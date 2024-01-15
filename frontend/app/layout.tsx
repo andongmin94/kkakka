@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/nav-bar";
+import Sidebar from "@/components/side-bar";
 
-const inter = Inter({ subsets: ["latin"] });
+const noto_sans = Noto_Sans_KR({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "까까",
@@ -17,15 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className={noto_sans.className}>
+        <Navbar />
+        <Sidebar>
           {children}
-        </ThemeProvider>
+        </Sidebar>
       </body>
     </html>
   );
