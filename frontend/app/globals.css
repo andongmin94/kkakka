@@ -1,8 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
 
+@font-face {
+  font-family: "DNFBitBitv2";
+  font-weight: 500;
+  src: url("/DNFBitBitv2.ttf") format("truetype");
+}
+  
 @layer base {
   :root {
     --background: 0 0% 100%;
