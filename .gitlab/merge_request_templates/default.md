@@ -10,7 +10,7 @@
 - [ ] 기타
 
 ### 반영 브랜치
-feat/#1-signup -> master
+feat/S10P12D110-17-signup -> master
 
 ### 변경 사항
 - 기존 username만 따로 가져가던 형태에서 관계를 매핑하여 User 객체를 통째로 참조하도록 변경
@@ -19,3 +19,6 @@ feat/#1-signup -> master
 ### 테스트 결과
 - [] Postman 테스트 결과 이상 없습니다.
 - [] local ci 테스트 결과 이상 없습니다.
+
+### 이슈 닫기
+S10P12D110-17 #done #comment 닫기
