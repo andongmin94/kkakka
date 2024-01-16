@@ -6,7 +6,7 @@ export default function () {
   // 임시 친구 데이터
   const sampleData: number[] = [1, 2, 3, 4];
   return (
-    // 배너 이미지
+    // 배너 이미지 넣는곳
     <Card className="border-solid border-4 rounded-3xl bg-[url('/image/liveImage.PNG')] bg-cover h-[15rem] w-[25rem] grid grid-rows-5 lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <CardHeader className="p-1 grid grid-cols-2">
         <Live />
