@@ -64,7 +64,7 @@
   }
 }
 
-.dnf {
+.font-dnf {
   font-family: "DNFBitBitv2";
   font-weight: 500;
   src: url("/DNFBitBitv2.ttf") format("truetype");

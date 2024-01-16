@@ -1,19 +1,22 @@
 import Link from "next/link";
 
-export default function SidebarDemo({ children }: { children: React.ReactNode }) {
+export default function SidebarDemo({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex">
-      <div className="dnf">dasd </div>
-      <div className="flex flex-col h-screen p-3 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] w-60">
+      <div className="flex flex-col h-screen p-3 shadow-[0_12px_15px_-1px_rgba(0,0,0,0.6)] w-60">
         <div className="space-y-3 ">
           <div className="flex-1">
-            <ul className="pt-2 pb-4 font-bold space-y-4 text-xl">
-              <li className="rounded-sm">               
+            <ul className="pt-2 pb-4 space-y-8 text-2xl font-dnf">
+              <li className="rounded-sm">
                 <Link
                   href="/itemShop"
-                  className="flex items-center p-2 space-x-3 rounded-md mx-8"
+                  className="flex items-center p-2 space-x-3 rounded-md mx-8 mt-6"
                 >
-                  <span>아이템샵</span>
+                  아이템샵
                 </Link>
               </li>
               <li className="rounded-sm">
@@ -21,7 +24,7 @@ export default function SidebarDemo({ children }: { children: React.ReactNode })
                   href="/chat"
                   className="flex items-center p-2 space-x-3 rounded-md mx-8"
                 >
-                  <span>메시지함</span>
+                  메시지함
                 </Link>
               </li>
               <li className="rounded-sm">
@@ -29,7 +32,7 @@ export default function SidebarDemo({ children }: { children: React.ReactNode })
                   href="/settings"
                   className="flex items-center p-2 space-x-3 rounded-md mx-8"
                 >
-                  <span>환경 설정</span>
+                  환경 설정
                 </Link>
               </li>
               <li className="rounded-sm">
@@ -37,7 +40,7 @@ export default function SidebarDemo({ children }: { children: React.ReactNode })
                   href="document"
                   className="flex items-center p-2 space-x-3 rounded-md mx-8"
                 >
-                  <span>서비스 소개</span>
+                  서비스 소개
                 </Link>
               </li>
             </ul>
