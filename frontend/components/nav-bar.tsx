@@ -4,13 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
-import { BellIcon, UsersIcon } from "@heroicons/react/24/outline";
-import {
-  BellIcon as CheckedBellIcon,
-  UsersIcon as ChekedUsersIcon,
-} from "@heroicons/react/24/solid";
 import {DropdownMenuRadioGroupDemo} from "@/components/alarm-menu";
-
+import { SheetDemo } from "./friend-tab";
 export default function Navbar() {
   const [state, setState] = useState(false);
 
@@ -35,7 +30,7 @@ export default function Navbar() {
   return (
     <header>
       <nav
-        className={`bg-white shadow-lg w-full md:static md:text-sm ${
+        className={`bg-white shadow-[0_5px_10px_-5px_rgba(0,0,0,0.6)] w-full md:static md:text-sm ${
           state ? "fixed z-10 h-full" : ""
         }`}
       >
@@ -97,12 +92,12 @@ export default function Navbar() {
             <ul className="text-gray-700 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0 md:text-gray-600 md:font-medium">
               <li>
                 <Link href="/">
-             <DropdownMenuRadioGroupDemo />
+                  <DropdownMenuRadioGroupDemo />
                 </Link>
               </li>
               <li>
                 <Link href="/">
-                  <UsersIcon className="w-10 h-10 mx-8 mr-16" />
+                  <SheetDemo />
                 </Link>
               </li>
             </ul>
