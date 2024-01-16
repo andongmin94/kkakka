@@ -24,7 +24,7 @@ export default function () {
       </CardHeader>
       <CardContent className="p-1 row-span-2"></CardContent>
       <CardFooter className="p-2 row-span-2">
-        {/* 플레이중인 친구의 프사 */}
+        {/* 플레이중인 친구의 프사 넣는곳*/}
         <div className="rounded-full border-4 h-20 w-20 border-red-500 bg-[url('/image/profileImage.PNG')] bg-cover" />
       </CardFooter>
     </Card>
