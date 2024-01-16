@@ -20,6 +20,3 @@ feat/S10P12D110-17-signup -> master
 ### 테스트 결과
 - [] Postman 테스트 결과 이상 없습니다.
 - [] local ci 테스트 결과 이상 없습니다.
-
-### 이슈 닫기
-S10P12D110-17 #done #comment 닫기
