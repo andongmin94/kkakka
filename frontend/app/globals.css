@@ -63,3 +63,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.dnf {
+  font-family: "DNFBitBitv2";
+  font-weight: 500;
+  src: url("/DNFBitBitv2.ttf") format("truetype");
+}
