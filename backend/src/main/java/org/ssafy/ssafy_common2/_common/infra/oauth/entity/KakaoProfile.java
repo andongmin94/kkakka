@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2._common.infra.oauth.entity;
 
 import lombok.Data;
 
