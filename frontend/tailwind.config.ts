@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      boxShadow: {
+        'inner-lg': 'inset 0 5px 10px 0 rgb(0 0 0 / 0.05)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
