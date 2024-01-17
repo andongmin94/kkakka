@@ -1,6 +1,7 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.ssafy.ssafy_common2.user.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
