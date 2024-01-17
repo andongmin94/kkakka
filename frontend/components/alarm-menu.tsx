@@ -24,11 +24,11 @@ export function DropdownMenuRadioGroupDemo() {
         <div
           onMouseOver={() => setIsListHover(true)}
           onMouseOut={() => setIsListHover(false)}
-        >
+          className="w-10 h-10">
           {isListHover ? (
-            <CheckedBellIcon className="w-10 h-10" />
+            <CheckedBellIcon />
           ) : (
-            <BellIcon className="w-10 h-10" />
+            <BellIcon />
           )}
         </div>
       </DropdownMenuTrigger>

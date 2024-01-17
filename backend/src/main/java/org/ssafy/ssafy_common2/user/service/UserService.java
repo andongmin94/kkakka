@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2.user.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.ssafy.ssafy_common2._common.jwt.JwtProperties;
+import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
+import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
+import org.ssafy.ssafy_common2.user.entity.User;
+import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -43,12 +48,14 @@ public class UserService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+            if (!"s".equals("s")) {
 
+            }
             // HttpBody 오브젝트 생성
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type","authorization_code");
             params.add("client_id", client_id);
-            params.add("redirect_uri", "http://localhost:8080/oauth");
+            params.add("redirect_uri", "http://localhost:8080/api/oauth/callback/kakao/token");
             params.add("code", code);
             params.add("client_secret", client_secret);
 
