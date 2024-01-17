@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5daf0e6-dcd6-40e6-8a87-07bc290d9f98" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/org/ssafy/ssafy_common2/common/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/ssafy/ssafy_common2/common/UserController.java" afterDir="false" />
-    </list>
+    <list default="true" id="d5daf0e6-dcd6-40e6-8a87-07bc290d9f98" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +33,7 @@
     </system>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -50,13 +48,17 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.Build backend.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.SsafyCommon2Application.executor": "Run",
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/ssafy/BackEnd/backend",
+    "last_opened_file_path": "C:/ssafy/ssafy_common_PRj/backend/src/main/java/org/ssafy/ssafy_common2/common",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -68,6 +70,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\ssafy\ssafy_common_PRj\backend\src\main\java\org\ssafy\ssafy_common2\common" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="BackEnd" />
@@ -123,6 +130,7 @@
       <workItem from="1705290381296" duration="23000" />
       <workItem from="1705290409931" duration="23000" />
       <workItem from="1705290519375" duration="1014000" />
+      <workItem from="1705292574234" duration="17790000" />
     </task>
     <servers />
   </component>

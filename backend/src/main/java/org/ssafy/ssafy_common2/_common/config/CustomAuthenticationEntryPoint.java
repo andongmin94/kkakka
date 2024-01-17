@@ -1,7 +1,8 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2._common.config;
 
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import org.ssafy.ssafy_common2._common.jwt.JwtProperties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
