@@ -18,12 +18,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <body className={noto_sans.className}>
-
-        <Navbar />
-        <Sidebar>{children}</Sidebar>
-
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <Sidebar>{children}</Sidebar>
+        </ThemeProvider>
       </body>
     </html>
   );
