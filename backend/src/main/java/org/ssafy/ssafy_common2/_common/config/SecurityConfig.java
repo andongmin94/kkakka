@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2._common.config;
 
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.ssafy.ssafy_common2._common.jwt.JwtRequestFilter;
+import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
