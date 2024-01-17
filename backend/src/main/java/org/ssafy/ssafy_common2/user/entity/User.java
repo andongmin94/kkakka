@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2.user.entity;
 
 import lombok.Builder;
 import lombok.Data;
