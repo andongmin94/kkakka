@@ -23,11 +23,11 @@ export function SheetDemo() {
       <div
           onMouseOver={() => setIsListHover(true)}
           onMouseOut={() => setIsListHover(false)}
-        >
+          className="w-10 h-10">
           {isListHover ? (
-            <CheckedUsersIcon className="w-10 h-10 ml-8 mr-16" />
+            <CheckedUsersIcon />
           ) : (
-            <UsersIcon className="w-10 h-10 ml-8 mr-16" />
+            <UsersIcon />
           )}
         </div>
       </SheetTrigger>
