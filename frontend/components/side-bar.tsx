@@ -19,7 +19,7 @@ export default function SidebarDemo({
             <ul className="pt-2 pb-4 space-y-8 text-2xl font-dnf">
               <li
                 className={clsx("rounded-sm", {
-                  "shadow-inner-lg": pathname === "/itemShop",
+                  "bg-gray-100 shadow-inner": pathname === "/itemShop",
                 })}
               >
                 <Link
@@ -31,7 +31,7 @@ export default function SidebarDemo({
               </li>
               <li
                 className={clsx("rounded-sm", {
-                  "shadow-inner-lg": pathname === "/chat",
+                  "bg-gray-100 shadow-inner-lg": pathname === "/chat",
                 })}
               >
                 <Link
@@ -43,7 +43,7 @@ export default function SidebarDemo({
               </li>
               <li
                 className={clsx("rounded-sm", {
-                  "shadow-inner-lg": pathname === "/settings",
+                  "bg-gray-100 shadow-inner-lg": pathname === "/settings",
                 })}
               >
                 <Link
@@ -55,7 +55,7 @@ export default function SidebarDemo({
               </li>
               <li
                 className={clsx("rounded-sm", {
-                  "shadow-inner-lg": pathname === "/document",
+                  "bg-gray-100 shadow-inner-lg": pathname === "/document",
                 })}
               >
                 <Link

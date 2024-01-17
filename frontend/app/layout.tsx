@@ -27,12 +27,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          <Sidebar><div className="container border-x border-gray-300 p-12 w-3/5 ml-64">
-            {children}
-          </div></Sidebar>
+          <Sidebar>
+            <div className="container border-x border-gray-300 p-12 w-1/2 ml-64">
+              
+              {children}
+            </div>
+          </Sidebar>
         </ThemeProvider>
-
-
       </body>
     </html>
   );
