@@ -25,6 +25,7 @@ export default function () {
       }}
       plugins={[plugin.current]}
     >
+      <div className="font-dnf">라이브</div>
       <CarouselContent>
         {data.map((_, index) => (
           <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">

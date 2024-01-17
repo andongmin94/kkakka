@@ -50,7 +50,7 @@ export default function Navbar() {
           >
             <ul className="text-gray-700 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0 md:text-gray-600 md:font-medium mr-8">
               <li>
-                <Link href="/">
+                <Link href="/profile/1">
                   <ProfileAvatar />
                 </Link>
               </li>
