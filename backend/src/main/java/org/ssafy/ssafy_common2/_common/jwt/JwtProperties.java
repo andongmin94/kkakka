@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2._common.jwt;
 
 public interface JwtProperties {
     // JWT의 Signature를 해싱할 때 사용되는 비밀 키
