@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.common;
+package org.ssafy.ssafy_common2._common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
