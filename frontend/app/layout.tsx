@@ -20,6 +20,7 @@ export default function RootLayout({
   return (
     <html>
       <body className={noto_sans.className}>
+
         <Navbar />
         <Sidebar>{children}</Sidebar>
 

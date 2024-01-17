@@ -8,7 +8,7 @@ export default function SidebarDemo({
   return (
     <div className="flex">
       <div className="flex flex-col h-screen p-3 shadow-[0_12px_15px_-1px_rgba(0,0,0,0.6)] w-60">
-        <div className="space-y-3 ">
+        <div className="space-y-3">
           <div className="flex-1">
             <ul className="pt-2 pb-4 space-y-8 text-2xl font-dnf">
               <li className="rounded-sm">
