@@ -43,6 +43,7 @@ export default function Navbar() {
                 className="mx-14"
                 width={100}
                 height={100}
+                priority
               />
             </Link>
             <div className="md:hidden">
