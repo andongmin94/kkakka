@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/nav-bar";
 import Sidebar from "@/components/side-bar";
 
-const noto_sans = Noto_Sans_KR({ subsets: ["latin"] });
+
 
 export const metadata: Metadata = {
   title: "까까",
@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning>
-      <body className={noto_sans.className}>
+      <body >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
