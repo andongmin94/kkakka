@@ -1,25 +1,26 @@
 import "./App.css";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ModeToggle } from "./components/mode-toggle";
 
-function App() {
+function App({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Link to="/test/:id">
-            <Button>asd</Button>
-          </Link>
-        </BrowserRouter>
-      </QueryClientProvider>
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <QueryClientProvider client={queryClient}>
+          <ModeToggle />
+          <br /><br /><br />
+          <BrowserRouter>
+            <Link to="/test/:id">
+              <Button>버튼</Button>
+            </Link>
+          </BrowserRouter>
+          {children}
+        </QueryClientProvider>
+      </ThemeProvider>
     </>
   );
 }
