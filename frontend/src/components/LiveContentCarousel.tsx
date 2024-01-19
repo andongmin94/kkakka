@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import LiveContent from "@/components/LiveContent";
 
-export default function () {
+export default function LiveContentCarousel () {
   // 라이브 유저 수 더미 데이터
   const data: number[] = [1, 2, 3, 4, 5, 6];
   const plugin = React.useRef(

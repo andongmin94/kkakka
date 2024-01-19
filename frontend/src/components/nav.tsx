@@ -1,4 +1,4 @@
-import classes from "./nav.module.css";
+import classes from "@/components/nav.module.css";
 
 export default function Nav() {
   return (

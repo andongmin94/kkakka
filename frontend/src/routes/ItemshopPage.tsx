@@ -1,4 +1,4 @@
-import TitleItemshop from "@/components/title-itemshop";
+import TitleItemshop from "@/components/TitleItemShop";
 
 export default function ItemshopPage() {
   return (

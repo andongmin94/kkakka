@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
-import classes from "./RootLayout.module.css";
-import FriendsBtn from "@/components/friendsBtn";
-import Alarm from "@/components/alarm";
+import classes from "@/routes/RootLayout.module.css";
+import FriendsBtn from "@/components/FriendsBtn";
+import Alarm from "@/components/Alarm";
 
 export default function RootLayout() {
   return (
