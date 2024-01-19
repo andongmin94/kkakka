@@ -1,15 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
+import App from "@/App.tsx";
+import "@/global.css";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import RootLayout from "./routes/RootLayout.tsx";
-import ItemshopPage from "./routes/ItemshopPage.tsx";
-import MessagePage from "./routes/MessagePage.tsx";
-import SettingPage from "./routes/SettingPage.tsx";
-import IntroPage from "./routes/IntroPage.tsx";
+import RootLayout from "@/routes/RootLayout.tsx";
+import ItemshopPage from "@/routes/ItemshopPage.tsx";
+import MessagePage from "@/routes/MessagePage.tsx";
+import SettingPage from "@/routes/SettingPage.tsx";
+import IntroPage from "@/routes/IntroPage.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@/components/ThemeProvider.tsx";
 
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +29,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

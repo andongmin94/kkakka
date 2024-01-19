@@ -4,7 +4,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import classes from "./alarm.module.css";
+import classes from "@/components/alarm.module.css";
 
 export default function Alarm() {
   return (
