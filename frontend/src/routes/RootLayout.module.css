@@ -29,6 +29,7 @@
   font-size: xx-large;
   margin-bottom: 30px;
   animation: navbarBottom 1s forwards;
+  font-weight: 600;
 }
 
 .menu:hover {

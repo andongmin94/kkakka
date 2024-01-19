@@ -82,11 +82,11 @@ body {
 }
 
 @font-face {
-  font-family: "SUITE-Bold";
-  font-weight: normal;
-  src: url("./fonts/SUITE-Bold.ttf") format("truetype");
+  font-family: "SUITE-Variable";
+  font-weight: 500;
+  src: url("./fonts/SUITE-Variable.ttf") format("truetype");
 }
 
 body {
-  font-family: "SUITE-Bold";
+  font-family: "SUITE-Variable";
 }

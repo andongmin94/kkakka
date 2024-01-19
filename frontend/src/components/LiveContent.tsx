@@ -1,5 +1,5 @@
-import Live from "./ani/Live";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import Live from "@/components/ani/Live";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 function Skeleton({
@@ -9,7 +9,7 @@ function Skeleton({
   return <div className={cn("rounded-md", className)} {...props} />;
 }
 
-export default function () {
+export default function LiveContent () {
   // 임시 친구 데이터
   const sampleData: number[] = [1, 2, 3, 4];
   return (
