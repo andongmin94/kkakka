@@ -1,0 +1,161 @@
+/* 전체 화면 영역 */
+.page {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* 사이드바 영역 */
+.section_left {
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  border: 1px solid gainsboro;
+  background-color: white;
+  box-shadow: 1px 5px 5px 1px gainsboro;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 사이드바 메뉴 */
+.menu {
+  display: flex;
+  justify-content: center;
+  width: 95%;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+  font-size: xx-large;
+  margin-bottom: 30px;
+  animation: navbarBottom 1s forwards;
+}
+
+.menu:hover {
+  background-color: rgb(235, 207, 196, 0.2);
+}
+
+.menu:last-child {
+  margin-right: 0;
+}
+
+.menu::before {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: #f14e4e91;
+  transition: width 0.2s ease-in-out, left 0.2s ease-in-out;
+}
+
+.menu:hover::before {
+  width: 100%;
+  left: 0;
+}
+
+@keyframes navbarBottom {
+  0% {
+    transform: translateY(-70%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 네브바와 메인 페이지를 포함하는 영역 */
+.section_right {
+  background-color: white;
+  width: 80%;
+  height: 100%;
+  margin-left: 300px;
+  margin-right: 100px;
+  margin-top: 0px;
+}
+
+/* 네브바 */
+.nav {
+  position: fixed;
+  width: 1190px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid white;
+  z-index: 2;
+  box-shadow: 15px 15px 15px 1px rgb(239, 238, 238);
+}
+
+/* 로고 이미지 */
+.logo_image {
+  height: 110px;
+  width: 100%;
+  background-image: url("/public/image/logo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 50px;
+}
+
+/* 메인 페이지 영역 */
+.body {
+  margin-top: 150px;
+}
+
+/* 네브바 오른쪽 영역 */
+.nav_right {
+  display: flex;
+  justify-items: end;
+  align-items: center;
+}
+
+/* 사용자 프로필 버튼 */
+.user_image {
+  border-radius: 50%;
+  border: 3px solid white;
+  height: 50px;
+  width: 50px;
+  background-image: url("/public/image/liveImage.PNG");
+  background-size: cover;
+  background-position: center;
+  margin-right: 30px;
+}
+
+.user_image:hover {
+  background-image: url("/public/image/liveImage.PNG");
+  animation-name: shake;
+  animation-duration: 1s;
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* --------------------------------------- */
+
+/* 친구창 사이드바 */
+.friends_click {
+  z-index: 3;
+  height: 300px;
+  width: 300px;
+}
