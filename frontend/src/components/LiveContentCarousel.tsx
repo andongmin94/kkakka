@@ -1,13 +1,8 @@
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
-
-import { CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import LiveContent from "@/components/LiveContent";
+import { CardContent } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 export default function LiveContentCarousel () {
   // 라이브 유저 수 더미 데이터
@@ -17,13 +12,7 @@ export default function LiveContentCarousel () {
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
   return (
-    <Carousel
-      opts={{
-        align: "start",
-      }}
-      plugins={[plugin.current]}
-      className="h-full w-full"
-    >
+    <Carousel opts={{ align: "start" }} plugins={[plugin.current]} className="h-full w-full">
       <CarouselContent>
         {data.map((_, index) => (
           <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
