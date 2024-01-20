@@ -115,14 +115,14 @@
   border: 3px solid white;
   height: 50px;
   width: 50px;
-  background-image: url("/public/image/liveImage.PNG");
+  background-image: url("/public/image/liveImage.png");
   background-size: cover;
   background-position: center;
   margin-right: 30px;
 }
 
 .user_image:hover {
-  background-image: url("/public/image/liveImage.PNG");
+  background-image: url("/public/image/liveImage.png");
   animation-name: shake;
   animation-duration: 1s;
 }

@@ -1,18 +1,13 @@
-import Live from "@/components/ani/Live";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
 import LiveProfile from "./LiveProfile";
+import Live from "@/components/ani/Live";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 export default function LiveContent() {
   // 임시 친구 데이터
   const sampleData: number[] = [1, 2, 3, 4];
   return (
     // 배너 이미지
-    <Card className="border-solid border-4 rounded-3xl bg-[url('/image/liveImage.PNG')] bg-cover h-[15rem] w-[23rem] grid grid-rows-5 lg:hover:scale-105 transition-transform ease-in-out duration-500">
+    <Card className="border-solid border-4 rounded-3xl bg-[url('/image/liveImage.png')] bg-cover h-[15rem] w-[23rem] grid grid-rows-5 lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <CardHeader className="p-1 grid grid-cols-2">
         <Live />
         <div className="flex justify-end">

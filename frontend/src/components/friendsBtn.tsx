@@ -1,13 +1,6 @@
-import classes from "@/components/FriendsBtn.module.css";
-
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import FriendsCard from "@/components/FriendsCard";
+import classes from "@/components/FriendsBtn.module.css";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 // 친구 카드 여러개를 띄우기 위한 더미 데이터
 const data: number[] = [1, 2, 3, 4, 5, 6];

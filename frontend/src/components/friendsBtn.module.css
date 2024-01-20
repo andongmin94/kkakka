@@ -2,14 +2,14 @@
 .friends_image {
   height: 55px;
   width: 55px;
-  background-image: url("/public/image/friendsOff.png");
+  background-image: url("/image/friendsOff.png");
   background-size: cover;
   background-position: center;
   margin-right: 30px;
 }
 
 .friends_image:hover {
-  background-image: url("/public/image/friendsOn.png");
+  background-image: url("/image/friendsOn.png");
   animation-name: shake;
   animation-duration: 1s;
 }

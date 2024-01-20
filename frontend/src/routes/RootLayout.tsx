@@ -1,18 +1,19 @@
-import { Link, Outlet } from "react-router-dom";
-import classes from "@/routes/RootLayout.module.css";
-import FriendsBtn from "@/components/FriendsBtn";
 import Alarm from "@/components/Alarm";
+import { Link, Outlet } from "react-router-dom";
+import FriendsBtn from "@/components/FriendsBtn";
+import classes from "@/routes/RootLayout.module.css";
+import { TailwindIndicator } from "@/components/TailwindIndicator";
 
 export default function RootLayout() {
   return (
     <>
       <main className={classes.page}>
         {/* 왼쪽 사이드바 영역*/}
-        
+
         <div className={classes.section_left}>
           {/* 로고 이미지 */}
-          <Link to="/" className="mt-5 mb-20 w-4/5" >
-            <img alt="logo" src="public/image/logo.png" />
+          <Link to="/" className="mt-5 mb-20 w-4/5">
+            <img alt="logo" src="/public/image/logo.png" />
           </Link>
           {/* 사이드바 메뉴 */}
           <Link to="/item" className={classes.menu}>
@@ -55,6 +56,7 @@ export default function RootLayout() {
           </div>
         </div>
       </main>
+      <TailwindIndicator />
     </>
   );
 }

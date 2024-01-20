@@ -1,12 +1,10 @@
-import "@/App.css";
-
 import LiveContentCarousel from "@/components/LiveContentCarousel";
 
-function App() {
+export default function IndexPage() {
   return (
     <>
       <div className="text-3xl mb-0 flex">
-        <img src="/image/playing.png" className="h-[50px] w-[50px]" />
+        <img src="/public/image/playing.png" className="h-[50px] w-[50px]" />
         <p className="grid place-items-center ml-2">라이브</p>
       </div>
       <div className="h-[100px] w-[1200px]">
@@ -16,10 +14,8 @@ function App() {
         <p className="grid place-items-center ml-2">새로 올라온 도감</p>
       </div>
       <div className="flex">
-        <img src="/image/liveImage.PNG" />
+        <img src="/public/image/liveImage.png" />
       </div>
     </>
   );
 }
-
-export default App;
