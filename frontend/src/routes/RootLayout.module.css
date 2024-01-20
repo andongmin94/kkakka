@@ -10,12 +10,16 @@
   position: fixed;
   width: 250px;
   height: 100%;
-  border: 1px solid gainsboro;
+  border: 1px solid black;
   background-color: white;
   box-shadow: 1px 5px 5px 1px gainsboro;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 /* 사이드바 메뉴 */
@@ -88,20 +92,9 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 20px;
-  border: 1px solid white;
+  border: 1px solid black;
   z-index: 2;
   box-shadow: 15px 15px 15px 1px rgb(239, 238, 238);
-}
-
-/* 로고 이미지 */
-.logo_image {
-  height: 110px;
-  width: 100%;
-  background-image: url("/public/image/logo.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  margin-bottom: 50px;
 }
 
 /* 메인 페이지 영역 */

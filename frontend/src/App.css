@@ -79,14 +79,11 @@ html,
 body {
   width: 100%;
   height: 100%;
+  font-family: "SUITE-Variable";
 }
 
 @font-face {
-  font-family: "SUITE";
+  font-family: "SUITE-Variable";
   font-weight: 400;
-  src: url("./fonts/SUITE.ttf") format("truetype");
-}
-
-body {
-  font-family: "SUITE";
+  src: url("./fonts/SUITE-Variable.ttf") format("truetype");
 }
