@@ -1,15 +1,13 @@
 import Live from "@/components/ani/Live";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import LiveProfile from "./LiveProfile";
 
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-md", className)} {...props} />;
-}
-
-export default function LiveContent () {
+export default function LiveContent() {
   // 임시 친구 데이터
   const sampleData: number[] = [1, 2, 3, 4];
   return (
@@ -31,18 +29,8 @@ export default function LiveContent () {
       </CardHeader>
       <CardContent className="p-1 row-span-2"></CardContent>
       <CardFooter className="p-2 row-span-2">
-        {/* 플레이중인 친구 프사 */}
-        <div className="flex items-center space-x-3">
-          <Skeleton className="w-[100px] h-[80px] rounded-full border-4  border-red-500 bg-[url('/image/profileImage.PNG')] bg-cover" />
-          <div className="space-y-2">
-            <Skeleton className="h-auto grid grid-rows-1 place-items-stretch">
-              {/* 제목 칸 */}
-              <div className="self-center text-2xl px-1">
-                페이커와 전수민은 취향차이 !!
-              </div>
-            </Skeleton>
-          </div>
-        </div>
+        {/* 플레이중인 친구 프사 (text에 내용을 적어주면 props로 전달) */}
+        <LiveProfile text="페이커와 전수민은 취향차이" />
       </CardFooter>
     </Card>
   );
