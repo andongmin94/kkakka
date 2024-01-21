@@ -1,18 +1,28 @@
+import * as React from "react";
 import classes from "@/components/alarm.module.css";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-export default function Alarm() {
+export function Alarm() {
+  const [position, setPosition] = React.useState("");
+
   return (
-    <>
-      <HoverCard>
-        <HoverCardTrigger>
-          <div className={classes.alarm_image} />
-        </HoverCardTrigger>
-        <HoverCardContent>
-          <p>알람1</p>
-          <p>알람2</p>
-        </HoverCardContent>
-      </HoverCard>
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className={classes.alarm_image} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-30 text-center">
+        <DropdownMenuLabel>알림</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup
+          className="w-30"
+          value={position}
+          onValueChange={setPosition}
+        >
+          <DropdownMenuRadioItem value="top">알림 1</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="bottom">알림 2</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="right">알림 3</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
