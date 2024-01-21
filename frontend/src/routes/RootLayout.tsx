@@ -1,8 +1,8 @@
-import Alarm from "@/components/Alarm";
 import { Link, Outlet } from "react-router-dom";
 import FriendsBtn from "@/components/FriendsBtn";
 import classes from "@/routes/RootLayout.module.css";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
+import { Alarm } from "@/components/Alarm";
 
 export default function RootLayout() {
   return (
@@ -42,7 +42,11 @@ export default function RootLayout() {
             {/* 네브바 오른쪽 영역 */}
             <div className={classes.nav_right}>
               {/* 사용자 프로필 버튼 */}
-              <div className={classes.user_image} />
+
+              <Link to="/item">  {/* 이 부분은 수정이 필요함 */}
+                <div className={classes.user_image} />
+              </Link>
+
               {/* 알림 버튼 */}
               <Alarm />
               {/* 친구 버튼 */}

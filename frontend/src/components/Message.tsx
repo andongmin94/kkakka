@@ -7,7 +7,7 @@ import LiveProfile from "./LiveProfile";
 import classes from "./Message.module.css";
 import MessageUpdatedAt from "./MessageUpdatedAt";
 
-export default function Message({ messageInfo }) {
+export default function Message({ messageInfo } : { messageInfo: any }) {
   return (
     <>
       <div className={classes.wrapper}>
