@@ -1,13 +1,16 @@
 const { app, BrowserWindow } = require("electron");
+var path = require('path');
 
 function createWindow() {
   // 브라우저 창을 생성합니다.
   const win = new BrowserWindow({
     width: 1600,
     height: 900,
+    frame: false,
+    icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
       nodeIntegration: true,
-    }
+    },
   });
 
   // index.html 파일 로드

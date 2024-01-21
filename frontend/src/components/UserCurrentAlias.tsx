@@ -1,5 +1,5 @@
 import classes from "./UserCurrentAlias.module.css";
-export default function userCurrentAlias({ alias }) {
+export default function userCurrentAlias({ alias } : { alias: string }) {
   return (
     <>
       <div className={`${classes.aliasTag} flex justify-around`}>
