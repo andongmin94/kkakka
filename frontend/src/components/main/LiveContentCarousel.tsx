@@ -64,7 +64,7 @@ export default function LiveContentCarousel() {
 
   const plugin = React.useRef(
     // 딜레이 시간 조절
-    Autoplay({ delay: 3000, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: false })
   );
   return (
     <Carousel
