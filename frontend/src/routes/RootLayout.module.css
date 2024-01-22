@@ -9,12 +9,11 @@
 .section_left {
   position: fixed;
   width: 250px;
-  height: 100%;
-  border: 1px solid black;
+  height: 680px;
+  background-color: rgba(255, 255, 255, 0.9);
   background-color: white;
   box-shadow: 1px 5px 5px 1px gainsboro;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,7 +46,7 @@
 .menu::before {
   content: "";
   position: absolute;
-  bottom: 2px;
+  bottom: 1px;
   left: 50%;
   width: 0;
   height: 3px;
@@ -92,9 +91,9 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 20px;
-  border: 1px solid black;
+  border: 4px solid rgb(255, 255, 255);
   z-index: 2;
-  box-shadow: 15px 15px 15px 1px rgb(239, 238, 238);
+  box-shadow: 1px 1px 5px 1px gainsboro;
 }
 
 /* 메인 페이지 영역 */
@@ -115,14 +114,14 @@
   border: 3px solid white;
   height: 50px;
   width: 50px;
-  background-image: url("/public/image/liveImage.png");
+  background-image: url("/image/liveImage.png");
   background-size: cover;
   background-position: center;
   margin-right: 30px;
 }
 
 .user_image:hover {
-  background-image: url("/public/image/liveImage.png");
+  background-image: url("/image/liveImage.png");
   animation-name: shake;
   animation-duration: 1s;
 }
