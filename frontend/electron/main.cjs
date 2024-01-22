@@ -8,10 +8,14 @@ function createWindow() {
     height: 900,
     frame: false,
     transparent: true,
-    icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
+    alwaysOnTop: true,
     webPreferences: {
-      nodeIntegration: true,
+      preload: __dirname + "/preload.js",
     },
+  });
+
+  ipcMain.on("close-app", () => {
+    app.quit();
   });
 
   // index.html 파일 로드
