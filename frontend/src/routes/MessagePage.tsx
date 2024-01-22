@@ -1,6 +1,7 @@
-import Message from "../components/Message";
+import Message from "../components/message/Message";
 
 export default function MessagePage() {
+  // 더미 데이터
   const messagesInfo = [
     {
       name: "김상훈",
