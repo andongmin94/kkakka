@@ -25,10 +25,10 @@ export default function LiveContent({ data }: { data: data }) {
         <Live />
         <div className="flex justify-end">
           {/* 채팅방에 들어온 친구 수 만큼 친구 프사 표시 */}
-          {data.friends.map((friend, idx) => {
+          {data.friends.map((friend, id) => {
             return (
               <div
-                key={idx}
+                key={id}
                 // 이유는 모르겠는데 여기서만 특정 이미지가 안나옴
                 className="rounded-full border-[3px] h-10 w-10 border-red-500 bg-[url('/image/joinSample.png')] bg-cover"
               />
