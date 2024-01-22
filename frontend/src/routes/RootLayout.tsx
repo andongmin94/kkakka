@@ -1,8 +1,9 @@
 import { Link, Outlet } from "react-router-dom";
-import FriendsBtn from "@/components/FriendsBtn";
+import FriendsBtn from "@/components/navbar/FriendsBtn";
 import classes from "@/routes/RootLayout.module.css";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
-import { Alarm } from "@/components/Alarm";
+import { Alarm } from "@/components/navbar/Alarm";
+import { ModeToggle } from "@/components/navbar/ModeToggle";
 
 export default function RootLayout() {
   return (
@@ -13,7 +14,7 @@ export default function RootLayout() {
         <div className={classes.section_left}>
           {/* 로고 이미지 */}
           <Link to="/" className="mt-5 mb-20 w-4/5">
-            <img alt="logo" src="/public/image/logo.png" />
+            <img alt="logo" src="/image/logo.png" />
           </Link>
           {/* 사이드바 메뉴 */}
           <Link to="/item" className={classes.menu}>
@@ -41,9 +42,12 @@ export default function RootLayout() {
 
             {/* 네브바 오른쪽 영역 */}
             <div className={classes.nav_right}>
+              {/* 다크모드 버튼 */}
+              <ModeToggle />
               {/* 사용자 프로필 버튼 */}
-
-              <Link to="/item">  {/* 이 부분은 수정이 필요함 */}
+              <Link to="/item">
+                {" "}
+                {/* 이 부분은 수정이 필요함 */}
                 <div className={classes.user_image} />
               </Link>
 
