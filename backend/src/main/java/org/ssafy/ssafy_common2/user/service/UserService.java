@@ -1,36 +1,36 @@
 package org.ssafy.ssafy_common2.user.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.ssafy.ssafy_common2._common.jwt.JwtProperties;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
+import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
+import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${kakao.clientId}")
     String client_id;
@@ -38,22 +38,15 @@ public class UserService {
     @Value("${kakao.secret}")
     String client_secret;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    public OauthToken getAccessToken(String code) {
 
-    public OauthToken getAccessToken(String code){
         OauthToken oauthToken = null;
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-            if (!"s".equals("s")) {
-
-            }
             // HttpBody 오브젝트 생성
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            params.add("grant_type","authorization_code");
+            params.add("grant_type", "authorization_code");
             params.add("client_id", client_id);
             params.add("redirect_uri", "http://localhost:8080/api/oauth/callback/kakao/token");
             params.add("code", code);
@@ -78,55 +71,53 @@ public class UserService {
                     kakaoTokenRequest,
                     String.class
             );
-           oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
-       } catch (JsonProcessingException e) {
-           e.printStackTrace();
-       }
-       return oauthToken;
-   }
+            oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
+            System.out.println(oauthToken.getAccess_token());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return oauthToken;
+    }
 
-    public String SaveUserAndGetToken(String token) {
+    public String SaveUserAndGetToken(String token, HttpServletResponse response) {
 
         //(1)
         KakaoProfile profile = findProfile(token);
 
         //(2)
-        User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail());
+        User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail()).orElse(null);
+
+        System.out.println("카카오 이메일 : " + profile.getKakao_account().getProfile().getProfile_image_url());
 
         //(3)
-        if(user == null) {
-            user = User.builder()
-                    .kakaoId(profile.getId())
-                    //(4)
-                    .kakaoProfileImg(profile.getKakao_account().getProfile().getProfile_image_url())
-                    .kakaoNickname(profile.getKakao_account().getProfile().getNickname())
-                    .kakaoEmail(profile.getKakao_account().getEmail())
-                    //(5)
-                    .userRole("ROLE_USER").build();
+        if (user == null) {
+
+            DynamicUserInfo userInfo = DynamicUserInfo.of(0, false, 0);
+            user = User.of(
+                    profile.getId(),
+                    profile.getKakao_account().getProfile().getProfile_image_url(),
+                    profile.getKakao_account().getProfile().getNickname(),
+                    profile.getKakao_account().getEmail(),
+                    "ROLE_USER",
+                    userInfo);
 
             userRepository.save(user);
         }
-
-        return createToken(user);
-    }
-
-    public String createToken(User user) {
-        String jwtToken = JWT.create()
-                .withSubject(user.getKakaoEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))
-                .withClaim("id", user.getUserCode())
-                .withClaim("nickname", user.getKakaoNickname())
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+        String jwtToken = jwtUtil.createToken(user.getKakaoEmail());
+        response.addHeader("Authorization", jwtToken);
 
         return jwtToken;
     }
 
-    public User getUser(HttpServletRequest request){
-        Long userCode = (Long) request.getAttribute("userCode");
+    public User getUser(User nowUser) {
 
-        User user = userRepository.findByUserCode(userCode);
+//        Long userCode = (Long) nowUser.getAttribute("userCode");
+//
+//        User user = userRepository.findById(userCode).orElseThrow(
+//                ()->new CustomException(ErrorType.NOT_FOUND_USER)
+//        );
 
-        return user;
+        return nowUser;
     }
 
 
@@ -135,6 +126,8 @@ public class UserService {
 
         //(1-2)
         RestTemplate rt = new RestTemplate();
+
+        System.out.println("token : " + token);
 
         //(1-3)
         HttpHeaders headers = new HttpHeaders();
@@ -167,6 +160,7 @@ public class UserService {
     }
 
    /* public JsonNode Logout(String autorize_code){
+
         final String RequestUrl = "https://kapi.kakao.com/v1/user/logout";
 
         final HttpClient client = HttpClientBuilder.create().build();

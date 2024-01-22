@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://database-1.ctee4gmysdpo.ap-northeast-2.rds.amazonaws.com:3306/ssafy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${rds.username}
+    password: ${rds.password}
+server:
+  servlet:
+    encoding:
+      force: 'true'
+      enabled: 'true'
+      charset: UTF-8
+    context-path: /
+  port: '8080'

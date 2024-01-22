@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
 #  security:
 #    oauth2:
 #      client:
@@ -20,24 +22,7 @@ spring:
 #            token-uri: https://kauth.kakao.com/oauth/token
 #            user-info-uri: https://kapi.kakao.com/v2/user/me
 #            user-name-attribute: id
-  jpa:
-    database: mysql
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  datasource:
-    password: ${spring.datasource.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${spring.datasource.username}
-    url: ${spring.datasource.url-mysql}
-server:
-  servlet:
-    encoding:
-      force: 'true'
-      enabled: 'true'
-      charset: UTF-8
-    context-path: /
-  port: '8080'
+
 logging:
   level:
     org:
@@ -48,3 +33,4 @@ logging:
 kakao:
   clientId : ${spring.kakao.client-id}
   secret: ${spring.kakao.client-secret}
+
