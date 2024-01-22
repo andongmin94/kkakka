@@ -8,7 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 // json형태 OauthToken 객체 데이터값 저장
-public class OauthToken { 
+public class OauthToken {
+
     private String token_type;
     private String access_token;
     private int expires_in;
