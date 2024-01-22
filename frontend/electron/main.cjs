@@ -7,6 +7,7 @@ function createWindow() {
     width: 1600,
     height: 900,
     frame: false,
+    transparent: true,
     icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
       nodeIntegration: true,
