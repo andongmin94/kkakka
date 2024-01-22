@@ -1,0 +1,33 @@
+/* 알람 버튼 */
+.alarm_image {
+  height: 40px;
+  width: 40px;
+  background-image: url("/image/alarmOff.png");
+  background-size: cover;
+  background-position: center;
+  margin-right: 30px;
+}
+
+.alarm_image:hover {
+  background-image: url("/image/alarmOn.png");
+  animation-name: shake;
+  animation-duration: 1s;
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
