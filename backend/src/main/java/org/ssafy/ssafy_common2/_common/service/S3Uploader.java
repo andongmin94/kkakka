@@ -50,13 +50,11 @@ public class S3Uploader {
 
 //    로컬에 생성된 File 삭제
 //    Multipartfile -> File로 전환되면서 로컬에 파일 생성된것을 삭제합니다.
-    private boolean removeNewFile(File targetFile) {
+    private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
-            return true;
         } else {
             log.info("파일이 삭제되지 못했습니다.");
-            return false;
         }
     }
 
@@ -64,7 +62,7 @@ public class S3Uploader {
         File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
 
         // 이미 존재하는 파일인 경우 삭제 후 다시 생성
-        if (convertFile.exists() && !removeNewFile(convertFile)) {
+        if (convertFile.exists() && !convertFile.delete()) {
             throw new IOException("이미 존재하는 파일을 삭제하는데 실패했습니다.");
         }
 
