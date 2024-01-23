@@ -21,14 +21,14 @@ public class ItemShop extends BaseTime {
     @Column(name = "item_name", nullable = false, length = 20)
     String itemName;
 
-    @Column(name = "item_price", nullable = false, length = 30)
-    String itemPrice;
+    @Column(name = "item_price", nullable = false)
+    int itemPrice;
 
     @Column(name = "item_desc", nullable = false, length = 255)
     String itemDesc;
 
     @Builder
-    public ItemShop(Long id, String itemName, String itemPrice, String itemDesc) {
+    private ItemShop(Long id, String itemName, int itemPrice, String itemDesc) {
         this.id = id;
         this.itemName = itemName;
         this.itemPrice = itemPrice;

@@ -2,7 +2,6 @@ package org.ssafy.ssafy_common2.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -39,7 +38,7 @@ public class User extends BaseTime {
     @Column(name = "user_role",nullable = false, length = 30)
     private String userRole;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
     private DynamicUserInfo userInfoId;
 
