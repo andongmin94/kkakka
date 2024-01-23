@@ -10,11 +10,11 @@ import SettingPage from "@/routes/SettingPage.tsx";
 import ItemshopPage from "@/routes/ItemshopPage.tsx";
 import KakaoCallbackPage from "@/routes/KakaoCallbackPage.tsx";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <RootLayout />,

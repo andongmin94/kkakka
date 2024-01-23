@@ -1,16 +1,44 @@
 {
   "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "license": "MIT",
+  "author": "D110",
+  "description": "team-project by D110",
   "main": "electron/main.cjs",
+  "build": {
+    "appId": "KKAKKA",
+    "productName": "까까",
+    "copyright": "Copyright © 2024 D110",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist_electron"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "elec": "electron .",
     "app": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && npm run elec\"",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron": "wait-on tcp:5173 && cross-env IS_DEV=true electron .",
+    "electron:pack": "electron-builder --dir",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"npm run electron\"",
+    "electron:builder": "electron-builder",
+    "build:for:electron": "tsc --noEmit && cross-env ELECTRON=true vite build",
+    "app:build": "npm run build:for:electron && npm run electron:builder"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
@@ -47,8 +75,8 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
-    "concurrently": "^8.2.2",
     "date-fns": "^3.2.0",
+    "dotenv": "^16.3.2",
     "embla-carousel-autoplay": "^8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc19",
     "lucide-react": "^0.312.0",
@@ -58,11 +86,9 @@
     "react-lottie-player": "^1.5.6",
     "react-resizable-panels": "^1.0.9",
     "react-router-dom": "^6.21.2",
-    "sonner": "^1.3.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.8.0",
-    "wait-on": "^7.2.0",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
@@ -73,7 +99,10 @@
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "electron": "^28.1.4",
+    "electron-builder": "^24.9.1",
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
@@ -81,6 +110,7 @@
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "wait-on": "^7.2.0"
   }
 }
