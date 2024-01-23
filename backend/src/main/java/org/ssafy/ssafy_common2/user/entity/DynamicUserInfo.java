@@ -17,24 +17,24 @@ public class DynamicUserInfo {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "point",nullable = false)
+    @Column(name = "point", nullable = false)
     private int point;
 
-    @Column(name = "is_login",nullable = false)
+    @Column(name = "is_login", nullable = false)
     private boolean isLogin;
 
-    @Column(name = "is_betting",nullable = false)
+    @Column(name = "is_betting", nullable = false)
     private int isBetting;
 
     @Column(name = "cur_alias", length = 50)
     private String curAlias;
 
     @Builder
-    private DynamicUserInfo(int point, boolean isLogin, int isBetting, String curAlias) {
+    private DynamicUserInfo(int point, boolean isLogin, int isBetting) {
         this.point = point;
         this.isLogin = isLogin;
         this.isBetting = isBetting;
-        this.curAlias = curAlias;
+        this.curAlias = "테스트용 칭호";
     }
 
     public static DynamicUserInfo of(int point, boolean isLogin, int isBetting) {
@@ -43,5 +43,13 @@ public class DynamicUserInfo {
                 .isLogin(isLogin)
                 .isBetting(isBetting)
                 .build();
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
+    public void minusPoint(int point) {
+        this.point -= point;
     }
 }
