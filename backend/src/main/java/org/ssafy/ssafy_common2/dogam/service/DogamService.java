@@ -20,6 +20,7 @@ import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +81,22 @@ public class DogamService {
 
         DogamCreateResponseDto responseDto = DogamCreateResponseDto.of(imgUrl, dto.getDogamTitle());
         return responseDto;
+    }
+
+    public void deleteDogam(Long dogamId, User user) {
+
+        Dogam dogam = dogamRepository.findById(dogamId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_DOGAM)
+        );
+
+        if (userRepository.findById(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        if (!Objects.equals(dogam.getUser().getId(), user.getId())) {
+            throw new CustomException(ErrorType.NOT_MATCHING_DOGAM_USER);
+        }
+
+        dogamRepository.delete(dogam);
     }
 }

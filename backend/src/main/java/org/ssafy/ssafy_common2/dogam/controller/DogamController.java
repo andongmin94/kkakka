@@ -24,6 +24,13 @@ public class DogamController {
     public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "email", required = true) String email , @ModelAttribute DogamCreateRequestDto dto
             , @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-        return ResponseUtils.ok(dogamService.createBoard(dto, email, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
+        return ResponseUtils.ok(dogamService.createDogam(dto, email, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
+    }
+
+    @DeleteMapping("/friends/dogam/{dogam_id}")
+    public ApiResponseDto<Void> deleteDogam(@PathVariable(value = "dogam_id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        dogamService.deleteDogam(dogamId, userDetails.getUser());
+        return ResponseUtils.ok(MsgType.DELETE_DOGAM_SUCCESSFULLY);
     }
 }
