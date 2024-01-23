@@ -1,5 +1,5 @@
 import MessagePeek from "./MessagePeek";
-import UnreadMessages from "../UnreadMessages";
+import UnreadMessages from "./UnreadMessages";
 import UserName from "../navbar/friendsSidebar/UserName";
 import UserStatus from "../navbar/friendsSidebar/UserStatus";
 import UserCurrentAlias from "../navbar/friendsSidebar/UserCurrentAlias";
@@ -25,7 +25,7 @@ export default function Message({
     <>
       <div className={classes.wrapper}>
         <MessageProfile />
-        <div>
+        <div className="flex flex-col items-center">
           <UserCurrentAlias alias={messageInfo.alias} />
           <UserName name={messageInfo.name} />
           <UserStatus status={messageInfo.status} />

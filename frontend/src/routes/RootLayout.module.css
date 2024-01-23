@@ -83,6 +83,8 @@
 
 /* 네브바 */
 .nav {
+  position: fixed;
+  width: 1190px;
   height: 100px;
   background-color: rgba(255, 255, 255, 0.9);
   margin-top: 10px;
@@ -97,9 +99,9 @@
 
 /* 메인 페이지 영역 */
 .body {
-  margin-top: 30px;
-  width: 100%;
-  height: 100%;
+  margin-top: 150px;
+  /* width: 100%;
+  height: 100%; */
 }
 
 /* 네브바 오른쪽 영역 */

@@ -13,11 +13,7 @@ function Skeleton({
   return <div className={cn("rounded-md", className)} {...props} />;
 }
 
-export default function LiveProfile({
-  userId,
-  text,
-  profileImage,
-}: LiveProfileProps) {
+export default function LiveProfile({ text, profileImage }: LiveProfileProps) {
   return (
     <div className="flex items-center space-x-3">
       <Skeleton
