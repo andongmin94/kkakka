@@ -1,19 +1,15 @@
 package org.ssafy.ssafy_common2.itemshop.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
+import org.ssafy.ssafy_common2.dogam.entity.Dogam;
+import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.User;
-
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn
 public class ItemDealList extends BaseTime {
 
     @Id
@@ -29,10 +25,43 @@ public class ItemDealList extends BaseTime {
     @JoinColumn(name = "item_type", nullable = false)
     private ItemShop itemType;
 
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dogam_id")
+    public Dogam dogam;
+
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "alias_id")
+    public Alias alias;
+
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enforcement_id")
+    public Enforcement enforcement;
+
+    public void setDogam(Dogam dogam) {
+        if (this.dogam != null) {
+            this.dogam.setItemDealList(null);
+        }
+        this.dogam = dogam;
+        if (!(dogam.getItemDealList() == this)) {
+            dogam.addItemDealList(this);
+        }
+    }
+
     @Builder
-    public ItemDealList(Long id, User user, ItemShop itemType) {
+    private ItemDealList(Long id, User user, ItemShop itemType) {
         this.id = id;
         this.user = user;
         this.itemType = itemType;
+    }
+
+    public static ItemDealList of(User user, ItemShop itemType) {
+
+        return builder()
+                .user(user)
+                .itemType(itemType)
+                .build();
     }
 }
