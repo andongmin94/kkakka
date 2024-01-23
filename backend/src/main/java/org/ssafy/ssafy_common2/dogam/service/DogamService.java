@@ -33,7 +33,7 @@ public class DogamService {
     private final DynamicUserInfoRepository dynamicUserInfoRepository;
     private final ItemShopRepository itemShopRepository;
 
-    public DogamCreateResponseDto createBoard(DogamCreateRequestDto dto, String email, User sender) throws IOException {
+    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, String email, User sender) throws IOException {
 
         if (userRepository.findById(sender.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
@@ -64,7 +64,7 @@ public class DogamService {
         String imgUrl = "";
         System.out.println(dto.getImgUrl());
         if (dto.getImgUrl() == null) {
-            imgUrl = "https://cleaningproject.s3.ap-northeast-2.amazonaws.com/static/%EB%8F%99%EA%B7%B8%EB%9D%BC%EB%AF%B8%20%EC%B2%AD%EC%86%8C.png";
+            imgUrl = "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EC%9D%B4%EC%A6%88%EB%A6%AC%EC%96%BC.jpg";
         } else {
             imgUrl = s3Uploader.upload(dto.getImgUrl());
         }
