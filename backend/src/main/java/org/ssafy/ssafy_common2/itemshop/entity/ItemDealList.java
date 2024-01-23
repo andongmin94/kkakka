@@ -12,6 +12,8 @@ import org.ssafy.ssafy_common2.user.entity.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
 public class ItemDealList extends BaseTime {
 
     @Id
