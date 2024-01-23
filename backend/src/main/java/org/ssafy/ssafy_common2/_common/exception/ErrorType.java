@@ -22,6 +22,8 @@ public enum ErrorType {
     NOT_FOUND_RECEIVER(401, "받을 유저가 존재하지 않습니다."),
     NOT_ENOUGH_POINT(401, "포인트가 부족합니다"),
     NOT_FOUND_SENDER(401, "보낸 유저가 존재하지 않습니다."),
+    NOT_FOUND_DOGAM(401, "도감이 존재하지 않습니다."),
+    NOT_MATCHING_DOGAM_USER(401, "유저와 도감이 매치되지 않습니다."),
     ;
 
     private int code;
