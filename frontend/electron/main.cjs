@@ -1,5 +1,8 @@
 const { app, BrowserWindow } = require("electron");
-var path = require('path');
+var path = require("path");
+require("dotenv").config();
+
+const isDev = process.env.IS_DEV == "true" ? true : false;
 
 function createWindow() {
   // 브라우저 창을 생성합니다.
@@ -7,20 +10,28 @@ function createWindow() {
     width: 1600,
     height: 900,
     frame: false,
-    transparent: true,
+    // transparent: true,
     alwaysOnTop: true,
     webPreferences: {
       preload: __dirname + "/preload.js",
+      nodeIntegration: true,
     },
   });
 
   // index.html 파일 로드
   // win.loadFile("index.html");
 
-  win.loadURL("http://localhost:5173");
-
   // 개발자 도구를 엽니다.
   // win.webContents.openDevTools();
+
+  win.loadURL(
+    isDev
+      ? "http://localhost:5173"
+      : `file://${path.join(__dirname, "../dist/index.html")}`
+  );
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
 }
 
 // 이 메소드는 Electron의 초기화가 완료되고
