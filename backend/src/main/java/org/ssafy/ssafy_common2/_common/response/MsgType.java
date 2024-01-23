@@ -10,6 +10,7 @@ public enum MsgType {
     SEARCH_SUCCESSFULLY("조회 성공"),
     DATA_SUCCESSFULLY("데이터 생성 성공"),
     GENERATE_TOKEN_SUCCESSFULLY("토큰 생성 성공"),
+    CREATE_DOGAM_SUCCESSFULLY("도감 생성 성공"),
     ;
 
     private final String msg;

@@ -19,8 +19,10 @@ import org.springframework.web.client.RestTemplate;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
 import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
+import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
+import org.ssafy.ssafy_common2.user.repository.AliasRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 @Service
@@ -31,6 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final AliasRepository aliasRepository;
 
     @Value("${kakao.clientId}")
     String client_id;
@@ -88,6 +91,7 @@ public class UserService {
         User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail()).orElse(null);
 
         System.out.println("카카오 이메일 : " + profile.getKakao_account().getProfile().getProfile_image_url());
+
 
         //(3)
         if (user == null) {
