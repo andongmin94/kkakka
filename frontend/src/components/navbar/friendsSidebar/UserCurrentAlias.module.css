@@ -1,5 +1,5 @@
 .innerText {
-  font-size: 10px;
+  font-size: 15px;
   font-weight: bold;
   color: #ffffff;
   margin: auto 0;
@@ -7,8 +7,9 @@
 
 .aliasTag {
   z-index: 1;
-  width: 109px;
-  height: 25.43px;
+  width: 149px;
+  /* height: 25.43px; */
+  height: 30px;
   border-radius: 5px;
   background-image: linear-gradient(
     90deg,

@@ -30,7 +30,8 @@ export default function LiveContent({ data }: { data: data }) {
               <div
                 key={id}
                 // 이유는 모르겠는데 여기서만 특정 이미지가 안나옴
-                className="rounded-full border-[3px] h-10 w-10 border-red-500 bg-[url('/image/joinSample.png')] bg-cover"
+                // className="rounded-full border-[3px] h-10 w-10 border-red-500 bg-[url('/image/joinSample.png')] bg-cover"
+                className={`rounded-full border-[3px] h-10 w-10 border-red-500 bg-[url('${friend.image}')] bg-cover`}
               />
             );
           })}
