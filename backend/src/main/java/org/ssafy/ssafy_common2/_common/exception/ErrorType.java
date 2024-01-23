@@ -17,6 +17,11 @@ public enum ErrorType {
     NOT_MATCHING_INFO(401, "아이디 또는 비밀번호를 잘못 입력했습니다."),
     NOT_TOKEN(401, "토큰이 없습니다."),
     NOT_VALID_TOKEN(401, "토큰이 유효하지 않습니다."),
+    NOT_FOUND_ITEM_DEAL_LIST(401,"아이템 거래 내역이 존재하지 않습니다." ),
+    NOT_FOUND_ITEM_SHOP(401,"아이템 타입이 존재하지 않습니다." ),
+    NOT_FOUND_RECEIVER(401, "받을 유저가 존재하지 않습니다."),
+    NOT_ENOUGH_POINT(401, "포인트가 부족합니다"),
+    NOT_FOUND_SENDER(401, "보낸 유저가 존재하지 않습니다."),
     ;
 
     private int code;
