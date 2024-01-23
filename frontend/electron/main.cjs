@@ -14,10 +14,6 @@ function createWindow() {
     },
   });
 
-  ipcMain.on("close-app", () => {
-    app.quit();
-  });
-
   // index.html 파일 로드
   // win.loadFile("index.html");
 
