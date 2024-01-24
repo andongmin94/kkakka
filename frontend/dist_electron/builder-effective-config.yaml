@@ -1,0 +1,16 @@
+directories:
+  output: dist_electron
+  buildResources: assets
+appId: KKAKKA
+productName: 까까
+copyright: Copyright © 2024 D110
+mac:
+  category: public.app-category.utilities
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+files:
+  - filter:
+      - dist/**/*
+      - electron/**/*
+electronVersion: 28.1.4
