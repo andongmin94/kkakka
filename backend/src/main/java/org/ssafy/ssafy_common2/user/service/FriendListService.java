@@ -2,6 +2,7 @@ package org.ssafy.ssafy_common2.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
@@ -23,64 +24,83 @@ public class FriendListService {
     private final UserRepository userRepository;
 
     // 친구 추가 요청
+    @Transactional
     public void addFriend(User sender, User receiver){
 
-        FriendState friendState = getFriendState(sender, receiver);
+        FriendState state = getFriendState(sender, receiver);
 
-        switch (friendState){
-            case NONE :
-                sendFriendRequest(sender, receiver.getKakaoEmail(), false);
-                break;
-            case RECEIVE :
-                acceptFriendRequest(getFriendList(receiver, sender.getKakaoEmail()).get());
-                break;
-            case SEND :
-            case FRIEND :
-                throw new CustomException(ErrorType.NOT_FOUND_PARK_TYPE);
+        switch (state){
+            case NONE:
+                sendFriendRequest(sender, receiver); break;
+            case RECEIVE:
+                acceptFriendRequest(sender, receiver); break;
+            case SEND:
+            case FRIEND:
+                throw new CustomException(ErrorType.DUPLICATED_REQUEST);
         }
     }
 
     // 친구 신청하기
-    public void sendFriendRequest(User user, String receiverEmail, Boolean isCheck){
+    @Transactional
+    public void sendFriendRequest(User sender, User receiver){
 
-        FriendList newFriend = FriendList.of(user, receiverEmail, isCheck);
+        FriendList friendRequest = getOrCreateFriendList(sender, receiver.getKakaoEmail());
+        FriendList oppositeFriendRequest = getOrCreateFriendList(receiver, sender.getKakaoEmail());
 
-        friendListRepository.save(newFriend);
+        friendRequest.updateIsCheck(true);
+
+        friendListRepository.save(friendRequest);
+        friendListRepository.save(oppositeFriendRequest);
     }
 
     // 친구 신청 받기 (이미 email유저가 나에게 친구 신청을 했던 경우)
-    public void acceptFriendRequest(FriendList friendList){
+    @Transactional
+    public void acceptFriendRequest(User sender, User receiver){
 
-        User receiver = validateFriend(friendList.getReceiver());
-        User sender = friendList.getSender();
+        FriendList friendRequest = getFriendList(sender, receiver.getKakaoEmail());
 
-        friendList.updateIsCheck(true);
-        sendFriendRequest(receiver, sender.getKakaoEmail(), true); // 상호 확인이 가능하도록 역방향도 만들어 준다.
+        friendRequest.updateIsCheck(true);
 
+        friendListRepository.save(friendRequest);
     }
 
-    // 두 사람의 현재 친구 상태를 확인
+    // 두 사람의 현재 친구요청 상태를 확인
     private FriendState getFriendState(User sender, User receiver){
 
-        Optional<FriendList> sendFriendRequest = getFriendList(sender, receiver.getKakaoEmail());
-        Optional<FriendList> receiveFriendRequest = getFriendList(receiver, sender.getKakaoEmail());
+        boolean sentRequestState = getRequestState(sender, receiver);
+        boolean receivedRequestState = getRequestState(receiver, sender);
 
-        if (sendFriendRequest.isPresent()) {
-            // 이미 친구인 경우
-            if (sendFriendRequest.get().getIsCheck())
-                return FriendState.FRIEND;
-            else
-                return FriendState.SEND;
-        } else if (receiveFriendRequest.isPresent()) {
-            if (!receiveFriendRequest.get().getIsCheck())
-                return FriendState.RECEIVE;
+        if (sentRequestState && receivedRequestState) {
+            return FriendState.FRIEND;
         }
-
-        return FriendState.NONE;
+        else if (receivedRequestState) {
+            return FriendState.RECEIVE;
+        }
+        else if (sentRequestState) {
+            return FriendState.SEND;
+        }
+        else {
+            return FriendState.NONE;
+        }
     }
 
-    public Optional<FriendList> getFriendList(User user1, String user2Email){
-        return friendListRepository.findBySenderAndReceiver(user1, user2Email);
+    // 현재 (친구)요청 승인 상태를 반환
+    public boolean getRequestState(User user1, User user2) {
+        return getFriendList(user1, user2.getKakaoEmail()).getIsCheck();
+    }
+
+    // 현재 친구 요청 데이터 반환
+    public FriendList getFriendList(User user1, String user2Email){
+        return friendListRepository
+                .findBySenderAndReceiver(user1, user2Email)
+                .orElse(FriendList.of(null, null, false));
+    }
+
+    // 현재 친구 요청 데이터가 존재하면 반환, 존재하지 않으면 객체를 생성하여 반환
+    public FriendList getOrCreateFriendList(User user1, String user2Email){
+        return friendListRepository
+                .findBySenderAndReceiver(user1, user2Email)
+                .orElse(FriendList.of(user1, user2Email, false));
     }
 
     // 친구(toUser)가 까까의 회원인지 확인
