@@ -2,6 +2,7 @@ package org.ssafy.ssafy_common2.dogam.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.user.entity.User;
@@ -9,6 +10,7 @@ import org.ssafy.ssafy_common2.user.entity.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE dogam set deleted_at = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class Dogam extends BaseTime {
 
     @Id
