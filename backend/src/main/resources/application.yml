@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: dev
+  servlet:
+    multipart:
+      enabled: true # 멀티파트 업로드 지원여부 (default: true)
+      max-file-size: 100MB
+      max-request-size: 100MB
 #  security:
 #    oauth2:
 #      client:
@@ -34,3 +39,14 @@ kakao:
   clientId : ${spring.kakao.client-id}
   secret: ${spring.kakao.client-secret}
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${aws.s3.accesskey}
+      secret-key: ${aws.s3.secretkey}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: ssafys3
