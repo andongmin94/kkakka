@@ -1,11 +1,12 @@
-window.addEventListener("DOMContentLoaded", () => {
-    const replaceText = (selector, text) => {
-      const element = document.getElementById(selector);
-      if (element) element.innerText = text;
-    };
+// preload.cjs
+const { ipcRenderer } = require('electron');
+
+// window.addEventListener('DOMContentLoaded', () => {
   
-    for (const dependency of ["chrome", "node", "electron"]) {
-      replaceText(`${dependency}-version`, process.versions[dependency]);
-    }
+// });
+
+const button = document.getElementById('myButton');
+  button.addEventListener('click', () => {
+    ipcRenderer.send('button-clicked');
+    console.log('preload');
   });
-  
