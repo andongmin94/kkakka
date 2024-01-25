@@ -2,6 +2,7 @@ package org.ssafy.ssafy_common2.itemshop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
 import org.ssafy.ssafy_common2.dogam.entity.Dogam;
 import org.ssafy.ssafy_common2.user.entity.Alias;
@@ -10,6 +11,7 @@ import org.ssafy.ssafy_common2.user.entity.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE item_deal_list set deleted_at = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class ItemDealList extends BaseTime {
 
     @Id
