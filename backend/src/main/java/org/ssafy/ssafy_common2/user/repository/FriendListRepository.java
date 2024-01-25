@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface FriendListRepository extends JpaRepository<FriendList,Long> {
 
-    Optional<FriendList> findBySenderAndReceiver(User sender, String receiver);
+    Optional<FriendList> findBySenderAndReceiverAndDeletedAtIsNull(User sender, String receiver);
 
     @Query("select fl.receiver from FriendList fl " +
             "where fl.receiver in " +

@@ -8,5 +8,5 @@ import org.ssafy.ssafy_common2.user.entity.User;
 import java.util.Optional;
 
 public interface ItempDealListRepository extends JpaRepository<ItemDealList,Long> {
-    Optional<ItemDealList> findByUser(User receiver);
+    Optional<ItemDealList> findByUserAndDeletedAtIsNull(User receiver);
 }
