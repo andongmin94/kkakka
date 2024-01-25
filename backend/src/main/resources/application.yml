@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: local
   servlet:
     multipart:
       enabled: true # 멀티파트 업로드 지원여부 (default: true)
