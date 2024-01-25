@@ -10,6 +10,7 @@ import org.ssafy.ssafy_common2.user.entity.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE chat_join set deleted_at = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class ChatJoin extends BaseTime  {
 
 
@@ -20,13 +21,13 @@ public class ChatJoin extends BaseTime  {
 
     // 2) 복합키 중 하나가 User의 FK임을 설정
     @MapsId("userId")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="user_id", referencedColumnName = "id")
     private User user;
 
     // 3) 복합키 중 하나가 Chat_Room의 FK임을 설정
     @MapsId("chatRoomId")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
     private ChatRoom chatRoom;
 
