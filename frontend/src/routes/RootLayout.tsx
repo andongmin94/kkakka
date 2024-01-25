@@ -6,6 +6,9 @@ import { Alarm } from "@/components/navbar/Alarm";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
 
 export default function RootLayout() {
+  // 사용자 아이디 더미 데이터
+  const userId = "1";
+
   return (
     <>
       <main className={classes.page}>
@@ -45,7 +48,7 @@ export default function RootLayout() {
               {/* 다크모드 버튼 */}
               <ModeToggle />
               {/* 사용자 프로필 버튼 */}
-              <Link to="/item">
+              <Link to="/profile/1">
                 {" "}
                 {/* 이 부분은 수정이 필요함 */}
                 <div className={classes.user_image} />
