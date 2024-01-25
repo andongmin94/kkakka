@@ -4,10 +4,20 @@ import classes from "@/routes/RootLayout.module.css";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Alarm } from "@/components/navbar/Alarm";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function RootLayout() {
   // 사용자 아이디 더미 데이터
-  const userId = "1";
+  // const userId = "1";
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // 페이지 이동시마다 스크롤바는 항상 최상단에 위치하게 한다.
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <>
@@ -44,13 +54,23 @@ export default function RootLayout() {
 
             {/* 네브바 오른쪽 영역 */}
             <div className={classes.nav_right}>
-              {/* 다크모드 버튼 */}
+              {/* 다크모드 버튼 (미완, 후순위) */}
               <ModeToggle />
               {/* 사용자 프로필 버튼 */}
-              <Link to="/profile/1">
-                {" "}
-                {/* 이 부분은 수정이 필요함 */}
-                <div className={classes.user_image} />
+              <Link
+                to="/profile/1"
+                className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+              >
+                {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
+                <Avatar>
+                  <AvatarImage
+                    src="/image/liveImage.png"
+                    alt="프사"
+                    className="bg-cover"
+                  />
+                  <AvatarFallback>프사</AvatarFallback>
+                </Avatar>
+                {/* <div className={classes.user_image} /> */}
               </Link>
 
               {/* 알림 버튼 */}
