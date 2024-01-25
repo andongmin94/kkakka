@@ -13,7 +13,6 @@ export default function RootLayout() {
     <>
       <main className={classes.page}>
         {/* 왼쪽 사이드바 영역*/}
-
         <div className={classes.section_left}>
           {/* 로고 이미지 */}
           <Link to="/" className="mt-5 mb-20 w-4/5">
