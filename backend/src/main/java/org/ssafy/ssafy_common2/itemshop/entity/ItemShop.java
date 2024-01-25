@@ -28,8 +28,8 @@ public class ItemShop extends BaseTime {
     String itemDesc;
 
     @Builder
-    private ItemShop(Long id, String itemName, int itemPrice, String itemDesc) {
-        this.id = id;
+    private ItemShop(String itemName, int itemPrice, String itemDesc) {
+
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemDesc = itemDesc;
