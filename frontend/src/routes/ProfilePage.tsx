@@ -3,7 +3,7 @@ import { Link, Outlet, useParams } from "react-router-dom";
 import Poor from "@/components/profile/Poor";
 import ProfileEdit from "@/components/profile/ProfileEdit";
 import ProfileImage from "@/components/profile/ProfileImage";
-import UserCurrentAlias from "@/components/navbar/friendsSidebar/UserCurrentAlias";
+import UserCurrentAlias from "@/components/UserCurrentAlias";
 import Check from "@/components/profile/Check";
 
 export default function ProfilePage() {
