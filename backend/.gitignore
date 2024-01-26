@@ -26,6 +26,10 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 application.properties
+application.yml
+application-dev.yml
+application-local.yml
+build.gradle
 
 ### NetBeans ###
 /nbproject/private/
