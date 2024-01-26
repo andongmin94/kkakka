@@ -1,6 +1,6 @@
 import classes from "./FriendsCard.module.css";
 import FriendsProfile from "./FriendsProfile";
-import UserCurrentAlias from "./UserCurrentAlias";
+import UserCurrentAlias from "../../UserCurrentAlias";
 import UserName from "./UserName";
 import UserStatus from "./UserStatus";
 
