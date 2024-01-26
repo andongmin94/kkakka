@@ -51,8 +51,8 @@ public class ItemDealList extends BaseTime {
     }
 
     @Builder
-    private ItemDealList(Long id, User user, ItemShop itemType) {
-        this.id = id;
+    private ItemDealList(User user, ItemShop itemType) {
+
         this.user = user;
         this.itemType = itemType;
     }
