@@ -2,7 +2,7 @@ import MessagePeek from "./MessagePeek";
 import UnreadMessages from "./UnreadMessages";
 import UserName from "../navbar/friendsSidebar/UserName";
 import UserStatus from "../navbar/friendsSidebar/UserStatus";
-import UserCurrentAlias from "../navbar/friendsSidebar/UserCurrentAlias";
+import UserCurrentAlias from "../UserCurrentAlias";
 import MessageProfile from "./MessageProfile";
 import classes from "./Message.module.css";
 import MessageUpdatedAt from "./MessageUpdatedAt";
