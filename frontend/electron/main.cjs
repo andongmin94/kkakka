@@ -1,5 +1,5 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage } = require("electron");
-var path = require("path");
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } = require("electron");
+const path = require("path");
 require("dotenv").config();
 
 const isDev = process.env.IS_DEV == "true" ? true : false;
@@ -16,22 +16,19 @@ function createWindow() {
     // transparent: true,
     alwaysOnTop: true,
     webPreferences: {
-      preload: __dirname + "/preload.js",
-      nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
   // index.html 파일 로드
   // win.loadFile("index.html");
 
-  // 개발자 도구를 엽니다.
-  // win.webContents.openDevTools();
-
   win.loadURL(
     isDev
       ? "http://localhost:5173"
       : `file://${path.join(__dirname, "../dist/index.html")}`
   );
+
   if (isDev) {
     win.webContents.openDevTools();
   }
@@ -84,3 +81,7 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+ipcMain.on("button-clicked", () => {
+  console.log("main")
+})

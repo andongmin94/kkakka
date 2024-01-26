@@ -13,6 +13,9 @@ import { ThemeProvider } from "@/components/navbar/ThemeProvider";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProfilePage from "./routes/ProfilePage";
+import ProfileCollection from "./routes/ProfileCollection";
+import ProfileDishonorPage from "./routes/ProfileDishonorPage";
+import ProfileRecordPage from "./routes/ProfileRecordPage";
 
 const queryClient = new QueryClient();
 const router = createHashRouter([
@@ -26,7 +29,15 @@ const router = createHashRouter([
       { path: "/setting", element: <SettingPage /> },
       { path: "/intro", element: <IntroPage /> },
       { path: "/login", element: <LoginPage /> },
-      { path: "/profile/:id", element: <ProfilePage /> },
+      {
+        path: "/profile/:id",
+        element: <ProfilePage />,
+        children: [
+          { path: "/profile/:id", element: <ProfileCollection /> },
+          { path: "/profile/:id/dishonor", element: <ProfileDishonorPage /> },
+          { path: "/profile/:id/record", element: <ProfileRecordPage /> },
+        ],
+      },
       {
         path: "/api/oauth/callback/kakao/token",
         element: <KakaoCallbackPage />,
