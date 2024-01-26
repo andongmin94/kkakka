@@ -13,8 +13,14 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
+import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.service.FriendListService;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,5 +44,16 @@ public class FriendListController {
         friendListService.addFriend(userDetails.getUser(), receiver);
 
         return ResponseUtils.ok(MsgType.DATA_SUCCESSFULLY);
+    }
+
+    @GetMapping("/friends")
+    public ApiResponseDto<Map<String, Object>> getFriends(@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+        List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(userDetails.getUser());
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("friendList", friendInfoList);
+
+        return ResponseUtils.ok(responseMap, MsgType.SEARCH_SUCCESSFULLY);
     }
 }

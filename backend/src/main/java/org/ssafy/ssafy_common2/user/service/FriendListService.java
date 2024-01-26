@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.FriendListRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,8 +47,8 @@ public class FriendListService {
     @Transactional
     public void sendFriendRequest(User sender, User receiver){
 
-        FriendList friendRequest = getOrCreateFriendList(sender, receiver.getKakaoEmail());
-        FriendList oppositeFriendRequest = getOrCreateFriendList(receiver, sender.getKakaoEmail());
+        FriendList friendRequest = getOrCreateFriendRequest(sender, receiver.getKakaoEmail());
+        FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender.getKakaoEmail());
 
         friendRequest.updateIsCheck(true);
 
@@ -57,7 +60,7 @@ public class FriendListService {
     @Transactional
     public void acceptFriendRequest(User sender, User receiver){
 
-        FriendList friendRequest = getFriendList(sender, receiver.getKakaoEmail());
+        FriendList friendRequest = getFriendRequest(sender, receiver.getKakaoEmail());
 
         friendRequest.updateIsCheck(true);
 
@@ -86,21 +89,34 @@ public class FriendListService {
 
     // 현재 (친구)요청 승인 상태를 반환
     public boolean getRequestState(User user1, User user2) {
-        return getFriendList(user1, user2.getKakaoEmail()).getIsCheck();
+
+        return getFriendRequest(user1, user2.getKakaoEmail()).getIsCheck();
     }
 
     // 현재 친구 요청 데이터 반환
-    public FriendList getFriendList(User user1, String user2Email){
+    public FriendList getFriendRequest(User user1, String user2Email){
+
         return friendListRepository
                 .findBySenderAndReceiver(user1, user2Email)
                 .orElse(FriendList.of(null, null, false));
     }
 
     // 현재 친구 요청 데이터가 존재하면 반환, 존재하지 않으면 객체를 생성하여 반환
-    public FriendList getOrCreateFriendList(User user1, String user2Email){
+    public FriendList getOrCreateFriendRequest(User user1, String user2Email){
+
         return friendListRepository
                 .findBySenderAndReceiver(user1, user2Email)
                 .orElse(FriendList.of(user1, user2Email, false));
+    }
+
+    // 친구 목록 반환
+    public List<FriendInfoDto> getFriendInfoList(User user) {
+
+        List<String> friendEmailList = friendListRepository.findFriendEmailsByUser(user);
+
+        return friendEmailList.stream()
+                .map(email -> FriendInfoDto.from(userRepository.findByKakaoEmail(email).orElseThrow())) // 이거 처리 Filter 등으로 변경?
+                .toList();
     }
 
     // 친구(toUser)가 까까의 회원인지 확인
