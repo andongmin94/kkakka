@@ -14,7 +14,8 @@ export default function Collection() {
         <div className="w-full font-bold text-2xl px-2 py-3">{title}</div>
         <div className="flex gap-3 pb-3">
           {/* 싫어요 */}
-          <ThumbsDown />
+          <ThumbsDown tD={thumbsDown} />
+          {dogamHateAmount}
           {/* 댓글 */}
           <CommentModal />
           {/* 등록일 */}
