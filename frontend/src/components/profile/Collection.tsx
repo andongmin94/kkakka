@@ -1,10 +1,10 @@
-import Comment from "@/components/profile/Comment";
+import CommentModal from "@/components/profile/CommentModal";
 import ThumbsDown from "@/components/profile/ThumbsDown";
 
 export default function Collection() {
   const title = "삽질하는 이수민머리ㅋㅋ";
   // 등록일 데이터
-  const update = "2024.01.25";
+  const update = "2024.01.25 오후 4:27";
 
   return (
     <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
@@ -16,7 +16,7 @@ export default function Collection() {
           {/* 싫어요 */}
           <ThumbsDown />
           {/* 댓글 */}
-          <Comment />
+          <CommentModal />
           {/* 등록일 */}
           <div className="grid grid-col place-items-center font-bold">
             {update}
