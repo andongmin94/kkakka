@@ -25,6 +25,7 @@ public enum ErrorType {
     NOT_FOUND_DOGAM(401, "도감이 존재하지 않습니다."),
     NOT_MATCHING_DOGAM_USER(401, "유저와 도감이 매치되지 않습니다."),
     DUPLICATED_REQUEST(409, "이미 완료된 요청입니다."),
+    FAILED_TO_MAKE_CHATROOM(500, "채팅방 생성에 실패하였습니다.")
     ;
 
     private int code;
