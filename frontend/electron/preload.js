@@ -1,12 +1,4 @@
-// preload.cjs
-const { ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
-// window.addEventListener('DOMContentLoaded', () => {
-  
-// });
-
-const button = document.getElementById('myButton');
-  button.addEventListener('click', () => {
-    ipcRenderer.send('button-clicked');
-    console.log('preload');
-  });
+// IPC Renderer를 전역 객체에 주입
+contextBridge.exposeInMainWorld('electron', { ipcRenderer });
