@@ -14,7 +14,16 @@ import {
 import Price from "./Price";
 import Purchase from "./Purchase";
 
+import { useProfileDogamStore } from "@/stores/ProfileStore";
+import { useEffect } from "react";
+
 export default function TitleItemshop() {
+  const { fetchProfileDogams, profileDogams } = useProfileDogamStore();
+
+  useEffect(() => {
+    fetchProfileDogams(); // 내 이메일 넣기
+  }, [fetchProfileDogams]);
+
   return (
     <Card className="static group/item bg-[url('/image/deleteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">

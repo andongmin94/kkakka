@@ -7,60 +7,68 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { useMainStore } from "@/stores/MainStore";
+import { useEffect } from "react";
 
 export default function LiveContentCarousel() {
   // 라이브 유저 수 더미 데이터
 
-  const liveData = [
-    {
-      userId: 1,
-      title: "3연승하고 잔다",
-      profileImage: "/image/profileImage.png",
-      bgImage: "/image/liveImage.png",
-      friends: [
-        { id: 1, image: "/image/joinSample.png" },
-        { id: 2, image: "/image/joinSample.png" },
-        { id: 3, image: "/image/joinSample.png" },
-        { id: 4, image: "/image/joinSample.png" },
-      ],
-    },
-    {
-      userId: 1,
-      title: "2연승하고 잔다",
-      profileImage: "/image/profileImage.png",
-      bgImage: "/image/liveImage.png",
-      friends: [
-        { id: 1, image: "/image/joinSample.png" },
-        { id: 2, image: "/image/joinSample.png" },
-        { id: 3, image: "/image/joinSample.png" },
-        { id: 4, image: "/image/joinSample.png" },
-      ],
-    },
-    {
-      userId: 1,
-      title: "1연승하고 잔다",
-      profileImage: "/image/profileImage.png",
-      bgImage: "/image/liveImage.png",
-      friends: [
-        { id: 1, image: "/image/joinSample.png" },
-        { id: 2, image: "/image/joinSample.png" },
-        { id: 3, image: "/image/joinSample.png" },
-        { id: 4, image: "/image/joinSample.png" },
-      ],
-    },
-    {
-      userId: 1,
-      title: "6연승하고 잔다",
-      profileImage: "/image/profileImage.png",
-      bgImage: "/image/liveImage.png",
-      friends: [
-        { id: 1, image: "/image/joinSample.png" },
-        { id: 2, image: "/image/joinSample.png" },
-        { id: 3, image: "/image/joinSample.png" },
-        { id: 4, image: "/image/joinSample.png" },
-      ],
-    },
-  ];
+  const { fetchMainInfos, mainInfos } = useMainStore();
+
+  useEffect(() => {
+    fetchMainInfos();
+  }, [fetchMainInfos]);
+
+  // const liveData = [
+  //   {
+  //     userId: 1,
+  //     title: "3연승하고 잔다",
+  //     profileImage: "/image/profileImage.png",
+  //     bgImage: "/image/liveImage.png",
+  //     friends: [
+  //       { id: 1, image: "/image/joinSample.png" },
+  //       { id: 2, image: "/image/joinSample.png" },
+  //       { id: 3, image: "/image/joinSample.png" },
+  //       { id: 4, image: "/image/joinSample.png" },
+  //     ],
+  //   },
+  //   {
+  //     userId: 1,
+  //     title: "2연승하고 잔다",
+  //     profileImage: "/image/profileImage.png",
+  //     bgImage: "/image/liveImage.png",
+  //     friends: [
+  //       { id: 1, image: "/image/joinSample.png" },
+  //       { id: 2, image: "/image/joinSample.png" },
+  //       { id: 3, image: "/image/joinSample.png" },
+  //       { id: 4, image: "/image/joinSample.png" },
+  //     ],
+  //   },
+  //   {
+  //     userId: 1,
+  //     title: "1연승하고 잔다",
+  //     profileImage: "/image/profileImage.png",
+  //     bgImage: "/image/liveImage.png",
+  //     friends: [
+  //       { id: 1, image: "/image/joinSample.png" },
+  //       { id: 2, image: "/image/joinSample.png" },
+  //       { id: 3, image: "/image/joinSample.png" },
+  //       { id: 4, image: "/image/joinSample.png" },
+  //     ],
+  //   },
+  //   {
+  //     userId: 1,
+  //     title: "6연승하고 잔다",
+  //     profileImage: "/image/profileImage.png",
+  //     bgImage: "/image/liveImage.png",
+  //     friends: [
+  //       { id: 1, image: "/image/joinSample.png" },
+  //       { id: 2, image: "/image/joinSample.png" },
+  //       { id: 3, image: "/image/joinSample.png" },
+  //       { id: 4, image: "/image/joinSample.png" },
+  //     ],
+  //   },
+  // ];
 
   const plugin = React.useRef(
     // 딜레이 시간 조절
@@ -73,15 +81,17 @@ export default function LiveContentCarousel() {
       className="h-full w-full"
     >
       <CarouselContent>
-        {liveData.map((data, index) => (
-          <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
-            <div className="p-1">
-              <CardContent className="flex aspect-square items-center justify-center p-0">
-                <LiveContent data={data} />
-              </CardContent>
-            </div>
-          </CarouselItem>
-        ))}
+        {mainInfos.liveBroadcastList &&
+          Array.isArray(mainInfos.liveBroadcastList) &&
+          mainInfos.liveBroadcastList.map((room, index) => (
+            <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
+              <div className="p-1">
+                <CardContent className="flex aspect-square items-center justify-center p-0">
+                  <LiveContent liveData={room} />
+                </CardContent>
+              </div>
+            </CarouselItem>
+          ))}
       </CarouselContent>
     </Carousel>
   );

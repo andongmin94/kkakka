@@ -1,11 +1,13 @@
 import CommentModal from "@/components/profile/CommentModal";
 import ThumbsDown from "@/components/profile/ThumbsDown";
 
-export default function Collection() {
-  const title = "삽질하는 이수민머리ㅋㅋ";
-  // 등록일 데이터
-  const update = "2024.01.25 오후 4:27";
-
+export default function Collection({
+  bg,
+  title,
+  update,
+  thumbsDown,
+  dogamHateAmount,
+}) {
   return (
     <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="h-[200px] w-[320px] border-4 border-inherit mt-5 rounded-3xl bg-[url('/image/liveImage.png')] bg-cover rounded-b-none border-b-0" />
@@ -17,7 +19,7 @@ export default function Collection() {
           <ThumbsDown tD={thumbsDown} />
           {dogamHateAmount}
           {/* 댓글 */}
-          <CommentModal />
+          <Comment />
           {/* 등록일 */}
           <div className="grid grid-col place-items-center font-bold">
             {update}

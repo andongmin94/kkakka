@@ -7,6 +7,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useFriendStore } from "@/stores/MainStore";
+import { useEffect } from "react";
 
 // 친구 카드 여러개를 띄우기 위한 더미 데이터
 
@@ -44,6 +46,12 @@ const friendsInfo = [
 ];
 
 export default function FriendsBtn() {
+  const { fetchFriends, friends } = useFriendStore();
+
+  useEffect(() => {
+    fetchFriends();
+  }, [fetchFriends]);
+
   return (
     <Sheet>
       <SheetTrigger>
@@ -57,9 +65,11 @@ export default function FriendsBtn() {
           </SheetTitle>
           <div className={classes.scrollbar}>
             {/* 친구 카드 생성 */}
-            {friendsInfo.map((info, idx) => {
-              return <FriendsCard key={idx} info={info} />;
-            })}
+            {friends.friendList &&
+              Array.isArray(friends.friendList) &&
+              friends.friendList.map((friend, idx) => {
+                return <FriendsCard key={idx} info={friend} />;
+              })}
           </div>
         </SheetHeader>
       </SheetContent>

@@ -1,12 +1,10 @@
-import { useState } from "react";
-
-export default function ThumbsDown() {
-  const [tD, setTd] = useState(false);
+export default function ThumbsDown({ tD }: { tD: boolean }) {
   return (
     <div
       className="h-10 w-10 ml-2"
       onClick={() => {
-        setTd(!tD);
+        !tD;
+        // 싫어요 누를때 post 요청보내야 함 (dogamId)
       }}
     >
       {tD ? (
