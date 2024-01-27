@@ -193,4 +193,10 @@ public class UserService {
 
         }
         return returnNode;}*/
+
+    public User validateUserByEmail(String email){
+
+        return userRepository.findByKakaoEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
+    }
 }
