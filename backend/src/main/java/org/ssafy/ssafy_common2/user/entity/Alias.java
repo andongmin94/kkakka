@@ -20,4 +20,38 @@ public class Alias extends BaseTime {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne(fetch =  FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "alias_name", length = 50, nullable = false)
+    private String aliasName;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "alias", cascade = CascadeType.ALL)
+    private ItemDealList itemDealList;
+
+    @Builder
+    public Alias(User user, String aliasName) {
+
+        this.user = user;
+        this.aliasName = aliasName;
+    }
+
+    public static Alias of(User user, String aliasName){
+
+        return builder()
+                .user(user)
+                .aliasName(aliasName)
+                .build();
+    }
+
+    // 연관관계 편의 메소드
+    public void addItemDealList(ItemDealList itemDealList) {
+
+        this.itemDealList = itemDealList;
+        if (itemDealList.getAlias() != this){
+            itemDealList.setAlias(this);
+        }
+    }
+
 }

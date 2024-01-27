@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.ssafy.ssafy_common2._common.exception.CustomException;
+import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
 import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
