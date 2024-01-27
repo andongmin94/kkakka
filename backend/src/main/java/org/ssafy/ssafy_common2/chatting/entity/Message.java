@@ -1,31 +1,38 @@
 package org.ssafy.ssafy_common2.chatting.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE chat_join set message = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class Message extends BaseTime  {
 
-    // 고유 번호
+    public enum MessageType {
+        ENTER, QUIT, TALK
+    }
+
+    // 1) 고유 번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    // 내용
-    @Column(name = "content", nullable = false)
-    private String name;
+    // 2) 채팅방 타입
+    @Column(name = "message_type")
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
 
-    // 보낸 사람 & 대화하고 있는 채팅방
+    // 3) 내용
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    // 4) 보낸 사람 & 대화하고 있는 채팅방
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
     @JoinColumns({
@@ -34,16 +41,19 @@ public class Message extends BaseTime  {
     })
     private  ChatJoin chatJoin;
 
+
     @Builder
-    private Message (String name, ChatJoin chatJoin){
-        this.name = name;
+    private Message (String content, ChatJoin chatJoin, MessageType messageType){
+        this.content = content;
         this.chatJoin = chatJoin;
+        this.messageType = messageType;
     }
 
-    public static  Message of(String name, ChatJoin chatJoin){
+    public static  Message of(String content, ChatJoin chatJoin, MessageType messageType){
         return  builder()
-                .name(name)
+                .content(content)
                 .chatJoin(chatJoin)
+                .messageType(messageType)
                 .build();
     }
 
