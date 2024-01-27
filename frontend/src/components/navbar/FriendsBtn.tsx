@@ -29,6 +29,18 @@ const friendsInfo = [
     status: "플레이 중",
     image: "/image/profileImage.png",
   },
+  {
+    name: "이해건2",
+    alias: "이해건삼해건",
+    status: "플레이 중",
+    image: "/image/profileImage.png",
+  },
+  {
+    name: "이해건3",
+    alias: "이해건삼해건",
+    status: "플레이 중",
+    image: "/image/profileImage.png",
+  },
 ];
 
 export default function FriendsBtn() {
@@ -40,7 +52,7 @@ export default function FriendsBtn() {
 
       <SheetContent className="p-0">
         <SheetHeader>
-          <SheetTitle className="grid place-items-center text-2xl border-2 rounded-lg shadow-xl mt-[6px] mx-1 bg-[#f14e4e91]">
+          <SheetTitle className="grid place-items-center text-2xl border-2 rounded-lg shadow-xl mt-[6px] mx-1 bg-red-200">
             <p>친구목록</p>
           </SheetTitle>
           <div className={classes.scrollbar}>
