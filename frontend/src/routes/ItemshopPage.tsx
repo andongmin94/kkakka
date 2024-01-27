@@ -2,8 +2,15 @@ import WriteAlias from "@/components/itemShop/WriteAlias";
 import DeleteCollection from "@/components/itemShop/DeleteCollection";
 import Compliment from "@/components/itemShop/Compliment";
 import Speaker from "@/components/itemShop/Speaker";
+import { useMainStore } from "@/stores/MainStore";
+import { useEffect } from "react";
 
 export default function ItemshopPage() {
+  const { mainInfos, fetchMainInfos } = useMainStore();
+  useEffect(() => {
+    fetchMainInfos;
+  }, [fetchMainInfos]);
+
   return (
     <>
       <div className="text-3xl mb-10 flex">

@@ -1,8 +1,11 @@
 import classes from "./UnreadMessages.module.css";
 
-export default function UnreadMessages() {
+export default function UnreadMessages({
+  unreadMessageNum,
+}: {
+  unreadMessageNum: number;
+}) {
   // 임시 데이터
-  const unreadMessageNum = 99;
   return (
     <>
       <div className={classes.circle}>

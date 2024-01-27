@@ -6,17 +6,18 @@ import UserStatus from "./UserStatus";
 
 interface info {
   name: string;
-  alias: string;
+  curAlias: string | null;
+  profileImg: string;
   status: string;
-  image: string;
+  login: boolean;
 }
 
 export default function FriendsCard({ info }: { info: info }) {
   return (
     <div className={classes.card}>
-      <FriendsProfile image={info.image} />
+      <FriendsProfile image={info.profileImg} />
       <div className={classes.textWrapper}>
-        <UserCurrentAlias alias={info.alias} />
+        <UserCurrentAlias curAlias={info.curAlias} />
         <UserName name={info.name} />
         <UserStatus status={info.status} />
       </div>
