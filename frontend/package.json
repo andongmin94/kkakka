@@ -8,11 +8,10 @@
   "main": "electron/main.cjs",
   "build": {
     "appId": "KKAKKA",
+    "mac": { "icon": "/electron/icon.png" },
+    "win": { "icon": "/electron/icon.png" },
     "productName": "까까",
     "copyright": "Copyright © 2024 D110",
-    "mac": {
-      "category": "public.app-category.utilities"
-    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
