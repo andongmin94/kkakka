@@ -8,12 +8,15 @@ import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.service.ItemDealService;
 import org.ssafy.ssafy_common2.user.dto.Response.AliasCreateResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.AliasResponseDto;
 import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.AliasRepository;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +62,15 @@ public class AliasService {
 
         return userRepository.findByKakaoEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_RECEIVER));
+    }
+
+    // 칭호 목록
+    public List<AliasResponseDto> getAliasList(User user) {
+
+        List<Alias> aliasList = aliasRepository.findByUserAndDeletedAtIsNull(user);
+
+        return aliasList.stream().map((alias) ->
+                AliasResponseDto.of(alias.getAliasName(), alias.getCreatedAt(), alias.getItemDealList().getUser().getUserName())
+        ).toList();
     }
 }
