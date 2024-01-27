@@ -32,6 +32,8 @@ public class StompHandler implements ChannelInterceptor {
         // 1-2) webSocket 연결 시
         if(StompCommand.CONNECT == accessor.getCommand()) {
             System.out.println("++++++++++++++++++++++++연결 완료++++++++++++++++++++++++++");
+            System.out.println(message.getHeaders());
+            System.out.println(channel);
         }
 
         // 1-3) 특정 채팅방 들어가겠다는 요청 시
@@ -45,6 +47,11 @@ public class StompHandler implements ChannelInterceptor {
                             (String) message.getHeaders().get("simpDestination")
                     ).orElse("InvalidRoomId"));
 
+            System.out.println(roomId);
+
+            //1-3-b) chatBody에서 User_id도 추출해서 chat_join에 맵핑
+
+            //1-3-c) Message 객체 생성 후 ChatService로 전달
 
 
         }
