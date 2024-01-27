@@ -32,7 +32,7 @@ export default function RootLayout() {
           <Link to="/item" className={classes.menu}>
             <h1>아이템샵</h1>
           </Link>
-          <Link to="/message" className={classes.menu}>
+          <Link to="/messagelist" className={classes.menu}>
             <h1>메세지함</h1>
           </Link>
           <Link to="/setting" className={classes.menu}>

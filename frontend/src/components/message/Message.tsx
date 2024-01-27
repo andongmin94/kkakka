@@ -31,7 +31,7 @@ export default function Message({
           <UserStatus status={messageInfo.status} />
         </div>
         <MessagePeek lastMessage={messageInfo.lastMessage} />
-        <UnreadMessages />
+        <UnreadMessages unreadMessageNum={messageInfo.unreadMessages} />
         <MessageUpdatedAt updatedAt={messageInfo.updatedAt} />
       </div>
     </>
