@@ -1,5 +1,6 @@
 package org.ssafy.ssafy_common2.chatting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -22,19 +23,21 @@ public class ChatJoin extends BaseTime  {
     // 2) 복합키 중 하나가 User의 FK임을 설정
     @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name ="user_id", referencedColumnName = "id")
     private User user;
 
     // 3) 복합키 중 하나가 Chat_Room의 FK임을 설정
     @MapsId("chatRoomId")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
     private ChatRoom chatRoom;
 
-    @Column(name = "bet_price", nullable = false)
+    @Column(name = "bet_price", nullable = true)
     private int betPrice;
 
-    @Column(name = "is_win", nullable = false)
+    @Column(name = "is_win", nullable = true)
     private boolean isWin;
 
     @Builder

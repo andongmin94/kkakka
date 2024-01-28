@@ -16,4 +16,6 @@ public class ChatJoinId implements Serializable {
     private Long userId;
     private Long chatRoomId;
 
+
+
 }

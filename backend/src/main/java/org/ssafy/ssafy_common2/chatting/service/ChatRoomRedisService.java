@@ -23,10 +23,10 @@ public class ChatRoomRedisService {
 
     // 2) Injection to Redis Data Structure
     @Resource(name = "redisTemplate")
-    private HashOperations<String, String, ChatRoom>  hashOpsChatRoom;
+    private HashOperations<String, Long, ChatRoom>  hashOpsChatRoom;
 
     @Resource(name = "redisTemplate")
-    private HashOperations<String, String, String> hashOpsEnterInfo;
+    private HashOperations<String, Long, Long> hashOpsEnterInfo;
 
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
@@ -35,18 +35,19 @@ public class ChatRoomRedisService {
     public List<ChatRoom> findAllRoom() {return hashOpsChatRoom.values(CHAT_ROOMS);}
 
     // 4) 특정 채팅방 조회
-    public ChatRoom findRoomById(String id) {return hashOpsChatRoom.get(CHAT_ROOMS, id);}
+    public ChatRoom findRoomById(long id) {return hashOpsChatRoom.get(CHAT_ROOMS, id);}
 
-    // 5) 1대 1 채팅방 생성
-    public ChatRoom createOneByOneRoom(String name) {
+    // 5) mySQL에서 생성한 채팅방 번호를 Redis에도 Mapping 하기
+    public void createOneByOneRoom(ChatRoom chatRoom) {
 
-        ChatRoom chatRoom = new ChatRoom();
-
-
-
-
-        return null;
+        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getId(), chatRoom);
     }
+
+    // 6) 유저가 입장한 채팅방 ID와 유저의 ID를 맵핑하여 정보를 저장한다.
+    public void setEnterInfo(long userId, long roomId) {
+        hashOpsEnterInfo.put(ENTER_INFO, userId, roomId);
+    }
+
 
 
 
