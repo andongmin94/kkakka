@@ -1,0 +1,21 @@
+{
+  "data": {
+    "profileDogamList": [
+      {
+        "dogamImg": "asdfasdf",
+        "dogamTitle": "냠냠",
+        "createdAt": "2020-01-01 00:00:00",
+        "dogamHateAmount": 100,
+        "isHate": false
+      },
+      {
+        "dogamImg": "asdfasdf",
+        "dogamTitle": "냠냠",
+        "createdAt": "2020-01-01 00:00:00",
+        "dogamHateAmount": 100,
+        "isHate": false
+      }
+    ]
+  },
+  "msg": "방 목록 생성 성공"
+}
