@@ -12,10 +12,7 @@ export default function SettingPage () {
     electron.ipcRenderer.send('button-clicked', 'hi');
     console.log('React button clicked');
   };
-  const closeClick = () => {
-    electron.ipcRenderer.send('close-clicked');
-    console.log('React close clicked');
-  }
+
 
   return (
     <div>
@@ -26,9 +23,6 @@ export default function SettingPage () {
         Click Me
       </button>
 
-      <button onClick={closeClick}>
-        Click Me
-      </button>
     </div>
   );
 };
