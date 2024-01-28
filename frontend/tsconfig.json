@@ -25,6 +25,6 @@
       ]
     }
   },
-  "include": ["src"],
+  "include": ["src", "electron/SettingPage.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
