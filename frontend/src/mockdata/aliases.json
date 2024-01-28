@@ -1,0 +1,27 @@
+{
+  "data": {
+    "aliasList": [
+      {
+        "content": "인의동손잭스",
+        "createdAt": "2020-01-01 00:00:00",
+        "creator": "이해건"
+      },
+      {
+        "content": "가나다라마바",
+        "createdAt": "2021-01-01 00:00:00",
+        "creator": "이수민"
+      },
+      {
+        "content": "새로운칭호",
+        "createdAt": "2020-05-01 00:00:00",
+        "creator": "전수민"
+      },
+      {
+        "content": "개못하는애",
+        "createdAt": "2023-01-01 00:00:00",
+        "creator": "전수민"
+      }
+    ]
+  },
+  "msg": "방 목록 생성 성공"
+}

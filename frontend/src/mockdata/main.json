@@ -1,0 +1,77 @@
+{
+  "data": {
+    "point": 1050,
+    "myProfilePic": "profile.png",
+    "liveBroadcastList": [
+      {
+        "playerEmail": "osy9536@naver.com",
+        "playerName": "오세영",
+        "playerProfilePic": "ohseyoung.png",
+        "playerBackgroundPic": "asdfasdf.png",
+        "roomId": 1,
+        "roomTitle": "1승만 하고 잔다",
+        "crowdList": [
+          {
+            "email": "jiyeon2536@naver.com",
+            "name": "김지연",
+            "profilePic": "jiyeon.png"
+          },
+          {
+            "email": "k1016h@naver.com",
+            "name": "김상훈",
+            "profilePic": "sang.png"
+          },
+          {
+            "email": "k1016h@naver.com",
+            "name": "김상훈",
+            "profilePic": "sang.png"
+          },
+          {
+            "email": "k1016h@naver.com",
+            "name": "김상훈",
+            "profilePic": "sang.png"
+          }
+        ]
+      },
+      {
+        "playerEmail": "lhgeer01@naver.com",
+        "playerName": "전수민",
+        "playerProfilePic": "ohsewrtyoung.png",
+        "playerBackgroundPic": "asdsdffasdf.png",
+        "roomId": 2,
+        "roomTitle": "페이커와 나는 취향차이",
+        "crowdList": [
+          {
+            "email": "gigi@naver.com",
+            "name": "이지연",
+            "profilePic": "aaaa.png"
+          },
+          {
+            "email": "kh9999@naver.com",
+            "name": "강상훈",
+            "profilePic": "bbbb.png"
+          }
+        ]
+      }
+    ],
+    "newDogamList": [
+      {
+        "dogamOwnerName": "배성규",
+        "dogamOwnerAlias": "나는야무법자",
+        "dogamPic": "dogam1.png",
+        "dogamOwnerProfilePic": "baesungkyu.png",
+        "dogamHateNumber": 10,
+        "dogamRecentComment": "개못하네"
+      },
+      {
+        "dogamOwnerName": "이수민",
+        "dogamOwnerAlias": "냥냥펀치냥냥",
+        "dogamPic": "dogam2.png",
+        "dogamOwnerProfilePic": "leesoomin.png",
+        "dogamHateNumber": 100,
+        "dogamRecentComment": "개잘하네"
+      }
+    ],
+    "msg": "토큰 생성 성공"
+  }
+}
