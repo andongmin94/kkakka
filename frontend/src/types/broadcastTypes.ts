@@ -4,7 +4,7 @@ export interface CrowdType {
   profilePic: string;
 }
 
-export interface BroadcastType {
+export interface BroadcastItemType {
   playerEmail: string;
   playerName: string;
   playerProfilePic: string;
@@ -12,4 +12,8 @@ export interface BroadcastType {
   roomId: number;
   roomTitle: string;
   crowdList: CrowdType[];
+}
+
+export interface BroadcastListResponse {
+  broadcasts: BroadcastItemType[];
 }
