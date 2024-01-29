@@ -16,7 +16,7 @@ export interface friendStoreType {
 }
 
 export interface alarmStoreType {
-  alarms: [];
+  alarms: [] | null;
   fetchAlarms: () => void;
   checkAlarm: (alarmId: number) => void;
 }
