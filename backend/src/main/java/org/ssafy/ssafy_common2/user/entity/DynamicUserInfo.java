@@ -52,4 +52,8 @@ public class DynamicUserInfo {
     public void minusPoint(int point) {
         this.point -= point;
     }
+
+    public void updateCurAlias(String curAlias) {
+        this.curAlias = curAlias;
+    }
 }
