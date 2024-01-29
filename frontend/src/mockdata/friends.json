@@ -1,0 +1,28 @@
+{
+  "data": {
+    "friendList": [
+      {
+        "name": "test2",
+        "curAlias": null,
+        "profileImg": "12351234",
+        "status": "OFFLINE",
+        "login": false
+      },
+      {
+        "name": "test3",
+        "curAlias": null,
+        "profileImg": "12351234",
+        "status": "OFFLINE",
+        "login": false
+      },
+      {
+        "name": "마니",
+        "curAlias": null,
+        "profileImg": "http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rNUkk3ER0/img_640x640.jpg",
+        "status": "OFFLINE",
+        "login": false
+      }
+    ]
+  },
+  "msg": "조회 성공"
+}
