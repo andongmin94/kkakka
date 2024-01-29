@@ -1,8 +1,12 @@
 import { create } from "zustand";
 import axios from "axios";
+import { profileDogamStoreType, aliasStoreType } from "@/types/storeTypes";
 
-export const useProfileDogamStore = create((set) => ({
+const access_token = localStorage.getItem("access_token");
+
+export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   profileDogams: [],
+  dogamDetail: {},
   addDogamStatus: "idle", // 'idle' | 'loading' | 'success' | 'error'
   deleteDogamStatus: "idle",
   errorMessage: "",
@@ -14,7 +18,7 @@ export const useProfileDogamStore = create((set) => ({
         `/api/profile/dogam?email=${friendEmail}`
       );
       set({ profileDogams: response.data });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching profile", error);
     }
   },
@@ -24,7 +28,7 @@ export const useProfileDogamStore = create((set) => ({
     try {
       const response = await axios.get(`/api/friends/dogam/${dogamId}`);
       set({ dogamDetail: response.data });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching profile", error);
     }
   },
@@ -49,7 +53,7 @@ export const useProfileDogamStore = create((set) => ({
         set({ addDogamStatus: "success" });
       }
     } catch (error) {
-      set({ addDogamStatus: "error", errorMessage: error.message });
+      set({ addDogamStatus: "error", errorMessage: "" });
     }
   },
 
@@ -58,20 +62,22 @@ export const useProfileDogamStore = create((set) => ({
     set({ deleteDogamStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axios.delete(`api/friend/dogam/${dogamId}`, {
+      await axios.delete(`api/friend/dogam/${dogamId}`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       set({ deleteDogamStatus: "error", errorMessage: error.message });
     }
   },
 }));
 
 // 칭호 보관함
-export const useAliasStore = create((set) => ({
+export const useAliasStore = create<aliasStoreType>((set) => ({
   aliases: [],
+  addAliasStatus: "idle",
+  errorMessage: "",
   // 불명예의 전당 확인
   fetchAliases: async (friendEmail) => {
     try {
@@ -79,8 +85,8 @@ export const useAliasStore = create((set) => ({
         `/api/profile/alias?email=${friendEmail}`
       );
       set({ aliases: response.data });
-    } catch (error) {
-      console.error("Error fetching aliases", error);
+    } catch (error: any) {
+      console.error("Error fetching aliases", error.message);
     }
   },
 
@@ -103,7 +109,7 @@ export const useAliasStore = create((set) => ({
       if (response.status === 200) {
         set({ addAliasStatus: "success" });
       }
-    } catch (error) {
+    } catch (error: any) {
       set({ addAliasStatus: "error", errorMessage: error.message });
     }
   },
