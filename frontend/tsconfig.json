@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/mockdata"],
+  "include": ["src", "electron/SettingPage.tsx", "src/mockdata"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
