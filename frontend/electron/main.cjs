@@ -1,11 +1,4 @@
-const {
-  app,
-  ipcMain,
-  BrowserWindow,
-  Tray,
-  Menu,
-  nativeImage,
-} = require("electron");
+const { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage } = require("electron");
 const path = require("path");
 require("dotenv").config();
 
@@ -91,5 +84,9 @@ ipcMain.on("hidden", (event) => {
 });
 
 ipcMain.on("button-clicked", (event, message) => {
-  console.log("Received message in main:", message);
+  console.log("Received from button-clicked : ", message);
+});
+
+ipcMain.on("Riot Game Info", (event, message) => {
+  console.log("Received from Riot Game Info : ", message);
 });

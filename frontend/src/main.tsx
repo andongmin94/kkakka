@@ -18,14 +18,10 @@ import { RouterProvider, createHashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 /////////////////////////////////////////////////////
 // 일렉트론 빌드 때만 사용되는 컴포넌트
-// import TitleBar from "../electron/TitleBar.tsx";
-// import SettingPage from "../electron/SettingPage.tsx";
+import TitleBar from "../electron/TitleBar.tsx";
+import SettingPage from "../electron/SettingPage.tsx";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import ProfileCollection from "./routes/ProfileCollection";
-import ProfileDishonorPage from "./routes/ProfileDishonorPage";
-import ProfileRecordPage from "./routes/ProfileRecordPage";
-
 const queryClient = new QueryClient();
 const router = createHashRouter([
   {
@@ -40,7 +36,7 @@ const router = createHashRouter([
         element: <MessageDetailPage user={undefined} />,
       },
 
-      // { path: "/setting", element: <SettingPage /> },
+      { path: "/setting", element: <SettingPage /> },
       { path: "/intro", element: <IntroPage /> },
       { path: "/login", element: <LoginPage /> },
       {
