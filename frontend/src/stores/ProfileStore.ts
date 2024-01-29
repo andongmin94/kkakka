@@ -1,8 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import { profileDogamStoreType, aliasStoreType } from "@/types/storeTypes";
-
-const access_token = localStorage.getItem("access_token");
+import { axiosInstance } from "@/utils/axios";
+const token = localStorage.getItem("token");
 
 export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   profileDogams: [],
@@ -14,8 +13,13 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   // 도감 리스트 확인하기
   fetchProfileDogams: async (friendEmail) => {
     try {
-      const response = await axios.get(
-        `/api/profile/dogam?email=${friendEmail}`
+      const response = await axiosInstance.get(
+        `/api/profile/dogam?email=${friendEmail}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       set({ profileDogams: response.data });
     } catch (error: any) {
@@ -26,7 +30,14 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   // 도감 디테일 (댓글)
   fetchDogamDetail: async (dogamId) => {
     try {
-      const response = await axios.get(`/api/friends/dogam/${dogamId}`);
+      const response = await axiosInstance.get(
+        `/api/friends/dogam/${dogamId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       set({ dogamDetail: response.data });
     } catch (error: any) {
       console.error("Error fetching profile", error);
@@ -38,7 +49,7 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
     set({ addDogamStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `api/friend/dogam?email=${friendEmail}`,
         formData,
         {
@@ -62,9 +73,9 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
     set({ deleteDogamStatus: "loading", errorMessage: "" });
 
     try {
-      await axios.delete(`api/friend/dogam/${dogamId}`, {
+      await axiosInstance.delete(`api/friend/dogam/${dogamId}`, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
     } catch (error: any) {
@@ -81,8 +92,13 @@ export const useAliasStore = create<aliasStoreType>((set) => ({
   // 불명예의 전당 확인
   fetchAliases: async (friendEmail) => {
     try {
-      const response = await axios.get(
-        `/api/profile/alias?email=${friendEmail}`
+      const response = await axiosInstance.get(
+        `/api/profile/alias?email=${friendEmail}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       set({ aliases: response.data });
     } catch (error: any) {
@@ -95,7 +111,7 @@ export const useAliasStore = create<aliasStoreType>((set) => ({
     set({ addAliasStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `api/friend/alias?email=${friendEmail}`,
         formData,
         {

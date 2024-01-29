@@ -1,10 +1,12 @@
 import { create } from "zustand";
-import axios from "axios";
 import {
   mainStoreType,
   friendStoreType,
   alarmStoreType,
 } from "@/types/storeTypes";
+import { axiosInstance } from "@/utils/axios";
+
+const token = localStorage.getItem("token");
 
 // 메인페이지 정보 (포인트, 프로필사진, 라이브방송리스트, 새로올라온 도감리스트)
 export const useMainStore = create<mainStoreType>((set) => ({
@@ -17,7 +19,11 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axios.get(`http://localhost:3001/data`);
+      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ myPoint: response.data.point });
     } catch (error: any) {
       console.error("Error fetching my point", error.message);
@@ -29,7 +35,11 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axios.get(`http://localhost:3001/data`);
+      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ myProfilePic: response.data.profilePic });
     } catch (error: any) {
       console.error("Error fetching my profile pic", error.message);
@@ -41,7 +51,11 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axios.get(`http://localhost:3001/data`);
+      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ liveBroadcastList: response.data.liveBroadcastList });
     } catch (error: any) {
       console.error("Error fetching live broadcast list", error.message);
@@ -53,7 +67,11 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axios.get(`http://localhost:3001/data`);
+      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ newDogamList: response.data.newDogamList });
     } catch (error: any) {
       console.error("Error fetching new dogam list", error.message);
@@ -67,7 +85,11 @@ export const useFriendStore = create<friendStoreType>((set) => ({
   fetchFriends: async () => {
     try {
       // const response = await axios.get("/api/friends");
-      const response = await axios.get(`http://localhost:3001/data/`);
+      const response = await axiosInstance.get(`http://localhost:3001/data/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ friends: response.data });
     } catch (error: any) {
       console.error("Error fetching friends", error.message);
@@ -77,12 +99,15 @@ export const useFriendStore = create<friendStoreType>((set) => ({
 
 export const useAlarmStore = create<alarmStoreType>((set) => ({
   alarms: [],
-
   // 알림 리스트 불러오기
   fetchAlarms: async () => {
     try {
       // const response = await axios.get("/api/alarm");
-      const response = await axios.get(`http://localhost:3001/data/`);
+      const response = await axiosInstance.get(`http://localhost:3001/data/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ alarms: response.data });
     } catch (error: any) {
       console.error("Error fetching alarms", error.message);
@@ -95,7 +120,11 @@ export const useAlarmStore = create<alarmStoreType>((set) => ({
     const dataToUpdate = { is_checked: true };
 
     try {
-      const response = await axios.patch(url, dataToUpdate);
+      const response = await axiosInstance.patch(url, dataToUpdate, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("서버 응답:", response.data);
     } catch (error: any) {
       console.error("Error checking the alarm", error.message);
