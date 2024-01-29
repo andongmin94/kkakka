@@ -21,14 +21,14 @@ public class DogamCommentController {
     private final DogamCommentService dogamCommentService;
 
     @PostMapping("/friends/dogam/comment/{dogam-id}")
-    public ApiResponseDto<DogamCommentResponseDto> createDogam(@PathVariable(name = "dogam-id") Long dogamID , @RequestBody DogamCommentCreateRequestDto dto
+    public ApiResponseDto<DogamCommentResponseDto> createDogamComment(@PathVariable(name = "dogam-id") Long dogamID , @RequestBody DogamCommentCreateRequestDto dto
             , @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
         return ResponseUtils.ok(dogamCommentService.createDogamComment(dto, dogamID, userDetails.getUser()), MsgType.CREATE_DOGAM_COMMENT_SUCCESSFULLY);
     }
 
     @DeleteMapping("/friends/dogam/comment/{comment-id}")
-    public ApiResponseDto<Void> deleteDogam(@PathVariable(value = "comment-id") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto<Void> deleteDogamComment(@PathVariable(value = "comment-id") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         dogamCommentService.deleteComment(commentId, userDetails.getUser());
         return ResponseUtils.ok(MsgType.DELETE_DOGAM_COMMENT_SUCCESSFULLY);
