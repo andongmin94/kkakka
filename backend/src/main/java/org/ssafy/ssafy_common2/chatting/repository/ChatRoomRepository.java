@@ -1,8 +1,10 @@
 package org.ssafy.ssafy_common2.chatting.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +16,9 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
 
     // 2) 해당 이메일로 만들어진 채팅방 리스트 조회
     List<ChatRoom> findAllByChatOwnerEmailAndDeletedAtIsNull(String chat_owner_email);
+
+    @Query(value = "UPDATE chat_room cr set cr.updated_at = :now where cr.chat_room_id = :roomId", nativeQuery = true)
+    void updateModifiedAt(LocalDateTime now, long roomId);
+
+
 }
