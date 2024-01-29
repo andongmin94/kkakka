@@ -13,11 +13,11 @@ import { useEffect } from "react";
 export default function LiveContentCarousel() {
   // 라이브 유저 수 더미 데이터
 
-  const { fetchMainInfos, mainInfos } = useMainStore();
+  const { fetchLiveBroadcastList, liveBroadcastList } = useMainStore();
 
   useEffect(() => {
-    fetchMainInfos();
-  }, [fetchMainInfos]);
+    fetchLiveBroadcastList();
+  }, [fetchLiveBroadcastList]);
 
   // const liveData = [
   //   {
@@ -81,9 +81,9 @@ export default function LiveContentCarousel() {
       className="h-full w-full"
     >
       <CarouselContent>
-        {mainInfos.liveBroadcastList &&
-          Array.isArray(mainInfos.liveBroadcastList) &&
-          mainInfos.liveBroadcastList.map((room, index) => (
+        {liveBroadcastList &&
+          Array.isArray(liveBroadcastList) &&
+          liveBroadcastList.map((room, index) => (
             <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
               <div className="p-1">
                 <CardContent className="flex aspect-square items-center justify-center p-0">
