@@ -22,9 +22,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import SettingPage from "../electron/SettingPage.tsx";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import ProfileCollection from "./routes/ProfileCollection";
-import ProfileDishonorPage from "./routes/ProfileDishonorPage";
-import ProfileRecordPage from "./routes/ProfileRecordPage";
 
 const queryClient = new QueryClient();
 const router = createHashRouter([
