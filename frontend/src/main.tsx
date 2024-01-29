@@ -44,7 +44,10 @@ const router = createHashRouter([
         element: <ProfilePage />,
         children: [
           { path: "/profile/:id", element: <ProfileCollection /> },
-          { path: "/profile/:id/dishonor", element: <ProfileDishonorPage /> },
+          {
+            path: "/profile/:id/dishonor",
+            element: <ProfileDishonorPage />,
+          },
           { path: "/profile/:id/record", element: <ProfileRecordPage /> },
         ],
       },
@@ -60,7 +63,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
-        {/* <TitleBar /> */}
+        <TitleBar />
         <RouterProvider router={router} />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
