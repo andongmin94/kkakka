@@ -3,21 +3,23 @@ package org.ssafy.ssafy_common2.chatting.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.ssafy.ssafy_common2._common.exception.ErrorResponse;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
+import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
+import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomRedisService;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
+
+import java.util.List;
+import java.util.Objects;
 
 import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 
@@ -51,40 +53,69 @@ public class ChatRoomController {
 
         // 1-3) 1대1 채팅방을 만들어달라는 요청을 받았을 경우
         if(roomType.equals("ONE")){
-            // 둘 사이의 1대1 채팅방이 있는지 확인
+
+            // 1-3-a) 둘 사이의 1대1 채팅방이 있는지 확인
             long roomId = chatRoomMySQLService.getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId());
 
-            // 둘 사이의 채팅방이 없다면 -1이 반환 되고, 방 생성을 한다.
+            // 1-3-b) 둘 사이의 채팅방이 없다면 -1이 반환 되고, 방 생성을 한다.
             if(roomId == -1) {
                 // 방 생성
                 ChatRoom createdRoom = chatRoomMySQLService.CreateChatRoom(ONE, owner.getUserName(), owner.getKakaoEmail());
+
+                //1-3-b-가) 채팅방 생성이 성공적으로 마무리 되면, chatJoin으로 둘을 연결한다.
+                chatRoomMySQLService.insertChatJoin(userDetails.getUser(), createdRoom, 0, false);
+
+                //1-4-d) 나 자신에게 말하기가 아니라면 채팅방 주인도 참가시켜야함.
+                if(!Objects.equals(owner.getId(), userDetails.getUser().getId())){
+                    chatRoomMySQLService.insertChatJoin(owner,createdRoom, 0, false);
+                }
+
                 if(createdRoom == null){
                     return ResponseUtils.error(ErrorResponse.of(ErrorType.FAILED_TO_MAKE_CHATROOM));
                 }
+
+
+
                 return  ResponseUtils.ok(createdRoom.getId(), MsgType.DATA_SUCCESSFULLY);
             }else {
                 return ResponseUtils.ok(roomId, MsgType.DATA_SUCCESSFULLY);
             }
         }
-        else{
 
+        // 1-4) 중계방 만들어달라는 요청을 받았을 경우
+        else{
+            // 1-4-a) 해당 친구 이름으로 중계방이 있는지 확인
             ChatRoom broadcastRoom = chatRoomMySQLService.getBroadcastRoomWithEmail(ChatRoom.ChatRoomType.MANY, friendEmail);
 
+            // 1-4-b) 없으면 만들어준다.
             if(broadcastRoom == null){
                 broadcastRoom = chatRoomMySQLService.CreateChatRoom(ChatRoom.ChatRoomType.MANY, owner.getUserName(), owner.getKakaoEmail());
+
+                //1-4-c) 만드는데 성공하면, 현재 유저를 해당 중계방에 참여한 것으로 바꾼다.
+                chatRoomMySQLService.insertChatJoin(userDetails.getUser(), broadcastRoom, 0, false);
+
+
             }
 
+            // 1-4-e) 만드는데 실패하면, 에러 출력한다.
             if(broadcastRoom == null){
                 return ResponseUtils.error(ErrorResponse.of(ErrorType.FAILED_TO_MAKE_CHATROOM));
             }
 
+
+            // 결과 주기
             return ResponseUtils.ok(broadcastRoom.getId(), MsgType.DATA_SUCCESSFULLY);
         }
     }
 
 
-    // 2) 채팅방 리스트 반환
+    // 2) 현 유저가 참여한 채팅방 리스트 반환
+    @GetMapping("/dm")
+    public List<ChatRoomInfoDto> getAllChatRoomInfo (@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println(userDetails.getUser().getId());
 
+        return chatRoomMySQLService.getChatRoomInfo(userDetails.getUser().getId());
+    }
 
 }
 
