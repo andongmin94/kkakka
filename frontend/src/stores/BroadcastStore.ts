@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import { broadcastStoreType } from "@/types/storeTypes";
+import { axiosInstance } from "@/utils/axios";
+const token = localStorage.getItem("token");
 
 export const useBroadcastStore = create<broadcastStoreType>((set) => ({
   broadcasts: [],
@@ -11,7 +12,11 @@ export const useBroadcastStore = create<broadcastStoreType>((set) => ({
     const url = `/api/friends/broadcast/create/${friendEmail}`;
 
     try {
-      const response = await axios.post(url);
+      const response = await axiosInstance.post(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("서버 응답:", response.data);
     } catch (error: any) {
       console.error("Error starting a new broadcast", error.message);
@@ -31,7 +36,11 @@ export const useBroadcastStore = create<broadcastStoreType>((set) => ({
         winOrLose,
       };
       const url = `/api/friends/broadcast/${roomId}/betting`;
-      await axios.post(url, betData);
+      await axiosInstance.post(url, betData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error: any) {
       console.error("Error creating bet", error.message);
     }
