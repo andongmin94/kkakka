@@ -1,4 +1,5 @@
 import { Link, Outlet, useParams } from "react-router-dom";
+import classes from "./ProfilePage.module.css";
 
 import Poor from "@/components/profile/Poor";
 import ProfileEdit from "@/components/profile/ProfileEdit";
@@ -31,48 +32,60 @@ export default function ProfilePage() {
   const params = useParams();
 
   return (
-    <div className="border-4 w-full border-red-200 flex flex-col items-center">
+    <div className="w-full flex flex-col items-center">
       {/* 프로필 배경 */}
       {/* 동적으로 주면 자꾸 됐다가 안됐다가 해서 일단 직접 입력으로 넣음 */}
-      <div
-        className={`border-4 w-[1000px] h-[350px] flex-col m-1 border-blue-200 bg-[url("/image/profileBg.png")] bg-cover`}
-      >
-        <div className="flex justify-between border-2 m-1">
-          <div className="border-2 m-1 w-[550px] h-[220px]">
-            <div className="border-2 m-1 w-[200px] h-[200px] grid place-items-center">
-              {/* 프사 */}
-              <ProfileImage userImg={userImg} />
+      <div className="border-8 rounded-2xl border-red-200">
+        <div
+          className={`border-4 w-[1000px] h-[350px] flex-col m-1 border-blue-200 bg-[url("/image/profileBg.png")] bg-cover rounded-2xl`}
+        >
+          <div className="flex justify-between m-1">
+            <div className="m-1 w-[550px] h-[220px]">
+              <div className="m-1 w-[200px] h-[200px] grid place-items-center">
+                {/* 프사 */}
+                <ProfileImage userImg={userImg} />
+              </div>
+            </div>
+            <div className="m-1 w-[550px] h-[200px] flex justify-end">
+              <div className="pt-[12px] mr-2">
+                {/* 뭔지 정확하게 몰라서 일단 체크 버튼 만들었음 */}
+                <Check check={check} />
+              </div>
+              {/* 파산 이미지 */}
+              {/* 파산일때만 보이게 */}
+              {poorFlag ? <Poor /> : null}
+
+              {/* 프로필 편집 or 메세지 버튼 */}
+              {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
+              {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
+              {params.id === userId ? <ProfileEdit /> : null}
             </div>
           </div>
-          <div className="border-2 m-1 w-[550px] h-[200px] flex justify-end">
-            {/* 파산 이미지 */}
-            {/* 파산일때만 보이게 */}
-            {poorFlag ? <Poor /> : null}
-
-            {/* 프로필 편집 or 메세지 버튼 */}
-            {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
-            {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-            {params.id === userId ? <ProfileEdit /> : null}
+          <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
+            <div className="font-bold text-4xl">
+              <div className=" bg-white rounded-2xl border-8 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
+                {userName}
+              </div>
+            </div>
+            <div>
+              <UserCurrentAlias alias={alias} />
+            </div>
           </div>
         </div>
-        <div className="border-2 m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[63px]">
-          <div className="font-bold text-4xl">{userName}</div>
-          <div>
-            <UserCurrentAlias alias={alias} />
-          </div>
-          <div>
-            {/* 뭔지 정확하게 몰라서 일단 체크 버튼 만들었음 */}
-            <Check check={check} />
+        <div className=" m-1 w-100% h-[50px] w-[1000px] flex gap-10">
+          <div
+            className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl items-center gap-14 pl-8`}
+          >
+            <Link to={`/profile/${params.id}`} className="h-[30px]">
+              도감
+            </Link>
+            <Link to={`/profile/${params.id}/dishonor`}>불명예 전당</Link>
+            <Link to={`/profile/${params.id}/record`}>전적</Link>
           </div>
         </div>
-      </div>
-      <div className="border-2 m-1 w-100% h-[50px] w-[1000px] flex gap-10">
-        <Link to={`/profile/${params.id}`}>도감</Link>
-        <Link to={`/profile/${params.id}/dishonor`}>불명예 전당</Link>
-        <Link to={`/profile/${params.id}/record`}>전적</Link>
-      </div>
 
-      <Outlet />
+        <Outlet />
+      </div>
     </div>
   );
 }

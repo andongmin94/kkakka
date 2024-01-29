@@ -1,8 +1,11 @@
 import { create } from "zustand";
-import axios from "axios";
+import { profileDogamStoreType, aliasStoreType } from "@/types/storeTypes";
+import { axiosInstance } from "@/utils/axios";
+const token = localStorage.getItem("token");
 
-export const useProfileDogamStore = create((set) => ({
+export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   profileDogams: [],
+  dogamDetail: {},
   addDogamStatus: "idle", // 'idle' | 'loading' | 'success' | 'error'
   deleteDogamStatus: "idle",
   errorMessage: "",
@@ -10,11 +13,16 @@ export const useProfileDogamStore = create((set) => ({
   // 도감 리스트 확인하기
   fetchProfileDogams: async (friendEmail) => {
     try {
-      const response = await axios.get(
-        `/api/profile/dogam?email=${friendEmail}`
+      const response = await axiosInstance.get(
+        `/api/profile/dogam?email=${friendEmail}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       set({ profileDogams: response.data });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching profile", error);
     }
   },
@@ -22,9 +30,16 @@ export const useProfileDogamStore = create((set) => ({
   // 도감 디테일 (댓글)
   fetchDogamDetail: async (dogamId) => {
     try {
-      const response = await axios.get(`/api/friends/dogam/${dogamId}`);
+      const response = await axiosInstance.get(
+        `/api/friends/dogam/${dogamId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       set({ dogamDetail: response.data });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching profile", error);
     }
   },
@@ -34,7 +49,7 @@ export const useProfileDogamStore = create((set) => ({
     set({ addDogamStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `api/friend/dogam?email=${friendEmail}`,
         formData,
         {
@@ -49,7 +64,7 @@ export const useProfileDogamStore = create((set) => ({
         set({ addDogamStatus: "success" });
       }
     } catch (error) {
-      set({ addDogamStatus: "error", errorMessage: error.message });
+      set({ addDogamStatus: "error", errorMessage: "" });
     }
   },
 
@@ -58,29 +73,36 @@ export const useProfileDogamStore = create((set) => ({
     set({ deleteDogamStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axios.delete(`api/friend/dogam/${dogamId}`, {
+      await axiosInstance.delete(`api/friend/dogam/${dogamId}`, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       set({ deleteDogamStatus: "error", errorMessage: error.message });
     }
   },
 }));
 
 // 칭호 보관함
-export const useAliasStore = create((set) => ({
+export const useAliasStore = create<aliasStoreType>((set) => ({
   aliases: [],
+  addAliasStatus: "idle",
+  errorMessage: "",
   // 불명예의 전당 확인
   fetchAliases: async (friendEmail) => {
     try {
-      const response = await axios.get(
-        `/api/profile/alias?email=${friendEmail}`
+      const response = await axiosInstance.get(
+        `/api/profile/alias?email=${friendEmail}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       set({ aliases: response.data });
-    } catch (error) {
-      console.error("Error fetching aliases", error);
+    } catch (error: any) {
+      console.error("Error fetching aliases", error.message);
     }
   },
 
@@ -89,7 +111,7 @@ export const useAliasStore = create((set) => ({
     set({ addAliasStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `api/friend/alias?email=${friendEmail}`,
         formData,
         {
@@ -103,7 +125,7 @@ export const useAliasStore = create((set) => ({
       if (response.status === 200) {
         set({ addAliasStatus: "success" });
       }
-    } catch (error) {
+    } catch (error: any) {
       set({ addAliasStatus: "error", errorMessage: error.message });
     }
   },

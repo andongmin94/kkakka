@@ -1,13 +1,19 @@
 import { create } from "zustand";
 import axios from "axios";
+import { dmStoreType } from "@/types/storeTypes";
 
+const token = localStorage.getItem("token");
 // 1대1 채팅방 목록
-export const useDmStore = create((set) => ({
+export const useDmStore = create<dmStoreType>((set) => ({
   dmList: [],
   fetchDmList: async () => {
     try {
       // const response = await axios.get("/api/friends/dm");
-      const response = await axios.get(`http://localhost:3001/data/`);
+      const response = await axios.get(`http://localhost:3001/data/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set({ dmList: response.data });
     } catch (error) {
       console.error("Error fetching direct messages", error);
@@ -19,10 +25,14 @@ export const useDmStore = create((set) => ({
     const url = `/api/friends/dm/create/${friendEmail}`;
 
     try {
-      const response = await axios.post(url);
+      const response = await axios.post(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error starting a new direct message", error.message);
+      console.error("Error starting a new direct message", error);
     }
   },
 
@@ -31,10 +41,14 @@ export const useDmStore = create((set) => ({
     const url = `/api/friends/dm/enter/${friendEmail}`;
 
     try {
-      const response = await axios.post(url);
+      const response = await axios.post(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error entering a direct message", error.message);
+      console.error("Error entering a direct message", error);
     }
   },
 
@@ -43,10 +57,14 @@ export const useDmStore = create((set) => ({
     const url = `/api/friends/dm/delete?email=${friendEmail}`;
 
     try {
-      const response = await axios.delete(url);
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error deleting a direct message", error.message);
+      console.error("Error deleting a direct message", error);
     }
   },
 
@@ -56,10 +74,14 @@ export const useDmStore = create((set) => ({
     const dataToUpdate = { checked_at: new Date() };
 
     try {
-      const response = await axios.patch(url, dataToUpdate);
+      const response = await axios.patch(url, dataToUpdate, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error checking the alarm", error.message);
+      console.error("Error checking the alarm", error);
     }
   },
 }));
