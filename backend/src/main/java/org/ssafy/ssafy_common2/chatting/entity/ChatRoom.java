@@ -36,18 +36,23 @@ public class ChatRoom extends BaseTime implements Serializable {
     @Column(name = "chat_owner_email", nullable = false, length = 50)
     private String chatOwnerEmail;
 
+    @Column(name = "user_cnt")
+    private int userCnt;
+
     @Builder
-    private ChatRoom( ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail){
+    private ChatRoom( ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail, int userCnt){
         this.chatRoomType = chatRoomType;
         this.chatOwnerName = chatOwnerName;
         this.chatOwnerEmail = chatOwnerEmail;
+        this.userCnt = userCnt;
     }
 
-    public static ChatRoom of ( ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail){
+    public static ChatRoom of ( ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail, int userCnt){
         return builder()
                 .chatRoomType(chatRoomType)
                 .chatOwnerName(chatOwnerName)
                 .chatOwnerEmail(chatOwnerEmail)
+                .userCnt(userCnt)
                 .build();
     }
 }

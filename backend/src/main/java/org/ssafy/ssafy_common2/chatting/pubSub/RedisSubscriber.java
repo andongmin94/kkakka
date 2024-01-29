@@ -22,6 +22,8 @@ public class RedisSubscriber {
             // 1-1) 발행된 메세지를 chatMessage DTO에 맞게 객체 매핑
             Message message = objectMapper.readValue(publisMessage, Message.class);
 
+            System.out.println(message);
+
             // 1-2) 채팅방을 구독한 클라이언트에게 메세지를 발송
             messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatJoin().getChatJoinId().getChatRoomId(), message);
         } catch (Exception e) {

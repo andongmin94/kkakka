@@ -23,15 +23,16 @@ import java.util.Optional;
 public class ChatRoomMySQLService {
 
     private final UserRepository userRepository;
-    private final DynamicUserInfoRepository dynamicUserInfoRepository;
     private final ChatJoinRepository chatJoinRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final MessageRepository messageRepository;
+    private final ChatRoomRedisService chatRoomRedisService;
 
 
     // 0) 채팅방 생성
     public ChatRoom CreateChatRoom (ChatRoom.ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail) {
-       ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.of(chatRoomType, chatOwnerName, chatOwnerEmail));
+       ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.of(chatRoomType, chatOwnerName, chatOwnerEmail, 0));
+
+       chatRoomRedisService.mappingChatRoom(chatRoom);
 
        return chatRoom;
     }
