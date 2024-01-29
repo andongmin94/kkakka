@@ -40,8 +40,14 @@ public class StompHandler implements ChannelInterceptor {
         // 1-2) webSocket 연결 시 ======================================================================
         if(StompCommand.CONNECT == accessor.getCommand()) {
             System.out.println("++++++++++++++++++++++++연결 완료++++++++++++++++++++++++++");
-            System.out.println(message.getHeaders());
+            System.out.println("CONNECT HEADER에 든 내용" + message.getHeaders());
             System.out.println(channel);
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            // 토큰 검사
+            String jwtToken = accessor.getFirstNativeHeader("Authorization");
+            log.info("CONNECT {}", jwtToken);
+            jwtUtil.validateToken(jwtToken);
         }
 
         // 1-3) 특정 채팅방 들어가겠다는 요청 시 =========================================================
@@ -50,23 +56,25 @@ public class StompHandler implements ChannelInterceptor {
             System.out.println("===================메세지 Header에 든 내용들:" + message.getHeaders().entrySet());
 
             //1-3-a) 헤더에서 구독 Destination 정보를 얻고, 거기서 roomId를 추출한다.
-            long roomId = chatService.getRoomId(
-                    Optional.ofNullable(
-                            (String) message.getHeaders().get("simpDestination")
-                    ).orElse("null"));
-
-            System.out.println(roomId);
-            System.out.println(message.getHeaders());
+            long roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("null"));
 
 
-            //1-3-b) ResponseBody 에서 User_id도 추출해서 chat_join에 roomID와 맵핑되어있는지 확인
-            long userId = (long)Optional.ofNullable(message.getHeaders().get("userId")).orElse(-1);
-            String chatRoomType = (String) Optional.of(message.getHeaders().get("chatRoomType")).orElse("ONE");
 
+
+            // 1-3-b) ResponseBody 에서 User_id도 추출해서 chat_join에 roomID와 맵핑되어있는지 확인
+
+            long userId = Optional.ofNullable(Long.parseLong(accessor.getNativeHeader("userId").get(0))).orElse((long) -1);
+            String chatRoomType = Optional.of(accessor.getNativeHeader("chatRoomType").get(0)).orElse("ONE");
             ChatJoin connectedChatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(userId,roomId).orElse(null);
 
+            // 1-3-c) 채팅방에 들어온 클라이언트의 UserId와 roomId를 맵핑해 놓는다.
+            chatRoomRedisService.setUserEnterInfo(userId, roomId);
 
-            //1-3-c) Message 객체 생성 후 ChatService로 전달
+            // 1-3-d) 채팅방에 누가 들어왔음으로, 채팅방 인원 수를 하나 늘린다.
+            chatRoomRedisService.plusUserCount(roomId);
+
+
+            // 1-3-d) 클라이언트 입장 메세지를 채팅방에 발송한다.
 
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
 
@@ -80,7 +88,10 @@ public class StompHandler implements ChannelInterceptor {
         // 1-4) 채팅방에 수정일자 변경해주기
         else if (StompCommand.DISCONNECT == accessor.getCommand()){
             // 1-4-a) Header에서 RoomId 얻기
-            long roomId = (long)Optional.ofNullable(message.getHeaders().get("roomId")).orElse(-1);
+            long roomId = chatService.getRoomId(
+                    Optional.ofNullable(
+                            (String) message.getHeaders().get("simpDestination")
+                    ).orElse("null"));
             LocalDateTime now = LocalDateTime.now();
 
             chatRoomRepository.updateModifiedAt(now,roomId);
