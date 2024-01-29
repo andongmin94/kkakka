@@ -27,7 +27,8 @@ public enum ErrorType {
     DUPLICATED_REQUEST(409, "이미 완료된 요청입니다."),
     FAILED_TO_MAKE_CHATROOM(500, "채팅방 생성에 실패하였습니다."),
     NOT_FOUND_ALIAS(401, "칭호가 존재하지 않습니다."),
-    NOT_FOUND_COMMENT(401, "댓글을 작성해 주세요");
+    NOT_FOUND_COMMENT(401, "댓글을 작성해 주세요"),
+    ;
 
     private int code;
     private String msg;
