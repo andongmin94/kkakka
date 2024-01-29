@@ -28,6 +28,8 @@ public enum ErrorType {
     FAILED_TO_MAKE_CHATROOM(500, "채팅방 생성에 실패하였습니다."),
     NOT_FOUND_ALIAS(401, "칭호가 존재하지 않습니다."),
     NOT_FOUND_COMMENT(401, "댓글을 작성해 주세요"),
+    NOT_FOUND_DOGAM_COMMENT(401, "도감 댓글이 존재하지 않습니다."),
+    NOT_MATCHING_COMMENT_USER(403, "도감 댓글을 지울수 있는 권한이 없습니다."),
     ;
 
     private int code;
