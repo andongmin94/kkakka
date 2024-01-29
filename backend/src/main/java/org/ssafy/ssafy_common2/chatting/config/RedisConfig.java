@@ -11,6 +11,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.ssafy.ssafy_common2.chatting.pubSub.RedisSubscriber;
 
 /*
 * 본문에는 간단히 제목만,
@@ -51,9 +52,11 @@ public class RedisConfig {
 
     // 4) Setting listener Adapter
     @Bean
-    public MessageListenerAdapter listenerAdapter () {
-        return  new MessageListenerAdapter();
+    public MessageListenerAdapter listenerAdapter (RedisSubscriber subscriber) {
+
+        return  new MessageListenerAdapter(subscriber, "sendMessage");
     }
+
 
 
     // 5) Setting RedisTemplate
