@@ -21,6 +21,8 @@ import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.FriendListRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,10 +41,10 @@ public class DogamCommentService {
 
     public DogamCommentResponseDto createDogamComment(DogamCommentCreateRequestDto dto, Long dogamId, User user) {
 
-        if (userRepository.findById(user.getId()).isEmpty()) {
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
-        Dogam dogam = dogamRepository.findById(dogamId).orElseThrow(
+        Dogam dogam = dogamRepository.findByIdAndDeletedAtIsNull(dogamId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_DOGAM)
         );
 
@@ -54,5 +56,21 @@ public class DogamCommentService {
         CommentDogam commentDogam = CommentDogam.of(user.getKakaoEmail(), dto.getComment(), dogam);
         commentDogamRepository.save(commentDogam);
         return commentResponseDto;
+    }
+
+    public void deleteComment(Long commentId, User user) {
+
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        CommentDogam commentDogam = commentDogamRepository.findByIdAndDeletedAtIsNull(commentId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_DOGAM_COMMENT)
+        );
+
+        if (!Objects.equals(commentDogam.getUserEmail(), user.getKakaoEmail())) {
+            throw new CustomException(ErrorType.NOT_MATCHING_COMMENT_USER);
+        }
+        commentDogamRepository.delete(commentDogam);
     }
 }
