@@ -25,21 +25,22 @@ public class FriendList extends BaseTime {
     @JoinColumn(name = "sender", nullable = false)
     private User sender;
 
-    @Column(name = "receiver", nullable = false, length = 50)
-    private String receiver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver", nullable = false)
+    private User receiver;
 
     @Column(name = "is_check", nullable = false)
     private Boolean isCheck = false;
 
     @Builder
-    private FriendList(User sender, String receiver, Boolean isCheck){
+    private FriendList(User sender, User receiver, Boolean isCheck){
 
         this.sender = sender;
         this.receiver = receiver;
         this.isCheck = isCheck;
     }
 
-    public static FriendList of(User sender, String receiver, Boolean isCheck){
+    public static FriendList of(User sender, User receiver, Boolean isCheck){
 
         return builder()
                 .sender(sender)
