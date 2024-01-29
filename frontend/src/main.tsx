@@ -22,6 +22,7 @@ import TitleBar from "../electron/TitleBar.tsx";
 import SettingPage from "../electron/SettingPage.tsx";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 const queryClient = new QueryClient();
 const router = createHashRouter([
   {
