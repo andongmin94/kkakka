@@ -17,7 +17,6 @@ public class RedisSubscriber {
     private final SimpMessageSendingOperations messagingTemplate;
 
     // 1)
-
     public void sendMessage (String publisMessage) {
         try {
             // 1-1) 발행된 메세지를 chatMessage DTO에 맞게 객체 매핑
