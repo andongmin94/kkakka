@@ -28,14 +28,6 @@ public class Dogam extends BaseTime {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dislike_id" )
-    public DislikeDogam dislikeDogam;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    public CommentDogam commentDogam;
-
     @Setter
     @OneToOne(mappedBy = "dogam", cascade = CascadeType.ALL)
     private ItemDealList itemDealList;
