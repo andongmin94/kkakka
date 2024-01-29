@@ -7,7 +7,6 @@ declare global {
 const electron = window.electron;
 
 import { Button } from "@/components/ui/button";
-import { Menubar } from "@/components/ui/menubar";
 
 export default function TitleBar() {
   const minimize = () => {
@@ -20,14 +19,12 @@ export default function TitleBar() {
     electron.ipcRenderer.send("hidden");
   };
   return (
-
-    <Menubar className="fixed flex justify-end mt-2 bg-background sticky top-0 z-40 w-full border-b" style={{ '-webkit-app-region': 'drag' } as React.CSSProperties}>
-      <div className="fixed z-10">
-        <Button onClick={minimize} style={{ '-webkit-app-region': 'no-drag' } as React.CSSProperties}>-</Button>&nbsp;
-        <Button onClick={maximize} style={{ '-webkit-app-region': 'no-drag' } as React.CSSProperties}>ㅁ</Button>&nbsp;
-        <Button onClick={hidden} style={{ '-webkit-app-region': 'no-drag' } as React.CSSProperties}>X</Button>
+    <div className="fixed flex gap-1 justify-end z-10 border" style={{ "-webkit-app-region": "drag", width: "99.3%", borderRadius: "8px", margin: "1px", borderColor: "darkorange", backgroundColor: "gold" } as React.CSSProperties }>
+      <div style={{ "-webkit-app-region": "no-drag" } as React.CSSProperties}>
+        <Button onClick={minimize} className="">-</Button>&nbsp;
+        <Button onClick={maximize}>ㅁ</Button>&nbsp;
+        <Button onClick={hidden}>X</Button>
       </div>
-    </Menubar>
-
+    </div>
   );
 }
