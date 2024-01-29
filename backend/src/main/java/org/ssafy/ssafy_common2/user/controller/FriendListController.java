@@ -27,33 +27,33 @@ import java.util.Objects;
 @RequestMapping("/api")
 public class FriendListController {
 
-//    private final FriendListService friendListService;
-//
-//    @PostMapping("/friends/{email}")
-//    public ApiResponseDto<Void> addFriend(@PathVariable(value="email") String friendEmail, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//
-//        // 자기 자신과 친구를 맺을 수 없음
-//        if (friendEmail.equals(userDetails.getUsername())) {
-//            return ResponseUtils.error(ErrorResponse.of(ErrorType.NOT_FOUND_PARK_TYPE)); // ERRORTYPE 수정 필요
-//        }
-//
-//        // friendEmail이 유효한 회원인지 확인
-//        User receiver = friendListService.validateFriend(friendEmail);
-//
-//        // 친구 추가하기
-//        friendListService.addFriend(userDetails.getUser(), receiver);
-//
-//        return ResponseUtils.ok(MsgType.DATA_SUCCESSFULLY);
-//    }
-//
-//    @GetMapping("/friends")
-//    public ApiResponseDto<Map<String, Object>> getFriends(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//
-//        List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(userDetails.getUser());
-//
-//        Map<String, Object> responseMap = new HashMap<>();
-//        responseMap.put("friendList", friendInfoList);
-//
-//        return ResponseUtils.ok(responseMap, MsgType.SEARCH_SUCCESSFULLY);
-//    }
+    private final FriendListService friendListService;
+
+    @PostMapping("/friends/{email}")
+    public ApiResponseDto<Void> addFriend(@PathVariable(value="email") String friendEmail, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        // 자기 자신과 친구를 맺을 수 없음
+        if (friendEmail.equals(userDetails.getUsername())) {
+            return ResponseUtils.error(ErrorResponse.of(ErrorType.NOT_FOUND_PARK_TYPE)); // ERRORTYPE 수정 필요
+        }
+
+        // friendEmail이 유효한 회원인지 확인
+        User receiver = friendListService.validateFriend(friendEmail);
+
+        // 친구 추가하기
+        friendListService.addFriend(userDetails.getUser(), receiver);
+
+        return ResponseUtils.ok(MsgType.DATA_SUCCESSFULLY);
+    }
+
+    @GetMapping("/friends")
+    public ApiResponseDto<Map<String, Object>> getFriends(@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+        List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(userDetails.getUser());
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("friendList", friendInfoList);
+
+        return ResponseUtils.ok(responseMap, MsgType.SEARCH_SUCCESSFULLY);
+    }
 }
