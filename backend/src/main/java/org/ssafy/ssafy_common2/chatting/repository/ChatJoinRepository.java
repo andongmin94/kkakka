@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
 
     // 1) 사용자 ID로 해당 사용자가 참여한 채팅방 정보를 전부 보냄
-    @Query("SELECT cj FROM ChatJoin cj WHERE cj.chatJoinId.userId = ?1 AND cj.deletedAt is null")
-    List<ChatJoin> findAllByUserIdAndDeletedAtIsNull(long user_id);
+    @Query("SELECT cj FROM ChatJoin cj WHERE cj.chatJoinId.userId = :user_id AND cj.deletedAt is null")
+    List<ChatJoin> findAllByUserIdAndDeletedAtIsNull(@Param("user_id")long user_id);
 
     // 2)
     @Query(value = "SELECT cr.id " +
@@ -22,9 +22,10 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
             "WHERE ( cr.chat_owner_email = :ownerEmail AND " +
             "cr.id IN  (SELECT cj.chat_room_id FROM chat_join cj WHERE cj.user_id = :attenderId )) " +
             "AND cr.deleted_at IS NULL " +
-            "AND cr.chat_room_type = 'ONE'", nativeQuery = true)
+            "AND cr.chat_room_type = :chatRoomType ", nativeQuery = true)
     Optional<Long> getUserConnectedRoomIdsAndDeletedAtISNULL (@Param("ownerEmail") String ownerEmail,
-                                                        @Param("attenderId") Long attenderId);
+                                                        @Param("attenderId") Long attenderId,
+                                                        @Param("chatRoomType") String chatRoomType );
 
 
     // 3) 내가 참여한 채팅방의 가장 최근 메세지
@@ -47,8 +48,7 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
 *     잘은 모르겠지만, 복합키 전부 FK인 경우에, 기본 인터페이스로 못 불러오는 것 같습니다.
 *     더 공부해서 최적화 하겠습니다.
 *
-*  2) 특정 Email이 방 주인인 1 대 1방들 중에서,
-*     방 번호가 현 유저가 참여한 채팅방의 방 번호 중 하나인 경우만
-*     뽑아서 List 화
+*  2) 특정 Email이 방 주인인 1 대 1 방 혹은 중계방들 중에서,
+*     방 번호가 현 유저가 참여한 채팅방의 방 번호 중 하나인 경우 그 방 번호를 출력
 *     (이때 삭제일자는 적혀있지 않다.)
 * */
