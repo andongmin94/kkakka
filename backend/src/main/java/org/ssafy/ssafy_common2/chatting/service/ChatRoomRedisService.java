@@ -1,6 +1,7 @@
 package org.ssafy.ssafy_common2.chatting.service;
 
 import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 
 import java.util.List;
+import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class ChatRoomRedisService {
 
     // 1) Redis HashKeys
@@ -34,8 +37,13 @@ public class ChatRoomRedisService {
     // 4) 특정 채팅방 조회
     public ChatRoom findRoomById(String id) {return hashOpsChatRoom.get(CHAT_ROOMS, id);}
 
-    // 5) 채팅방 생성
-    public ChatRoom createChatRoom(String name) {
+    // 5) 1대 1 채팅방 생성
+    public ChatRoom createOneByOneRoom(String name) {
+
+        ChatRoom chatRoom = new ChatRoom();
+
+
+
 
         return null;
     }

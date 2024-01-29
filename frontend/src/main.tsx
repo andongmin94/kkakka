@@ -21,6 +21,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import TitleBar from "../electron/TitleBar.tsx";
 // import SettingPage from "../electron/SettingPage.tsx";
 /////////////////////////////////////////////////////
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ProfileCollection from "./routes/ProfileCollection";
+import ProfileDishonorPage from "./routes/ProfileDishonorPage";
+import ProfileRecordPage from "./routes/ProfileRecordPage";
 
 const queryClient = new QueryClient();
 const router = createHashRouter([
@@ -31,7 +35,10 @@ const router = createHashRouter([
       { path: "/", element: <IndexPage /> },
       { path: "/item", element: <ItemshopPage /> },
       { path: "/messagelist", element: <MessageListPage /> },
-      { path: "/messagedetail", element: <MessageDetailPage user={undefined} /> },
+      {
+        path: "/messagedetail",
+        element: <MessageDetailPage user={undefined} />,
+      },
 
       // { path: "/setting", element: <SettingPage /> },
       { path: "/intro", element: <IntroPage /> },
@@ -59,6 +66,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         {/* <TitleBar /> */}
         <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>

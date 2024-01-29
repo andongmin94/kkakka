@@ -1,0 +1,29 @@
+{
+  "data": {
+    "dmList": [
+      {
+        "dmId": 1,
+        "friendEmail": "jiyeon@naver.com",
+        "friendProfilePic": "kinjiten.jpeg",
+        "friendName": "김지연",
+        "friendAlias": "황야의무법자",
+        "friendStatus": "관전 중",
+        "lastMessage": "나대지마",
+        "unreadMessage": 3,
+        "modifiedAt": "2020-12-12 12:12:12"
+      },
+      {
+        "dmId": 2,
+        "friendEmail": "sdsdsd@naver.com",
+        "friendProfilePic": "sdfsdfsdf.jpeg",
+        "friendName": "오세영",
+        "friendAlias": "새로운칭호다",
+        "friendStatus": "플레이 중",
+        "lastMessage": "놀러가자",
+        "unreadMessage": 3,
+        "modifiedAt": "2020-12-12 12:12:12"
+      }
+    ]
+  },
+  "msg": "방 목록 생성 성공"
+}
