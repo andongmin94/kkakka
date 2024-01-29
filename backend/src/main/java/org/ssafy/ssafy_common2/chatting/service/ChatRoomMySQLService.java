@@ -44,16 +44,16 @@ public class ChatRoomMySQLService {
         return chatRoomRepository.findAllByChatOwnerEmailAndDeletedAtIsNull(ownerEmail);
     }
 
-    // 2) 인수로 받은 유저 아이디가 참여한 채팅방 ID 리스트 확인
+    // 2) 인수로 받은 유저 아이디가 참여한 채팅방 참여 정보 반환 (chat_join 만!)
     public List<ChatJoin> getChatJoinList (long userId) {
 
         return  chatJoinRepository.findAllByUserIdAndDeletedAtIsNull(userId);
     }
 
-    // 3) 현 사용자와 요청한 Email 간의 1대1 채팅방이 있으면 방 번호 반환 없으면 -1 반환
-    public long getUserConnectedRoomIdWithOwner(String ownerEmail, long attenderId) {
+    // 3) 현 사용자와 인수로 주어진 Email 간의 1대1 채팅방이 있으면 방 번호 반환 없으면 -1 반환
+    public long getUserConnectedRoomIdWithOwner(String ownerEmail, long attenderId, String chatRoomType) {
 
-        long RoomIds = chatJoinRepository.getUserConnectedRoomIdsAndDeletedAtISNULL(ownerEmail, attenderId).orElse(0L);
+        long RoomIds = chatJoinRepository.getUserConnectedRoomIdsAndDeletedAtISNULL(ownerEmail, attenderId, chatRoomType).orElse(0L);
 
         if(RoomIds == 0) {
             return  -1;
@@ -68,12 +68,12 @@ public class ChatRoomMySQLService {
         return  broadCastRoom;
     }
 
-    // 5) 특정 채팅방에 참여
+    // 5) 현재 유저를 특정 채팅방에 참여
     public void insertChatJoin (User user, ChatRoom chatRoom, int betPrice, boolean isWin) {
         chatJoinRepository.save(ChatJoin.of(new ChatJoinId(), user, chatRoom, betPrice, isWin));
     }
 
-    // 6) 채팅방 리스트 정보 반환 하기
+    // 6) 현재 유저가 참여한 채팅방 리스트 정보 반환 하기
     public List<ChatRoomInfoDto> getChatRoomInfo (long userId) {
 
         // 유저 아이디로 그 사람이 참여한 모든 채팅방 번호를 얻기 (chatJoin 객체 다 가져옴)
@@ -87,6 +87,7 @@ public class ChatRoomMySQLService {
             // 6-1) 채팅방 정보로 주인 이메일과 아이디 얻기
             ChatRoom roomInfo = chatRoomRepository.findById(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
             element.setRoomId(temp.get(i).getChatJoinId().getChatRoomId());
+            element.setChatRoomType(Optional.ofNullable(roomInfo.getChatRoomType()).orElse(ChatRoom.ChatRoomType.DEAD));
             element.setFriendName(Optional.ofNullable(roomInfo.getChatOwnerName()).orElse("해당 채팅방의 주인ID을 찾지 못했습니다."));
             element.setFriendEmail(Optional.ofNullable(roomInfo.getChatOwnerEmail()).orElse("해당 채팅방 주인의Email을 찾지 못했습니다."));
 
@@ -105,7 +106,7 @@ public class ChatRoomMySQLService {
                 element.setLastMessage(lastMessage.getContent());
                 element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
             }else{
-                element.setLastMessage("채팅을 시작하세요!");
+                element.setLastMessage("아직 서로 대화를 하지 않았어요!, 채팅을 시작하세요!");
                 element.setLastWrittenMessageTime(null);
             }
 
@@ -118,6 +119,24 @@ public class ChatRoomMySQLService {
         }
 
         return ans;
+    }
+
+
+    // 채팅방 인원 +1 혹은 -1
+    public void updateUserCnt(long roomId, String mode) {
+
+        // 채팅방 특정
+        ChatRoom room = chatRoomRepository.findById(roomId).orElse(null);
+
+        // 이전 채팅방 인원 수
+        int cnt = room.getUserCnt();
+        // 채팅방 인원 +1
+        if(mode.equals("PLUS")){
+            chatRoomRepository.updateUserCnt(cnt+1, roomId);
+        }else{
+            chatRoomRepository.updateUserCnt(cnt-1, roomId);
+        }
+
     }
 
 
