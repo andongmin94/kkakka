@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
+import { dmStoreType } from "@/types/storeTypes";
 
 // 1대1 채팅방 목록
-export const useDmStore = create((set) => ({
+export const useDmStore = create<dmStoreType>((set) => ({
   dmList: [],
   fetchDmList: async () => {
     try {
@@ -22,7 +23,7 @@ export const useDmStore = create((set) => ({
       const response = await axios.post(url);
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error starting a new direct message", error.message);
+      console.error("Error starting a new direct message", error);
     }
   },
 
@@ -34,7 +35,7 @@ export const useDmStore = create((set) => ({
       const response = await axios.post(url);
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error entering a direct message", error.message);
+      console.error("Error entering a direct message", error);
     }
   },
 
@@ -46,7 +47,7 @@ export const useDmStore = create((set) => ({
       const response = await axios.delete(url);
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error deleting a direct message", error.message);
+      console.error("Error deleting a direct message", error);
     }
   },
 
@@ -59,7 +60,7 @@ export const useDmStore = create((set) => ({
       const response = await axios.patch(url, dataToUpdate);
       console.log("서버 응답:", response.data);
     } catch (error) {
-      console.error("Error checking the alarm", error.message);
+      console.error("Error checking the alarm", error);
     }
   },
 }));

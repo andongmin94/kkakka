@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import axios from "axios";
+import { broadcastStoreType } from "@/types/storeTypes";
 
-export const useBroadcastStore = create((set) => ({
+export const useBroadcastStore = create<broadcastStoreType>((set) => ({
   broadcasts: [],
-
+  createBetStatus: "idle", // 'idle' | 'loading' | 'success' | 'error'
+  errorMessage: "",
   // 라이브 방송 시작하기 (게임 시작시 자동 생성)
   startBroadcast: async (friendEmail) => {
     const url = `/api/friends/broadcast/create/${friendEmail}`;
@@ -11,7 +13,7 @@ export const useBroadcastStore = create((set) => ({
     try {
       const response = await axios.post(url);
       console.log("서버 응답:", response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error starting a new broadcast", error.message);
     }
   },
@@ -29,8 +31,8 @@ export const useBroadcastStore = create((set) => ({
         winOrLose,
       };
       const url = `/api/friends/broadcast/${roomId}/betting`;
-      const response = await axios.post(url, betData);
-    } catch (error) {
+      await axios.post(url, betData);
+    } catch (error: any) {
       console.error("Error creating bet", error.message);
     }
   },
