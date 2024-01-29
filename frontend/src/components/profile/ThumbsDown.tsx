@@ -1,13 +1,18 @@
+import { useState } from "react";
+
 export default function ThumbsDown({ tD }: { tD: boolean }) {
+  const [thumbs, setThumbs] = useState(tD);
   return (
     <div
-      className="h-10 w-10 ml-2"
+      className="h-[60px] w-[60px] ml-2 grid grid-col place-items-center"
       onClick={() => {
-        !tD;
+        setThumbs(!thumbs);
+        console.log(thumbs);
+        // !tD;
         // 싫어요 누를때 post 요청보내야 함 (dogamId)
       }}
     >
-      {tD ? (
+      {thumbs ? (
         <img src="/image/thumbsDownOn.png" />
       ) : (
         <img src="/image/thumbsDown.png" />
