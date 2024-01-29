@@ -97,7 +97,7 @@ public class FriendListService {
     public FriendList getFriendRequest(User user1, String user2Email){
 
         return friendListRepository
-                .findBySenderAndReceiver(user1, user2Email)
+                .findBySenderAndReceiverAndDeletedAtIsNull(user1, user2Email)
                 .orElse(FriendList.of(null, null, false));
     }
 
@@ -105,7 +105,7 @@ public class FriendListService {
     public FriendList getOrCreateFriendRequest(User user1, String user2Email){
 
         return friendListRepository
-                .findBySenderAndReceiver(user1, user2Email)
+                .findBySenderAndReceiverAndDeletedAtIsNull(user1, user2Email)
                 .orElse(FriendList.of(user1, user2Email, false));
     }
 

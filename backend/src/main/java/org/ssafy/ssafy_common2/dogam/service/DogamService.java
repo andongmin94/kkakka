@@ -13,7 +13,7 @@ import org.ssafy.ssafy_common2.dogam.repository.DogamRepository;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemShop;
 import org.ssafy.ssafy_common2.itemshop.repository.ItemShopRepository;
-import org.ssafy.ssafy_common2.itemshop.repository.ItempDealListRepository;
+import org.ssafy.ssafy_common2.itemshop.repository.ItemDealListRepository;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
@@ -30,7 +30,7 @@ public class DogamService {
     private final S3Uploader s3Uploader;
     private final DogamRepository dogamRepository;
     private final UserRepository userRepository;
-    private final ItempDealListRepository itempDealListRepository;
+    private final ItemDealListRepository itemDealListRepository;
     private final DynamicUserInfoRepository dynamicUserInfoRepository;
     private final ItemShopRepository itemShopRepository;
 
