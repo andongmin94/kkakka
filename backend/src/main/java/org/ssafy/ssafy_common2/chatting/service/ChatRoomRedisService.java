@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,16 +39,40 @@ public class ChatRoomRedisService {
     public ChatRoom findRoomById(long id) {return hashOpsChatRoom.get(CHAT_ROOMS, id);}
 
     // 5) mySQL에서 생성한 채팅방 번호를 Redis에도 Mapping 하기
-    public void createOneByOneRoom(ChatRoom chatRoom) {
+    public void mappingChatRoom(ChatRoom chatRoom) {
 
         hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getId(), chatRoom);
     }
 
     // 6) 유저가 입장한 채팅방 ID와 유저의 ID를 맵핑하여 정보를 저장한다.
-    public void setEnterInfo(long userId, long roomId) {
+    public void setUserEnterInfo(long userId, long roomId) {
         hashOpsEnterInfo.put(ENTER_INFO, userId, roomId);
     }
 
+    // 7) 특정 유저 ID가 입장해 있는 채팅방 ID 조회
+    public long getUserEnterInfo(long userId) {return hashOpsEnterInfo.get(ENTER_INFO, userId);}
+
+
+    // 8) 유저 ID가 맵핑된 채팅방 ID 삭제
+    public void removeUserEnterInfo(long userId) { hashOpsEnterInfo.delete(ENTER_INFO, userId); }
+
+
+    //---------------------------------------------------------------------------------------------------
+
+    // 9) 특정 채팅방의 유저 수를 조회
+    public long getUserCount(long roomId) {
+        return Long.valueOf(Optional.ofNullable(valueOps.get(USER_COUNT+"_"+roomId)).orElse(String.valueOf(0)));
+    }
+
+    // 10) 특정 채팅방 유저수를 +1 올린다.
+    public long plusUserCount(long roomId) {
+        return Optional.ofNullable(valueOps.increment(USER_COUNT+"_"+roomId)).orElse(0L);
+    }
+
+    // 11) 채팅방에 입장한 유저 수 -1
+    public long minusUserCount(String roomId){
+        return Optional.ofNullable(valueOps.decrement(USER_COUNT+"_"+roomId)).filter(count -> count >0).orElse(0L);
+    }
 
 
 
