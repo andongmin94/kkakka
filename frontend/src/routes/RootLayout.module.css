@@ -8,8 +8,8 @@
 /* 사이드바 영역 */
 .section_left {
   position: fixed;
-  width: 250px;
-  height: 660px;
+  width: 14%;
+  height: 96%;
   background-color: rgba(255, 255, 255, 0.9);
   background-color: white;
   box-shadow: 1px 5px 5px 1px gainsboro;
