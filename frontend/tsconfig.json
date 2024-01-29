@@ -20,11 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "electron/SettingPage.tsx"],
+  "include": ["src", "electron/SettingPage.tsx", "src/mockdata"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
