@@ -9,4 +9,6 @@ public interface DislikeDogamRepository extends JpaRepository<DislikeDogam,Long>
     int countByDogamIdAndDeletedAtIsNull(Long id);
 
     Optional<DislikeDogam> findByUserEmailAndDogamIdAndDeletedAtIsNull(String kakaoEmail, Long id);
+
+    Optional<DislikeDogam> findByIdAndDeletedAtIsNull(Long dislikeId);
 }
