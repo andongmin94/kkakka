@@ -7,5 +7,5 @@ import org.ssafy.ssafy_common2.itemshop.entity.ItemShop;
 import java.util.Optional;
 
 public interface ItemShopRepository extends JpaRepository<ItemShop,Long> {
-    Optional<ItemShop> findByItemName(String type);
+    Optional<ItemShop> findByItemNameAndDeletedAtIsNull(String type);
 }
