@@ -2,7 +2,7 @@ import axios from "axios";
 
 const createAxiosInstance = () => {
   const axiosInstance = axios.create({
-    baseURL: `${import.meta.env.VITE_REST_API_KEY}`,
+    baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
   });
 
   return axiosInstance;
