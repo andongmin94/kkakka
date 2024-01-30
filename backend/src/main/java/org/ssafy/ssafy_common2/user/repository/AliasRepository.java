@@ -12,5 +12,5 @@ public interface AliasRepository extends JpaRepository<Alias,Long> {
     List<Alias> findByUserAndDeletedAtIsNull(User user);
 
     // UserId로 찾은 것 중 created_at이 가장 최근인 데이터 하나만 가져오기
-    Optional<Alias> findFirstByUserIdOrderByCreatedAtDesc(Long userId);
+    Optional<Alias> findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(Long userId);
 }
