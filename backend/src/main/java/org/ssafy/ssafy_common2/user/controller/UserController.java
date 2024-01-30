@@ -43,11 +43,11 @@ public class UserController {
 
     // jwt 토큰으로 유저정보 요청하기
     @GetMapping("/me")
-    public ApiResponseDto<String> getCurrentUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponseDto<String> getCurrentUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         User user = userService.getUser(userDetails.getUser());
 
         System.out.println("user : " + user);
-        return ResponseUtils.ok("유저 : " + user.getUserName() +"\n카카오 이메일 : " + user.getKakaoEmail(),MsgType.SEARCH_SUCCESSFULLY);
+        return ResponseUtils.ok("유저 : " + user.getUserName() + "\n카카오 이메일 : " + user.getKakaoEmail(), MsgType.SEARCH_SUCCESSFULLY);
     }
 }

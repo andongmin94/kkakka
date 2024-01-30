@@ -30,6 +30,10 @@ public enum ErrorType {
     NOT_FOUND_COMMENT(401, "댓글을 작성해 주세요"),
     NOT_FOUND_DOGAM_COMMENT(401, "도감 댓글이 존재하지 않습니다."),
     NOT_MATCHING_COMMENT_USER(403, "도감 댓글을 지울수 있는 권한이 없습니다."),
+    ALREADY_EXIST_DISLIKE(401, "이미 싫어요를 눌렀습니다. 취소 요청을 하세요"),
+    NOT_FOUND_DOGAM_DISLIKE(401, "해당 도감에 싫어요가 존재하지 않습니다."),
+    NOT_MATCHING_DISLIKE_USER(403, "도감 싫어요를 취소할 권한이 없습니다."),
+    FAILED_TO_DISLKE_DOGAM(401, "본인 도감에 좋아요를 할 수 없습니다"),
     ;
 
     private int code;
