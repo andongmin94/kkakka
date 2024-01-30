@@ -92,7 +92,7 @@ public class ChatRoomMySQLService {
             element.setFriendEmail(Optional.ofNullable(roomInfo.getChatOwnerEmail()).orElse("해당 채팅방 주인의Email을 찾지 못했습니다."));
 
             // 6-2) 유저 아이디로 유저 정보 얻기
-            User friend = userRepository.findByKakaoEmail(roomInfo.getChatOwnerEmail()).orElse(null);
+            User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
             if(friend !=null) {
                 element.setFriendImgUrl(friend.getKakaoProfileImg());
