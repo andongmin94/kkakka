@@ -10,7 +10,6 @@ declare global {
 const electron = window.electron;
 
 export default function SettingPage() {
-
   const handleClick = () => {
     electron.ipcRenderer.send("button-clicked", "hi");
     console.log("React button clicked");
