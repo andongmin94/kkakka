@@ -1,4 +1,6 @@
+import AddCollection from "@/components/profile/AddCollection";
 import Collection from "@/components/profile/Collection";
+import { useParams } from "react-router-dom";
 // import { useProfileDogamStore } from "@/stores/ProfileStore";
 // import { useEffect } from "react";
 
@@ -8,6 +10,9 @@ export default function ProfileCollection() {
   // useEffect(() => {
   //   fetchProfileDogams();
   // }, [fetchProfileDogams]);
+
+  // 유저 임시 아이디
+  const userId = "2";
 
   // 도감 갯수 임시 데이터
   const profileDogams = [
@@ -34,13 +39,21 @@ export default function ProfileCollection() {
     },
   ];
 
+  const params = useParams();
+
   return (
-    <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
-      {profileDogams &&
-        Array.isArray(profileDogams) &&
-        profileDogams.map((dogam, idx) => {
-          return <Collection dogam={dogam} key={idx} />;
-        })}
-    </div>
+    <>
+      <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
+        {profileDogams &&
+          Array.isArray(profileDogams) &&
+          profileDogams.map((dogam, idx) => {
+            return <Collection dogam={dogam} key={idx} />;
+          })}
+      </div>
+      {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
+      <div className="flex justify-center mb-2">
+        {params.id != userId ? <AddCollection /> : null}
+      </div>
+    </>
   );
 }
