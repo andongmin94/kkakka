@@ -21,6 +21,7 @@ import org.ssafy.ssafy_common2.user.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
 
+import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.MANY;
 import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 
 
@@ -35,8 +36,8 @@ public class ChatRoomController {
     private final UserRepository userRepository;
 
 
-    // 1) 채팅방 생성
-    @PostMapping("/{type}/create/{email}")
+    // 1) (1대1 혹은 중계) 채팅방 생성
+    @PostMapping("/{type}/enter/{email}")
     public ApiResponseDto<?> createRoom (
             @PathVariable(value = "type")String type,
             @PathVariable(value = "email") String friendEmail,
@@ -44,7 +45,7 @@ public class ChatRoomController {
 
         // 1-1) 방의 타입을 보고   ONE, MANY, DEAD 중 하나 생성
         String roomType = type.equals("dm")? "ONE" : "MANY";
-        User owner = userRepository.findByKakaoEmail(friendEmail).orElse(null);
+        User owner = userRepository.findByKakaoEmailAndDeletedAtIsNull(friendEmail).orElse(null);
 
         // 1-2) 사용자가 등록되지 않았다면 에러 출력
         if(owner == null){
@@ -55,7 +56,7 @@ public class ChatRoomController {
         if(roomType.equals("ONE")){
 
             // 1-3-a) 둘 사이의 1대1 채팅방이 있는지 확인
-            long roomId = chatRoomMySQLService.getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId());
+            long roomId = chatRoomMySQLService.getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId(), "ONE");
 
             // 1-3-b) 둘 사이의 채팅방이 없다면 -1이 반환 되고, 방 생성을 한다.
             if(roomId == -1) {
@@ -87,12 +88,24 @@ public class ChatRoomController {
             // 1-4-a) 해당 친구 이름으로 중계방이 있는지 확인
             ChatRoom broadcastRoom = chatRoomMySQLService.getBroadcastRoomWithEmail(ChatRoom.ChatRoomType.MANY, friendEmail);
 
-            // 1-4-b) 없으면 만들어준다.
-            if(broadcastRoom == null){
+            // 해당 친구 이름의 안 죽은 중계방이 있다.
+            if(broadcastRoom !=null) {
+                // 해당 중계방과 유저가 연결되었는지 확인한다.
+                long roomId = chatRoomMySQLService.getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId(), "MANY");
+
+                // 연결이 안되어있을 경우 roomId == -1이다. 따라서 해당 중계방에 현 유저를 참여시킨다.
+                if(roomId == -1){
+                    chatRoomMySQLService.insertChatJoin(userDetails.getUser(), broadcastRoom, 0, false);
+                }
+            }
+
+            // 해당 친구 이름으로 안 죽은 중계방이 없다.
+            else if(broadcastRoom == null){
                 broadcastRoom = chatRoomMySQLService.CreateChatRoom(ChatRoom.ChatRoomType.MANY, owner.getUserName(), owner.getKakaoEmail());
 
                 //1-4-c) 만드는데 성공하면, 현재 유저를 해당 중계방에 참여한 것으로 바꾼다.
                 chatRoomMySQLService.insertChatJoin(userDetails.getUser(), broadcastRoom, 0, false);
+
 
 
             }
@@ -116,6 +129,11 @@ public class ChatRoomController {
 
         return chatRoomMySQLService.getChatRoomInfo(userDetails.getUser().getId());
     }
+
+    // 3) 채팅방 인원 +1
+
+    // 4) 채팅방 인원 -1
+
 
 }
 

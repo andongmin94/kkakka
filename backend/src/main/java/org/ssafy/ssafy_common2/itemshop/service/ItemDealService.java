@@ -24,7 +24,7 @@ public class ItemDealService {
     public ItemDealList buyItem(User user, String itemType) {
 
         // 구매할 아이템
-        ItemShop itemShop = itemShopRepository.findByItemName(itemType)
+        ItemShop itemShop = itemShopRepository.findByItemNameAndDeletedAtIsNull(itemType)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ITEM_SHOP));
 
         // 포인트 차감

@@ -5,12 +5,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
 
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE comment_dogam set deleted_at = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class CommentDogam extends BaseTime {
 
     @Id
@@ -25,14 +27,21 @@ public class CommentDogam extends BaseTime {
     private String dogamComment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DOGAM_ID", nullable = false)
-    private Dogam dogam;
+    @JoinColumn(name = "dogam_id")
+    public Dogam dogam;
 
     @Builder
-    private CommentDogam(Long id, String userEmail, String dogamComment, Dogam dogam) {
-        this.id = id;
+    private CommentDogam(String userEmail, String dogamComment, Dogam dogam) {
         this.userEmail = userEmail;
         this.dogamComment = dogamComment;
         this.dogam = dogam;
+    }
+
+    public static CommentDogam of(String userEmail, String dogamComment, Dogam dogam) {
+        return builder()
+                .userEmail(userEmail)
+                .dogamComment(dogamComment)
+                .dogam(dogam)
+                .build();
     }
 }

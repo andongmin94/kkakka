@@ -1,10 +1,8 @@
 package org.ssafy.ssafy_common2.user.repository;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
 import org.ssafy.ssafy_common2.user.entity.User;
 
@@ -13,15 +11,12 @@ import java.util.Optional;
 
 public interface FriendListRepository extends JpaRepository<FriendList,Long> {
 
-    Optional<FriendList> findBySenderAndReceiverAndDeletedAtIsNull(User sender, String receiver);
+    Optional<FriendList> findBySenderAndReceiverAndDeletedAtIsNull(User sender, User receiver);
 
-    @Query("select fl.receiver from FriendList fl " +
-            "where fl.receiver in " +
-                "(select u.kakaoEmail " +
-                "from User u join FriendList f " +
-                "on (f.sender.id = u.id) " +
-                "where f.receiver=:#{#user.kakaoEmail} and f.isCheck=true) " +
-            "and fl.sender=:user and fl.isCheck=true")
-    List<String> findFriendEmailsByUser(@Param("user") User user);
+    @Query("select fl.sender from FriendList fl " +
+            "where fl.sender in (select f.receiver from FriendList f where f.sender=:user and f.isCheck=true and f.deletedAt is null) " +
+            "and fl.receiver=:user and fl.isCheck=true and fl.deletedAt is null")
+    List<User> findFriendsByUser(@Param("user") User user);
 
+    List<FriendList> findAllBySenderOrReceiverAndIsCheckAndDeletedAtIsNull(User sender, User receiver, boolean b);
 }

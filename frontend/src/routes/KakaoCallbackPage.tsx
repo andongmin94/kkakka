@@ -14,7 +14,7 @@ export default function KakaoCallbackPage() {
 
       localStorage.setItem("token", res.data.authorization); // 토큰 받아오면 authorization 가져와서 로컬스토리지에 저장
 
-      navigate("/"); // 메인으로 이동
+      navigate("/#/"); // 메인으로 이동
     });
   }, []);
 
