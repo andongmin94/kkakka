@@ -7,6 +7,8 @@ import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
 import Check from "@/components/profile/Check";
 
+import { Button } from "@/components/ui/button";
+
 export default function ProfilePage() {
   // 사용자 아이디 더미 데이터
   const userId = "1";
@@ -58,12 +60,22 @@ export default function ProfilePage() {
               {/* 프로필 편집 or 메세지 버튼 */}
               {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
               {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-              {params.id === userId ? <ProfileEdit /> : null}
+              {params.id === userId ? (
+                <ProfileEdit />
+              ) : (
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                >
+                  메세지
+                </Button>
+              )}
             </div>
           </div>
           <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
             <div className="font-bold text-4xl">
-              <div className=" bg-white rounded-2xl border-8 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
+              <div className=" bg-white rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
                 {userName}
               </div>
             </div>

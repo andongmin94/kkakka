@@ -9,9 +9,11 @@ import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
 import org.ssafy.ssafy_common2.dogam.dto.response.DogamCreateResponseDto;
+import org.ssafy.ssafy_common2.dogam.dto.response.DogamMainListResponseDto;
 import org.ssafy.ssafy_common2.dogam.service.DogamService;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -19,6 +21,11 @@ import java.io.IOException;
 public class DogamController {
 
     private final DogamService dogamService;
+
+    @GetMapping("/friends/dogam")
+    public ApiResponseDto<List<DogamMainListResponseDto>> dogamList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseUtils.ok(dogamService.dogamList(userDetails.getUser()), MsgType.CREATE_DOGAM_LIST_SUCCESSFULLY);
+    }
 
     @PostMapping("/friends/dogam")
     public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "email", required = true) String email , @ModelAttribute DogamCreateRequestDto dto

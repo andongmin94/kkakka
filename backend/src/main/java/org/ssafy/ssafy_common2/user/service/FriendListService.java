@@ -47,8 +47,8 @@ public class FriendListService {
     @Transactional
     public void sendFriendRequest(User sender, User receiver){
 
-        FriendList friendRequest = getOrCreateFriendRequest(sender, receiver.getKakaoEmail());
-        FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender.getKakaoEmail());
+        FriendList friendRequest = getOrCreateFriendRequest(sender, receiver);
+        FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender);
 
         friendRequest.updateIsCheck(true);
 
@@ -60,7 +60,7 @@ public class FriendListService {
     @Transactional
     public void acceptFriendRequest(User sender, User receiver){
 
-        FriendList friendRequest = getFriendRequest(sender, receiver.getKakaoEmail());
+        FriendList friendRequest = getFriendRequest(sender, receiver);
 
         friendRequest.updateIsCheck(true);
 
@@ -88,41 +88,37 @@ public class FriendListService {
     }
 
     // 현재 (친구)요청 승인 상태를 반환
-    public boolean getRequestState(User user1, User user2) {
+    public boolean getRequestState(User sender, User receiver) {
 
-        return getFriendRequest(user1, user2.getKakaoEmail()).getIsCheck();
+        return getFriendRequest(sender, receiver).getIsCheck();
     }
 
     // 현재 친구 요청 데이터 반환
-    public FriendList getFriendRequest(User user1, String user2Email){
+    public FriendList getFriendRequest(User sender, User receiver){
 
         return friendListRepository
-                .findBySenderAndReceiverAndDeletedAtIsNull(user1, user2Email)
+                .findBySenderAndReceiverAndDeletedAtIsNull(sender, receiver)
                 .orElse(FriendList.of(null, null, false));
     }
 
     // 현재 친구 요청 데이터가 존재하면 반환, 존재하지 않으면 객체를 생성하여 반환
-    public FriendList getOrCreateFriendRequest(User user1, String user2Email){
+    public FriendList getOrCreateFriendRequest(User sender, User receiver){
 
         return friendListRepository
-                .findBySenderAndReceiverAndDeletedAtIsNull(user1, user2Email)
-                .orElse(FriendList.of(user1, user2Email, false));
+                .findBySenderAndReceiverAndDeletedAtIsNull(sender, receiver)
+                .orElse(FriendList.of(sender, receiver, false));
     }
 
     // 친구 목록 반환
     public List<FriendInfoDto> getFriendInfoList(User user) {
 
-        List<String> friendEmailList = friendListRepository.findFriendEmailsByUser(user);
-
-        return friendEmailList.stream()
-                .map(email -> FriendInfoDto.from(userRepository.findByKakaoEmail(email).orElseThrow())) // 이거 처리 Filter 등으로 변경?
-                .toList();
+        return friendListRepository.findFriendsByUser(user).stream().map(FriendInfoDto::from).toList();
     }
 
     // 친구(toUser)가 까까의 회원인지 확인
     public User validateFriend(String receiverEmail){
 
-        return userRepository.findByKakaoEmail(receiverEmail)
+        return userRepository.findByKakaoEmailAndDeletedAtIsNull(receiverEmail)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
     }
 
