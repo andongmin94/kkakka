@@ -56,6 +56,7 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .requestMatchers("/api/oauth/callback/kakao/token").permitAll()
                 .requestMatchers("/oauth/authorize").permitAll()
+                .requestMatchers("/hello").permitAll()
 //                .requestMatchers("/api/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/booking/**").permitAll()
 //                .anyRequest().authenticated()
