@@ -1,0 +1,47 @@
+package org.ssafy.ssafy_common2.dogam.dto.response;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class DogamMainListResponseDto {
+
+    String dogamTitle;
+    Long dogamId;
+    String friendName;
+    String friendAlias;
+    String dogamImgUrl;
+    String friendImgUrl;
+    boolean isHated;
+    int dogamDislikeNum;
+    DogamCommentResponseDto dogamCommentResponseDto;
+
+    @Builder
+    private DogamMainListResponseDto(String dogamTitle, Long dogamId, String friendName, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+        this.dogamTitle = dogamTitle;
+        this.dogamId = dogamId;
+        this.friendName = friendName;
+        this.friendAlias = friendAlias;
+        this.dogamImgUrl = dogamImgUrl;
+        this.friendImgUrl = friendImgUrl;
+        this.dogamDislikeNum = dogamDislikeNum;
+        this.isHated = isHated;
+        this.dogamCommentResponseDto = dogamCommentResponseDto;
+    }
+
+    public static DogamMainListResponseDto of(String dogamTitle, Long dogamId, String friendName, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+        return builder()
+                .dogamTitle(dogamTitle)
+                .dogamId(dogamId)
+                .friendName(friendName)
+                .friendAlias(friendAlias)
+                .dogamImgUrl(dogamImgUrl)
+                .friendImgUrl(friendImgUrl)
+                .dogamDislikeNum(dogamDislikeNum)
+                .isHated(isHated)
+                .dogamCommentResponseDto(dogamCommentResponseDto)
+                .build();
+    }
+}
