@@ -36,8 +36,9 @@ export interface broadcastStoreType {
 }
 
 // profile
+import { ProfileDogamType } from "@/types/dogamTypes";
 export interface profileDogamStoreType {
-  profileDogams: [];
+  profileDogams: ProfileDogamType[];
   dogamDetail: {};
   addDogamStatus: string;
   deleteDogamStatus: string;
@@ -52,8 +53,10 @@ export interface profileDogamStoreType {
   deleteDogam: (dogamId: number) => void;
 }
 
+import { AliasType } from "@/types/aliasTypes";
+
 export interface aliasStoreType {
-  aliases: [];
+  aliases: AliasType[];
   addAliasStatus: string;
   errorMessage: string | null;
   fetchAliases: (friendEmail: string) => void;
@@ -65,11 +68,28 @@ export interface aliasStoreType {
 }
 
 // dm
+import { DmType } from "@/types/dmTypes";
+
 export interface dmStoreType {
-  dmList: [];
+  dmList: DmType[];
   fetchDmList: () => void;
   startDm: (friendEmail: string) => void;
   enterDm: (friendEmail: string) => void;
   deleteDm: (friendEmail: string) => void;
   outingDm: (dmId: number) => void;
+}
+
+// itemshop
+import { ItemType } from "@/types/itemTypes";
+
+export interface itemshopStoreType {
+  items: ItemType[];
+  fetchItems: () => Promise<ItemType[]>;
+}
+
+// auth
+export interface AuthStoreType {
+  token: string | null;
+  setToken: (newToken: string) => void;
+  logout: () => void;
 }
