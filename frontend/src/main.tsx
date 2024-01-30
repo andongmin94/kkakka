@@ -14,7 +14,7 @@ import ProfileCollection from "@/routes/ProfileCollection";
 import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
 import ProfileRecordPage from "@/routes/ProfileRecordPage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
-import { RouterProvider, createHashRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 /////////////////////////////////////////////////////
 // 일렉트론 빌드 때만 사용되는 컴포넌트
@@ -24,7 +24,7 @@ import SettingPage from "../electron/SettingPage.tsx";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
