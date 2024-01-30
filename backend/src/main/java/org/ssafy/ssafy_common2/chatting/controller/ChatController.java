@@ -1,5 +1,7 @@
 package org.ssafy.ssafy_common2.chatting.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -21,36 +23,49 @@ import org.ssafy.ssafy_common2.chatting.service.ChatService;
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
-    private ChatService chatService;
     private ChatRoomMySQLService chatRoomMySQLService;
-
+    private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations template;
 
 
     // 1) 입장 메세지 용
 
-    @MessageMapping("/chat/user")
-    public void enterUser(@Payload Message msg, SimpMessageHeaderAccessor headerAccessor) {
+    @MessageMapping("/chat/enterUser")
+    public void enterUser(String publishMessage, SimpMessageHeaderAccessor headerAccessor) {
+        System.out.println("++++++ Chat Controller 입장 메세지 받음 ++++++");
 
-        // 채팅방 유저 +1
-        chatRoomMySQLService.updateUserCnt(msg.getChatJoin().getChatRoom().getId(), "PLUS");
 
-        headerAccessor.getSessionAttributes().put("userUUID", "전수민");
-        headerAccessor.getSessionAttributes().put("roomId", msg.getChatJoin().getChatRoom().getId());
+        try{
+            Message msg = objectMapper.readValue(publishMessage, Message.class);
 
-        msg.setContent(msg.getId() + "님이 입장 하셨습니다!");
-        template.convertAndSend("/sub/chat/room"+ msg.getChatJoin().getChatRoom().getId(), msg);
+            System.out.println("들어온 메세지" + msg.toString());
+
+            // 채팅방 유저 +1
+//            chatRoomMySQLService.updateUserCnt(msg.getChatJoin().getChatRoom().getId(), "PLUS");
+
+
+            msg.setContent(msg.getId() + "님이 입장 하셨습니다!");
+
+            template.convertAndSend("/sub/chat/room/"+ 1, msg);
+        }catch (Exception e){
+            log.error("Exception {}",e);
+        }
     }
 
 
     // 2) TALK 타입 메세지가 WebSocket으로 발행되는 경우, 전처리기 STOMP Handler를 거친 후 실행된다.
     @MessageMapping("/chat/sendMessage")
-    public void sendMessage (@Payload Message msg) {
-        log.info("MESSAGE {}", msg);
+    public void sendMessage (String publishMessage) {
+        log.info("MESSAGE {}", publishMessage);
 
-        msg.setContent(msg.getContent());
+        Message msg = null;
+        try {
+            msg = objectMapper.readValue(publishMessage, Message.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        template.convertAndSend("/sub/chat/room" + msg.getChatJoin().getChatRoom().getId(), msg);
+        template.convertAndSend("/sub/chat/room" + 1, msg);
     }
 
     @EventListener
