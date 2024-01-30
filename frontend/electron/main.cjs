@@ -23,7 +23,7 @@ function createWindow() {
 
   win.loadURL(
     isDev
-      ? "http://localhost:5173"
+      ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../dist/index.html")}`
   );
 
@@ -83,6 +83,8 @@ ipcMain.on("hidden", (event) => {
   win.hide();
 });
 
+/////
+
 ipcMain.on("button-clicked", (event, message) => {
   console.log("Received from button-clicked : ", message);
 });
@@ -90,3 +92,8 @@ ipcMain.on("button-clicked", (event, message) => {
 ipcMain.on("Riot Game Info", (event, message) => {
   console.log("Received from Riot Game Info : ", message);
 });
+
+ipcMain.on("lol", (event, message) => {
+  console.log("actions : ", message);
+});
+

@@ -14,7 +14,7 @@ import ProfileCollection from "@/routes/ProfileCollection";
 import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
 import ProfileRecordPage from "@/routes/ProfileRecordPage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
-import { RouterProvider, createHashRouter } from "react-router-dom";
+import { RouterProvider, createHashRouter, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 /////////////////////////////////////////////////////
 // 일렉트론 빌드 때만 사용되는 컴포넌트
