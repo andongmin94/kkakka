@@ -51,12 +51,12 @@ public class DogamService {
     // 도감 만들기
     public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, String email, User sender) throws IOException {
 
-        if (userRepository.findById(sender.getId()).isEmpty()) {
+        if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
         // 포인트 차감 로직 시작
-        DynamicUserInfo userInfo = dynamicUserInfoRepository.findById(sender.getId()).orElseThrow(
+        DynamicUserInfo userInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(sender.getId()).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_SENDER)
         );
 
@@ -66,11 +66,11 @@ public class DogamService {
         userInfo.minusPoint(10);
         // 포인트 차감 로직 끝
 
-        User receiver = userRepository.findByKakaoEmail(email).orElseThrow(
+        User receiver = userRepository.findByKakaoEmailAndDeletedAtIsNull(email).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_RECEIVER)
         );
 
-        ItemShop itemShop = itemShopRepository.findByItemName("도감추가").orElseThrow(
+        ItemShop itemShop = itemShopRepository.findByItemNameAndDeletedAtIsNull("도감추가").orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_ITEM_SHOP)
         );
 
@@ -100,11 +100,11 @@ public class DogamService {
 
     public void deleteDogam(Long dogamId, User user) {
 
-        Dogam dogam = dogamRepository.findById(dogamId).orElseThrow(
+        Dogam dogam = dogamRepository.findByIdAndDeletedAtIsNull(dogamId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_DOGAM)
         );
 
-        if (userRepository.findById(user.getId()).isEmpty()) {
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
@@ -118,12 +118,12 @@ public class DogamService {
     // 메인 페이지 도감 리스트 불러오기 메서드
     public List<DogamMainListResponseDto> dogamList(User user) {
 
-        if (userRepository.findById(user.getId()).isEmpty()) {
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
         // 수정 예정 -> 적절한 도감 리스트 띄우는 로직 개발 필요, 현재는 해당 유저의 친구들의 도감만 나옴
-        List<FriendList> friendLists = friendListRepository.findAllBySenderOrReceiverAndIsCheck(user, user, true);
+        List<FriendList> friendLists = friendListRepository.findAllBySenderOrReceiverAndIsCheckAndDeletedAtIsNull(user, user, true);
         List<Dogam> dogamList = new ArrayList<>();
         //찬구의 도감 리스트 전부 불러오기
         for (FriendList f : friendLists) {
@@ -138,7 +138,7 @@ public class DogamService {
         for (Dogam d : dogamList) {
 
             // 친구의 가장 최근 칭호 불러오기
-            Alias alias = aliasRepository.findFirstByUserIdOrderByCreatedAtDesc(d.getUser().getId()).orElse(null);
+            Alias alias = aliasRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getUser().getId()).orElse(null);
 
             // 해당 도감의 가장 최근 댓글 불러오기
             CommentDogam commentDogam = commentDogamRepository.findFirstByDogamIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getId());
@@ -146,7 +146,7 @@ public class DogamService {
             // 위에서 찾은 댓글의 주인
             User commentUser = null;
             if (commentDogam != null) {
-                commentUser = userRepository.findByKakaoEmail(commentDogam.getUserEmail()).orElseThrow(
+                commentUser = userRepository.findByKakaoEmailAndDeletedAtIsNull(commentDogam.getUserEmail()).orElseThrow(
                         () -> new CustomException(ErrorType.NOT_FOUND_USER)
                 );
             }
