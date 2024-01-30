@@ -1,10 +1,7 @@
 package org.ssafy.ssafy_common2.dogam.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
 
@@ -22,6 +19,7 @@ public class DislikeDogam extends BaseTime {
     @Column(name = "user_email",nullable = false, length = 250)
     private String userEmail;
 
+    @Setter
     @Column(name = "is_dislike",nullable = false)
     private boolean isDislike;
 
@@ -30,10 +28,18 @@ public class DislikeDogam extends BaseTime {
     public Dogam dogam;
 
     @Builder
-    private DislikeDogam(Long id, String userEmail, boolean isDislike, Dogam dogam) {
-        this.id = id;
+    private DislikeDogam(String userEmail, boolean isDislike, Dogam dogam) {
         this.userEmail = userEmail;
         this.isDislike = isDislike;
         this.dogam = dogam;
     }
+
+    public static DislikeDogam of(String kakaoEmail, boolean b, Dogam dogam) {
+        return builder()
+                .userEmail(kakaoEmail)
+                .isDislike(b)
+                .dogam(dogam)
+                .build();
+    }
+
 }
