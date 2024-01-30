@@ -32,11 +32,11 @@
   "scripts": {
     "dev": "vite",
     "elec": "electron .",
-    "app": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && npm run elec\"",
+    "app": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npm run elec\"",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "electron": "wait-on tcp:5173 && cross-env IS_DEV=true electron .",
+    "electron": "wait-on tcp:3000 && cross-env IS_DEV=true electron .",
     "electron:pack": "electron-builder --dir",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"npm run electron\"",
     "electron:builder": "electron-builder",
