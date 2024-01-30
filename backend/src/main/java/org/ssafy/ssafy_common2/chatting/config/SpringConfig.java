@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.chatting.config.handler;
+package org.ssafy.ssafy_common2.chatting.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
