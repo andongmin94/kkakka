@@ -11,7 +11,7 @@ interface dogam {
 
 export default function Collection({ dogam }: { dogam: dogam }) {
   return (
-    <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
+    <div className="">
       <div className="h-[200px] w-[320px] border-4 border-inherit mt-5 rounded-3xl bg-[url('/image/liveImage.png')] bg-cover rounded-b-none border-b-0" />
       <div className="w-[320px] border-4 border-inherit rounded-3xl bg-cover rounded-t-none border-t-0 mt-0 mb-5">
         {/* 제목 */}
@@ -20,12 +20,14 @@ export default function Collection({ dogam }: { dogam: dogam }) {
         </div>
         <div className="flex gap-3 pb-3 font-bold items-center">
           {/* 싫어요 */}
-          <ThumbsDown tD={dogam.isHated} />
+          <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
+            <ThumbsDown tD={dogam.isHated} />
+          </div>
           <div className=" flex self-center mr-4 text-xl text-blue-600">
             {dogam.dogamHateAmount}
           </div>
           {/* 댓글 */}
-          <div className="">
+          <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
             <CommentModal />
           </div>
           {/* 등록일 */}
