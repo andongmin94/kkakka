@@ -1,5 +1,6 @@
 package org.ssafy.ssafy_common2.itemshop.dto.response;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import org.ssafy.ssafy_common2.itemshop.entity.Enforcement;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class EnforcementCreateResponseDto {
 
