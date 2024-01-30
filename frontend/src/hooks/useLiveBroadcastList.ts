@@ -5,8 +5,8 @@ import { useMainStore } from "@/stores/MainStore";
 import { BroadcastListResponse } from "@/types/broadcastTypes";
 import { ErrorResponse } from "@/types/commonTypes";
 
-const useLiveBroadcastList = (token: string, params: object) => {
-  const queryFn = () => useMainStore.fetchLiveBroadcastList(token, params);
+const useLiveBroadcastList = () => {
+  const queryFn = () => useMainStore().fetchLiveBroadcastList();
   const { isLoading, data, isError, error } = useQuery<
     AxiosResponse<BroadcastListResponse>,
     AxiosError<ErrorResponse>

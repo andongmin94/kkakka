@@ -46,7 +46,9 @@ public class ChatRoomRedisService {
 
     // 6) 유저가 입장한 채팅방 ID와 유저의 ID를 맵핑하여 정보를 저장한다.
     public void setUserEnterInfo(long userId, long roomId) {
+        System.out.println("-----------유저와 채팅방 맵핑 시도-----------------");
         hashOpsEnterInfo.put(ENTER_INFO, userId, roomId);
+        System.out.println("-----------유저와 채팅방 맵핑 성공-----------------");
     }
 
     // 7) 특정 유저 ID가 입장해 있는 채팅방 ID 조회
