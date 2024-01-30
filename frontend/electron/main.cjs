@@ -17,6 +17,7 @@ function createWindow() {
     // alwaysOnTop: true,
     icon: path.join(__dirname, "icon.png"),
     webPreferences: {
+      // nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
     },
   });
@@ -87,6 +88,7 @@ ipcMain.on("hidden", (event) => {
 
 ipcMain.on("button-clicked", (event, message) => {
   console.log("Received from button-clicked : ", message);
+  win.webContents.send('receive-from-electron', message);
 });
 
 ipcMain.on("Riot Game Info", (event, message) => {

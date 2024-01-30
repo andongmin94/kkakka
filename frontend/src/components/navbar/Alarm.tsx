@@ -20,8 +20,8 @@ export function Alarm() {
     fetchAlarms();
   }, [fetchAlarms]);
 
-  console.log(alarms.alarmList); // 알림내용 리스트
-  console.log(alarms.uncheckedAlarms); // 읽지않은 알림 갯수
+  // console.log(alarms.alarmList); // 알림내용 리스트
+  // console.log(alarms.uncheckedAlarms); // 읽지않은 알림 갯수
 
   // 데이터 예시
   // {
