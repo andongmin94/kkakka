@@ -1,17 +1,21 @@
 package org.ssafy.ssafy_common2.chatting.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
 
 @RequiredArgsConstructor
 @Service
+
 public class ChatService {
 
-    private final ChannelTopic channelTopic;
-    private final RedisTemplate redisTemplate;
+    private final SimpMessageSendingOperations template;
+
+
 
 
     // 1) STOMP의 Header Meta Data인 Destination에서 RoomId를 추출
@@ -31,23 +35,9 @@ public class ChatService {
 
 
     // 2) 채팅방에 메세지 발송
-    public void sendChatMessage(Message message) {
 
-        // 2-1) 입장과 퇴장 메세지의 경우 Message 객체의 내용을 변환
-        if(Message.MessageType.ENTER.equals(message.getMessageType())) {
-            message.setContent(message.getId() + "님이 입장했습니다.");
-        } else if (Message.MessageType.QUIT.equals(message.getMessageType())) {
-            message.setContent(message.getId() + "님이 퇴장했습니다.");
-        }
 
-        // 2-2) 메세지를 Mysql DB에 저장 
 
-        // 2-3) 만약에 메세지 타입이 ENTER이면, 이전 메세지 전부 긁어서 restTemplate.convertAndSend 하기
-
-        // 2-4) 메세지를 Pub 하기
-        redisTemplate.convertAndSend(channelTopic.getTopic(), message);
-
-    }
 }
 
 

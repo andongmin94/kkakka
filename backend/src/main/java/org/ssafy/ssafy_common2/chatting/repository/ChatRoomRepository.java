@@ -17,8 +17,14 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     // 2) 해당 이메일로 만들어진 채팅방 리스트 조회
     List<ChatRoom> findAllByChatOwnerEmailAndDeletedAtIsNull(String chat_owner_email);
 
+    // 3) 채팅방을 유저 중 한 명이 나갔을 때, 채팅방 수정일자를 업데이트 한다.
     @Query(value = "UPDATE chat_room cr set cr.updated_at = :now where cr.chat_room_id = :roomId", nativeQuery = true)
     void updateModifiedAt(LocalDateTime now, long roomId);
+
+
+    @Query(value = "UPDATE chat_room cr set cr.user_cnt =:cnt where cr.chat_room_id = :roomId", nativeQuery = true)
+    void updateUserCnt(int cnt, long roomId);
+
 
 
 }
