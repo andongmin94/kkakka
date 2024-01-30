@@ -10,17 +10,19 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
       await axios
         .get(
           `${
-            import.meta.env.VITE_BASE_URL
+            import.meta.env.VITE_API_BASE_URL
           }/api/oauth/callback/kakao/token?code=${code}`
         )
         .then((res) => {
-          console.log(res);
-          set({ token: res.data.access_token });
-          localStorage.setItem("token", res.data.access_token);
+          console.log(res.headers.authorization);
+          set({ token: res.headers.authorization });
+          localStorage.setItem("token", res.headers.authorization);
         });
     } catch (error: any) {
       console.error("Error logging in", error.message);
     }
   },
-  logout: () => set({ token: null }),
+  logout: () => {
+    set({ token: null }), localStorage.removeItem("token");
+  },
 }));
