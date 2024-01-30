@@ -85,14 +85,17 @@ export default function ProfileEdit() {
         <div className="flex justify-between items-center">
           <div className="flex gap-x-5">
             {profileImage ? (
-              <img src={profileImage} className="h-20 w-20 rounded-lg" />
+              <img
+                src={profileImage}
+                className="h-20 w-20 rounded-lg border-2"
+              />
             ) : (
               <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
                 프사없음
               </div>
             )}
             {profileBg ? (
-              <img src={profileBg} className="h-20 w-20 rounded-lg" />
+              <img src={profileBg} className="h-20 w-20 rounded-lg border-2" />
             ) : (
               <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
                 배경없음
