@@ -90,6 +90,6 @@ export interface itemshopStoreType {
 // auth
 export interface AuthStoreType {
   token: string | null;
-  setToken: (newToken: string) => void;
+  setToken: (code: string) => void;
   logout: () => void;
 }
