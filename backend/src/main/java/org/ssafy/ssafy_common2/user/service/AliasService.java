@@ -60,7 +60,7 @@ public class AliasService {
 
     public User validateReceiverByEmail(String email){
 
-        return userRepository.findByKakaoEmail(email)
+        return userRepository.findByKakaoEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_RECEIVER));
     }
 
