@@ -12,6 +12,7 @@ public enum MsgType {
     GENERATE_TOKEN_SUCCESSFULLY("토큰 생성 성공"),
     CREATE_DOGAM_SUCCESSFULLY("도감 생성 성공"),
     DELETE_DOGAM_SUCCESSFULLY("도감 삭제 성공"),
+    CREATE_DOGAM_LIST_SUCCESSFULLY("메인 도감 리스트 생성 성공"),
     ;
 
     private final String msg;

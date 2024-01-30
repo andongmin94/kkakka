@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ItemDealListRepository extends JpaRepository<ItemDealList,Long> {
     Optional<ItemDealList> findByUserAndDeletedAtIsNull(User receiver);
+
+    ItemDealList findByDogamIdAndDeletedAtIsNull(ItemDealList itemDealList);
 }
