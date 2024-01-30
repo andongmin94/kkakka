@@ -1,10 +1,8 @@
 package org.ssafy.ssafy_common2.user.repository;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
 import org.ssafy.ssafy_common2.user.entity.User;
 
@@ -24,4 +22,5 @@ public interface FriendListRepository extends JpaRepository<FriendList,Long> {
             "and fl.sender=:user and fl.isCheck=true")
     List<String> findFriendEmailsByUser(@Param("user") User user);
 
+    List<FriendList> findAllBySenderOrReceiverAndIsCheck(User sender, User receiver, boolean b);
 }
