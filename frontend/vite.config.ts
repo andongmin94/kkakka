@@ -4,7 +4,11 @@ import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: process.env.ELECTRON=="true" ? './' : "/",
+  base: "./",
+  server: {
+    port: 3000,
+    host: "0.0.0.0",
+  },
   plugins: [react(), VitePWA({
     registerType: "autoUpdate",
     devOptions: {

@@ -4,7 +4,7 @@ export default function ThumbsDown({ tD }: { tD: boolean }) {
   const [thumbs, setThumbs] = useState(tD);
   return (
     <div
-      className="h-[60px] w-[60px] ml-2 grid grid-col place-items-center"
+      className="h-[50px] w-[50px] ml-2 grid grid-col place-items-center"
       onClick={() => {
         setThumbs(!thumbs);
         console.log(thumbs);
