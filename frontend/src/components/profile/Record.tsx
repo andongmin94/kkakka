@@ -42,7 +42,7 @@ export default function Record({ record }: { record: record }) {
           {/* 시간 */}
           <p className="text-sm">{record.time}</p>
         </div>
-        <div className="flex ml-5">
+        <div className="flex ml-1">
           {/* 챔피언 사진 */}
           <img
             src="/image/lolCham.png"
@@ -59,7 +59,7 @@ export default function Record({ record }: { record: record }) {
             <img className="h-[30px] w-[30px]" src="/image/lolRune2.png" />
           </div>
         </div>
-        <div className="h-full w-[100px] ml-10 flex flex-col justify-center items-center font-bold">
+        <div className="h-full w-[100px] ml-2 flex flex-col justify-center items-center font-bold">
           {/* 킬 데스 어시스트 */}
           <p className="text-xl">
             {record.kill} / <span className="text-red-600">{record.death}</span>{" "}
@@ -73,7 +73,7 @@ export default function Record({ record }: { record: record }) {
             {record.event}
           </p>
         </div>
-        <div className="h-full w-[150px] ml-3 flex flex-col justify-center items-center font-bold">
+        <div className="h-full w-[120px] flex flex-col justify-center items-center font-bold">
           {/* 킬관여 비율 */}
           <p>킬관여 {record.killRate}%</p>
           {/* cs, 분당cs */}
