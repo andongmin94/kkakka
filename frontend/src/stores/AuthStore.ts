@@ -1,21 +1,26 @@
 import { create } from "zustand";
 import { AuthStoreType } from "@/types/storeTypes";
-import { axiosInstance } from "@/utils/axios";
+// import { axiosInstance } from "@/utils/axios";
+import axios from "axios";
 
 export const useAuthStore = create<AuthStoreType>((set) => ({
   token: null,
   setToken: async (code: string) => {
     try {
-      const response = await axiosInstance.get(
-        `${import.meta.env.VITE_KAKAO_REDIRECT_URI}?code=${code}`
-      );
-      console.log(response.data);
-      set({ token: response.headers.Authorization });
-      localStorage.setItem("token", response.headers.Authorization);
+      await axios
+        .get(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/oauth/callback/kakao/token?code=${code}`
+        )
+        .then((res) => {
+          console.log(res);
+          set({ token: res.data.access_token });
+          localStorage.setItem("token", res.data.access_token);
+        });
     } catch (error: any) {
-      console.error("Error getting token", error.message);
+      console.error("Error logging in", error.message);
     }
   },
-
   logout: () => set({ token: null }),
 }));
