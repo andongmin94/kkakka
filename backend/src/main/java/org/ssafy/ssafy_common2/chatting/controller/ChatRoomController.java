@@ -45,7 +45,7 @@ public class ChatRoomController {
 
         // 1-1) 방의 타입을 보고   ONE, MANY, DEAD 중 하나 생성
         String roomType = type.equals("dm")? "ONE" : "MANY";
-        User owner = userRepository.findByKakaoEmail(friendEmail).orElse(null);
+        User owner = userRepository.findByKakaoEmailAndDeletedAtIsNull(friendEmail).orElse(null);
 
         // 1-2) 사용자가 등록되지 않았다면 에러 출력
         if(owner == null){
