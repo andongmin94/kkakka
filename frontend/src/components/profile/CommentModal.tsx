@@ -50,12 +50,14 @@ export default function CommentModal() {
 
   // 사용자 이름
   const userName = "전수민";
+  const userId = "1";
   const userUpdate = "2024.01.26 오후 3:50";
   const userAlias = "10년째 실버";
 
   // 임시 댓글 리스트
   const commentData = [
     {
+      userId: "2",
       name: "이해건",
       text: "개못하네",
       update: "2024.01.26 오후 2:06",
@@ -65,7 +67,7 @@ export default function CommentModal() {
 
   //-----------------------------------------
 
-  const [commentList, SetCommentList] = useState(commentData);
+  const [commentList, setCommentList] = useState(commentData);
 
   return (
     <Popover>
@@ -81,7 +83,7 @@ export default function CommentModal() {
           <div className="grid gap-2">
             <div className="border-2 border-black w-full" />
             {commentList.map((com, idx) => {
-              return <Comment key={idx} data={com} />;
+              return <Comment key={idx} data={com} userId={userId} />;
             })}
 
             {/* 댓글 입력 부분 */}
@@ -122,15 +124,16 @@ export default function CommentModal() {
                                 const t = form.getValues().content;
                                 // 댓글 객체 만들기
                                 const data = {
+                                  userId: userId,
                                   name: userName,
                                   text: t,
                                   update: userUpdate,
                                   alias: userAlias,
                                 };
                                 // 댓글 리스트에 추가
-                                SetCommentList((pre) => [...pre, data]);
+                                setCommentList((pre) => [...pre, data]);
                                 // 댓글 입력창 초기화
-                                form.setValue("content", "");
+                                form.setValue("content", "  ");
                               }
                             }}
                           >
