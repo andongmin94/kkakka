@@ -125,11 +125,15 @@ public class ChatRoomMySQLService {
     // 채팅방 인원 +1 혹은 -1
     public void updateUserCnt(long roomId, String mode) {
 
+
         // 채팅방 특정
         ChatRoom room = chatRoomRepository.findById(roomId).orElse(null);
 
+
+
         // 이전 채팅방 인원 수
         int cnt = room.getUserCnt();
+        System.out.println("방의 이전 인원수: " + cnt);
         // 채팅방 인원 +1
         if(mode.equals("PLUS")){
             chatRoomRepository.updateUserCnt(cnt+1, roomId);
