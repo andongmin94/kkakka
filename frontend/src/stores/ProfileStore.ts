@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { profileDogamStoreType, aliasStoreType } from "@/types/storeTypes";
-import { axiosInstance } from "@/utils/axios";
+import axios from "axios";
 const token = localStorage.getItem("token");
 
 export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
@@ -13,11 +13,11 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   // 도감 리스트 확인하기
   fetchProfileDogams: async (friendEmail) => {
     try {
-      const response = await axiosInstance.get(
+      const response = await axios.get(
         `/api/profile/dogam?email=${friendEmail}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         }
       );
@@ -30,14 +30,11 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   // 도감 디테일 (댓글)
   fetchDogamDetail: async (dogamId) => {
     try {
-      const response = await axiosInstance.get(
-        `/api/friends/dogam/${dogamId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`/api/friends/dogam/${dogamId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       set({ dogamDetail: response.data });
     } catch (error: any) {
       console.error("Error fetching profile", error);
@@ -45,16 +42,16 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   },
 
   // 도감 추가하기
-  addDogam: async (formData, access_token, friendEmail) => {
+  addDogam: async (formData, token, friendEmail) => {
     set({ addDogamStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axiosInstance.post(
+      const response = await axios.post(
         `api/friend/dogam?email=${friendEmail}`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${access_token}`,
+            Authorization: token,
           },
         }
       );
@@ -73,9 +70,9 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
     set({ deleteDogamStatus: "loading", errorMessage: "" });
 
     try {
-      await axiosInstance.delete(`api/friend/dogam/${dogamId}`, {
+      await axios.delete(`api/friend/dogam/${dogamId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
     } catch (error: any) {
@@ -92,11 +89,11 @@ export const useAliasStore = create<aliasStoreType>((set) => ({
   // 불명예의 전당 확인
   fetchAliases: async (friendEmail) => {
     try {
-      const response = await axiosInstance.get(
+      const response = await axios.get(
         `/api/profile/alias?email=${friendEmail}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         }
       );
@@ -107,16 +104,16 @@ export const useAliasStore = create<aliasStoreType>((set) => ({
   },
 
   // 칭호 지정권 구입 시 실행
-  addAlias: async (formData, access_token, friendEmail) => {
+  addAlias: async (formData, token, friendEmail) => {
     set({ addAliasStatus: "loading", errorMessage: "" });
 
     try {
-      const response = await axiosInstance.post(
+      const response = await axios.post(
         `api/friend/alias?email=${friendEmail}`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${access_token}`,
+            Authorization: token,
           },
         }
       );
