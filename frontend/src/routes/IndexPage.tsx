@@ -1,4 +1,5 @@
 import LiveContentCarousel from "@/components/main/LiveContentCarousel";
+import NewDogam from "@/components/main/NewDogam";
 
 export default function IndexPage() {
   return (
@@ -16,7 +17,8 @@ export default function IndexPage() {
         </p>
       </div>
       <div className="flex flex-col items-center">
-        <img src="/image/liveImage.png" />
+        {/* 도감 리스트 */}
+        <NewDogam />
       </div>
     </div>
   );
