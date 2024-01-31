@@ -2,14 +2,15 @@ import WriteAlias from "@/components/itemShop/WriteAlias";
 import DeleteCollection from "@/components/itemShop/DeleteCollection";
 import Compliment from "@/components/itemShop/Compliment";
 import Speaker from "@/components/itemShop/Speaker";
-import { useMainStore } from "@/stores/MainStore";
+import { useItemshopStore } from "@/stores/ItemshopStore";
 import { useEffect } from "react";
 
 export default function ItemshopPage() {
-  const { mainInfos, fetchMainInfos } = useMainStore();
+  const { items, fetchItems } = useItemshopStore();
   useEffect(() => {
-    fetchMainInfos;
-  }, [fetchMainInfos]);
+    fetchItems;
+    console.log(items);
+  }, [fetchItems]);
 
   return (
     <>

@@ -52,11 +52,11 @@ const router = createBrowserRouter([
           { path: "/main/profile/:id/record", element: <ProfileRecordPage /> },
         ],
       },
-      {
-        path: `/main/api/oauth/callback/kakao/token`,
-        element: <KakaoCallbackPage />,
-      },
     ],
+  },
+  {
+    path: "/api/oauth/callback/kakao/token",
+    element: <KakaoCallbackPage />,
   },
 ]);
 

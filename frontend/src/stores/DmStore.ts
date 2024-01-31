@@ -11,7 +11,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
       // const response = await axios.get("/api/friends/dm");
       const response = await axios.get(`http://localhost:3001/data/`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ dmList: response.data });
@@ -27,7 +27,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
     try {
       const response = await axios.post(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       console.log("서버 응답:", response.data);
@@ -43,7 +43,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
     try {
       const response = await axios.post(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       console.log("서버 응답:", response.data);
@@ -59,7 +59,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
     try {
       const response = await axios.delete(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       console.log("서버 응답:", response.data);
@@ -76,7 +76,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
     try {
       const response = await axios.patch(url, dataToUpdate, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       console.log("서버 응답:", response.data);

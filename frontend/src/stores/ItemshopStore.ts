@@ -8,13 +8,16 @@ export const useItemshopStore = create<itemshopStoreType>((set) => ({
   items: [],
   fetchItems: async () => {
     try {
-      // const response = await axios.get("/api/");
-      const response = await axios.get(`http://localhost:3001/data/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      set({ items: response.data });
+      await axios
+        .get("/api/itemshop", {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          set({ items: res.data });
+        });
     } catch (error: any) {
       console.error("Error fetching items", error.message);
     }
