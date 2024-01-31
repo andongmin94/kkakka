@@ -54,5 +54,15 @@ public class ChatMessageDto {
                 .build();
     }
 
-
+    @Override
+    public String toString() {
+        return "ChatMessageDto{" +
+                "messageType='" + messageType + '\'' +
+                ", content='" + content + '\'' +
+                ", userId=" + userId +
+                ", chatRoomId=" + chatRoomId +
+                ", createdAt=" + createdAt +
+                ", updateAt=" + updateAt +
+                '}';
+    }
 }
