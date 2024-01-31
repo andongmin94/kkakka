@@ -8,16 +8,15 @@ export const useItemshopStore = create<itemshopStoreType>((set) => ({
   items: [],
   fetchItems: async () => {
     try {
-      await axios
-        .get("/api/itemshop", {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/itemshop`,
+        {
           headers: {
             Authorization: token,
           },
-        })
-        .then((res) => {
-          console.log(res.data);
-          set({ items: res.data });
-        });
+        }
+      );
+      set((prev) => ({ ...prev, items: res.data.data.itemList }));
     } catch (error: any) {
       console.error("Error fetching items", error.message);
     }
