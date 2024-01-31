@@ -4,29 +4,34 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class DogamCommentResponseDto {
 
-    String friendImgUrl;
+    String commentUserImgUrl;
     String Comment;
-    String userName;
-    String userEmail;
+    String commentUserName;
+    String commentUerEmail;
+    private LocalDateTime createdAt;
 
     @Builder
-    private DogamCommentResponseDto(String friendImgUrl, String comment, String userName, String userEmail) {
-        this.friendImgUrl = friendImgUrl;
+    private DogamCommentResponseDto(String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
+        this.commentUserImgUrl = commentUserImgUrl;
         Comment = comment;
-        this.userName = userName;
-        this.userEmail = userEmail;
+        this.commentUserName = commentUserName;
+        this.commentUerEmail = commentUerEmail;
+        this.createdAt = createdAt;
     }
 
-    public static DogamCommentResponseDto of(String friendImgUrl, String comment, String userName, String userEmail) {
+    public static DogamCommentResponseDto of(String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
         return builder()
-                .friendImgUrl(friendImgUrl)
+                .commentUserImgUrl(commentUserImgUrl)
                 .comment(comment)
-                .userEmail(userEmail)
-                .userName(userName)
+                .commentUerEmail(commentUerEmail)
+                .commentUserName(commentUserName)
+                .createdAt(createdAt)
                 .build();
     }
 }
