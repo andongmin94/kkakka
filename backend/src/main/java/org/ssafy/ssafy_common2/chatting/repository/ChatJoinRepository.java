@@ -2,11 +2,14 @@ package org.ssafy.ssafy_common2.chatting.repository;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.*;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +44,13 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
     @Query(value = "SELECT * FROM chat_join cj WHERE cj.user_id = :userId AND cj.chat_room_id = :chatRoomId "
            , nativeQuery = true)
     Optional<ChatJoin> getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(long userId,long chatRoomId);
+
+
+    // 6) 채팅방 나갈 때, Modified_at 최신화
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE chat_join cj set cj.updated_at = :now where cj.user_id = :userId and cj.chat_room_id = :chatRoomId", nativeQuery = true)
+    void updateChatJoinModifiedAt(LocalDateTime now, long userId, long chatRoomId);
 }
 
 /*
