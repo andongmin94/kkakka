@@ -14,7 +14,6 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
           }/api/oauth/callback/kakao/token?code=${code}`
         )
         .then((res) => {
-          console.log(res.headers.authorization);
           set({ token: res.headers.authorization });
           localStorage.setItem("token", res.headers.authorization);
         });

@@ -13,7 +13,7 @@ export default function KakaoCallbackPage() {
 
   useEffect(() => {
     setToken(code!);
-    navigate("/");
+    navigate("/main");
   }, []);
 
   return <div>로그인 중입니다...</div>;

@@ -84,7 +84,7 @@ import { ItemType } from "@/types/itemTypes";
 
 export interface itemshopStoreType {
   items: ItemType[];
-  fetchItems: () => Promise<ItemType[]>;
+  fetchItems: () => void;
 }
 
 // auth
