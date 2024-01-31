@@ -88,11 +88,11 @@ export default function ProfilePage() {
           <div
             className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl items-center gap-14 pl-8`}
           >
-            <Link to={`/profile/${params.id}`} className="h-[30px]">
+            <Link to={`/main/profile/${params.id}`} className="h-[30px]">
               도감
             </Link>
-            <Link to={`/profile/${params.id}/dishonor`}>불명예 전당</Link>
-            <Link to={`/profile/${params.id}/record`}>전적</Link>
+            <Link to={`/main/profile/${params.id}/dishonor`}>불명예 전당</Link>
+            <Link to={`/main/profile/${params.id}/record`}>전적</Link>
           </div>
         </div>
 

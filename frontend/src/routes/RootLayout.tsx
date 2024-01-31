@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 
 export default function RootLayout() {
   // 사용자 아이디 더미 데이터
-  // const userId = "1";
+  const userId = "1";
 
   const { pathname } = useLocation();
 
@@ -25,20 +25,20 @@ export default function RootLayout() {
         {/* 왼쪽 사이드바 영역*/}
         <div className={classes.section_left}>
           {/* 로고 이미지 */}
-          <Link to="/" className="mt-5 mb-20 w-4/5">
+          <Link to="/main" className="mt-5 mb-20 w-4/5">
             <img alt="logo" src="/image/logo.png" />
           </Link>
           {/* 사이드바 메뉴 */}
-          <Link to="/item" className={classes.menu}>
+          <Link to="/main/item" className={classes.menu}>
             <h1>아이템샵</h1>
           </Link>
-          <Link to="/messagelist" className={classes.menu}>
+          <Link to="/main/messagelist" className={classes.menu}>
             <h1>메세지함</h1>
           </Link>
-          <Link to="/setting" className={classes.menu}>
+          <Link to="/main/setting" className={classes.menu}>
             <h1>환경 설정</h1>
           </Link>
-          <Link to="/intro" className={classes.menu}>
+          <Link to="/main/intro" className={classes.menu}>
             <h1>서비스 소개</h1>
           </Link>
         </div>
@@ -58,7 +58,7 @@ export default function RootLayout() {
               <ModeToggle />
               {/* 사용자 프로필 버튼 */}
               <Link
-                to="/profile/1"
+                to={`/main/profile/${userId}`}
                 className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
               >
                 {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
