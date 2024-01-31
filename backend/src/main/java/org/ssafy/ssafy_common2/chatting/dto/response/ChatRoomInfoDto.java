@@ -30,6 +30,7 @@ public class ChatRoomInfoDto {
                              boolean isLogin, String friendAlias, String lastMessage, LocalDateTime lastWrittenMessageTime,
                              int unreadMessageCnt){
 
+
         this.roomId = roomId;
         this.chatRoomType = chatRoomType;
         this.friendName = friendName;

@@ -1,5 +1,6 @@
 package org.ssafy.ssafy_common2.chatting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
