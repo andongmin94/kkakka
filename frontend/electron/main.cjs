@@ -22,11 +22,12 @@ function createWindow() {
     },
   });
 
-  win.loadURL(
-    isDev
-      ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../dist/index.html")}`
-  );
+  // win.loadURL(
+  //   isDev
+  //     ? "http://localhost:3000"
+  //     : `file://${path.join(__dirname, "../dist/index.html")}`
+  // );
+  win.loadURL("https://kkakka.vercel.app");
 
   if (isDev) {
     win.webContents.openDevTools();
