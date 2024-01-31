@@ -1,5 +1,6 @@
 import { Slider } from "@/components/ui/slider";
 import axios from "axios";
+// import { app } from "electron";
 
 declare global {
   interface Window {
@@ -28,6 +29,14 @@ export default function SettingPage() {
     document.body.style.backgroundColor = `rgba(255, 255, 255, ${value / 100})`;
     console.log("Transparency changed:", value);
   };
+
+  if (typeof electron !== 'undefined') {
+    // 일렉트론 환경
+    console.log('일렉트론 애플리케이션에서 실행 중입니다.');
+  } else {
+    // 브라우저 환경
+    console.log('웹 브라우저에서 실행 중입니다.');
+  }
 
   return (
     <div>
