@@ -4,7 +4,7 @@ import {
   friendStoreType,
   alarmStoreType,
 } from "@/types/storeTypes";
-import { axiosInstance } from "@/utils/axios";
+import axios from "axios";
 
 const token = localStorage.getItem("token");
 
@@ -19,9 +19,9 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+      const response = await axios.get(`http://localhost:3001/data`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ myPoint: response.data.point });
@@ -35,9 +35,9 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+      const response = await axios.get(`http://localhost:3001/data`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ myProfilePic: response.data.profilePic });
@@ -51,9 +51,9 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+      const response = await axios.get(`http://localhost:3001/data`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ liveBroadcastList: response.data.liveBroadcastList });
@@ -67,9 +67,9 @@ export const useMainStore = create<mainStoreType>((set) => ({
       // const response = await axios.get(
       //   `/api/oauth/callback/kakao/token?code=${code}`
       // );
-      const response = await axiosInstance.get(`http://localhost:3001/data`, {
+      const response = await axios.get(`http://localhost:3001/data`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ newDogamList: response.data.newDogamList });
@@ -85,9 +85,9 @@ export const useFriendStore = create<friendStoreType>((set) => ({
   fetchFriends: async () => {
     try {
       // const response = await axios.get("/api/friends");
-      const response = await axiosInstance.get(`http://localhost:3001/data/`, {
+      const response = await axios.get(`http://localhost:3001/data/`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ friends: response.data });
@@ -103,9 +103,9 @@ export const useAlarmStore = create<alarmStoreType>((set) => ({
   fetchAlarms: async () => {
     try {
       // const response = await axios.get("/api/alarm");
-      const response = await axiosInstance.get(`http://localhost:3001/data/`, {
+      const response = await axios.get(`http://localhost:3001/data/`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       set({ alarms: response.data });
@@ -120,9 +120,9 @@ export const useAlarmStore = create<alarmStoreType>((set) => ({
     const dataToUpdate = { is_checked: true };
 
     try {
-      const response = await axiosInstance.patch(url, dataToUpdate, {
+      const response = await axios.patch(url, dataToUpdate, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
       console.log("서버 응답:", response.data);
