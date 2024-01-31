@@ -7,6 +7,9 @@ import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.service.ItemDealService;
+import org.ssafy.ssafy_common2.notification.dto.NotificationDto;
+import org.ssafy.ssafy_common2.notification.entity.NotificationType;
+import org.ssafy.ssafy_common2.notification.service.NotificationService;
 import org.ssafy.ssafy_common2.user.dto.Response.AliasCreateResponseDto;
 import org.ssafy.ssafy_common2.user.dto.Response.AliasResponseDto;
 import org.ssafy.ssafy_common2.user.entity.Alias;
@@ -27,6 +30,7 @@ public class AliasService {
     private final UserRepository userRepository;
 
     private final ItemDealService itemDealService;
+    private final NotificationService notificationService;
 
     // 칭호 추가
     @Transactional
@@ -47,6 +51,8 @@ public class AliasService {
         // 현재 칭호 변경 해주기
         setCurrentAlias(receiver.getUserInfoId(), aliasName);
 
+        // 알림 발생
+        notifyAlias(sender, receiver, newAlias);
         return AliasCreateResponseDto.from(newAlias);
     }
 
@@ -72,5 +78,20 @@ public class AliasService {
         return aliasList.stream().map((alias) ->
                 AliasResponseDto.of(alias.getAliasName(), alias.getCreatedAt(), alias.getItemDealList().getUser().getUserName())
         ).toList();
+    }
+
+    // 알림 만들기
+    public void notifyAlias(User sender, User receiver, Alias alias) {
+
+        notificationService.send(
+                NotificationDto.of(
+                    receiver,
+                    NotificationType.NEW_ALIAS,
+                    "새로운 칭호가 추가되었습니다.",
+                    receiver.getKakaoProfileImg(),
+                    sender.getKakaoEmail(),
+                    alias.getId()
+                )
+        );
     }
 }
