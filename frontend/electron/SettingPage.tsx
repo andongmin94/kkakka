@@ -23,11 +23,16 @@ export default function SettingPage() {
     });
     console.log(response.data);
   };
+  const handleTransparencyChange = (value : any = 100) => {
+    // 투명도 값이 변경될 때의 로직을 여기에 추가
+    document.body.style.backgroundColor = `rgba(255, 255, 255, ${value / 100})`;
+    console.log("Transparency changed:", value);
+  };
 
   return (
     <div>
-      <div className="w-full">
-        <Slider />
+      <div >
+        <Slider onValueChange={handleTransparencyChange} className="w-40"/>
       </div>
       <br />
       <br />
