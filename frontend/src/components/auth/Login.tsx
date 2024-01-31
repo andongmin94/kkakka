@@ -7,5 +7,9 @@ export default function Login() {
   const loginHandler = () => {
     window.location.href = link;
   };
-  return <Button onClick={loginHandler}>로그인</Button>;
+  return (
+    <Button onClick={loginHandler} className="mt-20">
+      로그인
+    </Button>
+  );
 }
