@@ -65,7 +65,15 @@ const FormSchema = z.object({
   }),
 });
 
-export default function WhriteAlias() {
+export default function WriteAlias({
+  itemName,
+  itemPrice,
+  itemDesc,
+}: {
+  itemName: string;
+  itemPrice: number;
+  itemDesc: string;
+}) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = React.useState(false);
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
@@ -96,11 +104,8 @@ export default function WhriteAlias() {
     <Card className="static group/item bg-[url('/image/whriteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">
         <img src="/image/whriteAlias.png" className="h-20 w-20" />
-        <p className="text-4xl mt-3 font-bold text-white">칭호 지정권</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">
-          상대방의 칭호를 지정할 수 있는 아이템. 원하는 친구에게 사용이
-          가능하다. 아이템 구매 즉시 사용된다. 칭호는 6글자로 제한된다.
-        </p>
+        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
       </div>
 
       {/* 호버 */}
@@ -109,7 +114,7 @@ export default function WhriteAlias() {
         <DialogTrigger asChild>
           <div className="group/edit invisible group-hover/item:visible h-[23rem] w-[23rem] grid place-items-center z-10">
             {/* 호버 가격 버튼 */}
-            <Price />
+            <Price itemPrice={itemPrice} />
 
             {/* 호버 구매하기 버튼 */}
             <Purchase />
@@ -121,12 +126,12 @@ export default function WhriteAlias() {
           {/* 헤더 */}
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3 text-4xl">칭호 지정권</div>
+              <div className="mb-3 text-4xl">{itemName}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
                   <span className="self-center text-2xl font-bold">
-                    1,000 P
+                    {itemPrice}
                   </span>
                 </div>
               </div>
