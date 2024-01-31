@@ -25,35 +25,35 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
+  { path: "/", element: <LoginPage /> },
   {
-    path: "/",
+    path: "/main",
     element: <RootLayout />,
     children: [
-      { path: "/", element: <IndexPage /> },
-      { path: "/item", element: <ItemshopPage /> },
-      { path: "/messagelist", element: <MessageListPage /> },
+      { path: "/main", element: <IndexPage /> },
+      { path: "/main/item", element: <ItemshopPage /> },
+      { path: "/main/messagelist", element: <MessageListPage /> },
       {
-        path: "/messagedetail",
+        path: "/main/messagedetail",
         element: <MessageDetailPage user={undefined} />,
       },
 
-      { path: "/setting", element: <SettingPage /> },
-      { path: "/intro", element: <IntroPage /> },
-      { path: "/login", element: <LoginPage /> },
+      { path: "/main/setting", element: <SettingPage /> },
+      { path: "/main/intro", element: <IntroPage /> },
       {
-        path: "/profile/:id",
+        path: "/main/profile/:id",
         element: <ProfilePage />,
         children: [
-          { path: "/profile/:id", element: <ProfileCollection /> },
+          { path: "/main/profile/:id", element: <ProfileCollection /> },
           {
-            path: "/profile/:id/dishonor",
+            path: "/main/profile/:id/dishonor",
             element: <ProfileDishonorPage />,
           },
-          { path: "/profile/:id/record", element: <ProfileRecordPage /> },
+          { path: "/main/profile/:id/record", element: <ProfileRecordPage /> },
         ],
       },
       {
-        path: `/api/oauth/callback/kakao/token`,
+        path: `/main/api/oauth/callback/kakao/token`,
         element: <KakaoCallbackPage />,
       },
     ],
