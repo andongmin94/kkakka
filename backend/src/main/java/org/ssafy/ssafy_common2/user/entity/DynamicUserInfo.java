@@ -32,6 +32,9 @@ public class DynamicUserInfo extends BaseTime {
     @Column(name = "cur_alias", length = 50)
     private String curAlias;
 
+    @Column(name = "last_noti_event_id")
+    private String lastNotiEventId;
+
     @Builder
     private DynamicUserInfo(int point, boolean isLogin, int isBetting) {
         this.point = point;
@@ -59,4 +62,6 @@ public class DynamicUserInfo extends BaseTime {
     public void updateCurAlias(String curAlias) {
         this.curAlias = curAlias;
     }
+
+    public void updateLastNotiEventId(String lastNotiEventId) { this.lastNotiEventId = lastNotiEventId;}
 }
