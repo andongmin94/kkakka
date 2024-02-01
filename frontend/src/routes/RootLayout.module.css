@@ -155,10 +155,10 @@
 }
 
 /* 일렉트론 빌드할 때 주석 해제 */
-.section_left {
+.electron_section_left {
   margin-top: 60px;
 }
 
-.section_right {
+.electron_section_right {
   margin-top: 50px;
 }

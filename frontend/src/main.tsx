@@ -18,6 +18,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 /////////////////////////////////////////////////////
 // 일렉트론 빌드 때만 사용되는 컴포넌트
+const electron = window.electron;
 import TitleBar from "../electron/TitleBar.tsx";
 import SettingPage from "../electron/SettingPage.tsx";
 /////////////////////////////////////////////////////
@@ -64,7 +65,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
-        <TitleBar />
+        { (typeof electron !== 'undefined') && <TitleBar /> }
         <RouterProvider router={router} />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

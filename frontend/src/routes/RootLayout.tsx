@@ -7,7 +7,8 @@ import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
+import cn from 'clsx';
+const electron = window.electron;
 export default function RootLayout() {
   // 사용자 아이디 더미 데이터
   const userId = "1";
@@ -23,7 +24,7 @@ export default function RootLayout() {
     <>
       <main className={classes.page}>
         {/* 왼쪽 사이드바 영역*/}
-        <div className={classes.section_left}>
+        <div className={cn(classes.section_left, { [classes.electron_section_left]: typeof electron !== 'undefined' })}>
           {/* 로고 이미지 */}
           <Link to="/main" className="mt-5 mb-20 w-4/5">
             <img alt="logo" src="/image/logo.png" />
@@ -44,7 +45,7 @@ export default function RootLayout() {
         </div>
 
         {/* 네브바와 메인 페이지를 포함하는 영역 */}
-        <div className={classes.section_right}>
+        <div className={cn(classes.section_right, { [classes.electron_section_right]: typeof electron !== 'undefined' })}>
           {/* 네브바 */}
           <nav className={classes.nav}>
             <div></div>
