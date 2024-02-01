@@ -1,3 +1,5 @@
+import { PC } from "../MediaQuery";
+
 interface player {
   name: string;
   champion: string;
@@ -24,10 +26,12 @@ export default function Record({ record }: { record: record }) {
   return (
     <div className=" gap-y-2">
       {/* 전적 */}
-      <div className="w-80% h-[125px] border-2 m-5 flex">
+      <div className="w-80% h-[125px] border-2 m-5 flex rounded-lg">
         {/* 라벨색 */}
         <div
-          className={`h-full w-3 ${record.win ? "bg-blue-600" : "bg-red-600"}`}
+          className={`h-full w-3 ${
+            record.win ? "bg-blue-600" : "bg-red-600"
+          } rounded-lg`}
         />
         <div className="h-full w-[100px] font-bold text-center py-2  flex flex-col justify-center">
           <p
@@ -73,17 +77,20 @@ export default function Record({ record }: { record: record }) {
             {record.event}
           </p>
         </div>
-        <div className="h-full w-[120px] flex flex-col justify-center items-center font-bold">
-          {/* 킬관여 비율 */}
-          <p>킬관여 {record.killRate}%</p>
-          {/* cs, 분당cs */}
-          <p>
-            CS {record.cs} ({record.csPerM}/m)
-          </p>
-        </div>
+
+        <PC>
+          <div className="h-full w-[120px] flex flex-col justify-center items-center font-bold">
+            {/* 킬관여 비율 */}
+            <p className="text-center">킬관여 {record.killRate}%</p>
+            {/* cs, 분당cs */}
+            <p className="text-center">
+              CS {record.cs} ({record.csPerM}/m)
+            </p>
+          </div>
+        </PC>
         {/* 아이템 사진 */}
         {/* 임시로 사진은 그냥 넣음 */}
-        <div className="h-[90px] w-[150px] grid grid-cols-3 grid-row-2 gap-1 place-items-center ml-3 self-center">
+        <div className="h-[80px] w-[150px] grid grid-cols-3 grid-row-2 gap-1 place-items-center mx-3 self-center">
           {record.itemArr.map((_, idx) => {
             return (
               <img
@@ -94,31 +101,34 @@ export default function Record({ record }: { record: record }) {
             );
           })}
         </div>
-        {/* 팀 정보 */}
-        <div className="grid grid-cols-2 h-full w-[300px] ml-4">
-          {/* 블루팀 */}
-          <div className="grid grid-rows-5">
-            {record.blueTeam.map((player, idx) => {
-              return (
-                <div key={idx} className="flex justify-start items-center">
-                  <img src={player.champion} className="h-4 w-4" />
-                  <span>{player.name}</span>
-                </div>
-              );
-            })}
+
+        <PC>
+          {/* 팀 정보 */}
+          <div className="grid grid-cols-2 h-full w-[300px] ml-4">
+            {/* 블루팀 */}
+            <div className="grid grid-rows-5">
+              {record.blueTeam.map((player, idx) => {
+                return (
+                  <div key={idx} className="flex justify-start items-center">
+                    <img src={player.champion} className="h-4 w-4" />
+                    <span>{player.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+            {/* 레드팀 */}
+            <div className="grid grid-rows-5">
+              {record.blueTeam.map((player, idx) => {
+                return (
+                  <div key={idx} className="flex justify-start items-center">
+                    <img src={player.champion} className="h-4 w-4" />
+                    <span>{player.name}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          {/* 레드팀 */}
-          <div className="grid grid-rows-5">
-            {record.blueTeam.map((player, idx) => {
-              return (
-                <div key={idx} className="flex justify-start items-center">
-                  <img src={player.champion} className="h-4 w-4" />
-                  <span>{player.name}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        </PC>
       </div>
     </div>
   );

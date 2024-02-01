@@ -1,19 +1,11 @@
-import { Slider } from "@/components/ui/slider";
 import axios from "axios";
-
-declare global {
-  interface Window {
-    electron: typeof import("electron");
-  }
-}
-
 const electron = window.electron;
+import { Slider } from "@/components/ui/slider";
+
+electron.on('channel-name', () => { console.log("리액트에서 받았음") });
 
 export default function SettingPage() {
-  const handleClick = () => {
-    electron.ipcRenderer.send("button-clicked", "hi");
-    console.log("React button clicked");
-  };
+  const handleClick = () => { electron.send('button-clicked', '리액트에서 보냄') };
 
   const summonerName = async () => {
     let sname = "안동민";
@@ -29,6 +21,7 @@ export default function SettingPage() {
     document.body.style.backgroundColor = `rgba(255, 255, 255, ${value / 100})`;
     console.log("Transparency changed:", value);
   };
+
 
   /// 환경 체크
   if (typeof electron !== 'undefined') {

@@ -1,10 +1,8 @@
 import Dishonor from "@/components/profile/Dishonor";
-import { useLocation } from "react-router-dom";
+
+import { Mobile, PC } from "@/components/MediaQuery";
 
 export default function ProfileDishonorPage() {
-  const location = useLocation();
-  const aliases = location.state.aliases;
-
   // 칭호 갯수 임시 데이터
   const profileAlias = [
     {
@@ -25,10 +23,24 @@ export default function ProfileDishonorPage() {
   ];
 
   return (
-    <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
-      {aliases.map((data, idx) => {
-        return <Dishonor data={data} key={idx} />;
-      })}
-    </div>
+    <>
+      <PC>
+        <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
+          {profileAlias.map((data, idx) => {
+            return <Dishonor data={data} key={idx} />;
+          })}
+        </div>
+      </PC>
+
+      {/* ------------------------------------------------ */}
+
+      <Mobile>
+        <div className="w-full m-1 grid grid-cols-2 row-auto place-items-center">
+          {profileAlias.map((data, idx) => {
+            return <Dishonor data={data} key={idx} />;
+          })}
+        </div>
+      </Mobile>
+    </>
   );
 }
