@@ -20,6 +20,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import Comment from "./Comment";
 import { useState } from "react";
+import { useTheme } from "@/components/navbar/ThemeProvider";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -28,6 +29,7 @@ const FormSchema = z.object({
 });
 
 export default function CommentModal() {
+  const { theme } = useTheme();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -72,7 +74,7 @@ export default function CommentModal() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" />
+        { theme === "light" ? <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" /> : <div className="bg-[url('/image/comment_dark.png')] h-10 w-10 bg-cover" />}
       </PopoverTrigger>
       <PopoverContent className="w-[700px]">
         <div className="grid gap-4 w-full">
