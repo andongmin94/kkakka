@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": "D110",
   "description": "team-project by D110",
-  "main": "electron/main.js",
+  "main": "src/electron/main.js",
   "build": {
     "appId": "KKAKKA",
     "mac": {

@@ -19,8 +19,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 /////////////////////////////////////////////////////
 // 일렉트론 빌드 때만 사용되는 컴포넌트
 const electron = window.electron;
-import TitleBar from "../electron/TitleBar.tsx";
-import SettingPage from "../electron/SettingPage.tsx";
+import TitleBar from "@/electron/TitleBar.tsx";
+import SettingPage from "@/electron/SettingPage.tsx";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
