@@ -35,15 +35,30 @@
   font-weight: 600;
 }
 
-.menu:hover {
+.menu_M {
+  display: flex;
+  justify-content: center;
+  width: 95%;
+  border-radius: 10px;
+  text-decoration: none;
+  /* color: black; */
+  font-size: xx-large;
+  animation: navbarBottom 1s forwards;
+  font-weight: 600;
+}
+
+.menu_M:hover,
+menu:hover {
   background-color: rgb(235, 207, 196, 0.2);
 }
 
-.menu:last-child {
+.menu_M:last-child,
+menu:last-child {
   margin-right: 0;
 }
 
-.menu::before {
+.menu_M::before,
+menu::before {
   content: "";
   position: absolute;
   bottom: 1px;
@@ -54,7 +69,8 @@
   transition: width 0.2s ease-in-out, left 0.2s ease-in-out;
 }
 
-.menu:hover::before {
+.menu_M:hover::before,
+menu:hover::before {
   width: 100%;
   left: 0;
 }
@@ -80,10 +96,35 @@
   margin-right: 5%;
 }
 
+.section_right_M {
+  position: relative;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* 네브바 */
 .nav {
   position: fixed;
   width: 74%;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  border: 4px solid rgb(255, 255, 255);
+  z-index: 2;
+  box-shadow: 1px 1px 5px 1px gainsboro;
+}
+
+.nav_M {
+  position: fixed;
+  width: 95%;
   height: 100px;
   background-color: rgba(255, 255, 255, 0.9);
   margin-top: 10px;
@@ -118,9 +159,22 @@
   height: 100%; */
 }
 
+.body_M {
+  margin-top: 150px;
+  width: 100%;
+  height: 100%;
+}
+
 /* 네브바 오른쪽 영역 */
 .nav_right {
   display: flex;
+  justify-items: end;
+  align-items: center;
+}
+
+.nav_right_M {
+  display: flex;
+  flex-direction: row;
   justify-items: end;
   align-items: center;
 }
