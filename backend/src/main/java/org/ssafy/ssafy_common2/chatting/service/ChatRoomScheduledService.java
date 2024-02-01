@@ -21,7 +21,7 @@ public class ChatRoomScheduledService {
     private final ChatRoomRepository chatRoomRepository;
 
     // 1) 중계방 중에서 10분이 넘은 중계방은 더 이상 베팅을 하지 못하도록 닫는다.
-    @Scheduled(fixedDelay = 600000)
+    @Scheduled(fixedDelay = 60000)
     public void checkBroadCastRoom() {
 
         log.info("현재시간은 {} 이고 중계방 중 10분이 지난 중게방이 있다면 베팅을 비활성화 합니다.", LocalDateTime.now());

@@ -42,6 +42,18 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     @Query(value = "UPDATE chat_room cr set cr.ten_minute = true where cr.id = :roomId", nativeQuery = true)
     void updateIsTenMinute(long roomId);
 
+    // 7) 채팅방 이긴다 Point 최신화
+    @Modifying
+    @Query(value = "UPDATE chat_room cr SET cr.win_point = :betPrice WHERE cr.id = :roomId ", nativeQuery = true)
+    void updateWinPoint(long roomId, int betPrice);
+
+
+    // 8) 채팅방 진다 Point 최신화
+    @Modifying
+    @Query(value = "UPDATE chat_room cr SET cr.lose_point =:betPrice WHERE cr.id = :roomId", nativeQuery = true)
+    void updateLosePoint(long roomId, int betPrice);
+
+    // 9) userEmail과 채팅방 타입이 MANY인 걸 특정하여 하나의 채팅방을 반환한다. (친구의 라이브 중계방 찾기용)
 
 
 }

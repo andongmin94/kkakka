@@ -12,10 +12,6 @@ public class BettingDto {
 
    private PredictDto predictDto;
    private int myBettingPoint;
-   private int myChosenTeam;
+   private String myChosenTeam;
 
-   @Builder
-    private BettingDto (PredictDto predictDto,int myBettingPoint, int myChosenTeam ) {
-       
-   }
 }

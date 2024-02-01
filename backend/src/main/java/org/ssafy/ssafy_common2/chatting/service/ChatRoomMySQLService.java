@@ -15,8 +15,10 @@ import org.ssafy.ssafy_common2.chatting.entity.Message;
 import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
 import org.ssafy.ssafy_common2.chatting.repository.ChatRoomRepository;
 import org.ssafy.ssafy_common2.chatting.repository.MessageRepository;
+import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
+import org.ssafy.ssafy_common2.user.service.FriendListService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ public class ChatRoomMySQLService {
     private final ChatJoinRepository chatJoinRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
+    private final FriendListService friendListService;
 
 
 
@@ -173,9 +176,46 @@ public class ChatRoomMySQLService {
 
 
     // 9) 라이브 중인 친구 채팅방 얻기
-    public List<ChatRoomInfoDto> findAllBroadCastsRoom(){
+    public List<ChatRoomInfoDto> findAllBroadCastsRoom(User user){
 
-        return null;
+        // 3-1) 친구 목록 받기
+        List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(user);
+        //  3-1-a) 친구 리스트 받기용
+        ArrayList<ChatRoomInfoDto> ans = new ArrayList<>();
+
+        // 3-1-b) 친구 한 명씩 순회
+        for (int i = 0; i < friendInfoList.size(); i++) {
+
+            ChatRoomInfoDto element = new ChatRoomInfoDto();
+
+            // 3-2) 친구 목록 중에서 아직 살아있는 단체 채팅방 가진 친구 한명 찾기
+            ChatRoom friendsLiveRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, friendInfoList.get(i).getEmail()).orElse(null);
+
+            // 3-3) 그 친구들 정보를 ChatRoomInfoDto에 맞춰서 넣기
+            element.setRoomId(friendsLiveRoom.getId());
+            element.setChatRoomType(friendsLiveRoom.getChatRoomType());
+            element.setFriendName(friendsLiveRoom.getChatOwnerName());
+            element.setFriendEmail(friendsLiveRoom.getChatOwnerEmail());
+            element.setTenMinute(friendsLiveRoom.isTenMinute());
+            element.setFriendImgUrl(user.getKakaoProfileImg());
+            element.setFriendAlias(user.getUserInfoId().getCurAlias());
+            element.setLogin(user.getUserInfoId().isLogin());
+
+            // 3-4) 해당 채팅방의 마지막 메세지 찾기
+            Message lastMessage = chatJoinRepository.getLastMessage(friendsLiveRoom.getId()).orElse(null);
+
+            if(lastMessage != null){
+                element.setLastMessage(lastMessage.getContent());
+                element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
+            }else{
+                element.setLastMessage("아직 중계방에 채팅이 없습니다!! 빨리 들어오세요!");
+                element.setLastWrittenMessageTime(null);
+            }
+
+            // 3-5) 답 속에 포함
+            ans.add(element);
+        }
+        return ans;
     }
 }
 
