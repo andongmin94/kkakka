@@ -24,11 +24,12 @@ public class ChatRoomInfoDto {
     private String lastMessage;
     private LocalDateTime lastWrittenMessageTime;
     private int unreadMessageCnt;
+    private boolean tenMinute;
 
     @Builder
     private ChatRoomInfoDto (long roomId, ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
                              boolean isLogin, String friendAlias, String lastMessage, LocalDateTime lastWrittenMessageTime,
-                             int unreadMessageCnt){
+                             int unreadMessageCnt, boolean tenMinute){
 
 
         this.roomId = roomId;
@@ -41,11 +42,12 @@ public class ChatRoomInfoDto {
         this.lastMessage = lastMessage;
         this.lastWrittenMessageTime = lastWrittenMessageTime;
         this.unreadMessageCnt = unreadMessageCnt;
+        this.tenMinute = tenMinute;
     }
 
     public static ChatRoomInfoDto of (long roomId,ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
                                       boolean isLogin, String friendAlias, String lastMessage, LocalDateTime lastWrittenMessageTime,
-                                      int unreadMessageCnt){
+                                      int unreadMessageCnt, boolean tenMinute){
         return builder().roomId(roomId)
                 .chatRoomType(chatRoomType)
                 .friendName(friendName)
@@ -56,6 +58,7 @@ public class ChatRoomInfoDto {
                 .lastMessage(lastMessage)
                 .lastWrittenMessageTime(lastWrittenMessageTime)
                 .unreadMessageCnt(unreadMessageCnt)
+                .tenMinute(tenMinute)
                 .build();
 
     }
