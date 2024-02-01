@@ -10,18 +10,23 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   deleteDogamStatus: "idle",
   errorMessage: "",
 
-  // 도감 리스트 확인하기
-  fetchProfileDogams: async (friendEmail) => {
+  // 해당 유저의 도감 리스트 확인하기
+  fetchProfileDogams: async (userEmail) => {
     try {
-      const response = await axios.get(
-        `/api/profile/dogam?email=${friendEmail}`,
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/profile/dogam?email=${userEmail}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      set({ profileDogams: response.data });
+      set((prev) => ({
+        ...prev,
+        profileDogams: res.data.data.profileDogamList,
+      }));
     } catch (error: any) {
       console.error("Error fetching profile", error);
     }
@@ -30,24 +35,29 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   // 도감 디테일 (댓글)
   fetchDogamDetail: async (dogamId) => {
     try {
-      const response = await axios.get(`/api/friends/dogam/${dogamId}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      set({ dogamDetail: response.data });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      set((prev) => ({ ...prev, dogamDetail: res.data.data.dogamDetail }));
     } catch (error: any) {
       console.error("Error fetching profile", error);
     }
   },
 
-  // 도감 추가하기
-  addDogam: async (formData, token, friendEmail) => {
+  // 친구의 도감 추가하기
+  addDogam: async (formData, friendEmail) => {
     set({ addDogamStatus: "loading", errorMessage: "" });
 
     try {
       const response = await axios.post(
-        `api/friend/dogam?email=${friendEmail}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }api/friend/dogam?email=${friendEmail}`,
         formData,
         {
           headers: {
@@ -65,18 +75,42 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
     }
   },
 
-  // 도감 삭제권 구입시에 실행
-  deleteDogam: async (dogamId) => {
-    set({ deleteDogamStatus: "loading", errorMessage: "" });
-
+  // 도감 댓글 달기
+  createComment: async (dogamId, comment) => {
     try {
-      await axios.delete(`api/friend/dogam/${dogamId}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-    } catch (error: any) {
-      set({ deleteDogamStatus: "error", errorMessage: error.message });
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/friends/dogam/comment/${dogamId}`,
+        { comment },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log("서버 응답:", response.data);
+    } catch (error) {
+      console.error("Error creating comment", error);
+    }
+  },
+
+  // 도감 댓글 삭제
+  deleteComment: async (commentId) => {
+    try {
+      const response = await axios.delete(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/friends/dogam/comment/${commentId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log("서버 응답:", response.data);
+    } catch (error) {
+      console.error("Error deleting comment", error);
     }
   },
 }));
@@ -86,44 +120,22 @@ export const useAliasStore = create<aliasStoreType>((set) => ({
   aliases: [],
   addAliasStatus: "idle",
   errorMessage: "",
-  // 불명예의 전당 확인
-  fetchAliases: async (friendEmail) => {
+  // 유저의 불명예의 전당 확인
+  fetchAliases: async (userEmail) => {
     try {
-      const response = await axios.get(
-        `/api/profile/alias?email=${friendEmail}`,
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/profile/alias?email=${userEmail}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      set({ aliases: response.data });
+      set((prev) => ({ ...prev, aliases: res.data.data.aliasList }));
     } catch (error: any) {
       console.error("Error fetching aliases", error.message);
-    }
-  },
-
-  // 칭호 지정권 구입 시 실행
-  addAlias: async (formData, token, friendEmail) => {
-    set({ addAliasStatus: "loading", errorMessage: "" });
-
-    try {
-      const response = await axios.post(
-        `api/friend/alias?email=${friendEmail}`,
-        formData,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      // 성공시 상태를 success로 변경
-      if (response.status === 200) {
-        set({ addAliasStatus: "success" });
-      }
-    } catch (error: any) {
-      set({ addAliasStatus: "error", errorMessage: error.message });
     }
   },
 }));

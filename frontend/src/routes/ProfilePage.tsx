@@ -9,29 +9,39 @@ import Check from "@/components/profile/Check";
 
 import { Button } from "@/components/ui/button";
 
-export default function ProfilePage() {
+import { useAliasStore } from "@/stores/ProfileStore";
+import { useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
+
+export default function ProfilePage({ userEmail }: { userEmail: string }) {
   // 사용자 아이디 더미 데이터
   const userId = "1";
-
   // 사용자 이름
   const userName = "이수민";
-
   // 사용자 프사
   const userImg = "/image/joinSample.png";
-
   // 사용자 프로필 배경
   // const profileBg = "/image/profileBg.png";
-
   // 파산 플래그
   const poorFlag = true;
-
   // 칭호 내용
   const alias = "생태계파괴자";
-
   // 체크 버튼 플래그
   const check = false;
 
   const params = useParams();
+
+  // 불명예전당
+  const { aliases, fetchAliases } = useAliasStore(
+    useShallow((state) => ({
+      aliases: state.aliases,
+      fetchAliases: state.fetchAliases,
+    }))
+  );
+
+  useEffect(() => {
+    fetchAliases(userEmail);
+  }, [fetchAliases]);
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -88,11 +98,22 @@ export default function ProfilePage() {
           <div
             className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl items-center gap-14 pl-8`}
           >
-            <Link to={`/main/profile/${params.id}`} className="h-[30px]">
+            <Link
+              to={`/main/profile/${params.id}`}
+              state={{}}
+              className="h-[30px]"
+            >
               도감
             </Link>
-            <Link to={`/main/profile/${params.id}/dishonor`}>불명예 전당</Link>
-            <Link to={`/main/profile/${params.id}/record`}>전적</Link>
+            <Link
+              to={`/main/profile/${params.id}/dishonor`}
+              state={{ aliases: aliases }}
+            >
+              불명예 전당
+            </Link>
+            <Link to={`/main/profile/${params.id}/record`} state={{}}>
+              전적
+            </Link>
           </div>
         </div>
 
