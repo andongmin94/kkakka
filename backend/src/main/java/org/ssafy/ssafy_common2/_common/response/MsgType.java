@@ -16,6 +16,12 @@ public enum MsgType {
     DELETE_DOGAM_COMMENT_SUCCESSFULLY("도감 댓글 삭제 성공"),
     CREATE_DOGAM_COMMENT_SUCCESSFULLY("도감 댓글 생성 성공"),
     CREATE_DOGAM_DISLIKE_SUCCESSFULLY("도감 싫어요 생성 성공"),
+    UPDATE_ALARM_SUCCESSFULLY("알림 확인 성공"),
+    UPDATE_ALARM_EVENT_ID_SUCCESSFULLY("알림 LastEventID 갱신 성공"),
+    SEARCH_DOGAM_DETAIL_SUCCESSFULLY("도감 디테일 조회 성공"),
+    SEARCH_POINT_SUCCESSFULLY("포인트 조회 성공"),
+    SEARCH_EMAIL_SUCCESSFULLY("이메일 조회 성공"),
+    SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY("이메일 프로필 사진 조회 성공"),
     ;
 
     private final String msg;
