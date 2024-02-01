@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEffect } from "react";
 import { useAlarmStore } from "@/stores/MainStore";
+import { useTheme } from "@/components/navbar/ThemeProvider";
 
 export function Alarm() {
+  const { theme } = useTheme();
   const [position, setPosition] = React.useState("");
   const { fetchAlarms, alarms, checkAlarm } = useAlarmStore();
 
@@ -58,7 +60,7 @@ export function Alarm() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className={classes.alarm_image} />
+        {theme === "light" ? <div className={classes.alarm_image} /> : <div className={classes.alarm_image_dark} />}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30 text-center">
         <DropdownMenuLabel>

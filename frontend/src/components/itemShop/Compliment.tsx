@@ -65,7 +65,15 @@ const FormSchema = z.object({
   }),
 });
 
-export default function Compliment() {
+export default function Compliment({
+  itemName,
+  itemPrice,
+  itemDesc,
+}: {
+  itemName: string;
+  itemPrice: number;
+  itemDesc: string;
+}) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = React.useState(false);
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
@@ -96,12 +104,8 @@ export default function Compliment() {
     <Card className="static group/item bg-[url('/image/complimentBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">
         <img src="/image/compliment.png" className="h-20 w-20 ml-5 pt-3" />
-        <p className="text-4xl mt-3 font-bold text-white">강제 칭찬권</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">
-          강제로 칭찬하게 만드는 아이템이다. 원하는 상대를 선택하고 멘트를
-          작성한다. 상대는 내가 게임 중일 때, 칭찬 멘트를 우선적으로 말하게
-          된다.
-        </p>
+        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
       </div>
 
       {/* 호버 */}
@@ -110,7 +114,7 @@ export default function Compliment() {
         <DialogTrigger asChild>
           <div className="group/edit invisible group-hover/item:visible h-[23rem] w-[23rem] grid place-items-center z-10">
             {/* 호버 가격 버튼 */}
-            <Price />
+            <Price itemPrice={itemPrice} />
 
             {/* 호버 구매하기 버튼 */}
             <Purchase />
@@ -122,12 +126,12 @@ export default function Compliment() {
           {/* 헤더 */}
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3 text-4xl">강제 칭찬권</div>
+              <div className="mb-3 text-4xl">{itemName}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
                   <span className="self-center text-2xl font-bold">
-                    1,000 P
+                    {itemPrice}
                   </span>
                 </div>
               </div>
