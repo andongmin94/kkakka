@@ -10,8 +10,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { useProfileDogamStore } from "@/stores/ProfileStore";
+import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
 
 export default function AddCollection() {
+  const queryClient = new QueryClient();
+  const token = localStorage.getItem("token");
+
+  const { profileDogams, fetchProfileDogams, addDogam } = useProfileDogamStore(
+    useShallow((state) => ({
+      profileDogams: state.profileDogams,
+      fetchProfileDogams: state.fetchProfileDogams,
+      addDogam: state.addDogam,
+    }))
+  );
+
+  const { data: profileDogams } = useQuery("profileDogams", fetchProfileDogams);
+
+  const addDogamMutation = useMutation(addDogam, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("profileDogams");
+    },
+  });
+
+  const handleAddDogam = () => {
+    const newDogam = { name: "new dogam", type: "new type" };
+    addDogamMutation.mutate(newDogam);
+  };
+
   // 프로필 사진 저장
   const [dogamImage, setDogamImage]: any = useState(null);
 
@@ -82,6 +109,7 @@ export default function AddCollection() {
               onClick={() => {
                 // 저장버튼 눌렀을때 이미지 넘기는거 확인 !
                 // console.log(dogamImage);
+                handleAddDogam();
               }}
             >
               저장하기

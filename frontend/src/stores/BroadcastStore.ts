@@ -4,15 +4,35 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 export const useBroadcastStore = create<broadcastStoreType>((set) => ({
-  broadcasts: [],
   createBetStatus: "idle", // 'idle' | 'loading' | 'success' | 'error'
   errorMessage: "",
-  // 라이브 방송 시작하기 (게임 시작시 자동 생성)
-  startBroadcast: async (friendEmail) => {
-    const url = `/api/friends/broadcast/create/${friendEmail}`;
+  liveBroadcastList: [],
+  fetchLiveBroadcastList: async () => {
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcast`;
 
     try {
-      const response = await axios.post(url, {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      set((prev) => ({
+        ...prev,
+        liveBroadcastList: response.data.liveBroadcastList,
+      }));
+    } catch (error: any) {
+      console.error("Error fetching live broadcast list", error.message);
+    }
+  },
+
+  // 라이브 방송 시작하기 (게임 시작시 자동 생성)
+  startBroadcast: async (friendEmail) => {
+    const url = `${
+      import.meta.env.VITE_API_BASE_URL
+    }/api/friends/broadcast/enter/${friendEmail}`;
+
+    try {
+      const response = await axios.get(url, {
         headers: {
           Authorization: token,
         },
@@ -23,19 +43,16 @@ export const useBroadcastStore = create<broadcastStoreType>((set) => ({
     }
   },
 
-  // 게임 끝난 방 삭제하기 (게임 종료 0시간 후 삭제?) -- 논의 필요
-
   // 배팅하기
-  createBet: async (roomId, previousBetAmount, betAmount, winOrLose) => {
-    set({ createBetStatus: "loading", errorMessage: "" });
+  createBet: async (roomId, curBettingPoint, isWin) => {
+    set((prev) => ({ ...prev, createBetStatus: "loading", errorMessage: "" }));
     try {
       const betData = {
         roomId,
-        previousBetAmount,
-        betAmount,
-        winOrLose,
+        curBettingPoint,
+        isWin,
       };
-      const url = `/api/friends/broadcast/${roomId}/betting`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}/api/betting/{roomid}`;
       await axios.post(url, betData, {
         headers: {
           Authorization: token,
@@ -43,6 +60,21 @@ export const useBroadcastStore = create<broadcastStoreType>((set) => ({
       });
     } catch (error: any) {
       console.error("Error creating bet", error.message);
+    }
+  },
+
+  // 배팅 정산받기
+  settleBet: async (roomId) => {
+    set((prev) => ({ ...prev, createBetStatus: "loading", errorMessage: "" }));
+    try {
+      const url = `${import.meta.env.VITE_API_BASE_URL}/api/betting/${roomId}`;
+      await axios.post(url, {
+        headers: {
+          Authorization: token,
+        },
+      });
+    } catch (error: any) {
+      console.error("Error settling bet", error.message);
     }
   },
 }));

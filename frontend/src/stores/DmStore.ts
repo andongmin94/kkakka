@@ -6,39 +6,28 @@ const token = localStorage.getItem("token");
 // 1대1 채팅방 목록
 export const useDmStore = create<dmStoreType>((set) => ({
   dmList: [],
+  prevChat: [],
   fetchDmList: async () => {
     try {
-      // const response = await axios.get("/api/friends/dm");
-      const response = await axios.get(`http://localhost:3001/data/`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      set({ dmList: response.data });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      set((prev) => ({ ...prev, dmList: res.data.data.dmList }));
     } catch (error) {
       console.error("Error fetching direct messages", error);
     }
   },
 
-  // 새로운 채팅방 생성하기 -> 이미 있으면 기존 채팅방으로 이동.
-  startDm: async (friendEmail) => {
-    const url = `/api/friends/dm/create/${friendEmail}`;
-
-    try {
-      const response = await axios.post(url, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      console.log("서버 응답:", response.data);
-    } catch (error) {
-      console.error("Error starting a new direct message", error);
-    }
-  },
-
-  // 기존 채팅방 입장하기
+  // 채팅방 입장하기
   enterDm: async (friendEmail) => {
-    const url = `/api/friends/dm/enter/${friendEmail}`;
+    const url = `${
+      import.meta.env.VITE_API_BASE_URL
+    }/api/friends/dm/enter/${friendEmail}`;
 
     try {
       const response = await axios.post(url, {
@@ -54,7 +43,9 @@ export const useDmStore = create<dmStoreType>((set) => ({
 
   // 채팅방 삭제하기 (완전히 나가기)
   deleteDm: async (friendEmail) => {
-    const url = `/api/friends/dm/delete?email=${friendEmail}`;
+    const url = `${
+      import.meta.env.VITE_API_BASE_URL
+    }/api/friends/dm/delete?email=${friendEmail}`;
 
     try {
       const response = await axios.delete(url, {
@@ -68,20 +59,21 @@ export const useDmStore = create<dmStoreType>((set) => ({
     }
   },
 
-  // 채팅방 외출하기 (마지막 확인 시간 수정)
-  outingDm: async (dmId) => {
-    const url = `/api/friends/dm/outing/${dmId}`;
-    const dataToUpdate = { checked_at: new Date() };
+  // 채팅방 이전 내용
+  loadPrevChat: async (dmId) => {
+    const url = `${
+      import.meta.env.VITE_API_BASE_URL
+    }/api/firends/dm/load/${dmId}`;
 
     try {
-      const response = await axios.patch(url, dataToUpdate, {
+      const response = await axios.get(url, {
         headers: {
           Authorization: token,
         },
       });
-      console.log("서버 응답:", response.data);
+      set((prev) => ({ ...prev, prevChat: response.data.data.prevChat }));
     } catch (error) {
-      console.error("Error checking the alarm", error);
+      console.error("Error loading previous chat", error);
     }
   },
 }));
