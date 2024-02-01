@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
+import org.ssafy.ssafy_common2.user.dto.Response.FriendStateResponseDto;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.FriendListRepository;
@@ -28,24 +30,27 @@ public class FriendListService {
 
     // 친구 추가 요청
     @Transactional
-    public void addFriend(User sender, User receiver){
+    public MsgType editFriendState(User sender, User receiver){
 
+        // 현재 친구 상태 확인
         FriendState state = getFriendState(sender, receiver);
 
         switch (state){
-            case NONE:
-                sendFriendRequest(sender, receiver); break;
-            case RECEIVE:
-                acceptFriendRequest(sender, receiver); break;
-            case SEND:
-            case FRIEND:
-                throw new CustomException(ErrorType.DUPLICATED_REQUEST);
+            case NONE: // 아무 관계 아님 -> 친구 요청 가능
+                return sendFriendRequest(sender, receiver);
+            case RECEIVE: // sender가 친구 요청 받음 -> 친구 수락
+                return acceptFriendRequest(sender, receiver);
+            case SEND: // sender가 친구 요청함 -> 친구 요청 취소
+                return cancelFriendRequest(sender, receiver);
+            case FRIEND: // 친구 사이 -> 친구 끊기
+            default:
+                return breakOffFriendRelationship(sender, receiver);
         }
     }
 
     // 친구 신청하기
     @Transactional
-    public void sendFriendRequest(User sender, User receiver){
+    public MsgType sendFriendRequest(User sender, User receiver){
 
         FriendList friendRequest = getOrCreateFriendRequest(sender, receiver);
         FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender);
@@ -54,17 +59,52 @@ public class FriendListService {
 
         friendListRepository.save(friendRequest);
         friendListRepository.save(oppositeFriendRequest);
+
+        return MsgType.SEND_FRIEND_REQUEST_SUCCESSFULLY;
     }
 
     // 친구 신청 받기 (이미 email유저가 나에게 친구 신청을 했던 경우)
     @Transactional
-    public void acceptFriendRequest(User sender, User receiver){
+    public MsgType acceptFriendRequest(User sender, User receiver){
 
         FriendList friendRequest = getFriendRequest(sender, receiver);
-
         friendRequest.updateIsCheck(true);
+        friendListRepository.save(friendRequest);
+
+        return MsgType.RECEIVE_FRIEND_REQUEST_SUCCESSFULLY;
+    }
+
+    // 친구 신청 취소하기
+    @Transactional
+    public MsgType cancelFriendRequest(User sender, User receiver){
+
+        FriendList friendRequest = getFriendRequest(sender, receiver);
+        friendRequest.updateIsCheck(false);
+        friendListRepository.save(friendRequest);
+
+        return MsgType.CANCEL_FRIEND_REQUEST_SUCCESSFULLY;
+    }
+
+    // 친구 끊기
+    @Transactional
+    public MsgType breakOffFriendRelationship(User sender, User receiver){
+
+        FriendList friendRequest = getOrCreateFriendRequest(sender, receiver);
+        FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender);
+
+        friendRequest.updateIsCheck(false);
+        oppositeFriendRequest.updateIsCheck(false);
 
         friendListRepository.save(friendRequest);
+        friendListRepository.save(oppositeFriendRequest);
+
+        return MsgType.BREAK_OFF_FRIEND_RELATIONSHIP_SUCCESSFULLY;
+    }
+
+    // 두 유저의 현재 친구요청 상태를 리턴
+    public FriendStateResponseDto createFriendStateResponse(User sender, User receiver){
+
+        return FriendStateResponseDto.of(getFriendState(sender, receiver).toString());
     }
 
     // 두 사람의 현재 친구요청 상태를 확인
