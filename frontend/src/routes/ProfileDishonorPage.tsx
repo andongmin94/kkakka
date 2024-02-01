@@ -1,6 +1,5 @@
-import Dishonor from "@/components/profile/Dishonor";
-
 import { Mobile, PC } from "@/components/MediaQuery";
+import Dishonor from "@/components/profile/Dishonor";
 
 export default function ProfileDishonorPage() {
   // 칭호 갯수 임시 데이터

@@ -38,7 +38,7 @@ function createWindow() {
 app
   .whenReady()
   .then(createWindow)
-  .then(() => {
+  .then(async () => {
     const iconPath = join(dirname(fileURLToPath(import.meta.url)), "icon.png");
     const icon = nativeImage.createFromPath(iconPath);
     tray = new Tray(icon);
@@ -53,6 +53,23 @@ app
     tray.on("double-click", () => {
       win.show();
     });
+
+//////////////////////////////////////////////////////////
+// 리그오브레전드 통신
+
+    const ws = await createWebSocketConnection({
+      authenticationOptions: {
+        awaitConnection: true,
+      },
+    });
+    
+    ws.subscribe("/lol-champ-select/v1/session", (data) => {
+      const champId = data.actions[0][0].championId;
+      // const champId = data.actions;
+      console.log(champId);
+    });
+    
+//////////////////////////////////////////////////////////
   });
 
 app.on("window-all-closed", () => {
@@ -97,17 +114,6 @@ ipcMain.on("Riot Game Info", (event, message) => {
   console.log("Received from Riot Game Info : ", message);
 });
 
-//////////////////////////////////////////////////////////
-// 리그오브레전드 통신
 
-const ws = await createWebSocketConnection({
-  authenticationOptions: {
-    awaitConnection: true,
-  },
-});
 
-ws.subscribe("/lol-champ-select/v1/session", (data) => {
-  const champId = data.actions[0][0].championId;
-  // const champId = data.actions;
-  console.log(champId);
-});
+

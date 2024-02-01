@@ -1,4 +1,5 @@
 import classes from "./DishonorAlias.module.css";
+
 export default function DishonorAlias({ alias }: { alias: string }) {
   return (
     <>

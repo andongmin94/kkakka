@@ -1,4 +1,5 @@
 import classes from "./UserCurrentAlias.module.css";
+
 export default function UserCurrentAlias({ alias }: { alias: string }) {
   return (
     <>
