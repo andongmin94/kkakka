@@ -23,9 +23,9 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
     // 이벤트 캐시 아이디와 이벤트 객체를 받아서 저장
     @Override
-    public void saveEventCache(String emitterId, Object event) {
+    public void saveEventCache(String eventId, Object event) {
 
-        eventCache.put(emitterId, event);
+        eventCache.put(eventId, event);
     }
 
     // 주어진 email로 시작하는 모든 Emitter들을 가져온다.

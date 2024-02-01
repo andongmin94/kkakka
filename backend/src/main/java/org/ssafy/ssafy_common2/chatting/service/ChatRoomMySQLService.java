@@ -1,7 +1,12 @@
 package org.ssafy.ssafy_common2.chatting.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoinId;
@@ -10,9 +15,10 @@ import org.ssafy.ssafy_common2.chatting.entity.Message;
 import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
 import org.ssafy.ssafy_common2.chatting.repository.ChatRoomRepository;
 import org.ssafy.ssafy_common2.chatting.repository.MessageRepository;
+import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.User;
-import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
+import org.ssafy.ssafy_common2.user.service.FriendListService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +31,15 @@ public class ChatRoomMySQLService {
     private final UserRepository userRepository;
     private final ChatJoinRepository chatJoinRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatRoomRedisService chatRoomRedisService;
+    private final MessageRepository messageRepository;
+    private final FriendListService friendListService;
+
 
 
     // 0) 채팅방 생성
     public ChatRoom CreateChatRoom (ChatRoom.ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail) {
-       ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.of(chatRoomType, chatOwnerName, chatOwnerEmail, 0));
+       ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.of(chatRoomType, chatOwnerName, chatOwnerEmail, 0,false, 0, 0));
 
-       chatRoomRedisService.mappingChatRoom(chatRoom);
 
        return chatRoom;
     }
@@ -63,7 +70,7 @@ public class ChatRoomMySQLService {
     }
 
     // 4) 요청한 Email 이름으로 만들어진 중계방이나 1대1 채팅방 있는지 조회
-    public ChatRoom getBroadcastRoomWithEmail(ChatRoom.ChatRoomType chatRoomType, String email) {
+    public ChatRoom getRoomWithEmail(ChatRoom.ChatRoomType chatRoomType, String email) {
         ChatRoom broadCastRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(chatRoomType, email).orElse(null);
         return  broadCastRoom;
     }
@@ -90,7 +97,7 @@ public class ChatRoomMySQLService {
             element.setChatRoomType(Optional.ofNullable(roomInfo.getChatRoomType()).orElse(ChatRoom.ChatRoomType.DEAD));
             element.setFriendName(Optional.ofNullable(roomInfo.getChatOwnerName()).orElse("해당 채팅방의 주인ID을 찾지 못했습니다."));
             element.setFriendEmail(Optional.ofNullable(roomInfo.getChatOwnerEmail()).orElse("해당 채팅방 주인의Email을 찾지 못했습니다."));
-
+            element.setTenMinute(Optional.ofNullable(roomInfo.isTenMinute()).orElse(false));
             // 6-2) 유저 아이디로 유저 정보 얻기
             User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
@@ -122,7 +129,7 @@ public class ChatRoomMySQLService {
     }
 
 
-    // 채팅방 인원 +1 혹은 -1
+    // 7) 채팅방 인원 +1 혹은 -1
     public void updateUserCnt(long roomId, String mode) {
 
 
@@ -143,8 +150,73 @@ public class ChatRoomMySQLService {
 
     }
 
+    // 메세지 Entity를 메세지 Dto로 전환
+    public ChatMessageDto messageDtoConverter (Message message) {
+        return ChatMessageDto.of(
+                message.getMessageType().name(),
+                message.getContent(),
+                message.getChatJoin().getUser().getId(),
+                message.getChatJoin().getChatRoom().getId(),
+                message.getCreatedAt(),
+                message.getUpdatedAt()
+        );
+    };
+
+    // 8) 특정 방의 최근 메세지 100개 주기
+    public Page<ChatMessageDto> loadChatRoomMessage(long chatRoomId, int pageNo, String criteia){
+
+        // 1) 최신 순, 받은 페이지부터 100개 꺼내도록 설정
+        Pageable pageable = PageRequest.of(pageNo,100, Sort.by(Sort.Direction.DESC, criteia));
+
+        // 2) 실제 꺼내는 로직
+        Page<Message> messages = messageRepository.findAllByChatJoin_ChatRoom_Id(chatRoomId, pageable);
+
+        return messages.map(this::messageDtoConverter);
+    }
 
 
+    // 9) 라이브 중인 친구 채팅방 얻기
+    public List<ChatRoomInfoDto> findAllBroadCastsRoom(User user){
+
+        // 3-1) 친구 목록 받기
+        List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(user);
+        //  3-1-a) 친구 리스트 받기용
+        ArrayList<ChatRoomInfoDto> ans = new ArrayList<>();
+
+        // 3-1-b) 친구 한 명씩 순회
+        for (int i = 0; i < friendInfoList.size(); i++) {
+
+            ChatRoomInfoDto element = new ChatRoomInfoDto();
+
+            // 3-2) 친구 목록 중에서 아직 살아있는 단체 채팅방 가진 친구 한명 찾기
+            ChatRoom friendsLiveRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, friendInfoList.get(i).getEmail()).orElse(null);
+
+            // 3-3) 그 친구들 정보를 ChatRoomInfoDto에 맞춰서 넣기
+            element.setRoomId(friendsLiveRoom.getId());
+            element.setChatRoomType(friendsLiveRoom.getChatRoomType());
+            element.setFriendName(friendsLiveRoom.getChatOwnerName());
+            element.setFriendEmail(friendsLiveRoom.getChatOwnerEmail());
+            element.setTenMinute(friendsLiveRoom.isTenMinute());
+            element.setFriendImgUrl(user.getKakaoProfileImg());
+            element.setFriendAlias(user.getUserInfoId().getCurAlias());
+            element.setLogin(user.getUserInfoId().isLogin());
+
+            // 3-4) 해당 채팅방의 마지막 메세지 찾기
+            Message lastMessage = chatJoinRepository.getLastMessage(friendsLiveRoom.getId()).orElse(null);
+
+            if(lastMessage != null){
+                element.setLastMessage(lastMessage.getContent());
+                element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
+            }else{
+                element.setLastMessage("아직 중계방에 채팅이 없습니다!! 빨리 들어오세요!");
+                element.setLastWrittenMessageTime(null);
+            }
+
+            // 3-5) 답 속에 포함
+            ans.add(element);
+        }
+        return ans;
+    }
 }
 
 /*
