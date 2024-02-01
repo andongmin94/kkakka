@@ -58,4 +58,13 @@ public class Message extends BaseTime  {
                 .build();
     }
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", messageType=" + messageType +
+                ", content='" + content + '\'' +
+                ", chatJoin=" + chatJoin +
+                '}';
+    }
 }

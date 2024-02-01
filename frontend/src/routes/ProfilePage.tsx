@@ -85,7 +85,7 @@ export default function ProfilePage({ userEmail }: { userEmail: string }) {
           </div>
           <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
             <div className="font-bold text-4xl">
-              <div className=" bg-white rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
+              <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
                 {userName}
               </div>
             </div>

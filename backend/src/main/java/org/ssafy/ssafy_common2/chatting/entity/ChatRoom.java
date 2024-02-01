@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+// 삭제 명령이 들어왔을 때, 대신 실행할 명령어를 지정
 @SQLDelete(sql = "UPDATE chat_room set deleted_at = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class ChatRoom extends BaseTime implements Serializable {
 
@@ -39,20 +40,39 @@ public class ChatRoom extends BaseTime implements Serializable {
     @Column(name = "user_cnt")
     private int userCnt;
 
+    @Column(name = "ten_minute", nullable = false)
+    private boolean tenMinute;
+
+    @Column(name = "win_point", nullable = true)
+    private int winPoint;
+
+    @Column(name = "lose_point", nullable = true)
+    private  int losePoint;
+
+
     @Builder
-    private ChatRoom( ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail, int userCnt){
+    private ChatRoom( ChatRoomType chatRoomType, String chatOwnerName,
+                      String chatOwnerEmail, int userCnt, boolean tenMinute, int winPoint, int losePoint){
         this.chatRoomType = chatRoomType;
         this.chatOwnerName = chatOwnerName;
         this.chatOwnerEmail = chatOwnerEmail;
         this.userCnt = userCnt;
+        this.tenMinute = tenMinute;
+        this.winPoint = winPoint;
+        this.losePoint = losePoint;
     }
 
-    public static ChatRoom of ( ChatRoomType chatRoomType, String chatOwnerName, String chatOwnerEmail, int userCnt){
+    public static ChatRoom of ( ChatRoomType chatRoomType, String chatOwnerName,
+                                String chatOwnerEmail, int userCnt, boolean tenMinute
+            , int winPoint, int losePoint){
         return builder()
                 .chatRoomType(chatRoomType)
                 .chatOwnerName(chatOwnerName)
                 .chatOwnerEmail(chatOwnerEmail)
                 .userCnt(userCnt)
+                .tenMinute(tenMinute)
+                .winPoint(winPoint)
+                .losePoint(losePoint)
                 .build();
     }
 }

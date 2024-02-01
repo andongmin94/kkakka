@@ -51,6 +51,14 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
     @Transactional
     @Query(value = "UPDATE chat_join cj set cj.updated_at = :now where cj.user_id = :userId and cj.chat_room_id = :chatRoomId", nativeQuery = true)
     void updateChatJoinModifiedAt(LocalDateTime now, long userId, long chatRoomId);
+
+    // 7) userId, roomId로 채팅참여 하나 특정하여 배팅 금액, 어디에 걸었는지 최신화
+
+    @Modifying
+    @Query(value = "UPDATE chat_join cj SET cj.is_win = :isWin, cj.bet_price = :betPrice WHERE cj.user_id = :userId AND cj.chat_room_id = :roomId", nativeQuery = true)
+    void updateIswinAndBetPrice(boolean isWin, int betPrice, long userId, long roomId);
+
+
 }
 
 /*
