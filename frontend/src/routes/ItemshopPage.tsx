@@ -18,10 +18,10 @@ export default function ItemshopPage() {
     fetchItems();
   }, [fetchItems]);
 
-  console.log(items[0].itemName); // 칭호지정
-  console.log(items[1].itemName); // 도감삭제
-  console.log(items[2].itemName); // 강제칭찬
-  console.log(items[3].itemName); // 확성기
+  // console.log(items[0].itemName); // 칭호지정
+  // console.log(items[1].itemName); // 도감삭제
+  // console.log(items[2].itemName); // 강제칭찬
+  // console.log(items[3].itemName); // 확성기
 
   return (
     <>
