@@ -10,6 +10,7 @@ import org.ssafy.ssafy_common2.user.entity.User;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE chat_join set deleted_at = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class ChatJoin extends BaseTime  {
@@ -59,7 +60,16 @@ public class ChatJoin extends BaseTime  {
                 .build();
     }
 
-
+    @Override
+    public String toString() {
+        return "ChatJoin{" +
+                "chatJoinId=" + chatJoinId +
+                ", user=" + user +
+                ", chatRoom=" + chatRoom +
+                ", betPrice=" + betPrice +
+                ", isWin=" + isWin +
+                '}';
+    }
 }
 
 /*
