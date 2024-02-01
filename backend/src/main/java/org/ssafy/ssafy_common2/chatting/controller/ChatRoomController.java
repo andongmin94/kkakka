@@ -2,6 +2,7 @@ package org.ssafy.ssafy_common2.chatting.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.ssafy.ssafy_common2._common.exception.ErrorResponse;
@@ -10,18 +11,18 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
+import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
-import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
-import org.ssafy.ssafy_common2.chatting.service.ChatRoomRedisService;
+import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
+import org.ssafy.ssafy_common2.user.service.FriendListService;
 
 import java.util.List;
 import java.util.Objects;
 
-import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.MANY;
 import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 
 
@@ -31,7 +32,6 @@ import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 @RequestMapping("/api/friends")
 public class ChatRoomController {
 
-    private final ChatRoomRedisService chatRoomRedisService;
     private final ChatRoomMySQLService chatRoomMySQLService;
     private final UserRepository userRepository;
 
@@ -86,7 +86,7 @@ public class ChatRoomController {
         // 1-4) 중계방 만들어달라는 요청을 받았을 경우
         else{
             // 1-4-a) 해당 친구 이름으로 중계방이 있는지 확인
-            ChatRoom broadcastRoom = chatRoomMySQLService.getBroadcastRoomWithEmail(ChatRoom.ChatRoomType.MANY, friendEmail);
+            ChatRoom broadcastRoom = chatRoomMySQLService.getRoomWithEmail(ChatRoom.ChatRoomType.MANY, friendEmail);
 
             // 해당 친구 이름의 안 죽은 중계방이 있다.
             if(broadcastRoom !=null) {
@@ -124,16 +124,47 @@ public class ChatRoomController {
 
     // 2) 현 유저가 참여한 채팅방 리스트 반환
     @GetMapping("/dm")
-    public List<ChatRoomInfoDto> getAllChatRoomInfo (@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println(userDetails.getUser().getId());
+    public ApiResponseDto<?> getAllChatRoomInfo (@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return chatRoomMySQLService.getChatRoomInfo(userDetails.getUser().getId());
+        List<ChatRoomInfoDto> ans =  chatRoomMySQLService.getChatRoomInfo(userDetails.getUser().getId());
+
+        if(ans == null){
+            return  ResponseUtils.error(ErrorResponse.of(ErrorType.NO_CHATTING_ROOM_FOR_U));
+        }
+
+        return ResponseUtils.ok(ans, MsgType.DATA_SUCCESSFULLY);
     }
 
-    // 3) 채팅방 인원 +1
+    // 3) 현 유저의 친구 중에 라이브가 열린 채팅방 반환
+    @GetMapping("/broadcasts")
+    public ApiResponseDto<?> getAllBroadCastsRoomInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
-    // 4) 채팅방 인원 -1
+        List<ChatRoomInfoDto> ans = chatRoomMySQLService.findAllBroadCastsRoom(userDetails.getUser());
 
+        if(ans == null){
+            return ResponseUtils.error(ErrorResponse.of(ErrorType.NO_LIVE_BROADCAST_ROOM));
+        }
+
+
+        return  ResponseUtils.ok(ans,MsgType.DATA_SUCCESSFULLY);
+    }
+
+    // 4) 특정 채팅방의 메세지 내역 불러오기
+    @GetMapping("/dm/load/{chatRoomId}")
+    public ApiResponseDto<?> loadChatRoomMessage(
+            @PathVariable(value = "chatRoomId") long chatRoomId,
+            @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+            @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria
+    ){
+
+        Page<ChatMessageDto> ans = chatRoomMySQLService.loadChatRoomMessage(chatRoomId, pageNo, criteria);
+
+        if(ans == null){
+            return ResponseUtils.error(ErrorResponse.of(ErrorType.NO_MESSAGES_TO_LOAD));
+        }
+
+        return ResponseUtils.ok(ans, MsgType.DATA_SUCCESSFULLY);
+    }
 
 }
 
