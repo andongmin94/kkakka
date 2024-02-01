@@ -13,7 +13,7 @@ const { alarms, fetchAlarms } = useAlarmStore(
 );
 
 const useAlarmListQuery = () => {
-  return useQuery(queryKeys.ALARM, () => fetchAlarms());
+  return useQuery(queryKeys, () => fetchAlarms());
 };
 
 export default useAlarmListQuery;
