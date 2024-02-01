@@ -22,6 +22,8 @@ import Comment from "./Comment";
 import { useState } from "react";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 
+import { Mobile, PC } from "../MediaQuery";
+
 const FormSchema = z.object({
   content: z.string().min(2, {
     message: "두글자 이상 입력해주세요!",
@@ -72,86 +74,179 @@ export default function CommentModal() {
   const [commentList, setCommentList] = useState(commentData);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        { theme === "light" ? <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" /> : <div className="bg-[url('/image/comment_dark.png')] h-10 w-10 bg-cover" />}
-      </PopoverTrigger>
-      <PopoverContent className="w-[700px]">
-        <div className="grid gap-4 w-full">
-          {/* 헤더 */}
-          <div className="space-y-2">
-            <h4 className="font-bold leading-none text-xl">댓글 목록</h4>
-          </div>
-          <div className="grid gap-2">
-            <div className="border-2 border-black w-full" />
-            {commentList.map((com, idx) => {
-              return <Comment key={idx} data={com} userId={userId} />;
-            })}
+    <>
+      <PC>
+        <Popover>
+          <PopoverTrigger asChild>
+            {theme === "light" ? (
+              <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" />
+            ) : (
+              <div className="bg-[url('/image/comment_dark.png')] h-10 w-10 bg-cover" />
+            )}
+          </PopoverTrigger>
+          <PopoverContent className="w-[700px]">
+            <div className="grid gap-4 w-full">
+              {/* 헤더 */}
+              <div className="space-y-2">
+                <h4 className="font-bold leading-none text-xl">댓글 목록</h4>
+              </div>
+              <div className="grid gap-2">
+                <div className="border-2 border-black w-full" />
+                {commentList.map((com, idx) => {
+                  return <Comment key={idx} data={com} userId={userId} />;
+                })}
 
-            {/* 댓글 입력 부분 */}
-            <div className="">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="flex items-center"
-                >
-                  <FormField
-                    control={form.control}
-                    name="content"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex gap-3">
-                          <FormControl>
-                            <Input
-                              placeholder="댓글 입력"
-                              {...field}
-                              className="w-[590px]"
-                              // value={field.value || inputText}
-                              // onChange={(e) => {
-                              //   setInputText(e.target.value);
-                              // }}
-                            />
-                          </FormControl>
-                          <Button
-                            type="submit"
-                            variant="secondary"
-                            className="border-solid border-2 border-inherit bg-white font-bold h-[42px] text-lg"
-                            onClick={(_) => {
-                              // 2글자 이상만 작성 가능하게
-                              if (
-                                form.getValues().content != undefined &&
-                                form.getValues().content.length > 1
-                              ) {
-                                // 입력값 받고
-                                const t = form.getValues().content;
-                                // 댓글 객체 만들기
-                                const data = {
-                                  userId: userId,
-                                  name: userName,
-                                  text: t,
-                                  update: userUpdate,
-                                  alias: userAlias,
-                                };
-                                // 댓글 리스트에 추가
-                                setCommentList((pre) => [...pre, data]);
-                                // 댓글 입력창 초기화
-                                form.setValue("content", "  ");
-                              }
-                            }}
-                          >
-                            등록
-                          </Button>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </form>
-              </Form>
+                {/* 댓글 입력 부분 */}
+                <div className="">
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="flex items-center"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="flex gap-3">
+                              <FormControl>
+                                <Input
+                                  placeholder="댓글 입력"
+                                  {...field}
+                                  className="w-[590px]"
+                                  // value={field.value || inputText}
+                                  // onChange={(e) => {
+                                  //   setInputText(e.target.value);
+                                  // }}
+                                />
+                              </FormControl>
+                              <Button
+                                type="submit"
+                                variant="secondary"
+                                className="border-solid border-2 border-inherit bg-white font-bold h-[42px] text-lg"
+                                onClick={(_) => {
+                                  // 2글자 이상만 작성 가능하게
+                                  if (
+                                    form.getValues().content != undefined &&
+                                    form.getValues().content.length > 1
+                                  ) {
+                                    // 입력값 받고
+                                    const t = form.getValues().content;
+                                    // 댓글 객체 만들기
+                                    const data = {
+                                      userId: userId,
+                                      name: userName,
+                                      text: t,
+                                      update: userUpdate,
+                                      alias: userAlias,
+                                    };
+                                    // 댓글 리스트에 추가
+                                    setCommentList((pre) => [...pre, data]);
+                                    // 댓글 입력창 초기화
+                                    form.setValue("content", "  ");
+                                  }
+                                }}
+                              >
+                                등록
+                              </Button>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </form>
+                  </Form>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+          </PopoverContent>
+        </Popover>
+      </PC>
+
+      {/* ----------------------------------------------------------------------- */}
+      <Mobile>
+        <Popover>
+          <PopoverTrigger asChild>
+            <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" />
+          </PopoverTrigger>
+          <PopoverContent className="w-[500px]">
+            <div className="grid gap-4 w-full">
+              {/* 헤더 */}
+              <div className="space-y-2">
+                <h4 className="font-bold leading-none text-xl">댓글 목록</h4>
+              </div>
+              <div className="grid gap-2">
+                <div className="border-2 border-black w-full" />
+                {commentList.map((com, idx) => {
+                  return <Comment key={idx} data={com} userId={userId} />;
+                })}
+
+                {/* 댓글 입력 부분 */}
+                <div className="">
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="flex items-center"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="flex gap-3">
+                              <FormControl>
+                                <Input
+                                  placeholder="댓글 입력"
+                                  {...field}
+                                  className="w-[390px]"
+                                  // value={field.value || inputText}
+                                  // onChange={(e) => {
+                                  //   setInputText(e.target.value);
+                                  // }}
+                                />
+                              </FormControl>
+                              <Button
+                                type="submit"
+                                variant="secondary"
+                                className="border-solid border-2 border-inherit bg-white font-bold h-[42px] text-lg"
+                                onClick={(_) => {
+                                  // 2글자 이상만 작성 가능하게
+                                  if (
+                                    form.getValues().content != undefined &&
+                                    form.getValues().content.length > 1
+                                  ) {
+                                    // 입력값 받고
+                                    const t = form.getValues().content;
+                                    // 댓글 객체 만들기
+                                    const data = {
+                                      userId: userId,
+                                      name: userName,
+                                      text: t,
+                                      update: userUpdate,
+                                      alias: userAlias,
+                                    };
+                                    // 댓글 리스트에 추가
+                                    setCommentList((pre) => [...pre, data]);
+                                    // 댓글 입력창 초기화
+                                    form.setValue("content", "  ");
+                                  }
+                                }}
+                              >
+                                등록
+                              </Button>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </form>
+                  </Form>
+                </div>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </Mobile>
+    </>
   );
 }
