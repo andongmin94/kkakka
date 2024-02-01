@@ -45,7 +45,7 @@ public enum ErrorType {
     NOT_FOUND_DOGAM_DISLIKE(401, "해당 도감에 싫어요가 존재하지 않습니다."),
     NOT_MATCHING_DISLIKE_USER(403, "도감 싫어요를 취소할 권한이 없습니다."),
     FAILED_TO_DISLKE_DOGAM(401, "본인 도감에 좋아요를 할 수 없습니다"),
-    //---------------------------------------------------------------------
+    NOT_FOUND_ALARM(401, "잘못된 알림 확인 요청입니다."),
     ;
 
     private int code;
