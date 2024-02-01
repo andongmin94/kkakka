@@ -2,26 +2,19 @@ import WriteAlias from "@/components/itemShop/WriteAlias";
 import DeleteCollection from "@/components/itemShop/DeleteCollection";
 import Compliment from "@/components/itemShop/Compliment";
 import Speaker from "@/components/itemShop/Speaker";
-import { useItemshopStore } from "@/stores/ItemshopStore";
 import { useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
+import useItemListQuery from "@/apis/itemshop/queries/useItemListQuery";
 
 export default function ItemshopPage() {
-  const { items, fetchItems } = useItemshopStore(
-    useShallow((state) => ({
-      items: state.items,
-      fetchItems: state.fetchItems,
-    }))
-  );
+  const { data, isLoading, error } = useItemListQuery();
 
-  useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
-
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
   // console.log(items[0].itemName); // 칭호지정
   // console.log(items[1].itemName); // 도감삭제
   // console.log(items[2].itemName); // 강제칭찬
   // console.log(items[3].itemName); // 확성기
+  console.log(data);
 
   return (
     <>
@@ -33,30 +26,30 @@ export default function ItemshopPage() {
         <div className="grid grid-cols-2 row-auto w-[900px] h-[900px]">
           <div className="flex flex-col items-center">
             <WriteAlias
-              itemName={items[0].itemName}
-              itemPrice={items[0].itemPrice}
-              itemDesc={items[0].itemDesc}
+              itemName={data[0].itemName}
+              itemPrice={data[0].itemPrice}
+              itemDesc={data[0].itemDesc}
             />
           </div>
           <div className="flex flex-col items-center">
             <DeleteCollection
-              itemName={items[1].itemName}
-              itemPrice={items[1].itemPrice}
-              itemDesc={items[1].itemDesc}
+              itemName={data[1].itemName}
+              itemPrice={data[1].itemPrice}
+              itemDesc={data[1].itemDesc}
             />
           </div>
           <div className="flex flex-col items-center">
             <Compliment
-              itemName={items[2].itemName}
-              itemPrice={items[2].itemPrice}
-              itemDesc={items[2].itemDesc}
+              itemName={data[2].itemName}
+              itemPrice={data[2].itemPrice}
+              itemDesc={data[2].itemDesc}
             />
           </div>
           <div className="flex flex-col items-center">
             <Speaker
-              itemName={items[3].itemName}
-              itemPrice={items[3].itemPrice}
-              itemDesc={items[3].itemDesc}
+              itemName={data[3].itemName}
+              itemPrice={data[3].itemPrice}
+              itemDesc={data[3].itemDesc}
             />
           </div>
         </div>

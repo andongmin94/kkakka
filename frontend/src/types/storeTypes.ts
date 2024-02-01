@@ -49,6 +49,8 @@ export interface FeedStoreType {
 export interface friendStoreType {
   friends: [];
   fetchFriends: () => void;
+  checkIsFriend: (userEmail: string) => void;
+  sendFriendRequest: (userEmail: string) => void;
 }
 
 // itemshop
