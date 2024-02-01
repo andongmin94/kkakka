@@ -7,6 +7,7 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
+import org.ssafy.ssafy_common2.dogam.dto.response.DogamDetailResponseDto;
 import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
 import org.ssafy.ssafy_common2.dogam.dto.response.DogamCreateResponseDto;
 import org.ssafy.ssafy_common2.dogam.dto.response.DogamMainListResponseDto;
@@ -34,10 +35,16 @@ public class DogamController {
         return ResponseUtils.ok(dogamService.createDogam(dto, email, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
     }
 
-    @DeleteMapping("/friends/dogam/{dogam_id}")
-    public ApiResponseDto<Void> deleteDogam(@PathVariable(value = "dogam_id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @DeleteMapping("/friends/dogam/{dogam-id}")
+    public ApiResponseDto<Void> deleteDogam(@PathVariable(value = "dogam-id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         dogamService.deleteDogam(dogamId, userDetails.getUser());
         return ResponseUtils.ok(MsgType.DELETE_DOGAM_SUCCESSFULLY);
+    }
+
+    @GetMapping("/friends/dogam/{dogam-id}")
+    public ApiResponseDto<DogamDetailResponseDto> dogamDetail(@PathVariable(value = "dogam-id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseUtils.ok(dogamService
+                .dogamDetail(dogamId, userDetails.getUser()), MsgType.SEARCH_DOGAM_DETAIL_SUCCESSFULLY);
     }
 }

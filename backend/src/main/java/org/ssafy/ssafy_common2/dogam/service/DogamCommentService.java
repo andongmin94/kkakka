@@ -14,6 +14,7 @@ import org.ssafy.ssafy_common2.dogam.repository.DogamRepository;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -38,7 +39,7 @@ public class DogamCommentService {
             throw new CustomException(ErrorType.NOT_FOUND_COMMENT);
         }
 
-        DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail());
+        DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail(), LocalDateTime.now());
         CommentDogam commentDogam = CommentDogam.of(user.getKakaoEmail(), dto.getComment(), dogam);
         commentDogamRepository.save(commentDogam);
         return commentResponseDto;
