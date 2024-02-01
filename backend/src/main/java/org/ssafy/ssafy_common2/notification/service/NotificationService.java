@@ -17,7 +17,9 @@ import org.ssafy.ssafy_common2.notification.entity.Notification;
 import org.ssafy.ssafy_common2.notification.entity.NotificationType;
 import org.ssafy.ssafy_common2.notification.repository.EmitterRepository;
 import org.ssafy.ssafy_common2.notification.repository.NotificationRepository;
+import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
+import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,27 +33,31 @@ public class NotificationService {
 
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
+    private final DynamicUserInfoRepository dynamicUserInfoRepository;
 
     // 알림 구독
-    public SseEmitter subscribe(String username, String lastEventId) {
+    public SseEmitter subscribe(User user) {
 
-        String emitterId = createIdByUserEmailAndTime(username);
+        // user가 가장 마지막에 확인했던 알람의 id
+        String lastEventId = user.getUserInfoId().getLastNotiEventId();
+        String userEmail = user.getKakaoEmail();
+
+        // emitter 세팅
+        String emitterId = createIdByUserEmailAndTime(userEmail);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
         emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
         // 더미 데이터 전송 (503 에러 방지)
-        String eventId = createIdByUserEmailAndTime(username);
-        sendNotification(emitter, eventId, emitterId, "EventStream 생성 [user: " + username + "]");
+        String eventId = createIdByUserEmailAndTime(userEmail);
+        sendNotification(emitter, eventId, emitterId, "EventStream 생성 [user: " + userEmail + "]");
 
         // 클라이언트 미수신 Event 목록이 있을 경우, 전송하여 Event 유실 예방
         if(hasLostData(lastEventId)){
-            Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByUserEmail(String.valueOf(username));
-            eventCaches.entrySet().stream()
-                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> {
-                        sendNotification(emitter, entry.getKey(), emitterId, entry.getValue());
-                    });
+            Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByUserEmail(String.valueOf(userEmail));
+            long numOfNewAlarm = eventCaches.entrySet().stream()
+                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0).count();
+            sendNotification(emitter, createIdByUserEmailAndTime(userEmail), emitterId, "미확인 알람이 "+ numOfNewAlarm +"개 있습니다.");
         }
 
         return emitter;
@@ -61,6 +67,7 @@ public class NotificationService {
     @Transactional
     public void send(NotificationDto notificationDto) {
 
+        // DB에 알림 저장
         Notification notification = notificationRepository.save(notificationDto.toEntity());
         NotificationResponseDto responseDto = NotificationResponseDto.of(notification);
 
@@ -92,6 +99,16 @@ public class NotificationService {
 
     }
 
+    // 알림 last event id 업데이트
+    @Transactional
+    public void updateLastEventId(User user, String lastEventId) {
+
+        DynamicUserInfo userInfo = user.getUserInfoId();
+        userInfo.updateLastNotiEventId(lastEventId);
+        dynamicUserInfoRepository.save(userInfo);
+    }
+
+    // 알림 확인
     @Transactional
     public UpdateNotificationResponseDto readAlarm(Long alarmId, User user) {
 
@@ -111,19 +128,19 @@ public class NotificationService {
 
     // 받지 않은 이벤트가 있는지 확인
     private boolean hasLostData(String lastEventId){
-        return !lastEventId.isEmpty();
+        return StringUtils.hasLength(lastEventId);
     }
 
     // emitter에게 알림 전송 요청
     private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
         try {
+//            System.out.println("last event id : " + eventId);
             emitter.send(SseEmitter.event()
                     .id(eventId)
-                    .name("sse")
+                    .name("alarm")
 //                    .reconnectTime(1000L) // 재연결 시도
                     .data(data));
 
-            System.out.println("last-event-id : " +eventId);
         } catch (IOException exception) {
             // 클라이언트와의 연결이 끊긴 경우, emitter를 만료시킨다.
             emitter.complete();
