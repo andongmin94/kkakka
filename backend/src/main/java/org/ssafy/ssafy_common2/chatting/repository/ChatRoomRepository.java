@@ -26,11 +26,21 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     void updateModifiedAt(LocalDateTime now, long roomId);
 
 
+    // 4) 방의 인원수를 줄이거나 늘림
     @Modifying
     @Transactional
     @Query(value = "UPDATE chat_room cr set cr.user_cnt =:cnt where cr.id = :roomId", nativeQuery = true)
     void updateUserCnt(int cnt, long roomId);
 
+
+    // 5) 중계방이면서, 10분이 안 지났고, Delete 되지 않은 함수
+    Optional<List<ChatRoom>> findAllByChatRoomTypeAndTenMinuteIsFalseAndDeletedAtIsNull(ChatRoom.ChatRoomType chatRoomType);
+
+    // 6) 특정 채팅방의 10분 지났는지 여부를 true로 변경!
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE chat_room cr set cr.ten_minute = true where cr.id = :roomId", nativeQuery = true)
+    void updateIsTenMinute(long roomId);
 
 
 

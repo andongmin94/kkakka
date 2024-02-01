@@ -59,7 +59,16 @@ public class ChatJoin extends BaseTime  {
                 .build();
     }
 
-
+    @Override
+    public String toString() {
+        return "ChatJoin{" +
+                "chatJoinId=" + chatJoinId +
+                ", user=" + user +
+                ", chatRoom=" + chatRoom +
+                ", betPrice=" + betPrice +
+                ", isWin=" + isWin +
+                '}';
+    }
 }
 
 /*
