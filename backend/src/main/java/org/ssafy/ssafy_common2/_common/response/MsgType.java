@@ -19,6 +19,7 @@ public enum MsgType {
     SEARCH_DOGAM_DETAIL_SUCCESSFULLY("도감 디테일 조회 성공"),
     SEARCH_POINT_SUCCESSFULLY("포인트 조회 성공"),
     SEARCH_EMAIL_SUCCESSFULLY("이메일 조회 성공"),
+    SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY("이메일 프로필 사진 조회 성공"),
     ;
 
     private final String msg;
