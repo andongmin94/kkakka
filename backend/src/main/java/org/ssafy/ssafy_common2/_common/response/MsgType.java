@@ -18,6 +18,7 @@ public enum MsgType {
     CREATE_DOGAM_DISLIKE_SUCCESSFULLY("도감 싫어요 생성 성공"),
     SEARCH_DOGAM_DETAIL_SUCCESSFULLY("도감 디테일 조회 성공"),
     SEARCH_POINT_SUCCESSFULLY("포인트 조회 성공"),
+    SEARCH_EMAIL_SUCCESSFULLY("이메일 조회 성공"),
     ;
 
     private final String msg;

@@ -20,12 +20,20 @@ import java.util.Map;
 public class UserDataController {
 
     private final UserDataService userDataService;
+
     @GetMapping("/user/point")
     public ApiResponseDto<Map<String,Integer>> getPoint(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Map<String, Integer> map = new HashMap<>();
-        int point = userDataService.getPoint(userDetails.getUser());
-        map.put("Point", point);
+
+        Map<String, Integer> map = userDataService.getPoint(userDetails.getUser());
         return ResponseUtils.ok(map, MsgType.SEARCH_POINT_SUCCESSFULLY);
+
+    }
+
+    @GetMapping("/user/email")
+    public ApiResponseDto<Map<String,String>> getEmail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        Map<String,String> map = userDataService.getEmail(userDetails.getUser());
+        return ResponseUtils.ok(map, MsgType.SEARCH_EMAIL_SUCCESSFULLY);
 
     }
 }
