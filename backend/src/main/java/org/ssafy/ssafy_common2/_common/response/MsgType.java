@@ -17,6 +17,10 @@ public enum MsgType {
     CREATE_DOGAM_COMMENT_SUCCESSFULLY("도감 댓글 생성 성공"),
     CREATE_DOGAM_DISLIKE_SUCCESSFULLY("도감 싫어요 생성 성공"),
     SEARCH_DOGAM_DETAIL_SUCCESSFULLY("도감 디테일 조회 성공"),
+    SEND_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 성공"),
+    RECEIVE_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 수락 성공"),
+    CANCEL_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 취소 성공"),
+    BREAK_OFF_FRIEND_RELATIONSHIP_SUCCESSFULLY("친구 관계 끊기 성공"),
     ;
 
     private final String msg;
