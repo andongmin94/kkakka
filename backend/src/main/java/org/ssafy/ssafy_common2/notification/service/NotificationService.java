@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.ssafy.ssafy_common2._common.exception.CustomException;
+import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.notification.dto.NotificationDto;
+import org.ssafy.ssafy_common2.notification.dto.response.NotificationListResponseDto;
 import org.ssafy.ssafy_common2.notification.dto.response.NotificationResponseDto;
+import org.ssafy.ssafy_common2.notification.dto.response.UpdateNotificationResponseDto;
 import org.ssafy.ssafy_common2.notification.entity.Notification;
 import org.ssafy.ssafy_common2.notification.entity.NotificationType;
 import org.ssafy.ssafy_common2.notification.repository.EmitterRepository;
@@ -16,6 +20,7 @@ import org.ssafy.ssafy_common2.notification.repository.NotificationRepository;
 import org.ssafy.ssafy_common2.user.entity.User;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -44,7 +49,9 @@ public class NotificationService {
             Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByUserEmail(String.valueOf(username));
             eventCaches.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+                    .forEach(entry -> {
+                        sendNotification(emitter, entry.getKey(), emitterId, entry.getValue());
+                    });
         }
 
         return emitter;
@@ -62,6 +69,8 @@ public class NotificationService {
         String eventId = createIdByUserEmailAndTime(receiverEmail);
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserEmail(receiverEmail);
 
+        emitterRepository.saveEventCache(eventId, responseDto);
+
         // 사용자의 Emitter에 알림 전송
         emitters.forEach(
                 (key, emitter) -> {
@@ -71,9 +80,38 @@ public class NotificationService {
 
     }
 
+    // 알림 리스트 불러오기
+    public NotificationListResponseDto getNoficiationList(User user) {
+
+        NotificationListResponseDto responseDto = NotificationListResponseDto.from(
+                notificationRepository.findAllByUserAndIsCheckedIsFalseAndDeletedAtIsNull(user).stream()
+                .map(NotificationResponseDto::of).toList()
+        );
+
+        return responseDto;
+
+    }
+
+    @Transactional
+    public UpdateNotificationResponseDto readAlarm(Long alarmId, User user) {
+
+        Notification notification = notificationRepository.findByIdAndUser(alarmId, user)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_ALARM));
+
+        notification.updateIsChecked(true);
+
+        return UpdateNotificationResponseDto.of(getNumOfUncheckedAlarm(user));
+    }
+
+    // 안 읽은 알람 갯수
+    public int getNumOfUncheckedAlarm(User user) {
+
+        return notificationRepository.countByUserAndIsCheckedIsFalseAndDeletedAtIsNull(user);
+    }
+
     // 받지 않은 이벤트가 있는지 확인
     private boolean hasLostData(String lastEventId){
-        return !StringUtils.hasText(lastEventId);
+        return !lastEventId.isEmpty();
     }
 
     // emitter에게 알림 전송 요청
@@ -85,8 +123,7 @@ public class NotificationService {
 //                    .reconnectTime(1000L) // 재연결 시도
                     .data(data));
 
-            emitterRepository.saveEventCache(emitterId, data);
-
+            System.out.println("last-event-id : " +eventId);
         } catch (IOException exception) {
             // 클라이언트와의 연결이 끊긴 경우, emitter를 만료시킨다.
             emitter.complete();
@@ -97,4 +134,5 @@ public class NotificationService {
     private String createIdByUserEmailAndTime(String email) {
         return String.format("%s_%s", email, System.currentTimeMillis());
     }
+
 }

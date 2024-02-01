@@ -66,5 +66,9 @@ public class Notification extends BaseTime {
                 .build();
     }
 
+    public void updateIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
+    }
+
 
 }
