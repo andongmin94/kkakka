@@ -45,7 +45,7 @@ export default function ProfileEdit() {
         <Button
           type="submit"
           variant="secondary"
-          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+          className="mr-1 border-solid border-2 border-inherit font-bold text-lg mt-2 h-[50px]"
         >
           프로필 편집
         </Button>
