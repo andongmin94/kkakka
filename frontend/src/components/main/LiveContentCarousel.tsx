@@ -1,14 +1,10 @@
 import * as React from "react";
-import Autoplay from "embla-carousel-autoplay";
-import LiveContent from "@/components/main/LiveContent";
-import { CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import { useMainStore } from "@/stores/MainStore";
 import { useEffect } from "react";
+import Autoplay from "embla-carousel-autoplay";
+import { useMainStore } from "@/stores/MainStore";
+import { CardContent } from "@/components/ui/card";
+import LiveContent from "@/components/main/LiveContent";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 export default function LiveContentCarousel() {
   // 라이브 유저 수 더미 데이터

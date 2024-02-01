@@ -1,10 +1,6 @@
-import { create } from "zustand";
-import {
-  mainStoreType,
-  friendStoreType,
-  alarmStoreType,
-} from "@/types/storeTypes";
 import axios from "axios";
+import { create } from "zustand";
+import { mainStoreType, friendStoreType, alarmStoreType } from "@/types/storeTypes";
 
 const token = localStorage.getItem("token");
 
