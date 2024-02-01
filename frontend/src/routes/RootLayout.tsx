@@ -1,18 +1,17 @@
-import { Link, Outlet } from "react-router-dom";
-import FriendsBtn from "@/components/navbar/FriendsBtn";
-import classes from "@/routes/RootLayout.module.css";
-import { TailwindIndicator } from "@/components/TailwindIndicator";
-import { Alarm } from "@/components/navbar/Alarm";
-import { ModeToggle } from "@/components/navbar/ModeToggle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useTheme } from "@/components/navbar/ThemeProvider";
 import cn from "clsx";
-
-import { Mobile, PC } from "@/components/MediaQuery";
-
 const electron = window.electron;
+import { useEffect } from "react";
+import { Alarm } from "@/components/navbar/Alarm";
+import { Mobile, PC } from "@/components/MediaQuery";
+import classes from "@/routes/RootLayout.module.css";
+import FriendsBtn from "@/components/navbar/FriendsBtn";
+import { ModeToggle } from "@/components/navbar/ModeToggle";
+import { useTheme } from "@/components/navbar/ThemeProvider";
+import { useLocation, Link, Outlet } from "react-router-dom";
+import { TailwindIndicator } from "@/components/TailwindIndicator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+
 
 export default function RootLayout() {
   const { theme } = useTheme();

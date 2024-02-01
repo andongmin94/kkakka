@@ -1,17 +1,9 @@
 import * as React from "react";
-import classes from "@/components/navbar/Alarm.module.css";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useEffect } from "react";
 import { useAlarmStore } from "@/stores/MainStore";
+import classes from "@/components/navbar/Alarm.module.css";
 import { useTheme } from "@/components/navbar/ThemeProvider";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function Alarm() {
   const { theme } = useTheme();

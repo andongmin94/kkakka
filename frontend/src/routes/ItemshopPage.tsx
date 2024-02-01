@@ -1,10 +1,10 @@
-import WriteAlias from "@/components/itemShop/WriteAlias";
-import DeleteCollection from "@/components/itemShop/DeleteCollection";
-import Compliment from "@/components/itemShop/Compliment";
-import Speaker from "@/components/itemShop/Speaker";
-import { useItemshopStore } from "@/stores/ItemshopStore";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
+import Speaker from "@/components/itemShop/Speaker";
+import WriteAlias from "@/components/itemShop/WriteAlias";
+import Compliment from "@/components/itemShop/Compliment";
+import { useItemshopStore } from "@/stores/ItemshopStore";
+import DeleteCollection from "@/components/itemShop/DeleteCollection";
 
 export default function ItemshopPage() {
   const { items, fetchItems } = useItemshopStore(

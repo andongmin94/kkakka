@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function MessageDetailPage({ user }) {
   const { id } = useParams();

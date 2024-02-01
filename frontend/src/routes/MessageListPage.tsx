@@ -1,8 +1,8 @@
 import * as React from "react";
-import Message from "../components/message/Message";
-import { useNavigate } from "react-router-dom";
-import { useDmStore } from "@/stores/DmStore";
 import { useEffect } from "react";
+import { useDmStore } from "@/stores/DmStore";
+import { useNavigate } from "react-router-dom";
+import Message from "../components/message/Message";
 
 export default function MessageListPage() {
   const [position, setPosition] = React.useState("");
