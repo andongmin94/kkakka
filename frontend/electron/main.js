@@ -1,9 +1,12 @@
-const { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage } = require("electron");
-const path = require("path");
-require("dotenv").config();
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { join, dirname } from "path";
+import electronLocalshortcut from "electron-localshortcut";
+import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage } from "electron";
 
-const isDev = process.env.IS_DEV == "true" ? true : false;
+dotenv.config();
 
+const isDev = process.env.IS_DEV === "true";
 let win;
 let tray;
 
@@ -13,24 +16,20 @@ function createWindow() {
     width: 1700,
     height: 900,
     frame: false,
-    // transparent: true,
+    transparent: true,
     // alwaysOnTop: true,
-    icon: path.join(__dirname, "icon.png"),
+    icon: join(dirname(fileURLToPath(import.meta.url)), "icon.png"),
     webPreferences: {
-      // nodeIntegration: false,
-      preload: path.join(__dirname, "preload.js"),
+      preload: join(dirname(fileURLToPath(import.meta.url)), "preload.js"),
     },
   });
 
-  win.loadURL(
-    isDev
-      ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../dist/index.html")}`
-  );
+  win.loadURL(isDev ? "http://localhost:3000" : "https://kkakka.vercel.app");
 
-  if (isDev) {
-    win.webContents.openDevTools();
-  }  
+  electronLocalshortcut.register(win, "F12", () => {
+    console.log("F12 is pressed");
+    win.webContents.toggleDevTools();
+  });
 }
 
 // 이 메소드는 Electron의 초기화가 완료되고
@@ -39,7 +38,7 @@ app
   .whenReady()
   .then(createWindow)
   .then(() => {
-    const iconPath = path.join(__dirname, "icon.png");
+    const iconPath = join(dirname(fileURLToPath(import.meta.url)), "icon.png");
     const icon = nativeImage.createFromPath(iconPath);
     tray = new Tray(icon);
 
@@ -67,7 +66,6 @@ app.on("activate", () => {
   }
 });
 
-
 ipcMain.on("minimize", (event) => {
   win.minimize();
 });
@@ -84,11 +82,11 @@ ipcMain.on("hidden", (event) => {
   win.hide();
 });
 
-/////
+//////////////////////////////////////////////////////////
 
 ipcMain.on("button-clicked", (event, message) => {
   console.log("Received from button-clicked : ", message);
-  win.webContents.send('receive-from-electron', message);
+  win.webContents.send("receive-from-electron", message);
 });
 
 ipcMain.on("Riot Game Info", (event, message) => {
@@ -98,4 +96,3 @@ ipcMain.on("Riot Game Info", (event, message) => {
 ipcMain.on("lol", (event, message) => {
   console.log("actions : ", message);
 });
-
