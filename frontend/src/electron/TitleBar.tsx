@@ -1,22 +1,15 @@
-declare global {
-  interface Window {
-    electron: typeof import("electron");
-  }
-}
-
 const electron = window.electron;
-
 import { Button } from "@/components/ui/button";
 
 export default function TitleBar() {
   const minimize = () => {
-    electron.ipcRenderer.send("minimize");
+    electron.send("minimize");
   };
   const maximize = () => {
-    electron.ipcRenderer.send("maximize");
+    electron.send("maximize");
   };
   const hidden = () => {
-    electron.ipcRenderer.send("hidden");
+    electron.send("hidden");
   };
   return (
     <div className="fixed flex gap-1 justify-end z-10 border" style={{ WebkitAppRegion: "drag", width: "99.3%", borderRadius: "8px", margin: "1px", borderColor: "darkorange", backgroundColor: "gold" } as React.CSSProperties }>
