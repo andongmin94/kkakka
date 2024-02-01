@@ -2,7 +2,6 @@ package org.ssafy.ssafy_common2.chatting.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -10,7 +9,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -40,7 +38,7 @@ public class ChatController {
     @Transactional // 영속성을 위해서
     public void enterUser(String publishMessage, SimpMessageHeaderAccessor headerAccessor) {
         System.out.println("++++++ Chat Controller 입장 메세지 받음 ++++++");
-
+        log.info("What Accessor Header got {}", headerAccessor);
 
         try{
             ChatMessageDto msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
@@ -59,9 +57,16 @@ public class ChatController {
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
 
 
-                // 2-2) Message Insert DTO에 맞게 만들어 넣기
-                Message message = Message.of(msg.getContent(),chatJoin, Message.MessageType.ENTER);
-                messageRepository.save(message);
+            log.info("chatJoin 내용: {} ", chatJoin.toString() );
+
+                // 2-2) 채팅 참여가 존재한다면
+            if(chatJoin != null){
+                // 2-3) Message Insert DTO에 맞게 만들어 넣기
+                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
+                        msg.getCreatedAt(), msg.getUpdateAt());
+            }
+
+
 
 
             // 3) 채팅방 유저 +1
@@ -97,9 +102,13 @@ public class ChatController {
             // 2-1) ChatJoin 찾기
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
 
-            // 2-2) Message Insert DTO에 맞게 만들어 넣기
-            Message message = Message.of(msg.getContent(),chatJoin, Message.MessageType.TALK);
-            messageRepository.save(message);
+            // 2-2) 채팅 참여가 존재한다면
+            if(chatJoin != null){
+                // 2-3) Message Insert DTO에 맞게 만들어 넣기
+                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
+                        msg.getCreatedAt(), msg.getUpdateAt());
+            }
+
 
 
         } catch (JsonProcessingException e) {
@@ -131,25 +140,34 @@ public class ChatController {
             // 2-1) ChatJoin 찾기
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
 
-            // 2-2) Message Insert DTO에 맞게 만들어 넣기
-            Message message = Message.of(msg.getContent(),chatJoin, Message.MessageType.QUIT);
-            messageRepository.save(message);
+            // 2-2) 채팅 참여가 존재한다면
+            if(chatJoin != null){
+                // 2-3) Message Insert DTO에 맞게 만들어 넣기
+                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
+                        msg.getCreatedAt(), msg.getUpdateAt());
+            }
 
             // 2-3) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기
             chatJoinRepository.updateChatJoinModifiedAt(LocalDateTime.now(), 1, msg.getChatRoomId());
 
+
+            // 3) 채팅방 유저 -1
+            chatRoomMySQLService.updateUserCnt(msg.getChatRoomId(), "MINUS");
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
+    // 사용자가 App을 끄거나, 방에서 나갔을 때 실행하는 함수
     @EventListener
     @Transactional // 영속성을 위하여
     public void webSocketDisconnectListener(SessionDisconnectEvent event) {
         log.info("DisConnEvent {}", event);
 
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+
+        //
 //        long userId = Long.parseLong((String) headerAccessor.getSessionAttributes().get("userId"));
 //        long chatRoomId = Long.parseLong((String) headerAccessor.getSessionAttributes().get("chatRoomId"));
 //
