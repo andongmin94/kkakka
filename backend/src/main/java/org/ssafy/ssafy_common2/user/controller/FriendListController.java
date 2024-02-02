@@ -14,6 +14,7 @@ import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
+import org.ssafy.ssafy_common2.user.dto.Response.FriendStateResponseDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.service.FriendListService;
 
@@ -29,8 +30,21 @@ public class FriendListController {
 
     private final FriendListService friendListService;
 
-    @PostMapping("/friends/{email}")
-    public ApiResponseDto<Void> addFriend(@PathVariable(value="email") String friendEmail, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    // 현재 친구 상태를 조회
+    @GetMapping("/friends/{friend-email}")
+    public ApiResponseDto<FriendStateResponseDto> getFriendState(@PathVariable("friend-email") String friendEmail,
+                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        // friendEmail이 유효한 회원인지 확인
+        User receiver = friendListService.validateFriend(friendEmail);
+
+        return ResponseUtils.ok(friendListService.createFriendStateResponse(userDetails.getUser(), receiver), MsgType.SEARCH_SUCCESSFULLY);
+    }
+
+    // 친구 요청, 친구 요청 수락, 친구 신청 취소하기, 친구 끊기
+    @PostMapping("/friends")
+    public ApiResponseDto<Void> addFriend(@RequestParam(value="email") String friendEmail,
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         // 자기 자신과 친구를 맺을 수 없음
         if (friendEmail.equals(userDetails.getUsername())) {
@@ -40,12 +54,10 @@ public class FriendListController {
         // friendEmail이 유효한 회원인지 확인
         User receiver = friendListService.validateFriend(friendEmail);
 
-        // 친구 추가하기
-        friendListService.addFriend(userDetails.getUser(), receiver);
-
-        return ResponseUtils.ok(MsgType.DATA_SUCCESSFULLY);
+        return ResponseUtils.ok(friendListService.editFriendState(userDetails.getUser(), receiver));
     }
 
+    // 친구 리스트 조회
     @GetMapping("/friends")
     public ApiResponseDto<Map<String, Object>> getFriends(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
