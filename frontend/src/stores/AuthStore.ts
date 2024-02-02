@@ -1,6 +1,6 @@
+import axios from "axios";
 import { create } from "zustand";
 import { AuthStoreType } from "@/types/storeTypes";
-import axios from "axios";
 
 export const useAuthStore = create<AuthStoreType>((set) => ({
   token: null,

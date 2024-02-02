@@ -1,5 +1,5 @@
-import CommentModal from "@/components/profile/CommentModal";
 import ThumbsDown from "@/components/profile/ThumbsDown";
+import CommentModal from "@/components/profile/CommentModal";
 
 interface dogam {
   dogamImg: string;

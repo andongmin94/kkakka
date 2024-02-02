@@ -1,6 +1,6 @@
+import axios from "axios";
 import { create } from "zustand";
 import { mainStoreType } from "@/types/storeTypes";
-import axios from "axios";
 
 const token = localStorage.getItem("token");
 

@@ -1,8 +1,8 @@
-import WriteAlias from "@/components/itemShop/WriteAlias";
-import DeleteCollection from "@/components/itemShop/DeleteCollection";
-import Compliment from "@/components/itemShop/Compliment";
 import Speaker from "@/components/itemShop/Speaker";
+import WriteAlias from "@/components/itemShop/WriteAlias";
+import Compliment from "@/components/itemShop/Compliment";
 import useItemListQuery from "@/apis/itemshop/queries/useItemListQuery";
+import DeleteCollection from "@/components/itemShop/DeleteCollection";
 
 export default function ItemshopPage() {
   const { data, isLoading, error } = useItemListQuery();

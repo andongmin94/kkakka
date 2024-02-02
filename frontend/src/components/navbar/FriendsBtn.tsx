@@ -7,9 +7,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-// import { useFriendStore } from "@/stores/MainStore";
-// import { useEffect } from "react";
-// import { useShallow } from "zustand/react/shallow";
 
 // 친구 카드 여러개를 띄우기 위한 더미 데이터
 
@@ -47,17 +44,6 @@ const friendsInfo = [
 ];
 
 export default function FriendsBtn() {
-  // const { friends, fetchFriends } = useFriendStore(
-  //   useShallow((state) => ({
-  //     friends: state.friends,
-  //     fetchFriends: state.fetchFriends,
-  //   }))
-  // );
-
-  // useEffect(() => {
-  //   fetchFriends();
-  // }, [fetchFriends]);
-
   return (
     <Sheet>
       <SheetTrigger>

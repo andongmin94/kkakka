@@ -1,6 +1,5 @@
-import DishonorAlias from "./DishonorAlias";
-
 import { Mobile, PC } from "../MediaQuery";
+import DishonorAlias from "./DishonorAlias";
 
 interface data {
   alias: string;
