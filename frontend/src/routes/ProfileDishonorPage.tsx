@@ -1,3 +1,4 @@
+import { Mobile, PC } from "@/components/MediaQuery";
 import Dishonor from "@/components/profile/Dishonor";
 
 export default function ProfileDishonorPage() {
@@ -20,10 +21,24 @@ export default function ProfileDishonorPage() {
     },
   ];
   return (
-    <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
-      {profileAlias.map((data, idx) => {
-        return <Dishonor data={data} key={idx} />;
-      })}
-    </div>
+    <>
+      <PC>
+        <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
+          {profileAlias.map((data, idx) => {
+            return <Dishonor data={data} key={idx} />;
+          })}
+        </div>
+      </PC>
+
+      {/* ------------------------------------------------ */}
+
+      <Mobile>
+        <div className="w-full m-1 grid grid-cols-2 row-auto place-items-center">
+          {profileAlias.map((data, idx) => {
+            return <Dishonor data={data} key={idx} />;
+          })}
+        </div>
+      </Mobile>
+    </>
   );
 }
