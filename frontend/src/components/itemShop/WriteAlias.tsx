@@ -43,8 +43,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
-import { useFriendStore } from "@/stores/MainStore";
-import { useEffect } from "react";
+// import { useFriendStore } from "@/stores/MainStore";
+// import { useEffect } from "react";
 
 // 친구 더미 데이터
 const userId = [
@@ -79,11 +79,11 @@ export default function WriteAlias({
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = React.useState(false);
 
-  const { fetchFriends, friends } = useFriendStore(); // 친구목록
+  // const { fetchFriends, friends } = useFriendStore(); // 친구목록
 
-  useEffect(() => {
-    fetchFriends();
-  }, [fetchFriends]);
+  // useEffect(() => {
+  //   fetchFriends();
+  // }, [fetchFriends]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

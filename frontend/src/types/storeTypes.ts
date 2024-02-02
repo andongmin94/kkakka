@@ -61,7 +61,7 @@ export interface itemshopStoreType {
   addAliasStatus: string;
   deleteDogamStatus: string;
   errorMessage: string | null;
-  fetchItems: () => void;
+  fetchItems: () => Promise<void>;
   deleteDogam: (dogamId: number) => void;
   addAlias: (formData: FormData, friendEmail: string) => void;
   buyForcePraise: (friendEmail: string) => void;

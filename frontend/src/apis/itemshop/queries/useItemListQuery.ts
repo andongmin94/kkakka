@@ -1,19 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { useItemshopStore } from "@/stores/ItemshopStore";
-import { useShallow } from "zustand/react/shallow";
 import { ITEM_LIST } from "@/constants/queryKeys";
-
-const { fetchItems } = useItemshopStore(
-  useShallow((state) => ({
-    fetchItems: state.fetchItems,
-  }))
-);
+import { useItemshopStore } from "@/stores/ItemshopStore";
 
 const useItemListQuery = () => {
+  const { fetchItems } = useItemshopStore();
+
   const { data, error, isLoading } = useQuery({
     queryKey: [ITEM_LIST],
-    queryFn: () => fetchItems(),
+    queryFn: fetchItems,
   });
+
   return { data, error, isLoading };
 };
 
