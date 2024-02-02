@@ -42,6 +42,11 @@ public class ItemDealList extends BaseTime {
     @JoinColumn(name = "enforcement_id")
     public Enforcement enforcement;
 
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "megaphone_id")
+    public Megaphone megaphone;
+
     public void setDogam(Dogam dogam) {
         if (this.dogam != null) {
             this.dogam.setItemDealList(null);
