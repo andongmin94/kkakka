@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.response.MsgType;
+import org.ssafy.ssafy_common2.notification.dto.NotificationDto;
+import org.ssafy.ssafy_common2.notification.entity.NotificationType;
+import org.ssafy.ssafy_common2.notification.service.NotificationService;
 import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.dto.Response.FriendStateResponseDto;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
@@ -27,6 +30,8 @@ public class FriendListService {
 
     private final FriendListRepository friendListRepository;
     private final UserRepository userRepository;
+
+    private final NotificationService notificationService;
 
     // 친구 추가 요청
     @Transactional
@@ -59,6 +64,9 @@ public class FriendListService {
 
         friendListRepository.save(friendRequest);
         friendListRepository.save(oppositeFriendRequest);
+
+        // 친구 신청 알림 보내기
+        notifyFriendRequest(sender, receiver);
 
         return MsgType.SEND_FRIEND_REQUEST_SUCCESSFULLY;
     }
@@ -161,5 +169,21 @@ public class FriendListService {
         return userRepository.findByKakaoEmailAndDeletedAtIsNull(receiverEmail)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
     }
+
+    // 친구 신청하기
+    private void notifyFriendRequest(User sender, User receiver) {
+
+        notificationService.send(
+                NotificationDto.of(
+                        receiver,
+                        NotificationType.FRIEND_REQUEST,
+                        sender.getUserName()+"님이 친구요청을 보냈습니다.",
+                        sender.getKakaoProfileImg(),
+                        sender.getKakaoEmail(),
+                        sender.getId()
+                )
+        );
+    }
+
 
 }
