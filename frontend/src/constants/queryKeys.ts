@@ -20,6 +20,8 @@ export const ITEM_LIST = "/itemList";
 
 // profile
 // profile/alias
+export const ALIAS_LIST = "/profile/aliasList";
 // profile/dogam
+export const DOGAM_LIST = "/profile/dogamList";
 
 // user
