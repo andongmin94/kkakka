@@ -1,6 +1,7 @@
 import NewDogam from "@/components/main/NewDogam";
 import { Mobile, PC } from "@/components/MediaQuery";
 import LiveContentCarousel from "@/components/main/LiveContentCarousel";
+import useBroadcastListQuery from "@/apis/broadcast/queries/useBroadcastListQuery";
 
 // 임시 배열
 const dataList = [
@@ -58,6 +59,12 @@ const dataList = [
 ];
 
 export default function IndexPage() {
+  const { broadcasts, isLoading, error } = useBroadcastListQuery();
+
+  console.log("페이지단", broadcasts);
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+
   return (
     <>
       <PC>
@@ -67,7 +74,7 @@ export default function IndexPage() {
             <p className="grid place-items-center ml-2 font-bold">라이브</p>
           </div>
           <div className="h-[100px] w-[1200px] flex flex-col items-center">
-            {/* <LiveContentCarousel /> */}
+            <LiveContentCarousel />
           </div>
           <div className="text-3xl mt-[300px] mb-10 flex ">
             <img src="/image/dogam.png" className="h-[50px] w-[50px]" />

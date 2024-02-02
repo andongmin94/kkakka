@@ -1,15 +1,15 @@
 import axios from "axios";
 import { create } from "zustand";
-const token = localStorage.getItem("token");
 import { broadcastStoreType } from "@/types/storeTypes";
+
+const token = localStorage.getItem("token");
 
 export const useBroadcastStore = create<broadcastStoreType>((set) => ({
   createBetStatus: "idle", // 'idle' | 'loading' | 'success' | 'error'
   errorMessage: "",
   liveBroadcastList: [],
   fetchLiveBroadcastList: async () => {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcast`;
-
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts`;
     try {
       const response = await axios.get(url, {
         headers: {
@@ -20,8 +20,12 @@ export const useBroadcastStore = create<broadcastStoreType>((set) => ({
         ...prev,
         liveBroadcastList: response.data.liveBroadcastList,
       }));
+      console.log("서버 응답:", response.data);
+      console.log("서버 응답 투:", response.data.data);
+      return response.data.data;
     } catch (error: any) {
       console.error("Error fetching live broadcast list", error.message);
+      console.log("에러");
     }
   },
 

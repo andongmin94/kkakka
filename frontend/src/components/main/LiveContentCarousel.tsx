@@ -1,19 +1,15 @@
 import * as React from "react";
-import { useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import { useMainStore } from "@/stores/MainStore";
 import { CardContent } from "@/components/ui/card";
 import LiveContent from "@/components/main/LiveContent";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 export default function LiveContentCarousel() {
   // 라이브 유저 수 더미 데이터
-
-  const { fetchLiveBroadcastList, liveBroadcastList } = useMainStore();
-
-  useEffect(() => {
-    fetchLiveBroadcastList();
-  }, [fetchLiveBroadcastList]);
 
   // const liveData = [
   //   {
@@ -77,7 +73,7 @@ export default function LiveContentCarousel() {
       className="h-full w-full"
     >
       <CarouselContent>
-        {liveBroadcastList &&
+        {/* {liveBroadcastList &&
           Array.isArray(liveBroadcastList) &&
           liveBroadcastList.map((room, index) => (
             <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
@@ -87,7 +83,7 @@ export default function LiveContentCarousel() {
                 </CardContent>
               </div>
             </CarouselItem>
-          ))}
+          ))} */}
       </CarouselContent>
     </Carousel>
   );
