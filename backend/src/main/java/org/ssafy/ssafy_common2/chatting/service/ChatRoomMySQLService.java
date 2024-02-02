@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
+import org.ssafy.ssafy_common2.chatting.dto.response.CrowdDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoinId;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
@@ -19,10 +20,12 @@ import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 import org.ssafy.ssafy_common2.user.service.FriendListService;
+import org.ssafy.ssafy_common2.chatting.dto.response.LiveBroadcastListDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -176,46 +179,82 @@ public class ChatRoomMySQLService {
 
 
     // 9) 라이브 중인 친구 채팅방 얻기
-    public List<ChatRoomInfoDto> findAllBroadCastsRoom(User user){
+    public List<LiveBroadcastListDto> findAllBroadCastsRoom(User user){
 
         // 3-1) 친구 목록 받기
         List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(user);
         //  3-1-a) 친구 리스트 받기용
-        ArrayList<ChatRoomInfoDto> ans = new ArrayList<>();
+        ArrayList<LiveBroadcastListDto> ans = new ArrayList<>();
 
         // 3-1-b) 친구 한 명씩 순회
         for (int i = 0; i < friendInfoList.size(); i++) {
 
-            ChatRoomInfoDto element = new ChatRoomInfoDto();
+            // 빈 객체 만들기
+            LiveBroadcastListDto elements = new LiveBroadcastListDto();
 
-            // 3-2) 친구 목록 중에서 아직 살아있는 단체 채팅방 가진 친구 한명 찾기
-            ChatRoom friendsLiveRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, friendInfoList.get(i).getEmail()).orElse(null);
+            // 값 얻기
+            ChatRoom chatRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, friendInfoList.get(i).getEmail()).orElse(null);
+            User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(friendInfoList.get(i).getEmail()).orElse(null);
 
-            // 3-3) 그 친구들 정보를 ChatRoomInfoDto에 맞춰서 넣기
-            element.setRoomId(friendsLiveRoom.getId());
-            element.setChatRoomType(friendsLiveRoom.getChatRoomType());
-            element.setFriendName(friendsLiveRoom.getChatOwnerName());
-            element.setFriendEmail(friendsLiveRoom.getChatOwnerEmail());
-            element.setTenMinute(friendsLiveRoom.isTenMinute());
-            element.setFriendImgUrl(user.getKakaoProfileImg());
-            element.setFriendAlias(user.getUserInfoId().getCurAlias());
-            element.setLogin(user.getUserInfoId().isLogin());
+            // 방에 대한 값들 얻기
+            elements.setPlayerEmail(friendInfoList.get(i).getEmail());
+            elements.setPlayerName(chatRoom.getChatOwnerName());
+            elements.setRoomTitle(RandomPickRoomTitle());
+            elements.setRoomId(chatRoom.getId());
+            elements.setPlayerKakaoImg(friend.getKakaoProfileImg());
 
-            // 3-4) 해당 채팅방의 마지막 메세지 찾기
-            Message lastMessage = chatJoinRepository.getLastMessage(friendsLiveRoom.getId()).orElse(null);
+            // 참여한 사람들 List 얻기
 
-            if(lastMessage != null){
-                element.setLastMessage(lastMessage.getContent());
-                element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
-            }else{
-                element.setLastMessage("아직 중계방에 채팅이 없습니다!! 빨리 들어오세요!");
-                element.setLastWrittenMessageTime(null);
+                // 참여 정보 얻기
+            List<ChatJoin> chatJoin = chatJoinRepository.findChatJoinByChatJoinId_ChatRoomId(chatRoom.getId());
+
+
+                // 빈 객체
+            ArrayList<CrowdDto> crowdList = new ArrayList<>();
+
+                // 값 넣기
+            for (int j = 0; j < chatJoin.size(); j++) {
+                CrowdDto one = new CrowdDto();
+                User crowdMember = userRepository.findByIdAndDeletedAtIsNull(chatJoin.get(j).getUser().getId()).orElse(null);
+
+                one.setAttenderEmail(crowdMember.getKakaoEmail());
+                one.setAttenderProfileImg(crowdMember.getKakaoProfileImg());
+                one.setAttenderName(crowdMember.getUserName());
+
+                crowdList.add(one);
             }
 
             // 3-5) 답 속에 포함
-            ans.add(element);
+            elements.setCrowdDtoList(crowdList);
+
+            ans.add(elements);
+
         }
         return ans;
+    }
+
+
+    public String RandomPickRoomTitle () {
+
+        Random random = new Random();
+
+        int next = random.nextInt(10);
+
+        String [] roomTitles = {
+                "벌써 3연패 오늘은 이기겠습니다.",
+                "더 이상 물러설 곳이 없다.",
+                "어머니, 제가 해낼 수 있을까요?",
+                "오늘은 제가 얼마나 죽을까요? 이재, 곧 죽습니다.",
+                "이기는 놈이 강한 게 아니라 버티는 놈이 강한 거더라",
+                "공이 웃으면 풋볼 ㅋㅋㅋ",
+                "자동차를 톡하고 치면? 카톡",
+                "식사는 하셨는지요",
+                "채팅방은 공공장소입니다. 에티켓을 지켜주세요.",
+                "미국에서 비가 내리면? USB lol"
+        };
+
+
+        return roomTitles[next];
     }
 }
 

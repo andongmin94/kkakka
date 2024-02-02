@@ -13,13 +13,12 @@ import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
+
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
-import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
-import org.ssafy.ssafy_common2.user.service.FriendListService;
-
+import org.ssafy.ssafy_common2.chatting.dto.response.LiveBroadcastListDto;
 import java.util.List;
 import java.util.Objects;
 
@@ -139,7 +138,7 @@ public class ChatRoomController {
     @GetMapping("/broadcasts")
     public ApiResponseDto<?> getAllBroadCastsRoomInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        List<ChatRoomInfoDto> ans = chatRoomMySQLService.findAllBroadCastsRoom(userDetails.getUser());
+        List<LiveBroadcastListDto> ans = chatRoomMySQLService.findAllBroadCastsRoom(userDetails.getUser());
 
         if(ans == null){
             return ResponseUtils.error(ErrorResponse.of(ErrorType.NO_LIVE_BROADCAST_ROOM));
