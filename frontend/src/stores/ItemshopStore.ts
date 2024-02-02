@@ -20,6 +20,7 @@ export const useItemshopStore = create<itemshopStoreType>((set) => ({
         }
       );
       set((prev) => ({ ...prev, items: res.data.data.itemList }));
+      return res.data.data.itemList;
     } catch (error: any) {
       console.error("Error fetching items", error.message);
     }
