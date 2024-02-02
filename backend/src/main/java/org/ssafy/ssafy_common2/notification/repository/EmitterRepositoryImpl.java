@@ -28,6 +28,11 @@ public class EmitterRepositoryImpl implements EmitterRepository {
         eventCache.put(eventId, event);
     }
 
+    @Override
+    public Map<String, SseEmitter> findAllEmitter() {
+        return emitters;
+    }
+
     // 주어진 email로 시작하는 모든 Emitter들을 가져온다.
     @Override
     public Map<String, SseEmitter> findAllEmitterStartWithByUserEmail(String userEmail) {
