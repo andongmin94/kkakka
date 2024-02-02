@@ -1,4 +1,5 @@
 import classes from "./CommentAlias.module.css";
+
 export default function CommentAlias({ alias }: { alias: string }) {
   return (
     <>

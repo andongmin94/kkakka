@@ -1,4 +1,5 @@
 import classes from "./NewDogamAlias.module.css";
+
 export default function NewDogamAlias({ alias }: { alias: string }) {
   return (
     <>

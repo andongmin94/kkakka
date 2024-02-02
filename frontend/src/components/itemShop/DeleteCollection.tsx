@@ -1,21 +1,10 @@
-import { Card } from "@/components/ui/card";
-
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
 import Price from "./Price";
 import Purchase from "./Purchase";
-
-import { useProfileDogamStore } from "@/stores/ProfileStore";
 import { useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useProfileDogamStore } from "@/stores/ProfileStore";
+import { Dialog, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function TitleItemshop({
   itemName,
