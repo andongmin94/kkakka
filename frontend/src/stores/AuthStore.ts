@@ -1,6 +1,5 @@
 import axios from "axios";
 import { create } from "zustand";
-// import { axiosInstance } from "@/utils/axios";
 import { AuthStoreType } from "@/types/storeTypes";
 
 export const useAuthStore = create<AuthStoreType>((set) => ({
@@ -14,7 +13,7 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
           }/api/oauth/callback/kakao/token?code=${code}`
         )
         .then((res) => {
-          set({ token: res.headers.authorization });
+          set((prev) => ({ ...prev, token: res.headers.authorization }));
           localStorage.setItem("token", res.headers.authorization);
         });
     } catch (error: any) {
@@ -22,6 +21,6 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
     }
   },
   logout: () => {
-    set({ token: null }), localStorage.removeItem("token");
+    set((prev) => ({ ...prev, token: null })), localStorage.removeItem("token");
   },
 }));

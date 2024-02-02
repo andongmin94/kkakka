@@ -20,6 +20,7 @@ export default function ProfileDishonorPage() {
       createdAt: "2024년 1월 3일",
     },
   ];
+
   return (
     <>
       <PC>
