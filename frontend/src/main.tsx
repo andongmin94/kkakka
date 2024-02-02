@@ -2,7 +2,7 @@ import "@/globals.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import IndexPage from "@/routes/IndexPage";
-// import LoginPage from "@/routes/LoginPage.tsx";
+import LoginPage from "@/routes/LoginPage.tsx";
 import IntroPage from "@/routes/IntroPage.tsx";
 import RootLayout from "@/routes/RootLayout.tsx";
 import ProfilePage from "@/routes/ProfilePage.tsx";
@@ -25,7 +25,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
-  // { path: "/", element: <LoginPage /> },
+  { path: "/login", element: <LoginPage /> },
   {
     path: "/",
     element: <RootLayout />,
@@ -64,7 +64,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
-        { (typeof electron !== 'undefined') && <TitleBar /> }
+        {typeof electron !== "undefined" && <TitleBar />}
         <RouterProvider router={router} />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
