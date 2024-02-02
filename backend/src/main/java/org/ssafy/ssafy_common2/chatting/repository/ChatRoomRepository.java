@@ -53,7 +53,11 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     @Query(value = "UPDATE chat_room cr SET cr.lose_point =:betPrice WHERE cr.id = :roomId", nativeQuery = true)
     void updateLosePoint(long roomId, int betPrice);
 
-    // 9) userEmail과 채팅방 타입이 MANY인 걸 특정하여 하나의 채팅방을 반환한다. (친구의 라이브 중계방 찾기용)
+    // 9) MANY 이면서 delete 되지 않은 채팅방 리스트 전부 조회
+    List<ChatRoom> findChatRoomByChatRoomTypeAndDeletedAtIsNull(ChatRoom.ChatRoomType chatRoomType);
 
 
+    @Modifying
+    @Query(value = "UPDATE chat_room cr SET cr.deleted_at = :deleted_at WHERE cr.id = :roomId", nativeQuery = true)
+    void deleteChatRoomById(long roomId, LocalDateTime deleted_at);
 }
