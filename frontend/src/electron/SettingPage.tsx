@@ -1,20 +1,10 @@
-import { Slider } from "@/components/ui/slider";
 import axios from "axios";
-
-declare global {
-  interface Window {
-    electron: typeof import("electron");
-  }
-}
-
 const electron = window.electron;
+import { Slider } from "@/components/ui/slider";
 
 export default function SettingPage() {
-  const handleClick = () => {
-    electron.ipcRenderer.send("button-clicked", "hi");
-    console.log("React button clicked");
-  };
-
+  electron.on('channel-name', () => { console.log("리액트에서 받았음") });
+  const handleClick = () => { electron.send('button-clicked', '리액트에서 보냄') };
   const summonerName = async () => {
     let sname = "안동민";
     const response = await axios({

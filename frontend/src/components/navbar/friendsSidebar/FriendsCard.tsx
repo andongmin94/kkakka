@@ -1,8 +1,8 @@
-import classes from "./FriendsCard.module.css";
-import FriendsProfile from "./FriendsProfile";
-import UserCurrentAlias from "../../UserCurrentAlias";
 import UserName from "./UserName";
 import UserStatus from "./UserStatus";
+import FriendsProfile from "./FriendsProfile";
+import classes from "./FriendsCard.module.css";
+import UserCurrentAlias from "../../UserCurrentAlias";
 
 interface info {
   name: string;
