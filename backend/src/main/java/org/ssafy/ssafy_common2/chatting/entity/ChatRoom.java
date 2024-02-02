@@ -75,6 +75,20 @@ public class ChatRoom extends BaseTime implements Serializable {
                 .losePoint(losePoint)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "ChatRoom{" +
+                "id=" + id +
+                ", chatRoomType=" + chatRoomType +
+                ", chatOwnerName='" + chatOwnerName + '\'' +
+                ", chatOwnerEmail='" + chatOwnerEmail + '\'' +
+                ", userCnt=" + userCnt +
+                ", tenMinute=" + tenMinute +
+                ", winPoint=" + winPoint +
+                ", losePoint=" + losePoint +
+                '}';
+    }
 }
 
 /*

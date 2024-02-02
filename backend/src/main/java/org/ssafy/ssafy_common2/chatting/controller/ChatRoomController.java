@@ -150,9 +150,9 @@ public class ChatRoomController {
     }
 
     // 4) 특정 채팅방의 메세지 내역 불러오기
-    @GetMapping("/dm/load/{chatRoomId}")
+    @GetMapping("/dm/load/{chat_room_id}")
     public ApiResponseDto<?> loadChatRoomMessage(
-            @PathVariable(value = "chatRoomId") long chatRoomId,
+            @PathVariable(value = "chat_room_id") long chatRoomId,
             @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
             @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria
     ){
