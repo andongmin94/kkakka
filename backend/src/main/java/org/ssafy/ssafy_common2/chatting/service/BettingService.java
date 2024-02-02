@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2.chatting.dto.response.BettingDto;
+import org.ssafy.ssafy_common2.chatting.dto.response.DividendsDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.PredictDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
 import org.ssafy.ssafy_common2.chatting.repository.ChatRoomRepository;
+import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
+import org.ssafy.ssafy_common2.user.entity.User;
+import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ public class BettingService {
 
     private final ChatRoomRepository chatRoomRepository;
     private  final ChatJoinRepository chatJoinRepository;
+    private final DynamicUserInfoRepository dynamicUserInfoRepository;
 
 
     private BettingDto bettingDto = new BettingDto();
@@ -44,14 +49,20 @@ public class BettingService {
                     chatRoomRepository.updateWinPoint(roomId, betPoint + chatRoom.getWinPoint());
                     pd.setPridictWin(betPoint+ chatRoom.getWinPoint());
                     pd.setPridictLose(chatRoom.getLosePoint());
+
+                    // 2) 현 유저의 채팅 참여에도, 얼마나 걸었는지를 넣는다.
+                    chatJoinRepository.updateIswinAndBetPrice(isWin, betPoint + chatRoom.getWinPoint(), userId, roomId);
+
                 }else{
                     chatRoomRepository.updateLosePoint(roomId, betPoint + chatRoom.getLosePoint());
                     pd.setPridictWin(chatRoom.getWinPoint());
                     pd.setPridictLose(betPoint + chatRoom.getLosePoint());
+
+                    // 2) 현 유저의 채팅 참여에도, 얼마나 걸었는지를 넣는다.
+                    chatJoinRepository.updateIswinAndBetPrice(isWin, betPoint + chatRoom.getLosePoint(), userId, roomId);
                 }
 
-                // 2) 현 유저의 채팅 참여에도, 얼마나 걸었는지를 넣는다.
-                chatJoinRepository.updateIswinAndBetPrice(isWin, betPoint, userId, roomId);
+
 
 
                 // 3) 현재까지의 승부 예측 결과를 DTO에 담는다.
@@ -63,9 +74,51 @@ public class BettingService {
 
         }
 
-
-
-
         return  bettingDto;
     }
+
+    // ** 배팅 정산 **
+    @Transactional
+    public DividendsDto GetBettingResult (User user, long roomId, boolean isWin){
+        // 2-1) 채팅방의 총 이긴다 진다 금액 블러오기
+      ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElse(null);
+
+        // 2-2) 해당 유저의 배팅 채팅참여 내역
+        ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(user.getId(), chatRoom.getId()).orElse(null);
+
+        // 2-3) 유저 갱신용에서 진짜 point 꺼내기
+        DynamicUserInfo dynamicUserInfo = user.getUserInfoId();
+        // 2-4) 배팅 정산
+            int userPrevPoint = dynamicUserInfo.getPoint();
+            int calculatedPoint;
+
+            // 유저의 예측이 틀렸을 경우, 유저가 건 베팅 머니만큼 돈을 깐다.
+            if(chatJoin.isWin() != isWin){
+                calculatedPoint = userPrevPoint - chatJoin.getBetPrice();
+                dynamicUserInfoRepository.UpdateUserBettingPoint(calculatedPoint, user.getUserInfoId().getId());
+            }
+            else{
+                // 유저의 예측이 들어 맞았을 경우, 유저가 건 배팅 머니만큼 돈을 벌게 한다.
+                // 돈 계산 방법: 배팅금액 * (100 + (이긴다 혹은 진다 포인트/ 전체 포인트))
+
+                    // 이긴다 포인트로 포인트 배당
+                if(isWin){
+                    calculatedPoint = userPrevPoint * (100 + (chatRoom.getWinPoint()/(chatRoom.getWinPoint()+ chatRoom.getLosePoint())));
+                }else{
+                    calculatedPoint = userPrevPoint * (100 + (chatRoom.getLosePoint()/(chatRoom.getWinPoint()+ chatRoom.getLosePoint())));
+                }
+
+                dynamicUserInfoRepository.UpdateUserBettingPoint(calculatedPoint, user.getUserInfoId().getId());
+            }
+
+            DividendsDto dto = new DividendsDto();
+
+            dto.setCurUserPoint(calculatedPoint);
+            dto.setUserWin(isWin);
+            dto.setUserId(user.getId());
+
+
+        return dto;
+    }
+
 }
