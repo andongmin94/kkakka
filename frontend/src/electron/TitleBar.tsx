@@ -12,11 +12,11 @@ export default function TitleBar() {
     electron.send("hidden");
   };
   return (
-    <div className="fixed flex gap-1 justify-end z-10 border" style={{ WebkitAppRegion: "drag", width: "99.3%", borderRadius: "8px", margin: "1px", borderColor: "darkorange", backgroundColor: "gold" } as React.CSSProperties }>
-      <div style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
-        <Button onClick={minimize} className="">-</Button>&nbsp;
-        <Button onClick={maximize}>ㅁ</Button>&nbsp;
-        <Button onClick={hidden}>X</Button>
+    <div className="fixed flex justify-end z-10 border" style={{ WebkitAppRegion: "drag", width: "100%", borderWidth: "2px", borderColor: "darkorange", backgroundColor: "gold" } as React.CSSProperties }>
+      <div className="mx-1 my-1" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+        <Button onClick={minimize} className="text-xl">-</Button>&nbsp;
+        <Button onClick={maximize} className="text-xl">ㅁ</Button>&nbsp;
+        <Button onClick={hidden} className="text-xl">X</Button>
       </div>
     </div>
   );
