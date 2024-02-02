@@ -1,4 +1,4 @@
-package org.ssafy.ssafy_common2.user.controller;
+package org.ssafy.ssafy_common2.itemshop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
