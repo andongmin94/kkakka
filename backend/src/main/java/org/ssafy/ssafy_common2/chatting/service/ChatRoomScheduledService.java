@@ -82,7 +82,7 @@ public class ChatRoomScheduledService {
                 LocalDateTime chatRoomCreatedTime = cr.getCreatedAt();
 
                 // 중계방이 현재시각에서 10분 뺀 것보다 작으면(더 이전이면)
-                if(chatRoomCreatedTime.compareTo(LocalDateTime.now().minusMinutes(10)) <= 0){
+                if(chatRoomCreatedTime.compareTo(LocalDateTime.now().minusMinutes(90)) <= 0){
                     chatRoomRepository.deleteChatRoomById(cr.getId(), LocalDateTime.now());
                 }
             }
