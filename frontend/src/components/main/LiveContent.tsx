@@ -1,11 +1,6 @@
 import LiveProfile from "./LiveProfile";
 import Live from "@/components/ani/Live";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 interface data {
   playerEmail: string;
