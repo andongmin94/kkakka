@@ -16,8 +16,8 @@ export const useAlarmStore = create<alarmStoreType>((set) => ({
           },
         }
       );
-
       set((prev) => ({ ...prev, alarms: res.data.data.alarmList }));
+      return res.data.data.alarmList;
     } catch (error: any) {
       console.error("Error fetching alarms", error.message);
     }
