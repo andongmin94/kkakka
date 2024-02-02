@@ -5,12 +5,16 @@ import { useItemshopStore } from "@/stores/ItemshopStore";
 const useItemListQuery = () => {
   const { fetchItems } = useItemshopStore();
 
-  const { data, error, isLoading } = useQuery({
+  const {
+    data: items,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: [ITEM_LIST],
     queryFn: fetchItems,
   });
 
-  return { data, error, isLoading };
+  return { items, error, isLoading };
 };
 
 export default useItemListQuery;

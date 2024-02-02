@@ -58,6 +58,9 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
     @Query(value = "UPDATE chat_join cj SET cj.is_win = :isWin, cj.bet_price = :betPrice WHERE cj.user_id = :userId AND cj.chat_room_id = :roomId", nativeQuery = true)
     void updateIswinAndBetPrice(boolean isWin, int betPrice, long userId, long roomId);
 
+    // 8) 특정 채팅방에 참여한 사람들 전부 찾기
+    List<ChatJoin> findChatJoinByChatJoinId_ChatRoomId(long roomId);
+
 
 }
 
