@@ -2,7 +2,6 @@ import WriteAlias from "@/components/itemShop/WriteAlias";
 import DeleteCollection from "@/components/itemShop/DeleteCollection";
 import Compliment from "@/components/itemShop/Compliment";
 import Speaker from "@/components/itemShop/Speaker";
-import { useEffect } from "react";
 import useItemListQuery from "@/apis/itemshop/queries/useItemListQuery";
 
 export default function ItemshopPage() {
@@ -10,10 +9,12 @@ export default function ItemshopPage() {
 
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+
   // console.log(items[0].itemName); // 칭호지정
   // console.log(items[1].itemName); // 도감삭제
   // console.log(items[2].itemName); // 강제칭찬
   // console.log(items[3].itemName); // 확성기
+
   console.log(data);
 
   return (

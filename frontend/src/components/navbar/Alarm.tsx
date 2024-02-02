@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect } from "react";
-import { useAlarmStore } from "@/stores/MainStore";
+import { useAlarmStore } from "@/stores/AlarmStore";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 
 export function Alarm() {
@@ -60,11 +60,15 @@ export function Alarm() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {theme === "light" ? <div className={classes.alarm_image} /> : <div className={classes.alarm_image_dark} />}
+        {theme === "light" ? (
+          <div className={classes.alarm_image} />
+        ) : (
+          <div className={classes.alarm_image_dark} />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30 text-center">
         <DropdownMenuLabel>
-          {alarms.uncheckedAlarms}개의 알림이 있습니다.
+          {/* {alarms.uncheckedAlarms}개의 알림이 있습니다. */}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
@@ -72,7 +76,7 @@ export function Alarm() {
           value={position}
           onValueChange={setPosition}
         >
-          {alarms.alarmList &&
+          {/* {alarms.alarmList &&
             alarms.alarmList.map((alarm, idx) => {
               return (
                 <DropdownMenuRadioItem
@@ -86,7 +90,7 @@ export function Alarm() {
                   {alarm.createdAt}
                 </DropdownMenuRadioItem>
               );
-            })}
+            })} */}
 
           {/* <DropdownMenuRadioItem value="top">알림 1</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="bottom">알림 2</DropdownMenuRadioItem>

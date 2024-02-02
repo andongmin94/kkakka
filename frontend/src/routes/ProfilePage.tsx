@@ -11,39 +11,29 @@ import { Button } from "@/components/ui/button";
 
 import { Mobile, PC } from "@/components/MediaQuery";
 
-import { useAliasStore } from "@/stores/ProfileStore";
-import { useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
-
-export default function ProfilePage({ userEmail }: { userEmail: string }) {
+export default function ProfilePage() {
   // 사용자 아이디 더미 데이터
   const userId = "1";
+
   // 사용자 이름
   const userName = "이수민";
+
   // 사용자 프사
   const userImg = "/image/joinSample.png";
+
   // 사용자 프로필 배경
   // const profileBg = "/image/profileBg.png";
+
   // 파산 플래그
   const poorFlag = true;
+
   // 칭호 내용
   const alias = "생태계파괴자";
+
   // 체크 버튼 플래그
   const check = false;
 
   const params = useParams();
-
-  // 불명예전당
-  const { aliases, fetchAliases } = useAliasStore(
-    useShallow((state) => ({
-      aliases: state.aliases,
-      fetchAliases: state.fetchAliases,
-    }))
-  );
-
-  useEffect(() => {
-    fetchAliases(userEmail);
-  }, [fetchAliases]);
 
   return (
     <>
