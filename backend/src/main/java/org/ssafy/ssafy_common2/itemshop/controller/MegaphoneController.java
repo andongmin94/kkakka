@@ -10,6 +10,7 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
+import org.ssafy.ssafy_common2.itemshop.dto.request.MegaphoneCreateRequestDto;
 import org.ssafy.ssafy_common2.itemshop.dto.response.MegaphoneCreateResponseDto;
 import org.ssafy.ssafy_common2.itemshop.service.MegaphoneService;
 
@@ -22,7 +23,7 @@ public class MegaphoneController {
 
     @PostMapping("/friends/megaphone")
     public ApiResponseDto<MegaphoneCreateResponseDto> createMegaphone(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                      @RequestBody String content){
-        return ResponseUtils.ok(megaphoneService.createMegaphone(userDetails.getUser(), content), MsgType.DATA_SUCCESSFULLY);
+                                                                      @RequestBody MegaphoneCreateRequestDto requestDto){
+        return ResponseUtils.ok(megaphoneService.createMegaphone(userDetails.getUser(), requestDto), MsgType.DATA_SUCCESSFULLY);
     }
 }

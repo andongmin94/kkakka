@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.ssafy.ssafy_common2.itemshop.dto.request.MegaphoneCreateRequestDto;
 import org.ssafy.ssafy_common2.itemshop.dto.response.MegaphoneCreateResponseDto;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.entity.Megaphone;
@@ -26,13 +27,13 @@ public class MegaphoneService {
 
     // 확성기 생성
     @Transactional
-    public MegaphoneCreateResponseDto createMegaphone(User user, String content) {
+    public MegaphoneCreateResponseDto createMegaphone(User user, MegaphoneCreateRequestDto requestDto) {
 
         // 아이템 거래 내역 생성
         ItemDealList itemDealList = itemDealService.buyItem(user, "확성기");
 
         // 확성기 생성
-        Megaphone megaphone = Megaphone.of(content);
+        Megaphone megaphone = Megaphone.of(requestDto.getContent());
 
         // 연관관계 편의 메서드 사용
         megaphone.addItemDealList(itemDealList);
@@ -40,7 +41,7 @@ public class MegaphoneService {
 
         megaphoneRepository.save(megaphone);
 
-        MegaphoneCreateResponseDto responseDto = MegaphoneCreateResponseDto.of(user.getKakaoEmail(), content, megaphone.getCreatedAt());
+        MegaphoneCreateResponseDto responseDto = MegaphoneCreateResponseDto.of(user.getKakaoEmail(), megaphone.getContent(), megaphone.getCreatedAt());
 
         // 확성기 sse 전역 알림!
         sendMegaphone(responseDto);
