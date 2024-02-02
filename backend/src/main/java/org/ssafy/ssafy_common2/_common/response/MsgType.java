@@ -22,6 +22,10 @@ public enum MsgType {
     SEARCH_POINT_SUCCESSFULLY("포인트 조회 성공"),
     SEARCH_EMAIL_SUCCESSFULLY("이메일 조회 성공"),
     SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY("이메일 프로필 사진 조회 성공"),
+    SEND_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 성공"),
+    RECEIVE_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 수락 성공"),
+    CANCEL_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 취소 성공"),
+    BREAK_OFF_FRIEND_RELATIONSHIP_SUCCESSFULLY("친구 관계 끊기 성공"),
     ;
 
     private final String msg;
