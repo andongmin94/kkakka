@@ -21,7 +21,7 @@ public class EnforcementController {
     private final UserService userService;
     private final EnforcementService enforcementService;
 
-    @PostMapping("/friends/megaphone")
+    @PostMapping("/friends/compliment")
     public ApiResponseDto<EnforcementCreateResponseDto> addEnforcement(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                        @RequestParam("email") String defenderEmail,
                                                                        @RequestBody EnforcementCreateRequestDto requestDto) {
