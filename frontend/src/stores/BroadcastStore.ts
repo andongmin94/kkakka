@@ -1,7 +1,7 @@
-import { create } from "zustand";
-import { broadcastStoreType } from "@/types/storeTypes";
 import axios from "axios";
+import { create } from "zustand";
 const token = localStorage.getItem("token");
+import { broadcastStoreType } from "@/types/storeTypes";
 
 export const useBroadcastStore = create<broadcastStoreType>((set) => ({
   createBetStatus: "idle", // 'idle' | 'loading' | 'success' | 'error'

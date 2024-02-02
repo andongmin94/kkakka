@@ -1,7 +1,6 @@
-import LiveContentCarousel from "@/components/main/LiveContentCarousel";
 import NewDogam from "@/components/main/NewDogam";
-
 import { Mobile, PC } from "@/components/MediaQuery";
+import LiveContentCarousel from "@/components/main/LiveContentCarousel";
 
 // 임시 배열
 const dataList = [

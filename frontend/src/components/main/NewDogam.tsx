@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import CommentModal from "../profile/CommentModal";
-import ThumbsDown from "../profile/ThumbsDown";
-import NewDogamAlias from "./NewDogamAlias";
-
 import { Mobile, PC } from "../MediaQuery";
+import NewDogamAlias from "./NewDogamAlias";
+import ThumbsDown from "../profile/ThumbsDown";
+import CommentModal from "../profile/CommentModal";
 
 interface dataProps {
   // 도감 주인 아이디

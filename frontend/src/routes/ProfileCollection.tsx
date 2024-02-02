@@ -1,8 +1,7 @@
-import AddCollection from "@/components/profile/AddCollection";
-import Collection from "@/components/profile/Collection";
 import { useParams } from "react-router-dom";
-
 import { Mobile, PC } from "@/components/MediaQuery";
+import Collection from "@/components/profile/Collection";
+import AddCollection from "@/components/profile/AddCollection";
 
 // import { useProfileDogamStore } from "@/stores/ProfileStore";
 // import { useEffect } from "react";
