@@ -1,8 +1,8 @@
 // 도감에 달린 댓글
 export interface DogamCommentResponseType {
-  friendImgUrl: string | null;
-  userName: string | null;
-  userEmail: string | null;
+  commentUserImgUrl: string | null;
+  commentUserName: string | null;
+  commetUserEmail: string | null;
   comment: string | null;
 }
 

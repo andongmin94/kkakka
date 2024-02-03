@@ -39,6 +39,7 @@ export const useMainStore = create<mainStoreType>((set) => ({
       );
       set((prev) => ({ ...prev, myProfilePic: response.data.profilePic }));
       set((prev) => ({ ...prev, myEmail: response.data.email }));
+      console.log("myProfilePic", response.data);
       return response.data.profilePic;
     } catch (error: any) {
       console.error("Error fetching my profile pic", error.message);
