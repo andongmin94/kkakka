@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
@@ -31,15 +32,13 @@ public class UserDataService {
         return map;
     }
 
-    public Map<String, String> getEmailProfileImg(User user) {
+    public UserDataResponseDto getEmailProfileImg(User user) {
 
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
-        
-        Map<String, String> map = new HashMap<>();
-        map.put("Email", user.getKakaoEmail());
-        map.put("ProfileImg", user.getKakaoProfileImg());
-        return map;
+
+        UserDataResponseDto dto = UserDataResponseDto.of(user.getId(), user.getKakaoEmail(), user.getKakaoProfileImg());
+        return dto;
     }
 }
