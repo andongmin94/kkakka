@@ -17,7 +17,9 @@ export const useDmStore = create<dmStoreType>((set) => ({
           },
         }
       );
+      console.log("서버 응답:", res.data.data);
       set((prev) => ({ ...prev, dmList: res.data.data.dmList }));
+      return res.data.data.dmList;
     } catch (error) {
       console.error("Error fetching direct messages", error);
     }

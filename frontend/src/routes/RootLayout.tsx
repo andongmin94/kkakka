@@ -10,8 +10,14 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import useMyProfilePicQuery from "@/apis/user/queries/useMyProfilePicQuery";
 
 export default function RootLayout() {
+  // 백 api 미완
+  // const { myProfilePic, isLoading, error } = useMyProfilePicQuery();
+  // if (isLoading) return <div>로딩중...</div>;
+  // if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+
   const { theme } = useTheme();
   // 사용자 아이디 더미 데이터
   const userId = "1";

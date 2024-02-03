@@ -1,6 +1,6 @@
 import classes from "./NewDogamAlias.module.css";
 
-export default function NewDogamAlias({ alias }: { alias: string }) {
+export default function NewDogamAlias({ alias }: { alias: string | null }) {
   return (
     <>
       <div className={`${classes.aliasTag} flex justify-around`}>

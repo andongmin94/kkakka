@@ -15,11 +15,13 @@ export interface AuthStoreType {
 }
 
 // broadcast
+import { BroadcastItemType } from "@/types/broadcastTypes";
+
 export interface broadcastStoreType {
   createBetStatus: string;
   errorMessage: string | null;
   liveBroadcastList: [];
-  fetchLiveBroadcastList: () => void;
+  fetchLiveBroadcastList: () => Promise<BroadcastItemType[]>;
   startBroadcast: (friendEmail: string) => void;
   createBet: (roomId: number, curBettingPoint: number, isWin: boolean) => void;
   settleBet: (roomId: number) => void;
@@ -38,9 +40,11 @@ export interface dmStoreType {
 }
 
 // feed
+import { NewDogamType } from "@/types/dogamTypes";
+
 export interface FeedStoreType {
   newDogamList: [];
-  fetchNewDogamList: () => void;
+  fetchNewDogamList: () => Promise<NewDogamType[]>;
   disLikeDogam: (dogamId: number) => void;
   unDislikeDogam: (dogamId: number) => void;
 }
@@ -61,7 +65,7 @@ export interface itemshopStoreType {
   addAliasStatus: string;
   deleteDogamStatus: string;
   errorMessage: string | null;
-  fetchItems: () => Promise<void>;
+  fetchItems: () => Promise<ItemType[]>;
   deleteDogam: (dogamId: number) => void;
   addAlias: (formData: FormData, friendEmail: string) => void;
   buyForcePraise: (friendEmail: string, enfScript: string) => Promise<void>;

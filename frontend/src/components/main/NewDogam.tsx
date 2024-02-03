@@ -3,26 +3,9 @@ import { Mobile, PC } from "../MediaQuery";
 import NewDogamAlias from "./NewDogamAlias";
 import ThumbsDown from "../profile/ThumbsDown";
 import CommentModal from "../profile/CommentModal";
+import { NewDogamType } from "@/types/dogamTypes";
 
-interface dataProps {
-  // 도감 주인 아이디
-  id: string;
-  // 도감 주인 프사
-  userImg: string;
-  //   도감 사진
-  dogamImg: string;
-  // 도감 주인 이름
-  name: string;
-  // 도감 주인 칭호
-  alias: string;
-  //   도감 정보
-  dogamTitle: string;
-  createdAt: string;
-  dogamHateAmount: number;
-  isHated: boolean;
-}
-
-export default function NewDogam({ data }: { data: dataProps }) {
+export default function NewDogam({ data }: { data: NewDogamType }) {
   return (
     <>
       <PC>
@@ -30,18 +13,18 @@ export default function NewDogam({ data }: { data: dataProps }) {
         <div className="w-[500px] flex">
           {/* 왼쪽 구역 */}
           <Link
-            to={`/main/profile/${data.id}`}
+            to={`/main/profile/${data.dogamId}`}
             className="w-[200px] border-4 rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center bg-slate-100"
           >
             {/* 프사 */}
             <img
-              src={data.userImg}
+              src={data.dogamImgUrl}
               className="w-[130px] h-[130px] mb-5 rounded-full"
             />
             {/* 이름 */}
-            <p className="font-bold text-2xl mb-5">{data.name}</p>
+            <p className="font-bold text-2xl mb-5">{data.friendName}</p>
             {/* 칭호 */}
-            <NewDogamAlias alias={data.alias} />
+            <NewDogamAlias alias={data.friendAlias} />
           </Link>
 
           {/* 오른쪽 구역 */}
@@ -58,10 +41,10 @@ export default function NewDogam({ data }: { data: dataProps }) {
               <div className="flex gap-3 pb-3 font-bold items-center">
                 {/* 싫어요 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <ThumbsDown tD={data.isHated} />
+                  <ThumbsDown tD={data.hated} />
                 </div>
                 <div className=" flex self-center mr-4 text-xl text-blue-600">
-                  {data.dogamHateAmount}
+                  {data.dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
