@@ -93,11 +93,26 @@ app
       },
     });
     let gameIsRunning = false;
+    
     ws.subscribe('/lol-gameflow/v1/session', (data) => {
       if (data.phase === 'GameStart')
       {
         console.log('게임이 시작되었습니다!')
         gameIsRunning = true;
+        let oneShotChecker = false;
+        let lastSentEventId = 0;
+        // 마지막으로 전송한 이벤트의 ID를 저장하는 변수
+        function sendNewEvents(events) {
+          let newEvents = events.Events.filter(event => event.EventID > lastSentEventId);
+          
+          // lastSentEventId 이후의 모든 이벤트를 찾습니다.
+          if (newEvents.length != 0){
+            console.log(newEvents[0]);
+          }
+          // newEvents를 전송하는 코드를 여기에 작성합니다.
+          if (newEvents.length > 0) { lastSentEventId = newEvents[newEvents.length - 1].EventID }
+          // 마지막으로 전송한 이벤트의 ID를 업데이트합니다.
+        }
         async function fetchEventData() {
           try {
             const response = await axios({
@@ -111,7 +126,45 @@ app
                 rejectUnauthorized: false,
               }),
             });
-            console.log(response.data);
+
+            const allGameData = response.data;
+            const activePlayer = allGameData.activePlayer;
+            const playerName = activePlayer.summonerName;
+            const events = allGameData.events;
+            // variable areas
+
+            let players_info = allGameData.allPlayers.map((players, index) => {
+              let player = {};
+              player.team = index < 5 ? "블루" : "레드";
+              player.summonerName = players.summonerName;
+              player.championName = players.rawChampionName.split("game_character_displayname_")[1];
+              player.summonerSpells1 = players.summonerSpells.summonerSpellOne.displayName;
+              player.summonerSpells2 = players.summonerSpells.summonerSpellTwo.displayName;
+              return player;
+            });
+            let players = allGameData.allPlayers.map((players) => {
+              let player = {};
+              player.level = players.level;
+              player.kills = players.scores.kills;
+              player.deaths = players.scores.deaths;
+              player.assists = players.scores.assists;
+              player.cs = players.scores.creepScore;
+              player.wards = players.scores.wardScore;
+              player.items = players.items.filter(item => item !== undefined).map(item => item.displayName).join(", ");
+              return player;
+            });
+            // playerinfo areas
+            
+            if (!oneShotChecker) {
+              oneShotChecker = true;
+              console.log(playerName); // 이 코드는 현재 플레이어의 정보를 콘솔에 출력합니다.
+              console.log(players_info); // 이 코드는 모든 플레이어의 정보를 콘솔에 출력합니다.
+            }
+            
+            // console.log(players); // 이 코드는 각 플레이어의 정보를 콘솔에 출력합니다.
+            sendNewEvents(events);
+            // will be axios post areas
+
           } catch (error) {};
         }
         function loopFunction() {
