@@ -218,8 +218,9 @@ public class ChatRoomMySQLService {
             elements.setPlayerName(chatRoom.getChatOwnerName());
             elements.setRoomTitle(RandomPickRoomTitle());
             elements.setRoomId(chatRoom.getId());
-            elements.setPlayerKakaoImg(friend.getKakaoProfileImg());
-
+            elements.setPlayerProfilePic(friend.getKakaoProfileImg());
+            elements.setPlayerBackgroundPic(friend.getUserInfoId().getBackImg());
+            System.out.println(friend.getUserInfoId().getBackImg());
             // 참여한 사람들 List 얻기
 
                 // 참여 정보 얻기
