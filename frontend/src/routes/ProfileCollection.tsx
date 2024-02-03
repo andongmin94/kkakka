@@ -3,16 +3,7 @@ import { Mobile, PC } from "@/components/MediaQuery";
 import Collection from "@/components/profile/Collection";
 import AddCollection from "@/components/profile/AddCollection";
 
-// import { useProfileDogamStore } from "@/stores/ProfileStore";
-// import { useEffect } from "react";
-
 export default function ProfileCollection() {
-  // const { fetchProfileDogams, profileDogams } = useProfileDogamStore();
-
-  // useEffect(() => {
-  //   fetchProfileDogams();
-  // }, [fetchProfileDogams]);
-
   // 유저 임시 아이디
   const userId = "2";
 

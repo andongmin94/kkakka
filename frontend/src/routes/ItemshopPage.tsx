@@ -23,38 +23,40 @@ export default function ItemshopPage() {
         <img src="/image/itemShop.png" className="h-[50px] w-[50px]" />
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
       </div>
-      <div className="flex flex-col items-center">
-        <div className="grid grid-cols-2 row-auto w-[900px] h-[900px]">
-          <div className="flex flex-col items-center">
-            <WriteAlias
-              itemName={items[0].itemName}
-              itemPrice={items[0].itemPrice}
-              itemDesc={items[0].itemDesc}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <DeleteCollection
-              itemName={items[1].itemName}
-              itemPrice={items[1].itemPrice}
-              itemDesc={items[1].itemDesc}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Compliment
-              itemName={items[2].itemName}
-              itemPrice={items[2].itemPrice}
-              itemDesc={items[2].itemDesc}
-            />
-          </div>
-          <div className="flex flex-col items-center">
-            <Speaker
-              itemName={items[3].itemName}
-              itemPrice={items[3].itemPrice}
-              itemDesc={items[3].itemDesc}
-            />
+      {items && (
+        <div className="flex flex-col items-center">
+          <div className="grid grid-cols-2 row-auto w-[900px] h-[900px]">
+            <div className="flex flex-col items-center">
+              <WriteAlias
+                itemName={items[0].itemName}
+                itemPrice={items[0].itemPrice}
+                itemDesc={items[0].itemDesc}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <DeleteCollection
+                itemName={items[1].itemName}
+                itemPrice={items[1].itemPrice}
+                itemDesc={items[1].itemDesc}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Compliment
+                itemName={items[2].itemName}
+                itemPrice={items[2].itemPrice}
+                itemDesc={items[2].itemDesc}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <Speaker
+                itemName={items[3].itemName}
+                itemPrice={items[3].itemPrice}
+                itemDesc={items[3].itemDesc}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

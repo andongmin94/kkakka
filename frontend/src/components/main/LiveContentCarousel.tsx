@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { CardContent } from "@/components/ui/card";
 import LiveContent from "@/components/main/LiveContent";
@@ -7,21 +7,21 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import useBroadcastListQuery from "@/apis/broadcast/queries/useBroadcastListQuery";
 
-import { BroadcastItemType } from "@/types/broadcastTypes";
+export default function LiveContentCarousel() {
+  const { broadcasts, isLoading, error } = useBroadcastListQuery();
 
-export default function LiveContentCarousel({
-  broadcasts,
-}: {
-  broadcasts: BroadcastItemType[];
-}) {
-  const plugin = React.useRef(
+  const plugin = useRef(
     // 딜레이 시간 조절
     Autoplay({ delay: 3000, stopOnInteraction: false })
   );
 
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+
   if (!broadcasts || broadcasts.length === 0) {
-    return <div>No broadcasts available.</div>;
+    return <div>플레이 중인 친구가 없습니다.</div>;
   }
 
   return (
@@ -31,7 +31,7 @@ export default function LiveContentCarousel({
       className="h-full w-full"
     >
       <CarouselContent>
-        {Array.isArray(broadcasts) ? (
+        {Array.isArray(broadcasts) &&
           broadcasts.map((room, index) => (
             <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
               <div className="p-1">
@@ -40,10 +40,7 @@ export default function LiveContentCarousel({
                 </CardContent>
               </div>
             </CarouselItem>
-          ))
-        ) : (
-          <div>없음</div>
-        )}
+          ))}
       </CarouselContent>
     </Carousel>
   );
