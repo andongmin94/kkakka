@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class DogamDetailResponseDto {
 
+    private Long dogamUserId;
     private String imgUrl;
     private String dogamTitle;
     private String dogamUserName;
@@ -19,7 +20,8 @@ public class DogamDetailResponseDto {
     private List<DogamCommentResponseDto> dogamCommentResponseDtos;
 
     @Builder
-    private DogamDetailResponseDto(String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+    private DogamDetailResponseDto(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+        this.dogamUserId = dogamUserId;
         this.imgUrl = imgUrl;
         this.dogamTitle = dogamTitle;
         this.dogamUserName = dogamUserName;
@@ -28,8 +30,9 @@ public class DogamDetailResponseDto {
         this.dogamCommentResponseDtos = dogamCommentResponseDtos;
     }
 
-    public static DogamDetailResponseDto of(String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+    public static DogamDetailResponseDto of(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
         return builder()
+                .dogamUserId(dogamUserId)
                 .imgUrl(imgUrl)
                 .dogamTitle(dogamTitle)
                 .dogamUserName(dogamUserName)
