@@ -29,7 +29,7 @@ public class UserDataController {
 
     }
 
-    @GetMapping("/user/email")
+    @GetMapping("/user/data")
     public ApiResponseDto<UserDataResponseDto> getEmailProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         UserDataResponseDto map = userDataService.getEmailProfileImg(userDetails.getUser());
