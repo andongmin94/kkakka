@@ -11,6 +11,7 @@ public class DogamMainListResponseDto {
     String dogamTitle;
     Long dogamId;
     String friendName;
+    String friendEmail;
     String friendAlias;
     String dogamImgUrl;
     String friendImgUrl;
@@ -19,10 +20,11 @@ public class DogamMainListResponseDto {
     DogamCommentResponseDto dogamCommentResponseDto;
 
     @Builder
-    private DogamMainListResponseDto(String dogamTitle, Long dogamId, String friendName, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+    private DogamMainListResponseDto(String dogamTitle, Long dogamId, String friendName, String friendEmail, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
         this.dogamTitle = dogamTitle;
         this.dogamId = dogamId;
         this.friendName = friendName;
+        this.friendEmail = friendEmail;
         this.friendAlias = friendAlias;
         this.dogamImgUrl = dogamImgUrl;
         this.friendImgUrl = friendImgUrl;
@@ -31,11 +33,12 @@ public class DogamMainListResponseDto {
         this.dogamCommentResponseDto = dogamCommentResponseDto;
     }
 
-    public static DogamMainListResponseDto of(String dogamTitle, Long dogamId, String friendName, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+    public static DogamMainListResponseDto of(String dogamTitle, Long dogamId, String friendName, String friendEmail, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
         return builder()
                 .dogamTitle(dogamTitle)
                 .dogamId(dogamId)
                 .friendName(friendName)
+                .friendEmail(friendEmail)
                 .friendAlias(friendAlias)
                 .dogamImgUrl(dogamImgUrl)
                 .friendImgUrl(friendImgUrl)
