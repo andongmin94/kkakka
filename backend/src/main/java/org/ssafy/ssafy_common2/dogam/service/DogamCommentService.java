@@ -39,7 +39,7 @@ public class DogamCommentService {
             throw new CustomException(ErrorType.NOT_FOUND_COMMENT);
         }
 
-        DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail(), LocalDateTime.now());
+        DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(user.getId(), user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail(), LocalDateTime.now());
         CommentDogam commentDogam = CommentDogam.of(user.getKakaoEmail(), dto.getComment(), dogam);
         commentDogamRepository.save(commentDogam);
         return commentResponseDto;
