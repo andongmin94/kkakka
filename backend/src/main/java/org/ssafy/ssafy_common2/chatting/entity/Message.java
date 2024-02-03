@@ -10,7 +10,7 @@ import org.ssafy.ssafy_common2._common.entity.BaseTime;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @SQLDelete(sql = "UPDATE chat_join set message = CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul') where id = ?")
 public class Message extends BaseTime  {
 
@@ -61,10 +61,10 @@ public class Message extends BaseTime  {
     @Override
     public String toString() {
         return "Message{" +
-                "id=" + id +
-                ", messageType=" + messageType +
-                ", content='" + content + '\'' +
-                ", chatJoin=" + chatJoin +
+                "id =" + id +
+                ", messageType =" + messageType +
+                ", content ='" + content + '\'' +
+                ", chatJoin =" + chatJoin +
                 '}';
     }
 }
