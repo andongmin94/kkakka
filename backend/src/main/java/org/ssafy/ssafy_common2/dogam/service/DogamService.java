@@ -161,9 +161,13 @@ public class DogamService {
 
 
             // 댓글 주인의 프로필 사진, 댓글의 내용, 댓글 주인의 이름, 댓글 주인의 이메일 저장
-            DogamCommentResponseDto dogamCommentResponseDto = DogamCommentResponseDto.of(commentUser != null ? commentUser.getKakaoProfileImg() : null
-                    , commentDogam != null ? commentDogam.getDogamComment() : null, commentUser != null ? commentUser.getUserName() : null
-                    , commentUser != null ? commentUser.getKakaoEmail() : null, commentUser != null ? commentUser.getCreatedAt() : null);
+            DogamCommentResponseDto dogamCommentResponseDto = DogamCommentResponseDto.of(
+                    commentUser != null ? commentUser.getId() : null,
+                    commentUser != null ? commentUser.getKakaoProfileImg() : null,
+                    commentDogam != null ? commentDogam.getDogamComment() : null,
+                    commentUser != null ? commentUser.getUserName() : null,
+                    commentUser != null ? commentUser.getKakaoEmail() : null,
+                    commentUser != null ? commentUser.getCreatedAt() : null);
 
             int dislikeNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
             responseDtoList.add(DogamMainListResponseDto.of(d.getUser().getId(), d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias!=null?alias.getAliasName():null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
@@ -190,7 +194,7 @@ public class DogamService {
             User commentUser = userRepository.findByKakaoEmailAndDeletedAtIsNull(cd.getUserEmail()).orElseThrow(
                     () -> new CustomException(ErrorType.NOT_FOUND_USER)
             );
-            dogamCommentResponseDtos.add(DogamCommentResponseDto.of(commentUser.getKakaoProfileImg(), cd.getDogamComment(),
+            dogamCommentResponseDtos.add(DogamCommentResponseDto.of(commentUser.getId(), commentUser.getKakaoProfileImg(), cd.getDogamComment(),
                     commentUser.getUserName(), commentUser.getKakaoEmail(), cd.getCreatedAt()));
         }
 
