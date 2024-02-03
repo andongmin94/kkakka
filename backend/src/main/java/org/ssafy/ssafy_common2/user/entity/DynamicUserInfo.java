@@ -69,4 +69,8 @@ public class DynamicUserInfo extends BaseTime {
     }
 
     public void updateLastNotiEventId(String lastNotiEventId) { this.lastNotiEventId = lastNotiEventId;}
+
+    public void updateBackImg(String imgUrl) {
+        this.backImg = imgUrl;
+    }
 }
