@@ -194,7 +194,7 @@ public class DogamService {
                     commentUser.getUserName(), commentUser.getKakaoEmail(), cd.getCreatedAt()));
         }
 
-        DogamDetailResponseDto dto = DogamDetailResponseDto.of(user.getKakaoProfileImg(), dogam.getDogamTitle(), user.getUserName()
+        DogamDetailResponseDto dto = DogamDetailResponseDto.of(user.getKakaoProfileImg(), dogam.getDogamTitle(), user.getUserName(), user.getKakaoEmail()
                 , dogam.getCreatedAt(), dogamCommentResponseDtos);
         return dto;
     }
