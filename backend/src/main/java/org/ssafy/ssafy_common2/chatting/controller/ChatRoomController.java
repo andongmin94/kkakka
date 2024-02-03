@@ -46,7 +46,7 @@ public class ChatRoomController {
     }
 
 
-    // 2) 현 유저가 참여한 채팅방 리스트 반환
+    // 2) 현 유저가 참여한 1대1 채팅방 리스트 반환
     @GetMapping("/dm")
     public ApiResponseDto<?> getAllChatRoomInfo (@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
