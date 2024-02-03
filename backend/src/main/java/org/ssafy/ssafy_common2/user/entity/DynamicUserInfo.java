@@ -35,19 +35,24 @@ public class DynamicUserInfo extends BaseTime {
     @Column(name = "last_noti_event_id")
     private String lastNotiEventId;
 
+    @Column(name = "back_img",nullable = false, length = 250)
+    private String backImg;
+
     @Builder
-    private DynamicUserInfo(int point, boolean isLogin, int isBetting) {
+    private DynamicUserInfo(int point, boolean isLogin, int isBetting, String backImg) {
         this.point = point;
         this.isLogin = isLogin;
         this.isBetting = isBetting;
         this.curAlias = "테스트용 칭호";
+        this.backImg = backImg;
     }
 
-    public static DynamicUserInfo of(int point, boolean isLogin, int isBetting) {
+    public static DynamicUserInfo of(int point, boolean isLogin, int isBetting, String backImg) {
         return builder()
                 .point(point)
                 .isLogin(isLogin)
                 .isBetting(isBetting)
+                .backImg(backImg)
                 .build();
     }
 
