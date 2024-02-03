@@ -9,6 +9,7 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
+import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
 import org.ssafy.ssafy_common2.user.service.UserDataService;
 
 import java.util.Map;
@@ -29,9 +30,9 @@ public class UserDataController {
     }
 
     @GetMapping("/user/email")
-    public ApiResponseDto<Map<String,String>> getEmailProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto<UserDataResponseDto> getEmailProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        Map<String,String> map = userDataService.getEmailProfileImg(userDetails.getUser());
+        UserDataResponseDto map = userDataService.getEmailProfileImg(userDetails.getUser());
         return ResponseUtils.ok(map, MsgType.SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY);
 
     }

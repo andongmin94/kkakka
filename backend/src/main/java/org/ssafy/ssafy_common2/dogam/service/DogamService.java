@@ -166,7 +166,7 @@ public class DogamService {
                     , commentUser != null ? commentUser.getKakaoEmail() : null, commentUser != null ? commentUser.getCreatedAt() : null);
 
             int dislikeNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
-            responseDtoList.add(DogamMainListResponseDto.of(d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias!=null?alias.getAliasName():null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
+            responseDtoList.add(DogamMainListResponseDto.of(d.getUser().getId(), d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias!=null?alias.getAliasName():null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
                     dislikeNum, isHated, dogamCommentResponseDto));
         }
 
@@ -194,7 +194,7 @@ public class DogamService {
                     commentUser.getUserName(), commentUser.getKakaoEmail(), cd.getCreatedAt()));
         }
 
-        DogamDetailResponseDto dto = DogamDetailResponseDto.of(user.getKakaoProfileImg(), dogam.getDogamTitle(), user.getUserName(), user.getKakaoEmail()
+        DogamDetailResponseDto dto = DogamDetailResponseDto.of(user.getId(), user.getKakaoProfileImg(), dogam.getDogamTitle(), user.getUserName(), user.getKakaoEmail()
                 , dogam.getCreatedAt(), dogamCommentResponseDtos);
         return dto;
     }

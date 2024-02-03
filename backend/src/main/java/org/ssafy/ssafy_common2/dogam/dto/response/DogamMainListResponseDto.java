@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class DogamMainListResponseDto {
 
+    Long friendId;
     String dogamTitle;
     Long dogamId;
     String friendName;
@@ -20,7 +21,8 @@ public class DogamMainListResponseDto {
     DogamCommentResponseDto dogamCommentResponseDto;
 
     @Builder
-    private DogamMainListResponseDto(String dogamTitle, Long dogamId, String friendName, String friendEmail, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+    private DogamMainListResponseDto(Long friendId, String dogamTitle, Long dogamId, String friendName, String friendEmail, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+        this.friendId = friendId;
         this.dogamTitle = dogamTitle;
         this.dogamId = dogamId;
         this.friendName = friendName;
@@ -33,8 +35,9 @@ public class DogamMainListResponseDto {
         this.dogamCommentResponseDto = dogamCommentResponseDto;
     }
 
-    public static DogamMainListResponseDto of(String dogamTitle, Long dogamId, String friendName, String friendEmail, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
+    public static DogamMainListResponseDto of(Long friendId, String dogamTitle, Long dogamId, String friendName, String friendEmail, String friendAlias, String dogamImgUrl, String friendImgUrl, int dogamDislikeNum, boolean isHated, DogamCommentResponseDto dogamCommentResponseDto) {
         return builder()
+                .friendId(friendId)
                 .dogamTitle(dogamTitle)
                 .dogamId(dogamId)
                 .friendName(friendName)
