@@ -3,23 +3,16 @@ import UserStatus from "./UserStatus";
 import FriendsProfile from "./FriendsProfile";
 import classes from "./FriendsCard.module.css";
 import UserCurrentAlias from "../../UserCurrentAlias";
+import { FriendType } from "@/types/friendTypes";
 
-interface info {
-  name: string;
-  curAlias: string | null;
-  profileImg: string;
-  status: string;
-  login: boolean;
-}
-
-export default function FriendsCard({ info }: { info: info }) {
+export default function FriendsCard({ info }: { info: FriendType }) {
   return (
     <div className={classes.card}>
       <FriendsProfile image={info.profileImg} />
       <div className={classes.textWrapper}>
-        <UserCurrentAlias curAlias={info.curAlias} />
+        <UserCurrentAlias alias={info.curAlias} />
         <UserName name={info.name} />
-        <UserStatus status={info.status} />
+        <UserStatus status={info.state} />
       </div>
     </div>
   );
