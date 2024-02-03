@@ -48,6 +48,8 @@ public enum ErrorType {
     NOT_MATCHING_DISLIKE_USER(403, "도감 싫어요를 취소할 권한이 없습니다."),
     FAILED_TO_DISLKE_DOGAM(401, "본인 도감에 좋아요를 할 수 없습니다"),
     NOT_FOUND_ALARM(401, "잘못된 알림 확인 요청입니다."),
+    NOT_FOUND_USER_INFO(401, "다이나믹 유저 인포가 존재하지 않습니다"),
+    NOT_FOUND_BACK_IMG(401, "배경사진을 추가해 주세요"),
     ;
 
     private int code;
