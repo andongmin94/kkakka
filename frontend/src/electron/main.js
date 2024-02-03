@@ -92,11 +92,12 @@ app
         awaitConnection: true,
       },
     });
-    
+    let gameIsRunning = false;
     ws.subscribe('/lol-gameflow/v1/session', (data) => {
       if (data.phase === 'GameStart')
       {
         console.log('게임이 시작되었습니다!')
+        gameIsRunning = true;
         async function fetchEventData() {
           try {
             const response = await axios({
@@ -111,11 +112,10 @@ app
               }),
             });
             console.log(response.data);
-          } catch (error) {
-            console.error(error);
-          }
+          } catch (error) {};
         }
         function loopFunction() {
+          if (!gameIsRunning) return;
           fetchEventData();
           
           // 1초 후에 loopFunction을 다시 호출합니다.
@@ -127,7 +127,7 @@ app
       if (data.phase === 'WaitingForStats')
       { 
         console.log('게임이 종료되었습니다!')
-        return;
+        gameIsRunning = false;
       }
     });
     ////////////////////////////////////////////////////////////
