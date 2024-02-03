@@ -7,11 +7,11 @@ export interface CrowdType {
 export interface BroadcastItemType {
   playerEmail: string;
   playerName: string;
-  playerProfilePic: string;
+  playerKakaoImg: string;
   playerBackgroundPic: string;
   roomId: number;
   roomTitle: string;
-  crowdList: CrowdType[];
+  crowdDtoList: CrowdType[];
 }
 
 export interface BroadcastListResponse {

@@ -16,8 +16,9 @@ export const useFeedStore = create<FeedStoreType>((set) => ({
           },
         }
       );
-
-      set((prev) => ({ ...prev, newDogamList: response.data.newDogamList }));
+      console.log("서버 응답:", response.data.data);
+      set((prev) => ({ ...prev, newDogamList: response.data.data }));
+      return response.data.data;
     } catch (error: any) {
       console.error("Error fetching new dogam list", error.message);
     }

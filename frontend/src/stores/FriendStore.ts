@@ -16,8 +16,9 @@ export const useFriendStore = create<friendStoreType>((set) => ({
           },
         }
       );
-
+      console.log("서버 응답 친구목록:", res.data.data.friendList);
       set((prev) => ({ ...prev, friends: res.data.data.friendList }));
+      return res.data.data.friendList;
     } catch (error: any) {
       console.error("Error fetching friends", error.message);
     }

@@ -1,7 +1,11 @@
 // alarm
+import { AlarmType } from "@/types/alarmTypes";
 export interface alarmStoreType {
   alarms: [] | null;
-  fetchAlarms: () => void;
+  fetchAlarms: () => Promise<{
+    alarmList: AlarmType[];
+    numOfUncheckedAlarm: number;
+  }>;
   subscribeAlarm: () => void;
   checkAlarm: (alarmId: number) => void;
   checkNewAlarms: (lastEventId: string) => void;
@@ -15,11 +19,13 @@ export interface AuthStoreType {
 }
 
 // broadcast
+import { BroadcastItemType } from "@/types/broadcastTypes";
+
 export interface broadcastStoreType {
   createBetStatus: string;
   errorMessage: string | null;
   liveBroadcastList: [];
-  fetchLiveBroadcastList: () => void;
+  fetchLiveBroadcastList: () => Promise<BroadcastItemType[]>;
   startBroadcast: (friendEmail: string) => void;
   createBet: (roomId: number, curBettingPoint: number, isWin: boolean) => void;
   settleBet: (roomId: number) => void;
@@ -38,17 +44,21 @@ export interface dmStoreType {
 }
 
 // feed
+import { NewDogamType } from "@/types/dogamTypes";
+
 export interface FeedStoreType {
   newDogamList: [];
-  fetchNewDogamList: () => void;
+  fetchNewDogamList: () => Promise<NewDogamType[]>;
   disLikeDogam: (dogamId: number) => void;
   unDislikeDogam: (dogamId: number) => void;
 }
 
 // friend
+import { FriendType } from "@/types/friendTypes";
+
 export interface friendStoreType {
   friends: [];
-  fetchFriends: () => void;
+  fetchFriends: () => Promise<FriendType[]>;
   checkIsFriend: (userEmail: string) => void;
   sendFriendRequest: (userEmail: string) => void;
 }
@@ -61,10 +71,10 @@ export interface itemshopStoreType {
   addAliasStatus: string;
   deleteDogamStatus: string;
   errorMessage: string | null;
-  fetchItems: () => Promise<void>;
+  fetchItems: () => Promise<ItemType[]>;
   deleteDogam: (dogamId: number) => void;
   addAlias: (formData: FormData, friendEmail: string) => void;
-  buyForcePraise: (friendEmail: string) => void;
+  buyForcePraise: (friendEmail: string, enfScript: string) => Promise<void>;
   buyMegaphone: () => void;
 }
 
