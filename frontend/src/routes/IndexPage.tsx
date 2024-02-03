@@ -61,7 +61,6 @@ const dataList = [
 export default function IndexPage() {
   const { broadcasts, isLoading, error } = useBroadcastListQuery();
 
-  console.log("페이지단", broadcasts);
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러가 발생했습니다.{error.message}</div>;
 
@@ -74,7 +73,11 @@ export default function IndexPage() {
             <p className="grid place-items-center ml-2 font-bold">라이브</p>
           </div>
           <div className="h-[100px] w-[1200px] flex flex-col items-center">
-            <LiveContentCarousel />
+            {broadcasts ? (
+              <LiveContentCarousel broadcasts={broadcasts} />
+            ) : (
+              <div>Loading broadcasts...</div>
+            )}
           </div>
           <div className="text-3xl mt-[300px] mb-10 flex ">
             <img src="/image/dogam.png" className="h-[50px] w-[50px]" />

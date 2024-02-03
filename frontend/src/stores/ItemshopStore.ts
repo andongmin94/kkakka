@@ -71,13 +71,13 @@ export const useItemshopStore = create<itemshopStoreType>((set) => ({
   },
 
   // 강제 칭찬권 구매
-  buyForcePraise: async (friendEmail) => {
+  buyForcePraise: async (friendEmail, enfScript) => {
     try {
       const response = await axios.post(
         `${
           import.meta.env.VITE_API_BASE_URL
         }/api/friends/compliment?${friendEmail}`,
-        {},
+        { enfScript },
         {
           headers: {
             Authorization: token,
