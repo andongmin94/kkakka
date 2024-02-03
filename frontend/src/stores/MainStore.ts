@@ -20,6 +20,7 @@ export const useMainStore = create<mainStoreType>((set) => ({
         }
       );
       set((prev) => ({ ...prev, myPoint: response.data.point }));
+      return response.data.point;
     } catch (error: any) {
       console.error("Error fetching my point", error.message);
     }
@@ -38,6 +39,8 @@ export const useMainStore = create<mainStoreType>((set) => ({
       );
       set((prev) => ({ ...prev, myProfilePic: response.data.profilePic }));
       set((prev) => ({ ...prev, myEmail: response.data.email }));
+      console.log("myProfilePic", response.data);
+      return response.data.profilePic;
     } catch (error: any) {
       console.error("Error fetching my profile pic", error.message);
     }
