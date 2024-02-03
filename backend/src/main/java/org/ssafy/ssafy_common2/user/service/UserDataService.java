@@ -67,7 +67,7 @@ public class UserDataService {
         String imgUrl = "";
         System.out.println(dto.getBackImg());
         if (dto.getBackImg() == null) {
-            imgUrl = "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EC%9D%B4%EC%A6%88%EB%A6%AC%EC%96%BC.jpg";
+            throw new CustomException(ErrorType.NOT_FOUND_BACK_IMG);
         } else {
             imgUrl = s3Uploader.upload(dto.getBackImg());
         }
