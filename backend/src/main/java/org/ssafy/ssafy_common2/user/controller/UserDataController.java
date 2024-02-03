@@ -21,7 +21,7 @@ public class UserDataController {
 
     private final UserDataService userDataService;
 
-    @GetMapping("/user/point")
+    @GetMapping("/users/point")
     public ApiResponseDto<Map<String,Integer>> getPoint(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         Map<String, Integer> map = userDataService.getPoint(userDetails.getUser());
@@ -29,7 +29,7 @@ public class UserDataController {
 
     }
 
-    @GetMapping("/user/data")
+    @GetMapping("/users/data")
     public ApiResponseDto<UserDataResponseDto> getEmailProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         UserDataResponseDto map = userDataService.getEmailProfileImg(userDetails.getUser());
