@@ -31,32 +31,25 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
                                                         @Param("chatRoomType") String chatRoomType );
 
 
-    // 3) 내가 참여한 채팅방의 가장 최근 메세지
-    @Query(value = "SELECT * FROM message m WHERE 'deleted_at' IS NULL ORDER BY 'created_at' DESC LIMIT 1 ", nativeQuery = true)
-    Optional<Message> getLastMessage(long roomId);
-
-    // 4) 채팅방 수정 일자와 비교하여 안 읽은 메세지 수 뽑기
-    @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId) temp )", nativeQuery = true)
-    Optional<Integer> getUnreadMessageCnt (long chatRoomId);
 
 
     // 5) 사용자 ID와 RoomID로 해당 채팅참여가 진짜 있는지 확인
     @Query(value = "SELECT * FROM chat_join cj WHERE cj.user_id = :userId AND cj.chat_room_id = :chatRoomId "
            , nativeQuery = true)
-    Optional<ChatJoin> getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(long userId,long chatRoomId);
+    Optional<ChatJoin> getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(@Param("userId")long userId, @Param("chatRoomId") long chatRoomId);
 
 
     // 6) 채팅방 나갈 때, Modified_at 최신화
     @Modifying
     @Transactional
     @Query(value = "UPDATE chat_join cj set cj.updated_at = :now where cj.user_id = :userId and cj.chat_room_id = :chatRoomId", nativeQuery = true)
-    void updateChatJoinModifiedAt(LocalDateTime now, long userId, long chatRoomId);
+    void updateChatJoinModifiedAt(@Param("now")LocalDateTime now,@Param("userId") long userId,@Param("chatRoomId") long chatRoomId);
 
     // 7) userId, roomId로 채팅참여 하나 특정하여 배팅 금액, 어디에 걸었는지 최신화
 
     @Modifying
     @Query(value = "UPDATE chat_join cj SET cj.is_win = :isWin, cj.bet_price = :betPrice WHERE cj.user_id = :userId AND cj.chat_room_id = :roomId", nativeQuery = true)
-    void updateIswinAndBetPrice(boolean isWin, int betPrice, long userId, long roomId);
+    void updateIswinAndBetPrice(@Param("isWin") boolean isWin, @Param("betPrice") int betPrice, @Param("userId") long userId, @Param("roomId") long roomId);
 
     // 8) 특정 채팅방에 참여한 사람들 전부 찾기
     List<ChatJoin> findChatJoinByChatJoinId_ChatRoomId(long roomId);

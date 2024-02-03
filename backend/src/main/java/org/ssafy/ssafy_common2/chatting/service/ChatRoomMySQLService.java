@@ -6,6 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.ssafy.ssafy_common2._common.exception.ErrorResponse;
+import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
+import org.ssafy.ssafy_common2._common.response.MsgType;
+import org.ssafy.ssafy_common2._common.response.ResponseUtils;
+import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.CrowdDto;
@@ -22,10 +28,9 @@ import org.ssafy.ssafy_common2.user.repository.UserRepository;
 import org.ssafy.ssafy_common2.user.service.FriendListService;
 import org.ssafy.ssafy_common2.chatting.dto.response.LiveBroadcastListDto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+
+import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +101,16 @@ public class ChatRoomMySQLService {
 
             // 6-1) 채팅방 정보로 주인 이메일과 아이디 얻기
             ChatRoom roomInfo = chatRoomRepository.findById(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
+
+            // 6-1-a) 다대다 방은 안 담는다.
+            if(roomInfo.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                continue;
+            }
+
+            if(roomInfo == null){
+                return  null;
+            }
+
             element.setRoomId(temp.get(i).getChatJoinId().getChatRoomId());
             element.setChatRoomType(Optional.ofNullable(roomInfo.getChatRoomType()).orElse(ChatRoom.ChatRoomType.DEAD));
             element.setFriendName(Optional.ofNullable(roomInfo.getChatOwnerName()).orElse("해당 채팅방의 주인ID을 찾지 못했습니다."));
@@ -110,8 +125,10 @@ public class ChatRoomMySQLService {
                 element.setLogin(friend.getUserInfoId().isLogin());
             }
 
+            System.out.println(temp.get(i).getChatJoinId().getChatRoomId());
+
             // 6-3) 채팅방 번호로 메세지 정보 얻기
-            Message lastMessage = chatJoinRepository.getLastMessage(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
+            Message lastMessage = messageRepository.getLastMessage(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
             if(lastMessage != null) {
                 element.setLastMessage(lastMessage.getContent());
                 element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
@@ -121,7 +138,7 @@ public class ChatRoomMySQLService {
             }
 
             // 6-4) 채팅방 안 읽은 메세지 수 구하기
-            int unReadMessageCnt = chatJoinRepository.getUnreadMessageCnt(temp.get(i).getChatJoinId().getChatRoomId()).orElse(0);
+            int unReadMessageCnt = messageRepository.getUnreadMessageCnt(temp.get(i).getChatJoinId().getChatRoomId()).orElse(0);
             element.setUnreadMessageCnt(unReadMessageCnt);
 
             // 6-5) 답속에 포함
@@ -233,6 +250,87 @@ public class ChatRoomMySQLService {
         return ans;
     }
 
+    // 9) 채팅방 생성
+    public ApiResponseDto<? extends Object> createRoom (String type, String friendEmail, UserDetailsImpl userDetails) {
+
+        // 1-1) 방의 타입을 보고   ONE, MANY, DEAD 중 하나 생성
+        String roomType = type.equals("dm")? "ONE" : "MANY";
+        User owner = userRepository.findByKakaoEmailAndDeletedAtIsNull(friendEmail).orElse(null);
+
+        // 1-2) 사용자가 등록되지 않았다면 에러 출력
+        if(owner == null){
+            return ResponseUtils.error(ErrorResponse.of(ErrorType.NOT_FOUND_USER));
+        }
+
+        // 1-3) 1대1 채팅방을 만들어달라는 요청을 받았을 경우
+        if(roomType.equals("ONE")){
+
+            // 1-3-a) 둘 사이의 1대1 채팅방이 있는지 확인
+            long roomId = getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId(), "ONE");
+
+            // 1-3-b) 둘 사이의 채팅방이 없다면 -1이 반환 되고, 방 생성을 한다.
+            if(roomId == -1) {
+                // 방 생성
+                ChatRoom createdRoom = CreateChatRoom(ONE, owner.getUserName(), owner.getKakaoEmail());
+
+                //1-3-b-가) 채팅방 생성이 성공적으로 마무리 되면, chatJoin으로 둘을 연결한다.
+                insertChatJoin(userDetails.getUser(), createdRoom, 0, false);
+
+                //1-4-d) 나 자신에게 말하기가 아니라면 채팅방 주인도 참가시켜야함.
+                if(!Objects.equals(owner.getId(), userDetails.getUser().getId())){
+                    insertChatJoin(owner,createdRoom, 0, false);
+                }
+
+                if(createdRoom == null){
+                    return ResponseUtils.error(ErrorResponse.of(ErrorType.FAILED_TO_MAKE_CHATROOM));
+                }
+
+
+
+                return  ResponseUtils.ok(createdRoom.getId(), MsgType.DATA_SUCCESSFULLY);
+            }else {
+                return ResponseUtils.ok(roomId, MsgType.DATA_SUCCESSFULLY);
+            }
+        }
+
+        // 1-4) 중계방 만들어달라는 요청을 받았을 경우
+        else{
+            // 1-4-a) 해당 친구 이름으로 중계방이 있는지 확인
+            ChatRoom broadcastRoom = getRoomWithEmail(ChatRoom.ChatRoomType.MANY, friendEmail);
+
+            // 해당 친구 이름의 안 죽은 중계방이 있다.
+            if(broadcastRoom !=null) {
+                // 해당 중계방과 유저가 연결되었는지 확인한다.
+                long roomId = getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId(), "MANY");
+
+                // 연결이 안되어있을 경우 roomId == -1이다. 따라서 해당 중계방에 현 유저를 참여시킨다.
+                if(roomId == -1){
+                    insertChatJoin(userDetails.getUser(), broadcastRoom, 0, false);
+                }
+            }
+
+            // 해당 친구 이름으로 안 죽은 중계방이 없다.
+            else if(broadcastRoom == null){
+                broadcastRoom = CreateChatRoom(ChatRoom.ChatRoomType.MANY, owner.getUserName(), owner.getKakaoEmail());
+
+                //1-4-c) 만드는데 성공하면, 현재 유저를 해당 중계방에 참여한 것으로 바꾼다.
+                insertChatJoin(userDetails.getUser(), broadcastRoom, 0, false);
+
+
+
+            }
+
+            // 1-4-e) 만드는데 실패하면, 에러 출력한다.
+            if(broadcastRoom == null){
+                return ResponseUtils.error(ErrorResponse.of(ErrorType.FAILED_TO_MAKE_CHATROOM));
+            }
+
+
+            // 결과 주기
+            return ResponseUtils.ok(broadcastRoom.getId(), MsgType.DATA_SUCCESSFULLY);
+        }
+    }
+
 
     public String RandomPickRoomTitle () {
 
@@ -248,9 +346,12 @@ public class ChatRoomMySQLService {
                 "이기는 놈이 강한 게 아니라 버티는 놈이 강한 거더라",
                 "공이 웃으면 풋볼 ㅋㅋㅋ",
                 "자동차를 톡하고 치면? 카톡",
-                "식사는 하셨는지요",
+                "벌써 해가 중천입니다. 식사는 하셨는지요",
                 "채팅방은 공공장소입니다. 에티켓을 지켜주세요.",
-                "미국에서 비가 내리면? USB lol"
+                "미국에서 비가 내리면? USB lol",
+                "나이가 들어서 말파이트밖에 못하겠습니다.",
+                "아버지 제게 힘을 주세요",
+                "어 상훈이형이야 ㅋㅋ 형 알지?"
         };
 
 

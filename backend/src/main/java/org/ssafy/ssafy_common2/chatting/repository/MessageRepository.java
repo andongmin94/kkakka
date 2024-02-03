@@ -29,5 +29,13 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     // 2) 방번호에 맞는 메세지 찾기
     Page<Message> findAllByChatJoin_ChatRoom_Id(long roomId, Pageable pageable);
 
+    // 3) 내가 참여한 채팅방의 가장 최근 메세지
+    @Query(value = "SELECT * FROM message m WHERE m.deleted_at IS NULL AND m.chat_room_id = :roomId ORDER BY m.created_at DESC LIMIT 1 ", nativeQuery = true)
+    Optional<Message> getLastMessage(@Param("roomId") long roomId);
+
+    // 4) 채팅방 수정 일자와 비교하여 안 읽은 메세지 수 뽑기
+    @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId) temp )", nativeQuery = true)
+    Optional<Integer> getUnreadMessageCnt (@Param("chatRoomId") long chatRoomId);
+
 
 }

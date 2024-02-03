@@ -1,5 +1,6 @@
 package org.ssafy.ssafy_common2.chatting.repository;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,14 +24,14 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE chat_room cr set cr.updated_at = :now where cr.chat_room_id = :roomId", nativeQuery = true)
-    void updateModifiedAt(LocalDateTime now, long roomId);
+    void updateModifiedAt(@Param("now") LocalDateTime now, @Param("roomId") long roomId);
 
 
     // 4) 방의 인원수를 줄이거나 늘림
     @Modifying
     @Transactional
     @Query(value = "UPDATE chat_room cr set cr.user_cnt =:cnt where cr.id = :roomId", nativeQuery = true)
-    void updateUserCnt(int cnt, long roomId);
+    void updateUserCnt(@Param("cnt") int cnt, @Param("roomId") long roomId);
 
 
     // 5) 중계방이면서, 10분이 안 지났고, Delete 되지 않은 함수
@@ -40,18 +41,18 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE chat_room cr set cr.ten_minute = true where cr.id = :roomId", nativeQuery = true)
-    void updateIsTenMinute(long roomId);
+    void updateIsTenMinute(@Param("roomId") long roomId);
 
     // 7) 채팅방 이긴다 Point 최신화
     @Modifying
     @Query(value = "UPDATE chat_room cr SET cr.win_point = :betPrice WHERE cr.id = :roomId ", nativeQuery = true)
-    void updateWinPoint(long roomId, int betPrice);
+    void updateWinPoint(@Param("roomId") long roomId, @Param("betPrice") int betPrice);
 
 
     // 8) 채팅방 진다 Point 최신화
     @Modifying
     @Query(value = "UPDATE chat_room cr SET cr.lose_point =:betPrice WHERE cr.id = :roomId", nativeQuery = true)
-    void updateLosePoint(long roomId, int betPrice);
+    void updateLosePoint(@Param("roomId") long roomId, @Param("betPrice") int betPrice);
 
     // 9) MANY 이면서 delete 되지 않은 채팅방 리스트 전부 조회
     List<ChatRoom> findChatRoomByChatRoomTypeAndDeletedAtIsNull(ChatRoom.ChatRoomType chatRoomType);
@@ -59,5 +60,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
 
     @Modifying
     @Query(value = "UPDATE chat_room cr SET cr.deleted_at = :deleted_at WHERE cr.id = :roomId", nativeQuery = true)
-    void deleteChatRoomById(long roomId, LocalDateTime deleted_at);
+    void deleteChatRoomById(@Param("roomId") long roomId, @Param("delete_at") LocalDateTime deleted_at);
 }
