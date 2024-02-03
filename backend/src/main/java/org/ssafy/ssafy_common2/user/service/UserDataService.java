@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
+import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
@@ -38,7 +39,13 @@ public class UserDataService {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
-        UserDataResponseDto dto = UserDataResponseDto.of(user.getId(), user.getKakaoEmail(), user.getKakaoProfileImg());
+        boolean isBankrupt = false;
+        if (user.getUserInfoId().getPoint() == 0 && user.getUserInfoId().getIsBetting() == 0) {
+            isBankrupt = true;
+        }
+
+        UserDataResponseDto dto = UserDataResponseDto.of(user.getId(), user.getUserName(), user.getKakaoEmail(), user.getKakaoProfileImg(),
+                user.getUserInfoId().getBackImg(), user.getUserInfoId().getCurAlias(), isBankrupt);
         return dto;
     }
 }
