@@ -97,7 +97,7 @@ public class UserService {
         //(3)
         if (user == null) {
 
-            DynamicUserInfo userInfo = DynamicUserInfo.of(0, false, 0);
+            DynamicUserInfo userInfo = DynamicUserInfo.of(0, false, 0, null);
             user = User.of(
                     profile.getId(),
                     profile.getKakao_account().getProfile().getProfile_image_url(),

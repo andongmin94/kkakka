@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 public class DogamCommentResponseDto {
 
+    Long commentUserId;
     String commentUserImgUrl;
     String Comment;
     String commentUserName;
@@ -17,7 +18,8 @@ public class DogamCommentResponseDto {
     private LocalDateTime createdAt;
 
     @Builder
-    private DogamCommentResponseDto(String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
+    private DogamCommentResponseDto(Long commentUserId, String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
+        this.commentUserId = commentUserId;
         this.commentUserImgUrl = commentUserImgUrl;
         Comment = comment;
         this.commentUserName = commentUserName;
@@ -25,8 +27,9 @@ public class DogamCommentResponseDto {
         this.createdAt = createdAt;
     }
 
-    public static DogamCommentResponseDto of(String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
+    public static DogamCommentResponseDto of(Long commentUserId, String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
         return builder()
+                .commentUserId(commentUserId)
                 .commentUserImgUrl(commentUserImgUrl)
                 .comment(comment)
                 .commentUerEmail(commentUerEmail)
