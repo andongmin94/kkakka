@@ -12,6 +12,7 @@ const useBroadcastListQuery = () => {
   } = useQuery({
     queryKey: [BROADCAST_LIST],
     queryFn: fetchLiveBroadcastList,
+    refetchOnWindowFocus: false,
   });
 
   return { broadcasts, error, isLoading };

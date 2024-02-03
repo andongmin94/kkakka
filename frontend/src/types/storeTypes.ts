@@ -64,7 +64,7 @@ export interface itemshopStoreType {
   fetchItems: () => Promise<void>;
   deleteDogam: (dogamId: number) => void;
   addAlias: (formData: FormData, friendEmail: string) => void;
-  buyForcePraise: (friendEmail: string) => void;
+  buyForcePraise: (friendEmail: string, enfScript: string) => Promise<void>;
   buyMegaphone: () => void;
 }
 

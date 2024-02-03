@@ -11,8 +11,6 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-
-
 export default function RootLayout() {
   const { theme } = useTheme();
   // 사용자 아이디 더미 데이터

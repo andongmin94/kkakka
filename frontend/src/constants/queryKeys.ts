@@ -25,3 +25,5 @@ export const ALIAS_LIST = "/profile/aliasList";
 export const DOGAM_LIST = "/profile/dogamList";
 
 // user
+export const MY_POINT = "/myPoint";
+export const MY_PROFILE_PIC = "/myProfilePic";

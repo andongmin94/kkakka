@@ -18,14 +18,11 @@ export const useBroadcastStore = create<broadcastStoreType>((set) => ({
       });
       set((prev) => ({
         ...prev,
-        liveBroadcastList: response.data.liveBroadcastList,
+        liveBroadcastList: response.data.data,
       }));
-      console.log("서버 응답:", response.data);
-      console.log("서버 응답 투:", response.data.data);
       return response.data.data;
     } catch (error: any) {
       console.error("Error fetching live broadcast list", error.message);
-      console.log("에러");
     }
   },
 
