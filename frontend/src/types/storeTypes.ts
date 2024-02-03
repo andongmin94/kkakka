@@ -1,7 +1,11 @@
 // alarm
+import { AlarmType } from "@/types/alarmTypes";
 export interface alarmStoreType {
   alarms: [] | null;
-  fetchAlarms: () => void;
+  fetchAlarms: () => Promise<{
+    alarmList: AlarmType[];
+    numOfUncheckedAlarm: number;
+  }>;
   subscribeAlarm: () => void;
   checkAlarm: (alarmId: number) => void;
   checkNewAlarms: (lastEventId: string) => void;

@@ -16,8 +16,9 @@ export const useAlarmStore = create<alarmStoreType>((set) => ({
           },
         }
       );
-      set((prev) => ({ ...prev, alarms: res.data.data.alarmList }));
-      return res.data.data.alarmList;
+      console.log("서버 응답 알람목록:", res.data.data);
+      set((prev) => ({ ...prev, alarms: res.data.data }));
+      return res.data.data;
     } catch (error: any) {
       console.error("Error fetching alarms", error.message);
     }
@@ -33,6 +34,7 @@ export const useAlarmStore = create<alarmStoreType>((set) => ({
         },
       });
       console.log("서버 응답:", response.data);
+      return response.data;
     } catch (error: any) {
       console.error("Error subscribing alarms", error.message);
     }
