@@ -50,9 +50,11 @@ export interface FeedStoreType {
 }
 
 // friend
+import { FriendType } from "@/types/friendTypes";
+
 export interface friendStoreType {
   friends: [];
-  fetchFriends: () => void;
+  fetchFriends: () => Promise<FriendType[]>;
   checkIsFriend: (userEmail: string) => void;
   sendFriendRequest: (userEmail: string) => void;
 }

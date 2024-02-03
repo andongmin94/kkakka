@@ -29,9 +29,9 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
 
           {/* 오른쪽 구역 */}
           <div>
-            {/* 이미지 일단은 정적으로 들어감 */}
+            {/* 이미지  */}
             <div
-              className={`h-[200px] w-[320px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 bg-[url('${data.dogamImg}')] bg-cover rounded-b-none border-b-0`}
+              className={`h-[200px] w-[320px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 bg-[url('${data.dogamImgUrl}')] bg-cover rounded-b-none border-b-0`}
             />
             <div className="w-[320px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               {/* 제목 */}
@@ -67,25 +67,25 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
         <div className="w-[450px] flex">
           {/* 왼쪽 구역 */}
           <Link
-            to={`/main/profile/${data.id}`}
+            to={`/main/profile/${data.dogamId}`}
             className="w-[200px] border-4 rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center bg-slate-100"
           >
             {/* 프사 */}
             <img
-              src={data.userImg}
+              src={data.friendImgUrl}
               className="w-[130px] h-[130px] mb-5 rounded-full"
             />
             {/* 이름 */}
-            <p className="font-bold text-2xl mb-5">{data.name}</p>
+            <p className="font-bold text-2xl mb-5">{data.friendName}</p>
             {/* 칭호 */}
-            <NewDogamAlias alias={data.alias} />
+            <NewDogamAlias alias={data.friendAlias} />
           </Link>
 
           {/* 오른쪽 구역 */}
           <div>
-            {/* 이미지 일단은 정적으로 들어감 */}
+            {/* 이미지 */}
             <div
-              className={`h-[200px] w-[270px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 bg-[url('${data.dogamImg}')] bg-cover rounded-b-none border-b-0`}
+              className={`h-[200px] w-[270px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 bg-[url('${data.dogamImgUrl}')] bg-cover rounded-b-none border-b-0`}
             />
             <div className="w-[270px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               {/* 제목 */}
@@ -95,10 +95,10 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
               <div className="flex gap-3 pb-3 font-bold items-center">
                 {/* 싫어요 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <ThumbsDown tD={data.isHated} />
+                  <ThumbsDown tD={data.hated} />
                 </div>
                 <div className=" flex self-center mr-4 text-xl text-blue-600">
-                  {data.dogamHateAmount}
+                  {data.dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">

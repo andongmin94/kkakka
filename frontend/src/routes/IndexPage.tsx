@@ -55,9 +55,10 @@ export default function IndexPage() {
           </div>
           <div className="grid grid-cols-1 place-items-center gap-y-5 mb-5 w-full">
             {/* 도감 리스트 */}
-            {dogamfeedList.map((data, idx) => {
-              return <NewDogam data={data} key={idx} />;
-            })}
+            {dogamfeedList &&
+              dogamfeedList.map((data, idx) => {
+                return <NewDogam data={data} key={idx} />;
+              })}
           </div>
         </div>
       </Mobile>
