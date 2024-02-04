@@ -79,25 +79,25 @@ export interface itemshopStoreType {
 }
 
 // main
+import { UserType } from "./userTypes";
 export interface mainStoreType {
   myPoint: number;
-  myEmail: string;
-  myProfilePic: string;
-  fetchMyPoint: () => void;
-  fetchMyProfilePic: () => void;
+  userData: UserType;
+  fetchMyPoint: () => Promise<number>;
+  fetchMyData: () => Promise<UserType>;
 }
 
 // profile
 // 프로필도감, 도감디테일
-import { ProfileDogamType } from "@/types/dogamTypes";
+import { ProfileDogamType, DogamCommentResponseType } from "@/types/dogamTypes";
 export interface profileDogamStoreType {
   profileDogams: ProfileDogamType[];
   dogamDetail: {};
   addDogamStatus: string;
   deleteDogamStatus: string;
   errorMessage: string | null;
-  fetchProfileDogams: (friendEmail: string) => void;
-  fetchDogamDetail: (dogamId: number) => void;
+  fetchProfileDogams: (friendEmail: string) => Promise<ProfileDogamType[]>;
+  fetchDogamDetail: (dogamId: number) => Promise<DogamCommentResponseType[]>;
   addDogam: (formData: FormData, friendEmail: string) => void;
   createComment: (dogamId: number, comment: string) => void;
   deleteComment: (commentId: number) => void;
