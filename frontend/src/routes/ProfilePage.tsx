@@ -7,30 +7,15 @@ import ProfileEdit from "@/components/profile/ProfileEdit";
 import { Link, Outlet, useParams } from "react-router-dom";
 import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
+import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
 
 export default function ProfilePage() {
-  // 사용자 아이디 더미 데이터
-  const userId = "1";
-
-  // 사용자 이름
-  const userName = "이수민";
-
-  // 사용자 프사
-  const userImg = "/image/joinSample.png";
-
-  // 사용자 프로필 배경
-  // const profileBg = "/image/profileBg.png";
-
-  // 파산 플래그
-  const poorFlag = true;
-
-  // 칭호 내용
-  const alias = "생태계파괴자";
-
-  // 체크 버튼 플래그
-  const check = false;
-
   const params = useParams();
+
+  const { userData, isLoading, error } = useMyDataQuery();
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
 
   return (
     <>
@@ -46,22 +31,22 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage userImg={userImg} />
+                    <ProfileImage userImg={userData.userProfileImg} />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
                   <div className="pt-[12px] mr-2">
                     {/* 뭔지 정확하게 몰라서 일단 체크 버튼 만들었음 */}
-                    <Check check={check} />
+                    {/* <Check check={check} /> */}
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {poorFlag ? <Poor /> : null}
+                  {userData.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {params.id === userId ? (
+                  {params.id === userData.userId ? (
                     <ProfileEdit />
                   ) : (
                     <Button
@@ -77,11 +62,11 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
-                    {userName}
+                    {userData.userName}
                   </div>
                 </div>
                 <div>
-                  <UserCurrentAlias alias={alias} />
+                  <UserCurrentAlias alias={userData.userAlias} />
                 </div>
               </div>
             </div>
@@ -118,22 +103,22 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[150px] h-[150px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage userImg={userImg} />
+                    <ProfileImage userImg={userData.userProfileImg} />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
                   <div className="pt-[12px] mr-2">
                     {/* 뭔지 정확하게 몰라서 일단 체크 버튼 만들었음 */}
-                    <Check check={check} />
+                    {/* <Check check={check} /> */}
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {poorFlag ? <Poor /> : null}
+                  {userData.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {params.id === userId ? (
+                  {params.id === userData.userId ? (
                     <ProfileEdit />
                   ) : (
                     <Button
@@ -149,11 +134,11 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[5px] justify-between">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center ml-2">
-                    {userName}
+                    {userData.userName}
                   </div>
                 </div>
                 <div className="mr-2">
-                  <UserCurrentAlias alias={alias} />
+                  <UserCurrentAlias alias={userData.userAlias} />
                 </div>
               </div>
             </div>
@@ -180,3 +165,24 @@ export default function ProfilePage() {
     </>
   );
 }
+
+// // 사용자 아이디 더미 데이터
+// const userId = "1";
+
+// // 사용자 이름
+// const userName = "이수민";
+
+// // 사용자 프사
+// const userImg = "/image/joinSample.png";
+
+// // 사용자 프로필 배경
+// // const profileBg = "/image/profileBg.png";
+
+// // 파산 플래그
+// const poorFlag = true;
+
+// // 칭호 내용
+// const alias = "생태계파괴자";
+
+// // 체크 버튼 플래그
+// const check = false;
