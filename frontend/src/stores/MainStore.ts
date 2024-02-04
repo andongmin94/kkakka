@@ -4,21 +4,29 @@ import { mainStoreType } from "@/types/storeTypes";
 
 const token = localStorage.getItem("token");
 
-// 메인페이지 정보 (포인트, 프로필사진, 라이브방송리스트, 새로올라온 도감리스트) api 경로 수정하기
+// 메인페이지 정보
 export const useMainStore = create<mainStoreType>((set) => ({
   myPoint: 0,
-  myEmail: "",
-  myProfilePic: "",
+  userData: {
+    userName: "",
+    userEmail: "",
+    userProfileImg: "",
+    userBackImg: "",
+    userAlias: "",
+    userId: 0,
+    bankruptcy: false,
+  },
   fetchMyPoint: async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/point`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/point`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
+      console.log("서버 응답 point", response.data.point);
       set((prev) => ({ ...prev, myPoint: response.data.point }));
       return response.data.point;
     } catch (error: any) {
@@ -26,23 +34,22 @@ export const useMainStore = create<mainStoreType>((set) => ({
     }
   },
 
-  // 본인 이메일, 프로필 사진 불러오기
-  fetchMyProfilePic: async () => {
+  // 본인 정보
+  fetchMyData: async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/email`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/data`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      set((prev) => ({ ...prev, myProfilePic: response.data.profilePic }));
-      set((prev) => ({ ...prev, myEmail: response.data.email }));
-      console.log("myProfilePic", response.data);
-      return response.data.profilePic;
+      console.log("서버 응답 유저데이터", response.data.data);
+      set((prev) => ({ ...prev, userData: response.data.data }));
+      return response.data.data;
     } catch (error: any) {
-      console.error("Error fetching my profile pic", error.message);
+      console.error("Error fetching my datas", error.message);
     }
   },
 }));

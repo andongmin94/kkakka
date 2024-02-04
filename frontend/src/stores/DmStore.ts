@@ -17,7 +17,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
           },
         }
       );
-      console.log("서버 응답:", res.data.data);
+      console.log("서버 응답 dm:", res.data.data);
       set((prev) => ({ ...prev, dmList: res.data.data.dmList }));
       return res.data.data.dmList;
     } catch (error) {

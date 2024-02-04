@@ -10,24 +10,25 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import useMyProfilePicQuery from "@/apis/user/queries/useMyProfilePicQuery";
+import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
 
 export default function RootLayout() {
-  // 백 api 미완
-  // const { myProfilePic, isLoading, error } = useMyProfilePicQuery();
-  // if (isLoading) return <div>로딩중...</div>;
-  // if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
-  const { theme } = useTheme();
-  // 사용자 아이디 더미 데이터
-  const userId = "1";
-
   const { pathname } = useLocation();
 
   useEffect(() => {
     // 페이지 이동시마다 스크롤바는 항상 최상단에 위치하게 한다.
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  const { theme } = useTheme();
+
+  const { userData, isLoading, error } = useMyDataQuery();
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+
+  // 사용자 아이디 더미 데이터
+  const userId = "1";
 
   return (
     <>
@@ -80,13 +81,13 @@ export default function RootLayout() {
                   <ModeToggle />
                   {/* 사용자 프로필 버튼 */}
                   <Link
-                    to={`/main/profile/${userId}`}
+                    to={`/main/profile/${userData && userData.userId}`}
                     className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                   >
                     {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                     <Avatar>
                       <AvatarImage
-                        src="/image/liveImage.png"
+                        src={userData && userData.userProfileImg}
                         alt="프사"
                         className="bg-cover"
                       />
