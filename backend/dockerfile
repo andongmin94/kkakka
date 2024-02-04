@@ -17,4 +17,4 @@ EXPOSE 8080
 ENV NAME World
 
 # Run the JAR file
-CMD ["java", "-jar", "backend/build/libs/your-backend-app.jar"]
+CMD ["java", "-jar", "ssafy_common2-0.0.1-SNAPSHOT.jar"]
