@@ -8,8 +8,9 @@ import { createWebSocketConnection } from "league-connect";
 import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage } from "electron";
 
 dotenv.config();
-
 const isDev = process.env.IS_DEV === "true";
+const BASE_URL = process.env.API_BASE_URL;
+
 let win;
 let tray;
 
@@ -87,6 +88,24 @@ app
     });
 
     //////////////////// 리그오브레전드 통신 /////////////////////
+
+    // 방 만드는데 쓰는 함수 현재 로그인 접속자의 메일을 쓰게 해야함.
+    async function startBroadcast (friendEmail) {
+      const url = `${BASE_URL}/api/friends/broadcasts/enter/${friendEmail}`;
+    
+      try {
+        const response = await axios.post(url, {}, { // 두 번째 인자를 빈 객체로 설정
+          headers: {
+            Authorization: token,
+          },
+        });
+        console.log("서버 응답:", response.data);
+      } catch (error) {
+        console.error("Error starting a new broadcast", error.message);
+      }
+    }
+
+    // 클라이언트랑 웹소켓으로 연결하는 부분
     const ws = await createWebSocketConnection({
       authenticationOptions: {
         awaitConnection: true,
@@ -94,6 +113,7 @@ app
     });
     let gameIsRunning = false;
     
+    // 딱 게임이 시작되는 순간부터 게임이 끝날 때까지의 이벤트를 받아오는 부분
     ws.subscribe('/lol-gameflow/v1/session', (data) => {
       if (data.phase === 'GameStart')
       {
@@ -159,6 +179,7 @@ app
               oneShotChecker = true;
               console.log(playerName); // 이 코드는 현재 플레이어의 정보를 콘솔에 출력합니다.
               console.log(players_info); // 이 코드는 모든 플레이어의 정보를 콘솔에 출력합니다.
+              startBroadcast("k1016h@naver.com");
             }
             
             // console.log(players); // 이 코드는 각 플레이어의 정보를 콘솔에 출력합니다.
@@ -195,4 +216,9 @@ ipcMain.on("button-clicked", (event, message) => {
 ipcMain.on("Riot Game Info", (event, message) => {
   console.log("Received from Riot Game Info : ", message);
 });
+
+let token;
+ipcMain.on("token", (event, message) => {
+  token = message;
+})
 ////////////////////////////////////////////////////////////

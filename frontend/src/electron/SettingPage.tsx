@@ -8,7 +8,6 @@ export default function SettingPage() {
   const handleClick = () => {
     electron.send("button-clicked", "리액트에서 보냄");
   };
-
   const summonerName = async () => {
     let sname = "안동민";
     const response = await axios({
