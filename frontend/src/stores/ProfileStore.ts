@@ -23,10 +23,12 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
           },
         }
       );
+      console.log("프로필 도감 리스트", res.data);
       set((prev) => ({
         ...prev,
-        profileDogams: res.data.data.profileDogamList,
+        profileDogams: res.data.data,
       }));
+      return res.data;
     } catch (error: any) {
       console.error("Error fetching profile", error);
     }
@@ -43,7 +45,9 @@ export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
           },
         }
       );
+      console.log("도감 디테일:", res.data);
       set((prev) => ({ ...prev, dogamDetail: res.data.data.dogamDetail }));
+      return res.data.data;
     } catch (error: any) {
       console.error("Error fetching profile", error);
     }

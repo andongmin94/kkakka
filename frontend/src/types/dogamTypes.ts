@@ -11,6 +11,7 @@ export interface DogamDetailType {
   dogamTitle: string;
   dogamId: number;
   friendName: string;
+  friendEmail: string;
   friendAlias: string | null;
   dogamImgUrl: string;
   friendImgUrl: string;
