@@ -7,10 +7,21 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "@/components/navbar/ThemeProvider";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
 import { Mobile, PC } from "../MediaQuery";
+import useDogamDetailQuery from "@/apis/profile/dogam/queries/useDogamDetailQuery";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -18,7 +29,12 @@ const FormSchema = z.object({
   }),
 });
 
-export default function CommentModal() {
+export default function CommentModal({ dogamId }: { dogamId: number }) {
+  const { dogamComments, isLoading, error } = useDogamDetailQuery({ dogamId });
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+
   const { theme } = useTheme();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -38,28 +54,7 @@ export default function CommentModal() {
     });
   }
 
-  //----------------------------------------- 임시 데이터
-
-  // 사용자 이름
-  const userName = "전수민";
-  const userId = "1";
-  const userUpdate = "2024.01.26 오후 3:50";
-  const userAlias = "10년째 실버";
-
-  // 임시 댓글 리스트
-  const commentData = [
-    {
-      userId: "2",
-      name: "이해건",
-      text: "개못하네",
-      update: "2024.01.26 오후 2:06",
-      alias: "인의동손잭스",
-    },
-  ];
-
-  //-----------------------------------------
-
-  const [commentList, setCommentList] = useState(commentData);
+  // const [commentList, setCommentList] = useState(commentData);
 
   return (
     <>
@@ -80,9 +75,10 @@ export default function CommentModal() {
               </div>
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
-                {commentList.map((com, idx) => {
-                  return <Comment key={idx} data={com} userId={userId} />;
-                })}
+                {dogamComments &&
+                  dogamComments.map((com, idx) => {
+                    return <Comment key={idx} data={com} userId={userId} />;
+                  })}
 
                 {/* 댓글 입력 부분 */}
                 <div className="">
@@ -165,9 +161,10 @@ export default function CommentModal() {
               </div>
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
-                {commentList.map((com, idx) => {
-                  return <Comment key={idx} data={com} userId={userId} />;
-                })}
+                {dogamComments &&
+                  dogamComments.map((com, idx) => {
+                    return <Comment key={idx} data={com} userId={userId} />;
+                  })}
 
                 {/* 댓글 입력 부분 */}
                 <div className="">
@@ -238,3 +235,24 @@ export default function CommentModal() {
     </>
   );
 }
+
+//----------------------------------------- 임시 데이터
+
+// 사용자 이름
+// const userName = "전수민";
+// const userId = "1";
+// const userUpdate = "2024.01.26 오후 3:50";
+// const userAlias = "10년째 실버";
+
+// // 임시 댓글 리스트
+// const commentData = [
+//   {
+//     userId: "2",
+//     name: "이해건",
+//     text: "개못하네",
+//     update: "2024.01.26 오후 2:06",
+//     alias: "인의동손잭스",
+//   },
+// ];
+
+//-----------------------------------------
