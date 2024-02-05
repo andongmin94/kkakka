@@ -31,26 +31,31 @@ public class ChatMessageDto {
     // 메세지 수정 시간
     private LocalDateTime updateAt;
 
+    // Base64로 이미지 받음
+    private String imgCode;
+
 
     @Builder
     private ChatMessageDto(String messageType, String content, long userId, long chatRoomId,
-                           LocalDateTime createdAt, LocalDateTime updateAt){
+                           LocalDateTime createdAt, LocalDateTime updateAt, String imgCode){
         this.messageType = messageType;
         this.content = content;
         this.userId = userId;
         this.chatRoomId = chatRoomId;
         this.createdAt = createdAt;
         this.updateAt = updateAt;
+        this.imgCode = imgCode;
     }
 
     public static ChatMessageDto of (String messageType, String content, long userId, long chatRoomId,
-                                     LocalDateTime createdAt, LocalDateTime updateAt){
+                                     LocalDateTime createdAt, LocalDateTime updateAt, String imgCode){
         return  builder().messageType(messageType)
                 .content(content)
                 .userId(userId)
                 .chatRoomId(chatRoomId)
                 .createdAt(createdAt)
                 .updateAt(updateAt)
+                .imgCode(imgCode)
                 .build();
     }
 
@@ -65,6 +70,7 @@ public class ChatMessageDto {
                 ", chatRoomId=" + chatRoomId +
                 ", createdAt=" + createdAt +
                 ", updateAt=" + updateAt +
+                ", imageCode=" + imgCode +
                 '}';
     }
 }

@@ -42,6 +42,10 @@ public class ChatRoomController {
             @PathVariable(value = "user_id") long userId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
 
+        if(userDetails == null){
+            return ResponseUtils.error(ErrorResponse.of(ErrorType.NOT_FOUND_USER));
+        }
+
         return chatRoomMySQLService.createRoom(type,userId,userDetails);
     }
 

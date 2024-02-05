@@ -18,6 +18,8 @@ import org.ssafy.ssafy_common2.chatting.entity.Message;
 import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
 import org.ssafy.ssafy_common2.chatting.repository.MessageRepository;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
+import org.ssafy.ssafy_common2.chatting.service.ChatService;
+
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -30,6 +32,7 @@ public class ChatController {
     private final ChatRoomMySQLService chatRoomMySQLService;
     private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations template;
+    private final ChatService chatService;
 
 
     // 1) 입장 메세지 용
@@ -104,9 +107,24 @@ public class ChatController {
 
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
-                // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
-                        msg.getCreatedAt(), msg.getUpdateAt());
+                if(msg.getImgCode() == null){
+                    // 2-3) Message Insert DTO에 맞게 만들어 넣기
+                    messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
+                            msg.getCreatedAt(), msg.getUpdateAt());
+                }else {
+                    ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
+
+                    System.out.println(msgWithImg.toString());
+
+                    messageRepository.InsertMessage(msgWithImg.getContent(),
+                            msgWithImg.getMessageType(),
+                            msgWithImg.getUserId(),
+                            msgWithImg.getChatRoomId(),
+                            msgWithImg.getCreatedAt()
+                    ,msgWithImg.getUpdateAt());
+
+                    msg = msgWithImg;
+                }
             }
 
 
