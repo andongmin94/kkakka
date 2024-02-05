@@ -35,7 +35,7 @@ public class DynamicUserInfo extends BaseTime {
     @Column(name = "last_noti_event_id")
     private String lastNotiEventId;
 
-    @Column(name = "back_img",nullable = false, length = 250)
+    @Column(name = "back_img",nullable = true, length = 250)
     private String backImg;
 
     @Builder
