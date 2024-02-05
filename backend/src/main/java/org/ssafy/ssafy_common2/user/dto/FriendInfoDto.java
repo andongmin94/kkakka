@@ -14,6 +14,7 @@ public class FriendInfoDto {
     }
 
     private String name;
+    private Long userId;
     private String email;
     private boolean isLogin;
     private String curAlias;
@@ -24,8 +25,9 @@ public class FriendInfoDto {
     // builder
 
     @Builder
-    public FriendInfoDto(String name, String email, boolean isLogin, String curAlias, String profileImg, UserState state) {
+    public FriendInfoDto(Long userId, String name, String email, boolean isLogin, String curAlias, String profileImg, UserState state) {
 
+        this.userId = userId;
         this.name = name;
         this.email = email;
         this.isLogin = isLogin;
@@ -35,9 +37,10 @@ public class FriendInfoDto {
     }
 
     // of - 여러 파라미터
-    public static FriendInfoDto of(String name, String email, boolean isLogin, String curAlias, String profileImg, UserState state) {
+    public static FriendInfoDto of(Long userId, String name, String email, boolean isLogin, String curAlias, String profileImg, UserState state) {
 
         return builder()
+                .userId(userId)
                 .name(name)
                 .email(email)
                 .isLogin(isLogin)
@@ -52,6 +55,7 @@ public class FriendInfoDto {
         DynamicUserInfo userInfo = user.getUserInfoId();
 
         return builder()
+                .userId(user.getId())
                 .name(user.getUserName())
                 .email(user.getKakaoEmail())
                 .isLogin(userInfo.isLogin())
