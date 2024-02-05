@@ -36,6 +36,13 @@ public class UserDataController {
         return ResponseUtils.ok(map, MsgType.SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY);
     }
 
+    @GetMapping("/users/data/{user-id}")
+    public ApiResponseDto<UserDataResponseDto> getUserData(@PathVariable(value = "user-id") Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        UserDataResponseDto map = userDataService.getUserData(userId, userDetails.getUser());
+        return ResponseUtils.ok(map, MsgType.SEARCH_USER_DATA_SUCCESSFULLY);
+    }
+
     @PutMapping("/users/back-img")
     public ApiResponseDto<Void> updateUserBackImg(@AuthenticationPrincipal UserDetailsImpl userDetails, @ModelAttribute UserBackImgRequestDto dto) throws IOException {
 

@@ -74,4 +74,25 @@ public class UserDataService {
         // imgURL을 만들어서 S3에 저장 끝
         dynamicUserInfo.updateBackImg(imgUrl);
     }
+
+    public UserDataResponseDto getUserData(Long userId, User user) {
+
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        User curUser = userRepository.findByIdAndDeletedAtIsNull(userId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_USER)
+        );
+
+
+        boolean isBankrupt = false;
+        if (curUser.getUserInfoId().getPoint() == 0 && curUser.getUserInfoId().getIsBetting() == 0) {
+            isBankrupt = true;
+        }
+
+        UserDataResponseDto dto = UserDataResponseDto.of(curUser.getId(), curUser.getUserName(), curUser.getKakaoEmail(), curUser.getKakaoProfileImg(),
+                curUser.getUserInfoId().getBackImg(), curUser.getUserInfoId().getCurAlias(), isBankrupt);
+        return dto;
+    }
 }
