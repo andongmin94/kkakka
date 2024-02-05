@@ -1,21 +1,31 @@
 import Speaker from "@/components/itemShop/Speaker";
 import WriteAlias from "@/components/itemShop/WriteAlias";
 import Compliment from "@/components/itemShop/Compliment";
-import useItemListQuery from "@/apis/itemshop/queries/useItemListQuery";
 import DeleteCollection from "@/components/itemShop/DeleteCollection";
-
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { ItemType } from "@/types/itemTypes";
 export default function ItemshopPage() {
-  const { items, isLoading, error } = useItemListQuery();
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
   // console.log(items[0].itemName); // 칭호지정
   // console.log(items[1].itemName); // 도감삭제
   // console.log(items[2].itemName); // 강제칭찬
   // console.log(items[3].itemName); // 확성기
+  const token = localStorage.getItem("token");
 
-  console.log(items);
+  const [items, setItems] = useState<ItemType[]>();
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/itemshop`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data.itemList);
+        setItems(res.data.data.itemList);
+      });
+  }, []);
 
   return (
     <>

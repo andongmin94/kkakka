@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/form";
 
 import { Mobile, PC } from "../MediaQuery";
-import useDogamDetailQuery from "@/apis/profile/dogam/queries/useDogamDetailQuery";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -30,11 +29,6 @@ const FormSchema = z.object({
 });
 
 export default function CommentModal({ dogamId }: { dogamId: number }) {
-  const { dogamComments, isLoading, error } = useDogamDetailQuery({ dogamId });
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
   const { theme } = useTheme();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

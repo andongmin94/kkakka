@@ -1,11 +1,18 @@
-import useDogamFeedListQuery from "@/apis/dogamfeed/queries/useDogamFeedListQuery";
 import NewDogam from "@/components/main/NewDogam";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { NewDogamType } from "@/types/dogamTypes";
 
 export default function NewDogamList() {
-  const { dogamfeedList, isLoading, error } = useDogamFeedListQuery();
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  const [dogamfeedList, setDogamfeedList] = useState<NewDogamType[] | null>([]);
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`)
+      .then((res) => {
+        console.log(res.data.data);
+        setDogamfeedList(res.data.data);
+      });
+  }, []);
 
   return (
     <div>
