@@ -90,8 +90,8 @@ app
     //////////////////// 리그오브레전드 통신 /////////////////////
 
     // 방 만드는데 쓰는 함수 현재 로그인 접속자의 메일을 쓰게 해야함.
-    async function startBroadcast (friendEmail) {
-      const url = `${BASE_URL}/api/friends/broadcasts/enter/${friendEmail}`;
+    async function startBroadcast (user_id) {
+      const url = `${BASE_URL}/api/friends/broadcasts/enter/${user_id}`;
     
       try {
         const response = await axios.post(url, {}, { // 두 번째 인자를 빈 객체로 설정
@@ -100,6 +100,7 @@ app
           },
         });
         console.log("서버 응답:", response.data);
+        room_id = response.data.data;
       } catch (error) {
         console.error("Error starting a new broadcast", error.message);
       }
@@ -179,7 +180,7 @@ app
               oneShotChecker = true;
               console.log(playerName); // 이 코드는 현재 플레이어의 정보를 콘솔에 출력합니다.
               console.log(players_info); // 이 코드는 모든 플레이어의 정보를 콘솔에 출력합니다.
-              startBroadcast("k1016h@naver.com");
+              startBroadcast(user_id);
             }
             
             // console.log(players); // 이 코드는 각 플레이어의 정보를 콘솔에 출력합니다.
@@ -221,4 +222,42 @@ let token;
 ipcMain.on("token", (event, message) => {
   token = message;
 })
+
+let user_id;
+ipcMain.on("user_id", (event, message) => {
+  user_id = message;
+})
+
+let room_id;
+// WebSocket 연결을 만드는 함수
+function createWebSocketConnection(roomId) {
+  // WebSocket 서버의 URL. 여기서는 roomId를 경로에 포함시켰습니다.
+  const url = `ws://your-websocket-server.com/chatroom/${roomId}`;
+
+  // WebSocket 객체를 생성하고 반환합니다.
+  return new WebSocket(url);
+}
+
+// 응답에서 채팅방 ID를 가져와 WebSocket 연결을 만듭니다.
+const socket = createWebSocketConnection(room_id);
+
+// 연결이 열릴 때의 이벤트 핸들러
+socket.onopen = (event) => {
+  console.log("WebSocket is open now.");
+};
+
+// 메시지를 받을 때의 이벤트 핸들러
+socket.onmessage = (event) => {
+  console.log("WebSocket message received:", event.data);
+};
+
+// 연결이 닫힐 때의 이벤트 핸들러
+socket.onclose = (event) => {
+  console.log("WebSocket is closed now.");
+};
+
+// 오류가 발생할 때의 이벤트 핸들러
+socket.onerror = (error) => {
+  console.log("WebSocket error: ", error);
+};
 ////////////////////////////////////////////////////////////
