@@ -14,6 +14,7 @@ pipeline {
             steps {
                 echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
+                    sh "chmod +x ./gradlew"
                     sh "./gradlew clean build"
                 }
                 echo '백엔드 빌드 및 테스트 완료!'
