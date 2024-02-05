@@ -36,13 +36,13 @@ public class ChatRoomController {
 
 
     // 1) (1대1 혹은 중계) 채팅방 생성
-    @PostMapping("/{type}/enter/{email}")
+    @PostMapping("/{type}/enter/{user_id}")
     public ApiResponseDto<?> createRoom (
             @PathVariable(value = "type")String type,
-            @PathVariable(value = "email") String friendEmail,
+            @PathVariable(value = "user_id") long userId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return chatRoomMySQLService.createRoom(type,friendEmail,userDetails);
+        return chatRoomMySQLService.createRoom(type,userId,userDetails);
     }
 
 
