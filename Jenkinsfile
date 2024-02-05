@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         BuildGradle     = credentials('build.gradle')
-        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+        // AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
     stages {
         stage('Clone') {
