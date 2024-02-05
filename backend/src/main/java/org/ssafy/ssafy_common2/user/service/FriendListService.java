@@ -35,7 +35,9 @@ public class FriendListService {
 
     // 친구 추가 요청
     @Transactional
-    public MsgType editFriendState(User sender, User receiver){
+    public MsgType editFriendState(User sender, Long receiverId){
+
+        User receiver = validateReceiverByUserId(receiverId);
 
         // 현재 친구 상태 확인
         FriendState state = getFriendState(sender, receiver);
@@ -110,8 +112,9 @@ public class FriendListService {
     }
 
     // 두 유저의 현재 친구요청 상태를 리턴
-    public FriendStateResponseDto createFriendStateResponse(User sender, User receiver){
+    public FriendStateResponseDto createFriendStateResponse(User sender, Long receiverId){
 
+        User receiver = validateReceiverByUserId(receiverId);
         return FriendStateResponseDto.of(getFriendState(sender, receiver).toString());
     }
 
@@ -164,10 +167,10 @@ public class FriendListService {
     }
 
     // 친구(toUser)가 까까의 회원인지 확인
-    public User validateFriend(String receiverEmail){
+    public User validateReceiverByUserId(Long receiverId){
 
-        return userRepository.findByKakaoEmailAndDeletedAtIsNull(receiverEmail)
-                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
+        return userRepository.findByIdAndDeletedAtIsNull(receiverId)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_RECEIVER));
     }
 
     // 친구 신청하기
