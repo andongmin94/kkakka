@@ -54,7 +54,7 @@ public class UserController {
             test = true;
         }
 
-        System.out.println(a);
+        System.out.println("랜덤값 몇이야? 0.5 이하면 true가 된다 " + a);
         ret.put("isFirst", test);
         System.out.println("첫 가입인가? : " + isFirst);
         return ResponseUtils.ok(ret, MsgType.GENERATE_TOKEN_SUCCESSFULLY);
