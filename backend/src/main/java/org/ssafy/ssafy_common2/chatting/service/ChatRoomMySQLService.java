@@ -120,6 +120,7 @@ public class ChatRoomMySQLService {
             User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
             if(friend !=null) {
+                element.setFriendId(friend.getId());
                 element.setFriendImgUrl(friend.getKakaoProfileImg());
                 element.setFriendAlias(friend.getUserInfoId().getCurAlias());
                 element.setLogin(friend.getUserInfoId().isLogin());
@@ -199,37 +200,37 @@ public class ChatRoomMySQLService {
     // 9) 라이브 중인 친구 채팅방 얻기
     public List<LiveBroadcastListDto> findAllBroadCastsRoom(User user){
 
-        // 3-1) 친구 목록 받기
+        // 9-1) 친구 목록 받기
         List<FriendInfoDto> friendInfoList = friendListService.getFriendInfoList(user);
 
 
 
-        //  3-1-a) 친구 리스트 받기용
+        //  9-1-a) 친구 리스트 받기용
         ArrayList<LiveBroadcastListDto> ans = new ArrayList<>();
 
         System.out.println(friendInfoList.size());
 
-        // 3-1-b) 친구 한 명씩 순회
+        // 9-1-b) 친구 한 명씩 순회
         for (int i = 0; i < friendInfoList.size(); i++) {
 
-            // 빈 객체 만들기
+            //9-2 빈 객체 만들기
             LiveBroadcastListDto elements = new LiveBroadcastListDto();
 
-            // 값 얻기
+            //9-3 값 얻기
             ChatRoom chatRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, friendInfoList.get(i).getEmail()).orElse(null);
 
             if(chatRoom != null){
                 User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(friendInfoList.get(i).getEmail()).orElse(null);
 
 
-                // 방에 대한 값들 얻기
+                //9-5 방에 대한 값들 얻기
                 elements.setPlayerEmail(friendInfoList.get(i).getEmail());
                 elements.setPlayerName(chatRoom.getChatOwnerName());
                 elements.setRoomTitle(RandomPickRoomTitle());
                 elements.setRoomId(chatRoom.getId());
                 elements.setPlayerProfilePic(friend.getKakaoProfileImg());
                 elements.setPlayerBackgroundPic(friend.getUserInfoId().getBackImg());
-                System.out.println(friend.getUserInfoId().getBackImg());
+
                 // 참여한 사람들 List 얻기
 
                 // 참여 정보 얻기
@@ -251,13 +252,56 @@ public class ChatRoomMySQLService {
                     crowdList.add(one);
                 }
 
-                // 3-5) 답 속에 포함
+                // 9-5) 답 속에 포함
                 elements.setCrowdDtoList(crowdList);
 
                 ans.add(elements);
             }
 
         }
+
+        // 9-7) 본인 이름 중계방도 리스트에 넣기
+        LiveBroadcastListDto Mine = new LiveBroadcastListDto();
+
+        ChatRoom myRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, user.getKakaoEmail()).orElse(null);
+
+        if(myRoom != null){
+            Mine.setPlayerEmail(user.getKakaoEmail());
+            Mine.setPlayerName(user.getUserName());
+            Mine.setRoomTitle(RandomPickRoomTitle());
+            Mine.setRoomId(myRoom.getId());
+            Mine.setPlayerProfilePic(user.getKakaoProfileImg());
+            Mine.setPlayerBackgroundPic(user.getUserInfoId().getBackImg());
+
+
+            // 참여한 사람들 List 얻기
+
+            // 참여 정보 얻기
+            List<ChatJoin> chatJoin = chatJoinRepository.findChatJoinByChatJoinId_ChatRoomId(myRoom.getId());
+
+
+            // 빈 객체
+            ArrayList<CrowdDto> crowdList = new ArrayList<>();
+
+            // 값 넣기
+            for (int j = 0; j < chatJoin.size(); j++) {
+                CrowdDto one = new CrowdDto();
+                User crowdMember = userRepository.findByIdAndDeletedAtIsNull(chatJoin.get(j).getUser().getId()).orElse(null);
+
+                one.setAttenderEmail(crowdMember.getKakaoEmail());
+                one.setAttenderProfileImg(crowdMember.getKakaoProfileImg());
+                one.setAttenderName(crowdMember.getUserName());
+
+                crowdList.add(one);
+            }
+
+            // 9-5) 답 속에 포함
+            Mine.setCrowdDtoList(crowdList);
+        }
+
+        ans.add(Mine);
+
+
         return ans;
     }
 
