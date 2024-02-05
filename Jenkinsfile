@@ -23,7 +23,7 @@ pipeline {
                         sh "touch ./build.gradle" 
 
                         // application properties 파일 복사
-                        sh "echo '${mySecretInfo}' >> ./build.gradle"
+                        sh "echo '${mySecretInfo}' > ./build.gradle"
 
                         sh "./gradlew clean build"
                     }
