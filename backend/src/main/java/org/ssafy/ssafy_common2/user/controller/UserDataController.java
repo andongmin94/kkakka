@@ -9,6 +9,7 @@ import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.user.dto.Request.UserBackImgRequestDto;
 import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserProfileEditResponseDto;
 import org.ssafy.ssafy_common2.user.service.UserDataService;
 
 import java.io.IOException;
@@ -48,5 +49,12 @@ public class UserDataController {
 
         userDataService.updateUserBackImg(userDetails.getUser(), dto);
         return ResponseUtils.ok(MsgType.UPDATE_USER_BACK_IMG_SUCCESSFULLY);
+    }
+
+    @GetMapping("/users/profile-edit")
+    public ApiResponseDto<UserProfileEditResponseDto> getProfileEdit(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        UserProfileEditResponseDto dto = userDataService.getProfileEdit(userDetails.getUser());
+        return ResponseUtils.ok(dto, MsgType.SEARCH_USER_EDIT_DATA_SUCCESSFULLY);
     }
 }
