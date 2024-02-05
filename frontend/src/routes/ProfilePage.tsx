@@ -13,7 +13,7 @@ import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
 export default function ProfilePage() {
   const params = useParams();
   const userId = Number(params.id);
-  console.log(userId);
+  // console.log(userId); 로그에 찍히는게 가독성을 방해해서 일단 주석함.
   const { profileData } = useUserDataQuery({ userId });
   const { userData } = useMyDataQuery();
 

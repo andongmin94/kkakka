@@ -17,11 +17,11 @@ export default function LiveContent({
 }: {
   liveData: BroadcastItemType;
 }) {
-  console.log("liveData", liveData);
-  const playerEmail = liveData.playerEmail;
+  const roomId = liveData.roomId;
+  console.log(liveData.roomId + "번 방 라이브 중 " + liveData.playerName);
 
   const handleEnterRoom = useCallback(() => {
-    useDmEnterPost({ playerEmail });
+    useDmEnterPost({ friendId: roomId });
   }, []);
 
   return (

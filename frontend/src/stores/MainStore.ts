@@ -1,6 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { mainStoreType } from "@/types/storeTypes";
+const electron = window.electron;
 
 const token = localStorage.getItem("token");
 
@@ -46,6 +47,10 @@ export const useMainStore = create<mainStoreType>((set) => ({
         }
       );
       console.log("서버 응답 유저데이터", response.data.data);
+      ///////////// 일렉트론에서 쓰는 통신임 //////////////////
+      {typeof electron !== "undefined" && electron.send("user_id", response.data.data.userId)};
+      {typeof electron !== "undefined" && electron.send("token", localStorage.getItem("token"))};
+      ///////////// 일렉트론에서 쓰는 통신임 //////////////////
       set((prev) => ({ ...prev, userData: response.data.data }));
       return response.data.data;
     } catch (error: any) {
