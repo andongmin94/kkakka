@@ -21,7 +21,7 @@ pipeline {
                     sh "chmod +x ./gradlew"
 
                     sh "touch ./build.gradle" 
-
+ 
                     // application properties 파일 복사
                     sh "echo '${BuildGradle}' > ./build.gradle"
                     sh "./gradlew clean build"
