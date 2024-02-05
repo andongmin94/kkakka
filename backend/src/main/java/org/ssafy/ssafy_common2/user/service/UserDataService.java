@@ -80,8 +80,8 @@ public class UserDataService {
         if (dto.getProfileImg() != null) {
             if (!dto.getProfileImg().isEmpty()) {
                 profileImgUrl = s3Uploader.upload(dto.getProfileImg());
+                user.updateProfileImg(profileImgUrl);
             }
-            user.updateProfileImg(profileImgUrl);
         }
 
         // imgURL을 만들어서 S3에 저장 끝
