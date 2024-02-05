@@ -38,7 +38,7 @@ export interface dmStoreType {
   dmList: DmType[];
   prevChat: [];
   fetchDmList: () => void;
-  enterDm: (friendEmail: string) => void;
+  enterDm: (friendEmail: string) => Promise<void>;
   deleteDm: (friendEmail: string) => void;
   loadPrevChat: (dmId: number) => void;
 }
@@ -88,6 +88,11 @@ export interface mainStoreType {
 }
 
 // profile
+export interface profileStoreType {
+  profile: UserType;
+  fetchProfile: (userId: number) => Promise<UserType>;
+}
+
 // 프로필도감, 도감디테일
 import { ProfileDogamType, DogamCommentResponseType } from "@/types/dogamTypes";
 export interface profileDogamStoreType {
