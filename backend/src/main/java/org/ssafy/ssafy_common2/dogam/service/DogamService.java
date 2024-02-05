@@ -170,6 +170,7 @@ public class DogamService {
 
             // 댓글 주인의 프로필 사진, 댓글의 내용, 댓글 주인의 이름, 댓글 주인의 이메일 저장
             DogamCommentResponseDto dogamCommentResponseDto = DogamCommentResponseDto.of(
+                    commentDogam != null ? commentDogam.getId() : null,
                     commentUser != null ? commentUser.getId() : null,
                     commentUser != null ? commentUser.getKakaoProfileImg() : null,
                     commentDogam != null ? commentDogam.getDogamComment() : null,
@@ -202,7 +203,7 @@ public class DogamService {
             User commentUser = userRepository.findByKakaoEmailAndDeletedAtIsNull(cd.getUserEmail()).orElseThrow(
                     () -> new CustomException(ErrorType.NOT_FOUND_USER)
             );
-            dogamCommentResponseDtos.add(DogamCommentResponseDto.of(commentUser.getId(), commentUser.getKakaoProfileImg(), cd.getDogamComment(),
+            dogamCommentResponseDtos.add(DogamCommentResponseDto.of(cd.getId(), commentUser.getId(), commentUser.getKakaoProfileImg(), cd.getDogamComment(),
                     commentUser.getUserName(), commentUser.getKakaoEmail(), cd.getCreatedAt()));
         }
 
