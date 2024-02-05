@@ -1,9 +1,11 @@
 // 도감에 달린 댓글
 export interface DogamCommentResponseType {
-  commentUserImgUrl: string | null;
-  commentUserName: string | null;
-  commetUserEmail: string | null;
-  comment: string | null;
+  commentUserImgUrl: string;
+  commentUserName: string;
+  commetUserEmail: string;
+  commentUserId: number;
+  comment: string;
+  commentId: number;
 }
 
 // 도감 상세 (누르면 모달)

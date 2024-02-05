@@ -24,7 +24,7 @@ export default function MessageListPage() {
       });
   }, []);
 
-  const enterChat = (friendId: number) => {
+  const enterChatHandler = (friendId: number) => {
     axios
       .post(
         `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
@@ -48,7 +48,7 @@ export default function MessageListPage() {
           <Message
             key={dm.dmId}
             onClick={() => {
-              enterChat(dm.friendId);
+              enterChatHandler(dm.friendId);
             }}
           />;
         })}

@@ -5,9 +5,14 @@ import { NewDogamType } from "@/types/dogamTypes";
 
 export default function NewDogamList() {
   const [dogamfeedList, setDogamfeedList] = useState<NewDogamType[] | null>([]);
+  const token = localStorage.getItem("token");
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         console.log(res.data.data);
         setDogamfeedList(res.data.data);
