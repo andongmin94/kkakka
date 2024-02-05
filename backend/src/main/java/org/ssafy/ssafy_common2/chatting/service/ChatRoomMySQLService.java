@@ -178,7 +178,8 @@ public class ChatRoomMySQLService {
                 message.getChatJoin().getUser().getId(),
                 message.getChatJoin().getChatRoom().getId(),
                 message.getCreatedAt(),
-                message.getUpdatedAt()
+                message.getUpdatedAt(),
+                null
         );
     };
 
