@@ -19,6 +19,9 @@ export default function RootLayout() {
 
   const [userData, setUserData] = useState<UserType | null>(null);
 
+  // 스크롤 내릴땐 네브바가 안보이게
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+
   useEffect(() => {
     // 페이지 이동시마다 스크롤바는 항상 최상단에 위치하게 한다.
     window.scrollTo(0, 0);
@@ -40,6 +43,29 @@ export default function RootLayout() {
         {typeof electron !== "undefined" && electron.send("token", localStorage.getItem("token"))};
         ///////////// 일렉트론에서 쓰는 통신임 //////////////////
       });
+
+    // ------------------------------
+    // 스크롤바 부분
+    let prevScrollPos = window.pageYOffset;
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+
+      // 예스크롤을 내릴 때 네브바를 숨김, 올리면 다시 보임
+      setIsNavbarVisible(
+        currentScrollPos <= 0 || currentScrollPos < prevScrollPos
+      );
+
+      // 현재 스크롤 위치를 업데이트
+      prevScrollPos = currentScrollPos;
+    };
+
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener("scroll", handleScroll);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const { theme } = useTheme();
@@ -85,75 +111,77 @@ export default function RootLayout() {
             })}
           >
             {/* 네브바 */}
-            {theme === "light" ? (
-              <nav className={classes.nav}>
-                <div></div>
+            {isNavbarVisible ? (
+              theme === "light" ? (
+                <nav className={classes.nav}>
+                  <div></div>
 
-                {/* 로고 */}
-                <h1>확성기 자리</h1>
+                  {/* 로고 */}
+                  <h1>확성기 자리</h1>
 
-                {/* 네브바 오른쪽 영역 */}
-                <div className={classes.nav_right}>
-                  {/* 다크모드 버튼 (미완, 후순위) */}
-                  <ModeToggle />
-                  {/* 사용자 프로필 버튼 */}
-                  <Link
-                    to={`/main/profile/${userData && userData.userId}`}
-                    className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                  >
-                    {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
-                    <Avatar>
-                      <AvatarImage
-                        src={userData && userData.userProfileImg}
-                        alt="프사"
-                        className="bg-cover"
-                      />
-                      <AvatarFallback>프사</AvatarFallback>
-                    </Avatar>
-                    {/* <div className={classes.user_image} /> */}
-                  </Link>
+                  {/* 네브바 오른쪽 영역 */}
+                  <div className={classes.nav_right}>
+                    {/* 다크모드 버튼 (미완, 후순위) */}
+                    <ModeToggle />
+                    {/* 사용자 프로필 버튼 */}
+                    <Link
+                      to={`/main/profile/${userData && userData.userId}`}
+                      className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                    >
+                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
+                      <Avatar>
+                        <AvatarImage
+                          src={userData && userData.userProfileImg}
+                          alt="프사"
+                          className="bg-cover"
+                        />
+                        <AvatarFallback>프사</AvatarFallback>
+                      </Avatar>
+                      {/* <div className={classes.user_image} /> */}
+                    </Link>
 
-                  {/* 알림 버튼 */}
-                  <Alarm />
-                  {/* 친구 버튼 */}
-                  <FriendsBtn />
-                </div>
-              </nav>
-            ) : (
-              <nav className={classes.nav_dark}>
-                <div></div>
+                    {/* 알림 버튼 */}
+                    <Alarm />
+                    {/* 친구 버튼 */}
+                    <FriendsBtn />
+                  </div>
+                </nav>
+              ) : (
+                <nav className={classes.nav_dark}>
+                  <div></div>
 
-                {/* 로고 */}
-                <h1>확성기 자리</h1>
+                  {/* 로고 */}
+                  <h1>확성기 자리</h1>
 
-                {/* 네브바 오른쪽 영역 */}
-                <div className={classes.nav_right}>
-                  {/* 다크모드 버튼 (미완, 후순위) */}
-                  <ModeToggle />
-                  {/* 사용자 프로필 버튼 */}
-                  <Link
-                    to={`/main/profile/${userData && userData.userId}`}
-                    className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                  >
-                    {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
-                    <Avatar>
-                      <AvatarImage
-                        src="/image/liveImage.png"
-                        alt="프사"
-                        className="bg-cover"
-                      />
-                      <AvatarFallback>프사</AvatarFallback>
-                    </Avatar>
-                    {/* <div className={classes.user_image} /> */}
-                  </Link>
+                  {/* 네브바 오른쪽 영역 */}
+                  <div className={classes.nav_right}>
+                    {/* 다크모드 버튼 (미완, 후순위) */}
+                    <ModeToggle />
+                    {/* 사용자 프로필 버튼 */}
+                    <Link
+                      to={`/main/profile/${userData && userData.userId}`}
+                      className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                    >
+                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
+                      <Avatar>
+                        <AvatarImage
+                          src="/image/liveImage.png"
+                          alt="프사"
+                          className="bg-cover"
+                        />
+                        <AvatarFallback>프사</AvatarFallback>
+                      </Avatar>
+                      {/* <div className={classes.user_image} /> */}
+                    </Link>
 
-                  {/* 알림 버튼 */}
-                  <Alarm />
-                  {/* 친구 버튼 */}
-                  <FriendsBtn />
-                </div>
-              </nav>
-            )}
+                    {/* 알림 버튼 */}
+                    <Alarm />
+                    {/* 친구 버튼 */}
+                    <FriendsBtn />
+                  </div>
+                </nav>
+              )
+            ) : undefined}
 
             {/* 메인 페이지 영역 */}
             <div className={classes.body}>
