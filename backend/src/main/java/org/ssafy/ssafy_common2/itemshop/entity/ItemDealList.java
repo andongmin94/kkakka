@@ -27,7 +27,6 @@ public class ItemDealList extends BaseTime {
     @JoinColumn(name = "item_type", nullable = false)
     private ItemShop itemType;
 
-    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dogam_id")
     public Dogam dogam;
