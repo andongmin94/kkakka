@@ -31,7 +31,7 @@ pipeline {
                 echo '백엔드 빌드 및 테스트 완료!'
             }
         }
- 
+  
         stage('Build Docker Image') {
             steps {
                 echo '도커 이미지 빌드 시작!'
