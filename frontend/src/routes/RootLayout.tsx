@@ -1,6 +1,6 @@
 import cn from "clsx";
 const electron = window.electron;
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alarm } from "@/components/navbar/Alarm";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
@@ -10,26 +10,38 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
+import axios from "axios";
+import { UserType } from "@/types/userTypes";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
+  const token = localStorage.getItem("token");
+
+  const [userData, setUserData] = useState<UserType | null>(null);
 
   useEffect(() => {
     // 페이지 이동시마다 스크롤바는 항상 최상단에 위치하게 한다.
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  // 로그인한 유저 데이터 불러오기
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        setUserData(res.data.data);
+      });
+  }, []);
+
   const { theme } = useTheme();
 
-  const { userData, isLoading, error } = useMyDataQuery();
-
-  if (!userData) {
-    return <div>로딩중...</div>;
-  }
-
   // 사용자 아이디 더미 데이터
-  const userId = "1";
+  // const userId = "1";
 
   return (
     <>
@@ -116,7 +128,7 @@ export default function RootLayout() {
                   <ModeToggle />
                   {/* 사용자 프로필 버튼 */}
                   <Link
-                    to={`/main/profile/${userId}`}
+                    to={`/main/profile/${userData && userData.userId}`}
                     className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                   >
                     {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
@@ -168,7 +180,7 @@ export default function RootLayout() {
               <div className={classes.nav_right_M}>
                 {/* 사용자 프로필 버튼 */}
                 <Link
-                  to={`/main/profile/${userId}`}
+                  to={`/main/profile/${userData && userData.userId}`}
                   className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                 >
                   {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}

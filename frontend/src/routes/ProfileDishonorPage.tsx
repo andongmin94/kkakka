@@ -1,18 +1,7 @@
 import { Mobile, PC } from "@/components/MediaQuery";
 import Dishonor from "@/components/profile/Dishonor";
-import useAliasListQuery from "@/apis/profile/alias/queries/useAliasListQuery";
-import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
 
 export default function ProfileDishonorPage() {
-  const { userData } = useMyDataQuery();
-  const userEmail = userData.userEmail;
-  console.log(userEmail);
-
-  const { aliases, isLoading, error } = useAliasListQuery({ userEmail });
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
   return (
     <>
       <PC>
