@@ -37,5 +37,4 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId) temp )", nativeQuery = true)
     Optional<Integer> getUnreadMessageCnt (@Param("chatRoomId") long chatRoomId);
 
-
 }
