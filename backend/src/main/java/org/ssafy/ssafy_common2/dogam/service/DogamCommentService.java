@@ -44,9 +44,10 @@ public class DogamCommentService {
             throw new CustomException(ErrorType.NOT_FOUND_COMMENT);
         }
 
-        DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(user.getId(), user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail(), LocalDateTime.now());
         CommentDogam commentDogam = CommentDogam.of(user.getKakaoEmail(), dto.getComment(), dogam);
-        commentDogamRepository.save(commentDogam);
+        commentDogamRepository.saveAndFlush(commentDogam);
+
+        DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(commentDogam.getId(), user.getId(), user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail(), LocalDateTime.now());
 
         // 새 댓글 알림
         notifyNewComment(user, dogam.getUser(), dogamId);
