@@ -1,7 +1,42 @@
 import axios from "axios";
 import { create } from "zustand";
+import {
+  profileDogamStoreType,
+  aliasStoreType,
+  profileStoreType,
+} from "@/types/storeTypes";
+
 const token = localStorage.getItem("token");
-import { profileDogamStoreType, aliasStoreType } from "@/types/storeTypes";
+
+// 프로필 들어가면 나오는 정보
+export const useProfileStore = create<profileStoreType>((set) => ({
+  profile: {
+    userName: "",
+    userEmail: "",
+    userProfileImg: "",
+    userBackImg: "",
+    userAlias: "",
+    userId: 0,
+    bankruptcy: false,
+  },
+  fetchProfile: async (userId) => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/data/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log("서버응답 프로필 정보", res.data.data);
+      set({ profile: res.data.data });
+      return res.data.data;
+    } catch (error: any) {
+      console.error("Error fetching profile", error.message);
+    }
+  },
+}));
 
 export const useProfileDogamStore = create<profileDogamStoreType>((set) => ({
   profileDogams: [],
@@ -137,7 +172,9 @@ export const useAliasStore = create<aliasStoreType>((set) => ({
           },
         }
       );
+      console.log("서버응답 칭호 리스트", res.data.data.aliasList);
       set((prev) => ({ ...prev, aliases: res.data.data.aliasList }));
+      return res.data.data.aliasList;
     } catch (error: any) {
       console.error("Error fetching aliases", error.message);
     }

@@ -7,15 +7,19 @@ import ProfileEdit from "@/components/profile/ProfileEdit";
 import { Link, Outlet, useParams } from "react-router-dom";
 import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
+import useUserDataQuery from "@/apis/user/queries/useUserDataQuery";
 import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
 
 export default function ProfilePage() {
   const params = useParams();
+  const userId = Number(params.id);
+  console.log(userId);
+  const { profileData } = useUserDataQuery({ userId });
+  const { userData } = useMyDataQuery();
 
-  const { userData, isLoading, error } = useMyDataQuery();
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  if (!profileData) {
+    return <div>로딩중...</div>;
+  }
 
   return (
     <>
@@ -31,7 +35,9 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage userImg={userData.userProfileImg} />
+                    <ProfileImage
+                      userImg={profileData && profileData.userProfileImg}
+                    />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
@@ -41,12 +47,13 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {userData.bankruptcy ? <Poor /> : null}
+                  {profileData && profileData.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {params.id === userData.userId ? (
+                  {profileData &&
+                  profileData.userId === (userData && userData.userId) ? (
                     <ProfileEdit />
                   ) : (
                     <Button
@@ -62,11 +69,13 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
-                    {userData.userName}
+                    {profileData && profileData.userName}
                   </div>
                 </div>
                 <div>
-                  <UserCurrentAlias alias={userData.userAlias} />
+                  <UserCurrentAlias
+                    alias={profileData && profileData.userAlias}
+                  />
                 </div>
               </div>
             </div>
@@ -103,7 +112,7 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[150px] h-[150px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage userImg={userData.userProfileImg} />
+                    <ProfileImage userImg={profileData.userProfileImg} />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
@@ -113,12 +122,12 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {userData.bankruptcy ? <Poor /> : null}
+                  {profileData.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {params.id === userData.userId ? (
+                  {profileData.userId === userData.userId ? (
                     <ProfileEdit />
                   ) : (
                     <Button
@@ -134,11 +143,11 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[5px] justify-between">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center ml-2">
-                    {userData.userName}
+                    {profileData.userName}
                   </div>
                 </div>
                 <div className="mr-2">
-                  <UserCurrentAlias alias={userData.userAlias} />
+                  <UserCurrentAlias alias={profileData.userAlias} />
                 </div>
               </div>
             </div>
@@ -147,13 +156,18 @@ export default function ProfilePage() {
                 className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl`}
               >
                 <div className="grid grid-cols-3 place-items-center gap-10">
-                  <Link to={`/main/profile/${params.id}`} className="h-[30px]">
+                  <Link
+                    to={`/main/profile/${profileData.userId}`}
+                    className="h-[30px]"
+                  >
                     도감
                   </Link>
-                  <Link to={`/main/profile/${params.id}/dishonor`}>
+                  <Link to={`/main/profile/${profileData.userId}/dishonor`}>
                     불명예 전당
                   </Link>
-                  <Link to={`/main/profile/${params.id}/record`}>전적</Link>
+                  <Link to={`/main/profile/${profileData.userId}/record`}>
+                    전적
+                  </Link>
                 </div>
               </div>
             </div>

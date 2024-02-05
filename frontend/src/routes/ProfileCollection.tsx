@@ -5,6 +5,7 @@ import AddCollection from "@/components/profile/AddCollection";
 import useProfileDogamsQuery from "@/apis/profile/dogam/queries/useProfileDogamsQuery";
 import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
 // 프로필 도감은 백에서 미완이라 안뜸
+
 export default function ProfileCollection() {
   const params = useParams();
 
