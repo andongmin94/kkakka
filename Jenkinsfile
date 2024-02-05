@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        BuildGradle     = credentials('build.gradle')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+    }
     stages {
         stage('Clone') {
             steps {
@@ -18,12 +22,8 @@ pipeline {
 
                     sh "touch ./build.gradle" 
 
-                    // Secret Text로 저장한 정보를 환경 변수로 가져오기
-                    withCredentials([SecretText(credentialsId: 'build.gradle', Secret: 'Secret')]){
-                        // application properties 파일 복사
-                        sh "echo '${Secret}' > ./build.gradle"
-                    }                   
-
+                    // application properties 파일 복사
+                    sh "echo '${BuildGradle}' > ./build.gradle"
                     sh "./gradlew clean build"
                 
                 }
