@@ -7,19 +7,56 @@ import ProfileEdit from "@/components/profile/ProfileEdit";
 import { Link, Outlet, useParams } from "react-router-dom";
 import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
-import useUserDataQuery from "@/apis/user/queries/useUserDataQuery";
-import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { UserType } from "@/types/userTypes";
 
 export default function ProfilePage() {
+  const token = localStorage.getItem("token");
   const params = useParams();
-  const userId = Number(params.id);
-  console.log(userId);
-  const { profileData } = useUserDataQuery({ userId });
-  const { userData } = useMyDataQuery();
 
-  if (!profileData) {
-    return <div>로딩중...</div>;
-  }
+  const [userProfileData, setUserProfileData] = useState<UserType | null>(null);
+  const [myData, setMyData] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${params.id}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setUserProfileData(res.data.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setMyData(res.data.data);
+      });
+  });
+
+  const enterChatHandler = (friendId: number) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then(() => {
+        // navigate(`/chat/${friendId}`); // 아직 없는듯
+      });
+  };
 
   return (
     <>
@@ -36,7 +73,9 @@ export default function ProfilePage() {
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
                     {/* 프사 */}
                     <ProfileImage
-                      userImg={profileData && profileData.userProfileImg}
+                      userImg={
+                        userProfileData && userProfileData.userProfileImg
+                      }
                     />
                   </div>
                 </div>
@@ -47,19 +86,26 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {profileData && profileData.bankruptcy ? <Poor /> : null}
+                  {userProfileData && userProfileData.bankruptcy ? (
+                    <Poor />
+                  ) : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {profileData &&
-                  profileData.userId === (userData && userData.userId) ? (
+                  {userProfileData &&
+                  userProfileData.userId === (myData && myData.userId) ? (
                     <ProfileEdit />
                   ) : (
                     <Button
                       type="submit"
                       variant="secondary"
                       className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                      onClick={() => {
+                        enterChatHandler(
+                          userProfileData && userProfileData.userId
+                        );
+                      }}
                     >
                       메세지
                     </Button>
@@ -69,12 +115,12 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
-                    {profileData && profileData.userName}
+                    {userProfileData && userProfileData.userName}
                   </div>
                 </div>
                 <div>
                   <UserCurrentAlias
-                    alias={profileData && profileData.userAlias}
+                    alias={userProfileData && userProfileData.userAlias}
                   />
                 </div>
               </div>
@@ -112,7 +158,11 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[150px] h-[150px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage userImg={profileData.userProfileImg} />
+                    <ProfileImage
+                      userImg={
+                        userProfileData && userProfileData.userProfileImg
+                      }
+                    />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
@@ -122,12 +172,15 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {profileData.bankruptcy ? <Poor /> : null}
+                  {userProfileData && userProfileData.bankruptcy ? (
+                    <Poor />
+                  ) : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {profileData.userId === userData.userId ? (
+                  {userProfileData &&
+                  userProfileData.userId === (myData && myData.userId) ? (
                     <ProfileEdit />
                   ) : (
                     <Button
@@ -143,11 +196,13 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[5px] justify-between">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center ml-2">
-                    {profileData.userName}
+                    {userProfileData && userProfileData.userName}
                   </div>
                 </div>
                 <div className="mr-2">
-                  <UserCurrentAlias alias={profileData.userAlias} />
+                  <UserCurrentAlias
+                    alias={userProfileData && userProfileData.userAlias}
+                  />
                 </div>
               </div>
             </div>
@@ -157,15 +212,25 @@ export default function ProfilePage() {
               >
                 <div className="grid grid-cols-3 place-items-center gap-10">
                   <Link
-                    to={`/main/profile/${profileData.userId}`}
+                    to={`/main/profile/${
+                      userProfileData && userProfileData.userId
+                    }`}
                     className="h-[30px]"
                   >
                     도감
                   </Link>
-                  <Link to={`/main/profile/${profileData.userId}/dishonor`}>
+                  <Link
+                    to={`/main/profile/${
+                      userProfileData && userProfileData.userId
+                    }/dishonor`}
+                  >
                     불명예 전당
                   </Link>
-                  <Link to={`/main/profile/${profileData.userId}/record`}>
+                  <Link
+                    to={`/main/profile/${
+                      userProfileData && userProfileData.userId
+                    }/record`}
+                  >
                     전적
                   </Link>
                 </div>
