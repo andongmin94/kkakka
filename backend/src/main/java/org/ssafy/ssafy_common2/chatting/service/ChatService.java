@@ -1,47 +1,111 @@
 package org.ssafy.ssafy_common2.chatting.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.UUID;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
-
 public class ChatService {
 
+
+    private final AmazonS3Client amazonS3Client;
     private final SimpMessageSendingOperations template;
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String S3Bucket;
 
+    @Transactional
+    public ChatMessageDto BinaryImageChange(ChatMessageDto chatMessageDto) {
+        try {
+            // 1-1) ","를 기준으로 Base64를 나눠준다.
+            String [] strings = chatMessageDto.getImgCode().split(",");
+            String base64Image = strings[1];
 
+            // 1-2) if 문을 통해 확장자명을 찾음
+            String extension = "";
 
-    // 1) STOMP의 Header Meta Data인 Destination에서 RoomId를 추출
-    public long getRoomId(String destination) {
-        int lastIndex = destination.lastIndexOf('/');
+            if(strings[0].equals("data:image/jpeg;base64")){
+                extension = "jpeg";
+            } else if(strings[0].equals("data:image/png;base64")){
+                extension = "png";
+            } else if(strings[0].equals("data:image/jpg;base64")){
+                extension = "jpg";
+            } else if(strings[0].equals("data:image/gif;base64")){
+                extension = "gif";
+            }
 
-        // 1-1) lastIndexOf는 우리가 찾는 문자가 문자열 내에 없다면 -1을 뱉는다.
-        if(lastIndex != -1){
+            // 1-3) Base64를 bytes 로 변환
+            byte [] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
 
-            // 만약 '/' 이 있다면 우리는 그것 이후부터 잘라서 온다.
-            // 그러니까 destination의 chat/room/{방번호} 이므로 여기서 {방번호}만 떼서 오는 것이다.
-            return Long.parseLong(destination.substring(lastIndex +1));
-        }else {
-            return -1;
+            // 1-4) create Temp File 을 통해 임시 파일을 생성해준다. (이 임시 파일은 지워줘야함.)
+            File tempFile = File.createTempFile("image", "." + extension);
+
+            try(OutputStream outputStream = new FileOutputStream(tempFile)){
+                // 1-5) tempFile 에 이미지 바이트 배열을 써준다.
+                outputStream.write(imageBytes);
+            }
+
+            // 1-6) UUID를 통해 파일명이 겹치지 않게 해준다.
+            String originalName = UUID.randomUUID().toString();
+
+            // 1-7) S3에 tempFile에 저장해준다.
+            amazonS3Client.putObject(new PutObjectRequest(S3Bucket, originalName, tempFile));
+
+            String awsS3ImageUrl = amazonS3Client.getUrl(S3Bucket, originalName).toString();
+
+            try {
+                // 1-8) 방금 생성한 임시 파일을 지우기
+                FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+
+                // 1-9) 아웃풋 닫아주기
+                fileOutputStream.close();
+
+                if(tempFile.delete()){
+                    log.info("File delete success");
+                }else{
+                    log.info("File delete fail");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            chatMessageDto.setImgCode(awsS3ImageUrl);
+            chatMessageDto.setContent(awsS3ImageUrl);
+
+            return chatMessageDto;
+
+        } catch (IOException e) {
+           throw new RuntimeException(e);
         }
     }
 
 
-    // 2) 채팅방에 메세지 발송
+
+
+
+
+
 
 
 
 }
 
-
-/*
-* 1) lastIndexOf() 메서드는 (지정된 문자 또는 문자열의 하위 문자열)이 마지막으로 나타나는 위치를 반환
-*
-* */
