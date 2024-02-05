@@ -7,14 +7,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import useFriendListQuery from "@/apis/friend/queries/useFriendListQuery";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { FriendType } from "@/types/friendTypes";
 
 export default function FriendsBtn() {
-  const { friends, isLoading, error } = useFriendListQuery();
+  const [friends, setFriends] = useState<FriendType[] | null>(null);
+  const token = localStorage.getItem("token");
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data.friendList);
+        setFriends(res.data.data.friendList);
+      });
+  }, []);
 
   return (
     <Sheet>
