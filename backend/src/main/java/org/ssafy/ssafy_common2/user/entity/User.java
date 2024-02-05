@@ -79,4 +79,12 @@ public class User extends BaseTime {
                 .userInfo(userInfo)
                 .build();
     }
+
+    public void updateProfileImg(String profileImgUrl) {
+        this.kakaoProfileImg = profileImgUrl;
+    }
+
+    public void updateRiotId(String riotId) {
+        this.riotId = riotId;
+    }
 }
