@@ -25,16 +25,19 @@ export default function LiveContentCarousel() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcast/`, {
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts`, {
         headers: {
           Authorization: token,
         },
       })
       .then((res) => {
-        console.log(res.data.data);
+        console.log("라이브", res.data.data);
         setBroadcastList(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
       });
-  }, [broadcastList]);
+  }, []);
 
   return (
     <Carousel

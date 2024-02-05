@@ -26,7 +26,7 @@ export default function ProfileCollection() {
       .then((res) => {
         setProfileDogams(res.data.data);
       });
-  });
+  }, []);
 
   const [myData, setMyData] = useState<UserType | null>(null);
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function ProfileCollection() {
       .then((res) => {
         setMyData(res.data.data);
       });
-  });
+  }, []);
 
   return (
     <>
