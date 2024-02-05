@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classes from "@/components/navbar/Alarm.module.css";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 import {
@@ -10,18 +10,50 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import useAlarmSubscribeQuery from "@/apis/alarm/queries/useAlarmSubscribeQuery";
-import useAlarmListQuery from "@/apis/alarm/queries/useAlarmListQuery";
+import axios from "axios";
+import { AlarmType } from "@/types/alarmTypes";
 
 export function Alarm() {
   const { theme } = useTheme();
   const [position, setPosition] = useState("");
+  const token = localStorage.getItem("token");
 
-  // const { newAlarms, isLoading, error } = useAlarmSubscribeQuery();
-  const { alarms, isLoading, error } = useAlarmListQuery();
+  const [alarms, setAlarms] = useState<{
+    alarmList: AlarmType[];
+    numOfUncheckedAlarm: number;
+  } | null>(null);
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/alarm`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        setAlarms(res.data.data);
+      });
+  }, []);
+
+  const alarmList = alarms && alarms.alarmList;
+  const numOfUncheckedAlarm = alarms && alarms.numOfUncheckedAlarm;
+
+  const checkAlarm = (alarmId: number) => {
+    axios
+      .put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/alarm/${alarmId}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
 
   return (
     <DropdownMenu>
@@ -34,7 +66,7 @@ export function Alarm() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30 text-center">
         <DropdownMenuLabel>
-          {alarms && alarms.numOfUncheckedAlarm}개의 알림이 있습니다.
+          {numOfUncheckedAlarm}개의 알림이 있습니다.
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
@@ -42,15 +74,14 @@ export function Alarm() {
           value={position}
           onValueChange={setPosition}
         >
-          {alarms &&
-            alarms.alarmList &&
-            alarms.alarmList.map((alarm, idx) => {
+          {alarmList &&
+            alarmList.map((alarm, idx) => {
               return (
                 <DropdownMenuRadioItem
                   value="top"
-                  // onClick={() => {
-                  //   checkAlarm(alarm.alarmId); 이거 뮤테이션써서불러오기
-                  // }}
+                  onClick={() => {
+                    checkAlarm(alarm.alarmID);
+                  }}
                 >
                   {alarm.alarmPic}
                   {alarm.alarmContent}

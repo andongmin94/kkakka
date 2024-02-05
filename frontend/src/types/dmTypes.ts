@@ -1,5 +1,6 @@
 export interface DmType {
   dmId: number;
+  friendId: number;
   friendEmail: string;
   friendProfilePic: string;
   friendName: string;
