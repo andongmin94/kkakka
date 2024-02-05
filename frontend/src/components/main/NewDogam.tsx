@@ -13,7 +13,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
         <div className="w-[500px] flex">
           {/* 왼쪽 구역 */}
           <Link
-            to={`/main/profile/${data.dogamId}`}
+            to={`/main/profile/${data.friendId}`}
             className="w-[200px] border-4 rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center bg-slate-100"
           >
             {/* 프사 */}
