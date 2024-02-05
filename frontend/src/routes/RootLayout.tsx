@@ -24,10 +24,6 @@ export default function RootLayout() {
 
   const { userData, isLoading, error } = useMyDataQuery();
 
-  if (!userData) {
-    return <div>로딩중...</div>;
-  }
-
   // 사용자 아이디 더미 데이터
   const userId = "1";
 
