@@ -17,6 +17,7 @@ import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.dto.Response.FriendStateResponseDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.service.FriendListService;
+import org.ssafy.ssafy_common2.user.service.UserService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,32 +30,22 @@ import java.util.Objects;
 public class FriendListController {
 
     private final FriendListService friendListService;
+    private final UserService userService;
 
     // 현재 친구 상태를 조회
-    @GetMapping("/friends/{friend-email}")
-    public ApiResponseDto<FriendStateResponseDto> getFriendState(@PathVariable("friend-email") String friendEmail,
+    @GetMapping("/friends/{friend-user-id}")
+    public ApiResponseDto<FriendStateResponseDto> getFriendState(@PathVariable("friend-user-id") Long friendUserId,
                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        // friendEmail이 유효한 회원인지 확인
-        User receiver = friendListService.validateFriend(friendEmail);
-
-        return ResponseUtils.ok(friendListService.createFriendStateResponse(userDetails.getUser(), receiver), MsgType.SEARCH_SUCCESSFULLY);
+        return ResponseUtils.ok(friendListService.createFriendStateResponse(userDetails.getUser(), friendUserId), MsgType.SEARCH_SUCCESSFULLY);
     }
 
     // 친구 요청, 친구 요청 수락, 친구 신청 취소하기, 친구 끊기
-    @PostMapping("/friends")
-    public ApiResponseDto<Void> addFriend(@RequestParam(value="email") String friendEmail,
+    @PostMapping("/friends/{friend-user-id}")
+    public ApiResponseDto<Void> addFriend(@PathVariable("friend-user-id") Long friendUserId,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        // 자기 자신과 친구를 맺을 수 없음
-        if (friendEmail.equals(userDetails.getUsername())) {
-            return ResponseUtils.error(ErrorResponse.of(ErrorType.NOT_FOUND_PARK_TYPE)); // ERRORTYPE 수정 필요
-        }
-
-        // friendEmail이 유효한 회원인지 확인
-        User receiver = friendListService.validateFriend(friendEmail);
-
-        return ResponseUtils.ok(friendListService.editFriendState(userDetails.getUser(), receiver));
+        return ResponseUtils.ok(friendListService.editFriendState(userDetails.getUser(), friendUserId));
     }
 
     // 친구 리스트 조회
