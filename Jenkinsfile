@@ -12,7 +12,7 @@ pipeline {
                 git branch: 'cicdtest', credentialsId: 'docker-hub', url: 'https://lab.ssafy.com/s10-webmobile2-sub2/S10P12D110.git'
                 echo '클론을 완료!'
             }
-        }
+        } 
   
         stage('BE-Build') {
             steps {
