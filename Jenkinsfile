@@ -24,7 +24,9 @@ pipeline {
  
                     // application properties 파일 복사
                     // sh "echo '${BuildGradle}' > ./build.gradle"
-                    writeFile file: './build.gradle', text: '${BuildGradle}''
+                    secript{
+                        writeFile file: './build.gradle', text: '${BuildGradle}''
+                    }
                     sh "./gradlew clean build"
                 
                 }
