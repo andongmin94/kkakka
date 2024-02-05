@@ -26,10 +26,10 @@ export const useDmStore = create<dmStoreType>((set) => ({
   },
 
   // 채팅방 입장하기
-  enterDm: async (friendEmail) => {
+  enterDm: async (friendId) => {
     const url = `${
       import.meta.env.VITE_API_BASE_URL
-    }/api/friends/dm/enter/${friendEmail}`;
+    }/api/friends/dm/enter/${friendId}`;
 
     try {
       const response = await axios.post(url, {

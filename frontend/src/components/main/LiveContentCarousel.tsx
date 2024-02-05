@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { CardContent } from "@/components/ui/card";
 import LiveContent from "@/components/main/LiveContent";
