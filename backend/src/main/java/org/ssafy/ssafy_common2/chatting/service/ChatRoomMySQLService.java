@@ -251,12 +251,12 @@ public class ChatRoomMySQLService {
         return ans;
     }
 
-    // 9) 채팅방 생성
-    public ApiResponseDto<? extends Object> createRoom (String type, String friendEmail, UserDetailsImpl userDetails) {
+    // 9) 채팅방 생성 (채팅방 타입, 채팅방을 만들기를 바라는 userId, 현재 유저의 UserDetail )
+    public ApiResponseDto<? extends Object> createRoom (String type, long userId, UserDetailsImpl userDetails) {
 
         // 1-1) 방의 타입을 보고   ONE, MANY, DEAD 중 하나 생성
         String roomType = type.equals("dm")? "ONE" : "MANY";
-        User owner = userRepository.findByKakaoEmailAndDeletedAtIsNull(friendEmail).orElse(null);
+        User owner = userRepository.findByIdAndDeletedAtIsNull(userId).orElse(null);
 
         // 1-2) 사용자가 등록되지 않았다면 에러 출력
         if(owner == null){
@@ -267,7 +267,7 @@ public class ChatRoomMySQLService {
         if(roomType.equals("ONE")){
 
             // 1-3-a) 둘 사이의 1대1 채팅방이 있는지 확인
-            long roomId = getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId(), "ONE");
+            long roomId = getUserConnectedRoomIdWithOwner(owner.getKakaoEmail(), userDetails.getUser().getId(), "ONE");
 
             // 1-3-b) 둘 사이의 채팅방이 없다면 -1이 반환 되고, 방 생성을 한다.
             if(roomId == -1) {
@@ -297,12 +297,12 @@ public class ChatRoomMySQLService {
         // 1-4) 중계방 만들어달라는 요청을 받았을 경우
         else{
             // 1-4-a) 해당 친구 이름으로 중계방이 있는지 확인
-            ChatRoom broadcastRoom = getRoomWithEmail(ChatRoom.ChatRoomType.MANY, friendEmail);
+            ChatRoom broadcastRoom = getRoomWithEmail(ChatRoom.ChatRoomType.MANY, owner.getKakaoEmail());
 
             // 해당 친구 이름의 안 죽은 중계방이 있다.
             if(broadcastRoom !=null) {
                 // 해당 중계방과 유저가 연결되었는지 확인한다.
-                long roomId = getUserConnectedRoomIdWithOwner(friendEmail, userDetails.getUser().getId(), "MANY");
+                long roomId = getUserConnectedRoomIdWithOwner(owner.getKakaoEmail(), userDetails.getUser().getId(), "MANY");
 
                 // 연결이 안되어있을 경우 roomId == -1이다. 따라서 해당 중계방에 현 유저를 참여시킨다.
                 if(roomId == -1){
