@@ -64,9 +64,9 @@ public class AliasService {
         dynamicUserInfoRepository.save(receiver);
     }
 
-    public User validateReceiverByEmail(String email){
+    public User validateReceiverByUserId(Long userId){
 
-        return userRepository.findByKakaoEmailAndDeletedAtIsNull(email)
+        return userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_RECEIVER));
     }
 
