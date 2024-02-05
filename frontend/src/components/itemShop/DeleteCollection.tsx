@@ -3,8 +3,16 @@ import Purchase from "./Purchase";
 import { useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useProfileDogamStore } from "@/stores/ProfileStore";
-import { Dialog, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function TitleItemshop({
   itemName,
@@ -15,12 +23,6 @@ export default function TitleItemshop({
   itemPrice: number;
   itemDesc: string;
 }) {
-  const { fetchProfileDogams, profileDogams } = useProfileDogamStore();
-
-  useEffect(() => {
-    fetchProfileDogams(); // 내 이메일 넣기
-  }, [fetchProfileDogams]);
-
   return (
     <Card className="static group/item bg-[url('/image/deleteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">

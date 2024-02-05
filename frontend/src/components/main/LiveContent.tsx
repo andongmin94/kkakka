@@ -7,9 +7,6 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { BroadcastItemType } from "@/types/broadcastTypes";
-import useDmEnterPost from "@/apis/dm/mutations/useDmEnterPost";
-import { useCallback } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 export default function LiveContent({
@@ -17,13 +14,6 @@ export default function LiveContent({
 }: {
   liveData: BroadcastItemType;
 }) {
-  const roomId = liveData.roomId;
-  console.log(liveData.roomId + "번 방 라이브 중 " + liveData.playerName);
-
-  const handleEnterRoom = useCallback(() => {
-    useDmEnterPost({ friendId: roomId });
-  }, []);
-
   return (
     // 배너 이미지 - 배경이미지는 api로 아직 안들어와서 일단 이렇게 처리했어요
     <Card
@@ -48,11 +38,7 @@ export default function LiveContent({
         </div>
       </CardHeader>
       <CardContent className="p-1 row-span-2">
-        <Button>
-          <Link to={"/main"} onClick={() => handleEnterRoom()}>
-            입장하기
-          </Link>
-        </Button>
+        <Button>입장하기</Button>
       </CardContent>
       <CardFooter className="p-2 row-span-2">
         {/* 플레이중인 친구 프사 props로 전달) */}

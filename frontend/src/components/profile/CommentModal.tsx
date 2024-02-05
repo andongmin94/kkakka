@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Comment from "./Comment";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,8 @@ import {
 } from "@/components/ui/form";
 
 import { Mobile, PC } from "../MediaQuery";
-import useDogamDetailQuery from "@/apis/profile/dogam/queries/useDogamDetailQuery";
+import axios from "axios";
+import { DogamCommentResponseType } from "@/types/dogamTypes";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -30,11 +31,6 @@ const FormSchema = z.object({
 });
 
 export default function CommentModal({ dogamId }: { dogamId: number }) {
-  const { dogamComments, isLoading, error } = useDogamDetailQuery({ dogamId });
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
   const { theme } = useTheme();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -54,7 +50,26 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
     });
   }
 
-  // const [commentList, setCommentList] = useState(commentData);
+  const token = localStorage.getItem("token");
+  const [dogamComments, setDogamComments] = useState<
+    DogamCommentResponseType[]
+  >([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("도감댓글", res.data.data.dogamCommentResponseDtos);
+        setDogamComments(res.data.data.dogamCommentResponseDtos);
+      });
+  }, []);
 
   return (
     <>
@@ -76,8 +91,16 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
                 {dogamComments &&
-                  dogamComments.map((com, idx) => {
-                    return <Comment key={idx} data={com} userId={userId} />;
+                  dogamComments.map((comment, idx) => {
+                    return (
+                      <Comment
+                        key={idx}
+                        content={comment.comment}
+                        userId={comment.commentUserId}
+                        commentId={comment.commentId}
+                        commentUserName={comment.commentUserName}
+                      />
+                    );
                   })}
 
                 {/* 댓글 입력 부분 */}
@@ -125,7 +148,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                       alias: userAlias,
                                     };
                                     // 댓글 리스트에 추가
-                                    setCommentList((pre) => [...pre, data]);
+                                    setDogamComments((pre) => [...pre, data]);
                                     // 댓글 입력창 초기화
                                     form.setValue("content", "  ");
                                   }
@@ -162,8 +185,14 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
                 {dogamComments &&
-                  dogamComments.map((com, idx) => {
-                    return <Comment key={idx} data={com} userId={userId} />;
+                  dogamComments.map((comment, idx) => {
+                    return (
+                      <Comment
+                        key={idx}
+                        data={comment.comment}
+                        userId={comment.commentUserId}
+                      />
+                    );
                   })}
 
                 {/* 댓글 입력 부분 */}
@@ -211,7 +240,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                       alias: userAlias,
                                     };
                                     // 댓글 리스트에 추가
-                                    setCommentList((pre) => [...pre, data]);
+                                    setDogamComments((pre) => [...pre, data]);
                                     // 댓글 입력창 초기화
                                     form.setValue("content", "  ");
                                   }
