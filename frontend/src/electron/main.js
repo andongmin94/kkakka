@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 import { join, dirname } from "path";
 import electronLocalshortcut from "electron-localshortcut";
 import { createWebSocketConnection } from "league-connect";
+import WebSocket from "ws";
+import { OverlayController } from 'electron-overlay-window';
 import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage } from "electron";
 
 dotenv.config();
@@ -100,7 +102,7 @@ app
           },
         });
         console.log("서버 응답:", response.data);
-        room_id = response.data.data;
+        return response.data.data;
       } catch (error) {
         console.error("Error starting a new broadcast", error.message);
       }
@@ -122,6 +124,7 @@ app
         gameIsRunning = true;
         let oneShotChecker = false;
         let lastSentEventId = 0;
+        
         // 마지막으로 전송한 이벤트의 ID를 저장하는 변수
         function sendNewEvents(events) {
           let newEvents = events.Events.filter(event => event.EventID > lastSentEventId);
@@ -176,11 +179,16 @@ app
             });
             // playerinfo areas
             
-            if (!oneShotChecker) {
-              oneShotChecker = true;
+            if (!oneShotChecker) {          
+              OverlayController.attachByTitle(win, 'League of Legends (TM) Client');
+              OverlayController.focusTarget();
+              win.setSize(300, 200);
+              win.setPosition(0, 880);
+              win.setAlwaysOnTop(true);
+              startBroadcast(user_id).then((room_id) => {socket(room_id)})
               console.log(playerName); // 이 코드는 현재 플레이어의 정보를 콘솔에 출력합니다.
               console.log(players_info); // 이 코드는 모든 플레이어의 정보를 콘솔에 출력합니다.
-              startBroadcast(user_id);
+              oneShotChecker = true;
             }
             
             // console.log(players); // 이 코드는 각 플레이어의 정보를 콘솔에 출력합니다.
@@ -221,43 +229,42 @@ ipcMain.on("Riot Game Info", (event, message) => {
 let token;
 ipcMain.on("token", (event, message) => {
   token = message;
+  console.log("Received from token : ", token);
 })
 
 let user_id;
 ipcMain.on("user_id", (event, message) => {
   user_id = message;
+  console.log("Received from user_id : ", user_id);
 })
 
-let room_id;
+////////////////////////////////////////////////////////////
+
+////////////////////// 웹소켓 통신 //////////////////////////
+
 // WebSocket 연결을 만드는 함수
-function createWebSocketConnection(roomId) {
+const socket = (roomId) => {
   // WebSocket 서버의 URL. 여기서는 roomId를 경로에 포함시켰습니다.
-  const url = `ws://your-websocket-server.com/chatroom/${roomId}`;
+  const url = `ws://localhost:3000/chatroom/${roomId}`;
+  console.log("WebSocket is created now.");
 
   // WebSocket 객체를 생성하고 반환합니다.
   return new WebSocket(url);
 }
-
-// 응답에서 채팅방 ID를 가져와 WebSocket 연결을 만듭니다.
-const socket = createWebSocketConnection(room_id);
-
 // 연결이 열릴 때의 이벤트 핸들러
 socket.onopen = (event) => {
   console.log("WebSocket is open now.");
 };
-
 // 메시지를 받을 때의 이벤트 핸들러
 socket.onmessage = (event) => {
   console.log("WebSocket message received:", event.data);
 };
-
 // 연결이 닫힐 때의 이벤트 핸들러
 socket.onclose = (event) => {
   console.log("WebSocket is closed now.");
 };
-
 // 오류가 발생할 때의 이벤트 핸들러
 socket.onerror = (error) => {
-  console.log("WebSocket error: ", error);
-};
+  console.log("WebSocket error: ", error)
+}
 ////////////////////////////////////////////////////////////
