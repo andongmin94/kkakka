@@ -14,20 +14,18 @@ pipeline {
             steps {
                 echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
-                    script{
-                        sh "chmod +x ./gradlew"
+                    sh "chmod +x ./gradlew"
 
-                        // Secret Text로 저장한 정보를 환경 변수로 가져오기
-                        def mySecretInfo = credentials('build.gradle')
+                    sh "touch ./build.gradle" 
 
-                        sh "touch ./build.gradle" 
-
+                    // Secret Text로 저장한 정보를 환경 변수로 가져오기
+                    withCredentials([usernamePassword(credentialsId: 'build.gradle', Secret: 'Secret')]){
                         // application properties 파일 복사
-                        sh "echo '${mySecretInfo}' > ./build.gradle"
+                        sh "echo '${Secret}' > ./build.gradle"
+                    }                   
 
-                        sh "./gradlew clean build"
-                    }
-                    
+                    sh "./gradlew clean build"
+                
                 }
                 echo '백엔드 빌드 및 테스트 완료!'
             }
