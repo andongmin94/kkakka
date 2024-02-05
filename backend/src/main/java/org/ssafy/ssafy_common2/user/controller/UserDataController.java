@@ -35,7 +35,7 @@ public class UserDataController {
     public ApiResponseDto<UserDataResponseDto> getEmailProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         UserDataResponseDto map = userDataService.getEmailProfileImg(userDetails.getUser());
-        return ResponseUtils.ok(map, MsgType.SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY);
+        return ResponseUtils.ok(map, MsgType.SEARCH_MY_PROFILE_DATA_SUCCESSFULLY);
     }
 
     @GetMapping("/users/data/{user-id}")
