@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDmStore } from "@/stores/DmStore";
 
-const useDmEnterPost = ({ friendEmail }: { friendEmail: string }) => {
+const useDmEnterPost = ({ friendId }: { friendId: any }) => {
   const { enterDm } = useDmStore();
 
-  return useMutation(() => enterDm(friendEmail), {
+  return useMutation<unknown, Error, void, unknown>(() => enterDm(friendId), {
     onSuccess: () => {
       window.alert("채팅방에 입장했습니다.");
     },
