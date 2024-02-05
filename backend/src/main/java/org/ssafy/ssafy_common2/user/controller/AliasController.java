@@ -24,24 +24,23 @@ import java.util.Map;
 public class AliasController {
 
     private final AliasService aliasService;
-    private final UserService userService;
 
     @PostMapping("/friends/alias")
     public ApiResponseDto<AliasCreateResponseDto> addAlias(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                           @RequestParam("email") String receiverEmail,
+                                                           @RequestParam("receiver-id") Long receiverId,
                                                            @RequestBody AliasCreateRequestDto aliasRequestDto){
 
         User sender = userDetails.getUser();
         // 받는 사람이 우리 서비스 유저인지 확인
-        User receiver = aliasService.validateReceiverByEmail(receiverEmail);
+        User receiver = aliasService.validateReceiverByUserId(receiverId);
 
         return ResponseUtils.ok(aliasService.addAlias(sender, receiver, aliasRequestDto.getAliasName()), MsgType.DATA_SUCCESSFULLY);
     }
 
     @GetMapping("/profile/alias")
-    public ApiResponseDto<Map<String, Object>> getAliasList(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam("email") String email) {
+    public ApiResponseDto<Map<String, Object>> getAliasList(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam("user-id") Long userId) {
 
-        User user = userService.validateUserByEmail(email);
+        User user = aliasService.validateReceiverByUserId(userId);
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("aliasList", aliasService.getAliasList(user));
 

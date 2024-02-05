@@ -23,12 +23,10 @@ public class EnforcementController {
 
     @PostMapping("/friends/compliment")
     public ApiResponseDto<EnforcementCreateResponseDto> addEnforcement(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                       @RequestParam("email") String defenderEmail,
+                                                                       @RequestParam("receiver-id") Long defenderUserId,
                                                                        @RequestBody EnforcementCreateRequestDto requestDto) {
 
         User attacker = userDetails.getUser();
-        User defender = userService.validateUserByEmail(defenderEmail);
-
-        return ResponseUtils.ok(enforcementService.addEnforcement(attacker, defender, requestDto), MsgType.DATA_SUCCESSFULLY);
+        return ResponseUtils.ok(enforcementService.addEnforcement(attacker, defenderUserId, requestDto), MsgType.DATA_SUCCESSFULLY);
     }
 }
