@@ -14,9 +14,10 @@ public class UserDataResponseDto {
     String userBackImg;
     String userAlias;
     boolean isBankruptcy; // 파산 여부
+    String riotId;
 
     @Builder
-    public UserDataResponseDto(Long userId, String userName, String userEmail, String userProfileImg, String userBackImg, String userAlias, boolean isBankruptcy) {
+    public UserDataResponseDto(Long userId, String userName, String userEmail, String userProfileImg, String userBackImg, String userAlias, boolean isBankruptcy, String riotId) {
         UserId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -24,9 +25,10 @@ public class UserDataResponseDto {
         this.userBackImg = userBackImg;
         this.userAlias = userAlias;
         this.isBankruptcy = isBankruptcy;
+        this.riotId = riotId;
     }
 
-    public static UserDataResponseDto of(Long userId, String userName, String userEmail, String userProfileImg, String userBackImg, String userAlias, boolean isBankruptcy) {
+    public static UserDataResponseDto of(Long userId, String userName, String userEmail, String userProfileImg, String userBackImg, String userAlias, boolean isBankruptcy, String riotId) {
         return builder()
                 .userId(userId)
                 .userName(userName)
@@ -35,6 +37,7 @@ public class UserDataResponseDto {
                 .userBackImg(userBackImg)
                 .userAlias(userAlias)
                 .isBankruptcy(isBankruptcy)
+                .riotId(riotId)
                 .build();
     }
 }

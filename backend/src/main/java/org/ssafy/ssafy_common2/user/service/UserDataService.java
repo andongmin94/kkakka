@@ -51,7 +51,7 @@ public class UserDataService {
         }
 
         UserDataResponseDto dto = UserDataResponseDto.of(user.getId(), user.getUserName(), user.getKakaoEmail(), user.getKakaoProfileImg(),
-                user.getUserInfoId().getBackImg(), user.getUserInfoId().getCurAlias(), isBankrupt);
+                user.getUserInfoId().getBackImg(), user.getUserInfoId().getCurAlias(), isBankrupt, user.getRiotId());
         return dto;
     }
 
@@ -112,7 +112,7 @@ public class UserDataService {
         }
 
         UserDataResponseDto dto = UserDataResponseDto.of(curUser.getId(), curUser.getUserName(), curUser.getKakaoEmail(), curUser.getKakaoProfileImg(),
-                curUser.getUserInfoId().getBackImg(), curUser.getUserInfoId().getCurAlias(), isBankrupt);
+                curUser.getUserInfoId().getBackImg(), curUser.getUserInfoId().getCurAlias(), isBankrupt, curUser.getRiotId());
         return dto;
     }
 
