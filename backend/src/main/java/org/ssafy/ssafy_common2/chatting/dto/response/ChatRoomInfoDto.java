@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ChatRoomInfoDto {
 
-    private long roomId;
+    private Long friendId;
+    private Long roomId;
     private ChatRoom.ChatRoomType chatRoomType;
     private String friendName;
     private String friendEmail;
@@ -27,11 +28,11 @@ public class ChatRoomInfoDto {
     private boolean tenMinute;
 
     @Builder
-    private ChatRoomInfoDto (long roomId, ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
+    private ChatRoomInfoDto (Long friendId,Long roomId, ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
                              boolean isLogin, String friendAlias, String lastMessage, LocalDateTime lastWrittenMessageTime,
                              int unreadMessageCnt, boolean tenMinute){
 
-
+        this.friendId = friendId;
         this.roomId = roomId;
         this.chatRoomType = chatRoomType;
         this.friendName = friendName;
@@ -45,10 +46,12 @@ public class ChatRoomInfoDto {
         this.tenMinute = tenMinute;
     }
 
-    public static ChatRoomInfoDto of (long roomId,ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
+    public static ChatRoomInfoDto of (Long friendId, Long roomId,ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
                                       boolean isLogin, String friendAlias, String lastMessage, LocalDateTime lastWrittenMessageTime,
                                       int unreadMessageCnt, boolean tenMinute){
-        return builder().roomId(roomId)
+        return builder()
+                .friendId(friendId)
+                .roomId(roomId)
                 .chatRoomType(chatRoomType)
                 .friendName(friendName)
                 .friendEmail(friendEmail)
