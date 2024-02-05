@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.service.S3Uploader;
-import org.ssafy.ssafy_common2.user.dto.Request.UserBackImgRequestDto;
+import org.ssafy.ssafy_common2.user.dto.Request.UserProfileRequestDto;
 import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserProfileEditResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserProfileResponseDto;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
@@ -53,7 +55,7 @@ public class UserDataService {
         return dto;
     }
 
-    public void updateUserBackImg(User user, UserBackImgRequestDto dto) throws IOException {
+    public UserProfileResponseDto updateUserProfile(User user, UserProfileRequestDto dto) throws IOException {
 
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
@@ -64,15 +66,33 @@ public class UserDataService {
         );
 
         // imgURL을 만들어서 S3에 저장 시작
-        String imgUrl = "";
-        System.out.println(dto.getBackImg());
-        if (dto.getBackImg() == null) {
-            throw new CustomException(ErrorType.NOT_FOUND_BACK_IMG);
-        } else {
-            imgUrl = s3Uploader.upload(dto.getBackImg());
+        String backImgUrl = "";
+        if (dto.getBackImg() != null) {
+            if (!dto.getBackImg().isEmpty()) {
+                backImgUrl = s3Uploader.upload(dto.getBackImg());
+                dynamicUserInfo.updateBackImg(backImgUrl);
+            } else {
+                System.out.println("배경 화면이 비었다");
+            }
         }
+
+        String profileImgUrl = "";
+        if (dto.getProfileImg() != null) {
+            if (!dto.getProfileImg().isEmpty()) {
+                profileImgUrl = s3Uploader.upload(dto.getProfileImg());
+            }
+            user.updateProfileImg(profileImgUrl);
+        }
+
         // imgURL을 만들어서 S3에 저장 끝
-        dynamicUserInfo.updateBackImg(imgUrl);
+        if (dto.getRiotId()!= null) {
+            if(!dto.getRiotId().isEmpty()) {
+                user.updateRiotId(dto.getRiotId());
+            }
+        }
+        userRepository.saveAndFlush(user);
+        UserProfileResponseDto ans = UserProfileResponseDto.of(profileImgUrl, backImgUrl, dto.getRiotId());
+        return ans;
     }
 
     public UserDataResponseDto getUserData(Long userId, User user) {
@@ -93,6 +113,16 @@ public class UserDataService {
 
         UserDataResponseDto dto = UserDataResponseDto.of(curUser.getId(), curUser.getUserName(), curUser.getKakaoEmail(), curUser.getKakaoProfileImg(),
                 curUser.getUserInfoId().getBackImg(), curUser.getUserInfoId().getCurAlias(), isBankrupt);
+        return dto;
+    }
+
+    public UserProfileEditResponseDto getProfileEdit(User user) {
+
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        UserProfileEditResponseDto dto = UserProfileEditResponseDto.of(user.getKakaoProfileImg(), user.getUserInfoId().getBackImg(), user.getRiotId());
         return dto;
     }
 }
