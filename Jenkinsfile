@@ -19,7 +19,7 @@ pipeline {
                     sh "touch ./build.gradle" 
 
                     // Secret Text로 저장한 정보를 환경 변수로 가져오기
-                    withCredentials([usernamePassword(credentialsId: 'build.gradle', Secret: 'Secret')]){
+                    withCredentials([SecretText(credentialsId: 'build.gradle', Secret: 'Secret')]){
                         // application properties 파일 복사
                         sh "echo '${Secret}' > ./build.gradle"
                     }                   
