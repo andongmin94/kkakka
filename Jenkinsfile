@@ -20,6 +20,8 @@ pipeline {
                         // Secret Text로 저장한 정보를 환경 변수로 가져오기
                         def mySecretInfo = credentials('build.gradle')
 
+                        sh "touch ./build.gradle" 
+
                         // application properties 파일 복사
                         sh "echo '${mySecretInfo}' > ./backend/build.gradle"
 
