@@ -21,6 +21,7 @@ export const ITEM_LIST = "/itemList";
 // profile
 // profile/alias
 export const ALIAS_LIST = "/profile/aliasList";
+
 // profile/dogam
 export const PROFILE_DOGAM_LIST = "/profile/dogamList";
 export const DOGAM_DETAIL = "/profile/dogamDetail";
@@ -28,3 +29,4 @@ export const DOGAM_DETAIL = "/profile/dogamDetail";
 // user
 export const MY_POINT = "/myPoint";
 export const MY_DATA = "/myData";
+export const USER_DATA = "/userData";
