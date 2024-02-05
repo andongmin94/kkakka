@@ -23,8 +23,8 @@ pipeline {
                     sh "touch ./build.gradle" 
  
                     // application properties 파일 복사
-                    // sh "echo '${BuildGradle}' > ./build.gradle"
-                    writeFile file: './build.gradle', text: '${BuildGradle}''
+                    sh "echo '${BuildGradle}' > ./build.gradle"
+            
                     sh "./gradlew clean build"
                 
                 }
