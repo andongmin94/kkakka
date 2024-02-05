@@ -15,6 +15,8 @@ pipeline {
                 echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
                     sh "chmod +x ./gradlew"
+                    sh chmod +x /var/jenkins_home/workspace/cicdtest/backend/gradlew
+                    sh cd /var/jenkins_home/workspace/cicdtest/backend
                     sh "./gradlew clean build"
                 }
                 echo '백엔드 빌드 및 테스트 완료!'
