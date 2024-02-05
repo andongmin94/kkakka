@@ -23,6 +23,7 @@ import TitleBar from "@/electron/TitleBar.tsx";
 import SettingPage from "@/electron/SettingPage";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import MessageTestPage from "./routes/MessageTestPage";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -43,6 +44,8 @@ const router = createBrowserRouter([
 
       { path: "/main/setting", element: <SettingPage /> },
       { path: "/main/intro", element: <IntroPage /> },
+      // 채팅 테스트용
+      { path: "/main/test/:id", element: <MessageTestPage /> },
       {
         path: "/main/profile/:id",
         element: <ProfilePage />,
