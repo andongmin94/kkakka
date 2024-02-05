@@ -83,6 +83,7 @@
     "date-fns": "^3.2.0",
     "dotenv": "^16.3.2",
     "electron-localshortcut": "^3.2.1",
+    "electron-overlay-window": "^3.3.0",
     "embla-carousel-autoplay": "^8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc19",
     "json-server": "^1.0.0-alpha.22",
@@ -103,6 +104,7 @@
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.8.0",
+    "ws": "^8.16.0",
     "zod": "^3.22.4",
     "zustand": "^4.4.7"
   },
