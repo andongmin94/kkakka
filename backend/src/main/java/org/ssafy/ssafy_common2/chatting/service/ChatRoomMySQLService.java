@@ -120,6 +120,7 @@ public class ChatRoomMySQLService {
             User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
             if(friend !=null) {
+                element.setFriendId(friend.getId());
                 element.setFriendImgUrl(friend.getKakaoProfileImg());
                 element.setFriendAlias(friend.getUserInfoId().getCurAlias());
                 element.setLogin(friend.getUserInfoId().isLogin());
