@@ -49,9 +49,12 @@ public class UserController {
         Map<String, Boolean> ret = new HashMap<>();
 //        ret.put("isFirst", isFirst);
         boolean test = false;
-        if (Math.random() < 0.5) {
+        double a = Math.random();
+        if (a < 0.5) {
             test = true;
         }
+
+        System.out.println(a);
         ret.put("isFirst", test);
         System.out.println("첫 가입인가? : " + isFirst);
         return ResponseUtils.ok(ret, MsgType.GENERATE_TOKEN_SUCCESSFULLY);
