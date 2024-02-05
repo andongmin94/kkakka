@@ -28,6 +28,7 @@ public enum MsgType {
     BREAK_OFF_FRIEND_RELATIONSHIP_SUCCESSFULLY("친구 관계 끊기 성공"),
     UPDATE_USER_BACK_IMG_SUCCESSFULLY("유저 배경사진 업데이트 성공"),
     SEARCH_USER_DATA_SUCCESSFULLY("유저 데이터 찾기 성공"),
+    SEARCH_USER_EDIT_DATA_SUCCESSFULLY("유저 편집 데이터 찾기 성공"),
     ;
 
     private final String msg;

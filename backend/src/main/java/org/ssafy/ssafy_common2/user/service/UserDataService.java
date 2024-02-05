@@ -8,6 +8,7 @@ import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.service.S3Uploader;
 import org.ssafy.ssafy_common2.user.dto.Request.UserBackImgRequestDto;
 import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserProfileEditResponseDto;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
@@ -93,6 +94,16 @@ public class UserDataService {
 
         UserDataResponseDto dto = UserDataResponseDto.of(curUser.getId(), curUser.getUserName(), curUser.getKakaoEmail(), curUser.getKakaoProfileImg(),
                 curUser.getUserInfoId().getBackImg(), curUser.getUserInfoId().getCurAlias(), isBankrupt);
+        return dto;
+    }
+
+    public UserProfileEditResponseDto getProfileEdit(User user) {
+
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        UserProfileEditResponseDto dto = UserProfileEditResponseDto.of(user.getKakaoProfileImg(), user.getUserInfoId().getBackImg(), user.getRiotId());
         return dto;
     }
 }
