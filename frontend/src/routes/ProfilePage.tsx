@@ -40,7 +40,7 @@ export default function ProfilePage() {
       .then((res) => {
         setMyData(res.data.data);
       });
-  });
+  }, []);
 
   const enterChatHandler = (friendId: number) => {
     axios
@@ -54,7 +54,7 @@ export default function ProfilePage() {
         }
       )
       .then(() => {
-        // navigate(`/chat/${friendId}`); // 아직 없는듯
+        // navigate(`/chat/${friendId}`);
       });
   };
 
