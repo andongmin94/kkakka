@@ -11,6 +11,9 @@ import org.ssafy.ssafy_common2.dogam.entity.CommentDogam;
 import org.ssafy.ssafy_common2.dogam.entity.Dogam;
 import org.ssafy.ssafy_common2.dogam.repository.CommentDogamRepository;
 import org.ssafy.ssafy_common2.dogam.repository.DogamRepository;
+import org.ssafy.ssafy_common2.notification.dto.NotificationDto;
+import org.ssafy.ssafy_common2.notification.entity.NotificationType;
+import org.ssafy.ssafy_common2.notification.service.NotificationService;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
@@ -25,6 +28,8 @@ public class DogamCommentService {
     private final DogamRepository dogamRepository;
     private final UserRepository userRepository;
     private final CommentDogamRepository commentDogamRepository;
+
+    private final NotificationService notificationService;
 
     public DogamCommentResponseDto createDogamComment(DogamCommentCreateRequestDto dto, Long dogamId, User user) {
 
@@ -42,6 +47,10 @@ public class DogamCommentService {
         DogamCommentResponseDto commentResponseDto = DogamCommentResponseDto.of(user.getId(), user.getKakaoProfileImg(), dto.getComment(), user.getUserName(), user.getKakaoEmail(), LocalDateTime.now());
         CommentDogam commentDogam = CommentDogam.of(user.getKakaoEmail(), dto.getComment(), dogam);
         commentDogamRepository.save(commentDogam);
+
+        // 새 댓글 알림
+        notifyNewComment(user, dogam.getUser(), dogamId);
+
         return commentResponseDto;
     }
 
@@ -60,4 +69,20 @@ public class DogamCommentService {
         }
         commentDogamRepository.delete(commentDogam);
     }
+
+    // 새 댓글 알림
+    private void notifyNewComment(User sender, User receiver, Long dogamId) {
+
+        notificationService.send(
+                NotificationDto.of(
+                        receiver,
+                        NotificationType.NEW_COMMENT,
+                        "새로운 댓글이 등록되었습니다.",
+                        receiver.getKakaoProfileImg(),
+                        sender.getKakaoEmail(),
+                        dogamId
+                )
+        );
+    }
+
 }

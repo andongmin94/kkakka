@@ -20,6 +20,9 @@ import org.ssafy.ssafy_common2.dogam.repository.DogamRepository;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemShop;
 import org.ssafy.ssafy_common2.itemshop.repository.ItemShopRepository;
+import org.ssafy.ssafy_common2.notification.dto.NotificationDto;
+import org.ssafy.ssafy_common2.notification.entity.NotificationType;
+import org.ssafy.ssafy_common2.notification.service.NotificationService;
 import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
@@ -48,6 +51,8 @@ public class DogamService {
     private final AliasRepository aliasRepository;
     private final DislikeDogamRepository dislikeDogamRepository;
     private final CommentDogamRepository commentDogamRepository;
+
+    private final NotificationService notificationService;
 
     // 도감 만들기
     public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, String email, User sender) throws IOException {
@@ -94,6 +99,9 @@ public class DogamService {
         itemDealList.setDogam(dogam);
 
         dogamRepository.save(dogam);
+
+        // 새 도감 알림
+        notifyNewDogam(sender, receiver, dogam.getId());
 
         DogamCreateResponseDto responseDto = DogamCreateResponseDto.of(imgUrl, dto.getDogamTitle());
         return responseDto;
@@ -202,6 +210,22 @@ public class DogamService {
                 , dogam.getCreatedAt(), dogamCommentResponseDtos);
         return dto;
     }
+
+    // 새 도감 알림
+    private void notifyNewDogam(User sender, User receiver, Long dogamId) {
+
+        notificationService.send(
+                NotificationDto.of(
+                        receiver,
+                        NotificationType.NEW_DOGAM,
+                        "새로운 도감이 등록되었습니다.",
+                        receiver.getKakaoProfileImg(),
+                        sender.getKakaoEmail(),
+                        dogamId
+                )
+        );
+    }
+
 
     //해당 유저의 친구 목록 불러오기
 
