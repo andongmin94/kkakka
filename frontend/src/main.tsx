@@ -11,6 +11,7 @@ import MessageListPage from "@/routes/MessageListPage";
 import MessageDetailPage from "@/routes/MessageDetailPage";
 import ProfileRecordPage from "@/routes/ProfileRecordPage";
 import ProfileCollection from "@/routes/ProfileCollection";
+import LoginSuccessPage from "@/routes/LoginSuccessPage.tsx";
 import KakaoCallbackPage from "@/routes/KakaoCallbackPage.tsx";
 import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
@@ -26,6 +27,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
+  { path: "/loginsuccess", element: <LoginSuccessPage /> },
+
   {
     path: "/",
     element: <RootLayout />,
@@ -60,7 +63,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(  
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
