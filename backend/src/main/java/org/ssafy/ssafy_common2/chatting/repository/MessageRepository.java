@@ -34,7 +34,7 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     Optional<Message> getLastMessage(@Param("roomId") long roomId);
 
     // 4) 채팅방 수정 일자와 비교하여 안 읽은 메세지 수 뽑기
-    @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId) temp )", nativeQuery = true)
+    @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId AND cj.deleted_at is null limit 1) temp )", nativeQuery = true)
     Optional<Integer> getUnreadMessageCnt (@Param("chatRoomId") long chatRoomId);
 
 }
