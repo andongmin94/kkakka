@@ -42,7 +42,7 @@ pipeline {
                 echo '도커 이미지 빌드 완료!'
             }
         }
-
+ 
         stage('Push to Docker Hub') {
             steps {
                 echo '도커 이미지를 Docker Hub에 푸시 시작!'
