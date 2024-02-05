@@ -37,7 +37,7 @@ export const useDmStore = create<dmStoreType>((set) => ({
           Authorization: token,
         },
       });
-      console.log("서버 응답:", response.data);
+      console.log("서버 응답 방 들어가기:", response.data);
     } catch (error) {
       console.error("Error entering a direct message", error);
     }
