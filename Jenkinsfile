@@ -63,6 +63,7 @@ pipeline {
                 sshagent(['aws-key']) { 
                     sh "docker rm -f backend"
                     sh "docker rmi osy9536/ssafy:latest"
+                    sh "docker image prune -f"
                     sh "docker pull osy9536/ssafy:latest && docker run -d -p 8080:8080 --name backend osy9536/ssafy:latest"
                 }
                 echo 'EC2에 배포 완료!'
