@@ -37,7 +37,7 @@ public class AliasService {
     public AliasCreateResponseDto addAlias(User sender, User receiver, String aliasName){
 
         // 아이템 거래 내역 생성
-        ItemDealList itemDealList = itemDealService.buyItem(sender, "칭호");
+        ItemDealList itemDealList = itemDealService.buyItem(sender, "칭호지정권");
 
         // 칭호 생성
         Alias newAlias = Alias.of(receiver, aliasName);
