@@ -12,6 +12,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.ssafy.ssafy_common2._common.exception.CustomException;
+import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
@@ -60,7 +62,7 @@ public class ChatController {
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
 
 
-            log.info("chatJoin 내용: {} ", chatJoin.toString() );
+//            log.info("chatJoin 내용: {} ", chatJoin.toString() );
 
                 // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
@@ -97,7 +99,6 @@ public class ChatController {
             LocalDateTime now = LocalDateTime.now();
 
             // 1) 안 들어온 데이터 추가해주기
-            msg.setMessageType("TALK");
             msg.setCreatedAt(now);
             msg.setUpdateAt(now);
 
@@ -125,6 +126,8 @@ public class ChatController {
 
                     msg = msgWithImg;
                 }
+            }else{
+                throw new CustomException(ErrorType.THIS_USER_DIDNT_JOIN_IN_THIS_ROOM);
             }
 
 
