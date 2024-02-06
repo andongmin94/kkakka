@@ -18,7 +18,12 @@ export default function KakaoCallbackPage() {
         )
         .then((res) => {
           localStorage.setItem("token", res.headers.authorization);
-          navigate("/loginsuccess");
+          console.log(res.data.data.isFirst);
+          if (res.data.data.isFirst) {
+            navigate("/loginsuccess");
+          } else {
+            navigate("/main");
+          }
         })
         .catch((err) => {
           console.error("로그인 에러", err);

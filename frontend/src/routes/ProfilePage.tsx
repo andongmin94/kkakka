@@ -58,6 +58,33 @@ export default function ProfilePage() {
       });
   };
 
+  const [friendStatus, setFriendStatus] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/${params.id}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data.state);
+        setFriendStatus(res.data.data.state);
+      });
+  }, []);
+
+  const changeFriendStatusHandler = () => {
+    axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/friends/${params.id}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  };
+
   return (
     <>
       <PC>
@@ -97,18 +124,24 @@ export default function ProfilePage() {
                   userProfileData.userId === (myData && myData.userId) ? (
                     <ProfileEdit />
                   ) : (
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                      onClick={() => {
-                        enterChatHandler(
-                          userProfileData && userProfileData.userId
-                        );
-                      }}
-                    >
-                      메세지
-                    </Button>
+                    <>
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                        onClick={() => {
+                          enterChatHandler(
+                            userProfileData && userProfileData.userId
+                          );
+                        }}
+                      >
+                        메세지
+                      </Button>
+
+                      <Button onClick={changeFriendStatusHandler}>
+                        친구신청하기/끊기/요청중/받아주기
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>

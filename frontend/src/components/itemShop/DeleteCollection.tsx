@@ -18,10 +18,12 @@ export default function TitleItemshop({
   itemName,
   itemPrice,
   itemDesc,
+  myPoint,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
+  myPoint: number;
 }) {
   return (
     <Card className="static group/item bg-[url('/image/deleteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
