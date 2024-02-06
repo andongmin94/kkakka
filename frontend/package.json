@@ -87,6 +87,7 @@
     "electron-overlay-window": "^3.3.0",
     "embla-carousel-autoplay": "^8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc19",
+    "event-source-polyfill": "^1.0.31",
     "json-server": "^1.0.0-alpha.22",
     "league-connect": "^6.0.0-rc12",
     "lucide-react": "^0.312.0",
@@ -112,6 +113,7 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@types/event-source-polyfill": "^1.0.5",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
