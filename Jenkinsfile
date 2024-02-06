@@ -104,7 +104,7 @@ pipeline {
                 echo '프론트 도커 이미지를 Docker Hub에 푸시 완료!'
             }
         }
-
+ 
         stage('Deploy to EC2-FE') {
             steps {
                 echo '프론트 EC2에 배포 시작!'
