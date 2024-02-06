@@ -15,6 +15,7 @@ export default function ItemshopPage() {
   const token = localStorage.getItem("token");
 
   const [items, setItems] = useState<ItemType[]>();
+  
 
   useEffect(() => {
     axios
@@ -26,7 +27,7 @@ export default function ItemshopPage() {
       .then((res) => {
         console.log(res.data.data.itemList);
         setItems(res.data.data.itemList);
-      });
+      });  
   }, []);
 
   const [myPoint, setMyPoint] = useState<number>(0);
