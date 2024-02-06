@@ -1,14 +1,29 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Message from "../components/message/Message";
 import { DmType } from "@/types/dmTypes";
 import axios from "axios";
+
+interface dmProps {
+  chatRoomType: string;
+  friendAlias: string;
+  friendEmail: string;
+  friendId: number;
+  friendImgUrl: string;
+  friendName: string;
+  lastMessage: string;
+  lastWrittenMessageTime: Date;
+  login: boolean;
+  roomId: string;
+  tenMinute: boolean;
+  unreadMessageCnt: number;
+}
 
 export default function MessageListPage() {
   const [position, setPosition] = useState("");
   const navigate = useNavigate();
 
-  const [dmList, setDmList] = useState<DmType[] | null>(null);
+  const [dmList, setDmList] = useState<dmProps[] | null>(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -35,8 +50,8 @@ export default function MessageListPage() {
           },
         }
       )
-      .then(() => {
-        // navigate(`/chat/${friendId}`); // 아직 없는듯
+      .then((res) => {
+        navigate(`/main/message/${res.data.data}`); // 아직 없는듯
       });
   };
 
@@ -44,14 +59,16 @@ export default function MessageListPage() {
     <div>
       <div>메시지 목록</div>
       {dmList &&
-        dmList.map((dm) => {
-          <Message
-            key={dm.dmId}
+        dmList.map((dm, idx) => (
+          <div
+            key={idx}
             onClick={() => {
               enterChatHandler(dm.friendId);
             }}
-          />;
-        })}
+          >
+            <Message dm={dm} />
+          </div>
+        ))}
     </div>
   );
 }
