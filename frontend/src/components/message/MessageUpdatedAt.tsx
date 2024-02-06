@@ -1,5 +1,5 @@
 interface updatedAtProps {
-  updatedAt: string;
+  updatedAt: number;
 }
 
 export default function MessageUpdatedAt({ updatedAt }: updatedAtProps) {
