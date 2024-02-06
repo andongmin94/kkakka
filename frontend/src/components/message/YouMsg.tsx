@@ -22,11 +22,12 @@ export default function YouMsg({ data }: { data: dataProps }) {
           <div>
             {/* 상대방 이름 */}
             <p className="font-bold">{data.name}</p>
-            <div>
+            <div className="flex">
               <div className="max-w-[80%] m-2 p-3 rounded-2xl self-end bg-blue-300 text-white font-bold text-xl text-wrap">
                 {/* 이미지인지 텍스트 채팅인지 판별 */}
                 {data.img ? <img src={data.img} /> : data.content}
               </div>
+              {/* <div className=" self-end">time</div> */}
             </div>
           </div>
         </div>
