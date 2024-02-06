@@ -11,13 +11,29 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
-import { UserType } from "@/types/userTypes";
+import useUserStore from "@/store/userStore";
+
+import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
+  const { theme } = useTheme();
   const token = localStorage.getItem("token");
 
-  const [userData, setUserData] = useState<UserType | null>(null);
+  const { useUserDataQuery } = useUserData();
+  const { data: userData } = useUserDataQuery();
+
+  const { userInfo, setUserInfo } = useUserStore();
+
+  useEffect(() => {
+    if (userData) {
+      setUserInfo(userData);
+    } else {
+      console.log("유저 정보 없음");
+    }
+  }, [userData, setUserInfo]);
+
+  console.log("유저 정보:", userInfo);
 
   // 스크롤 내릴땐 네브바가 안보이게
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -27,24 +43,7 @@ export default function RootLayout() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  // 로그인한 유저 데이터 불러오기
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        setUserData(res.data.data);
-        ///////////// 일렉트론에서 쓰는 통신임 //////////////////
-        {typeof electron !== "undefined" && electron.send("userInfo", res.data.data)}
-        {typeof electron !== "undefined" && electron.send("token", localStorage.getItem("token"))}
-        ///////////// 일렉트론에서 쓰는 통신임 //////////////////
-      });
-
-    // ------------------------------
     // 스크롤바 부분
     let prevScrollPos = window.pageYOffset;
     const handleScroll = () => {
@@ -67,8 +66,6 @@ export default function RootLayout() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const { theme } = useTheme();
 
   // 알림 SSE 구독 -> 로그인시 딱 한번만
   useEffect(() => {
@@ -151,13 +148,13 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/profile/${userData && userData.userId}`}
+                      to={`/main/profile/${userInfo && userInfo.userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                       <Avatar>
                         <AvatarImage
-                          src={userData && userData.userProfileImg}
+                          src={userInfo && userInfo.userProfileImg}
                           alt="프사"
                           className="bg-cover"
                         />
@@ -185,7 +182,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/profile/${userData && userData.userId}`}
+                      to={`/main/profile/${userInfo && userInfo.userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
@@ -238,7 +235,7 @@ export default function RootLayout() {
               <div className={classes.nav_right_M}>
                 {/* 사용자 프로필 버튼 */}
                 <Link
-                  to={`/main/profile/${userData && userData.userId}`}
+                  to={`/main/profile/${userInfo && userInfo.userId}`}
                   className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                 >
                   {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
