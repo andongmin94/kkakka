@@ -39,8 +39,14 @@ export default function RootLayout() {
         console.log(res.data.data);
         setUserData(res.data.data);
         ///////////// 일렉트론에서 쓰는 통신임 //////////////////
-        {typeof electron !== "undefined" && electron.send("user_id", res.data.data.userId)};
-        {typeof electron !== "undefined" && electron.send("token", localStorage.getItem("token"))};
+        {
+          typeof electron !== "undefined" &&
+            electron.send("user_id", res.data.data.userId);
+        }
+        {
+          typeof electron !== "undefined" &&
+            electron.send("token", localStorage.getItem("token"));
+        }
         ///////////// 일렉트론에서 쓰는 통신임 //////////////////
       });
 
@@ -70,8 +76,34 @@ export default function RootLayout() {
 
   const { theme } = useTheme();
 
-  // 사용자 아이디 더미 데이터
-  // const userId = "1";
+  // 알림 SSE 구독 -> 로그인시 딱 한번만
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }, []);
+
+  const [lastEventId, setLastEventId] = useState<string>("");
+  // 마지막 이벤트 아이디 어떻게 받아올지 생각해봐
+
+  // request body로 LastEventId (SSE가 생성한 eventId) 보내야 함.
+  const updateLastEventId = () => {
+    axios
+      .put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/alarm/`,
+        { LastEventId: lastEventId },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   return (
     <>
@@ -175,7 +207,7 @@ export default function RootLayout() {
                     </Link>
 
                     {/* 알림 버튼 */}
-                    <Alarm />
+                    <Alarm onClick={updateLastEventId} />
                     {/* 친구 버튼 */}
                     <FriendsBtn />
                   </div>

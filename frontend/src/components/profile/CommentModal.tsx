@@ -23,6 +23,7 @@ import {
 import { Mobile, PC } from "../MediaQuery";
 import axios from "axios";
 import { DogamCommentResponseType } from "@/types/dogamTypes";
+import { UserType } from "@/types/userTypes";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -39,18 +40,33 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  // 이거 뭔지 잘 모르겠어서 일단 주석
+  // function onSubmit(data: z.infer<typeof FormSchema>) {
+  //   toast({
+  //     title: "You submitted the following values:",
+  //     description: (
+  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
+  //     ),
+  //   });
+  // }
 
   const token = localStorage.getItem("token");
+  const [myData, setMyData] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setMyData(res.data.data);
+      });
+  }, []);
+
   const [dogamComments, setDogamComments] = useState<
     DogamCommentResponseType[]
   >([]);
@@ -131,7 +147,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                 type="submit"
                                 variant="secondary"
                                 className="border-solid border-2 border-inherit bg-white font-bold h-[42px] text-lg"
-                                onClick={(_) => {
+                                onClick={(e) => {
                                   // 2글자 이상만 작성 가능하게
                                   if (
                                     form.getValues().content != undefined &&
@@ -141,11 +157,11 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                     const t = form.getValues().content;
                                     // 댓글 객체 만들기
                                     const data = {
-                                      userId: userId,
-                                      name: userName,
-                                      text: t,
-                                      update: userUpdate,
-                                      alias: userAlias,
+                                      userId: myData?.userId,
+                                      commentUserName: myData?.userName,
+                                      comment: t,
+                                      commetUserEmail: myData?.userEmail,
+                                      commentUserImgUrl: myData?.userProfileImg,
                                     };
                                     // 댓글 리스트에 추가
                                     setDogamComments((pre) => [...pre, data]);
