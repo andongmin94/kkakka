@@ -21,7 +21,6 @@ interface dataProps {
 }
 
 interface PictureProps {
-  messageList: dataProps[];
   setMessageList: React.Dispatch<React.SetStateAction<dataProps[]>>;
 }
 
@@ -31,7 +30,7 @@ const id = "1";
 const profile = "/image/joinSample.png";
 const name = "이해건";
 
-export default function Picture({ messageList, setMessageList }: PictureProps) {
+export default function Picture({ setMessageList }: PictureProps) {
   const [image, setImage]: any = useState(null);
   return (
     <>
