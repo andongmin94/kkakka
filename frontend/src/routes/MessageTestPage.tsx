@@ -6,9 +6,16 @@ import YouMsg from "@/components/message/YouMsg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import axios from "axios";
+
+let stompClient: any;
 
 export default function MessageTestPage() {
+  const token = localStorage.getItem("token");
+
   // 프로필 버튼을 눌렀을때 해당 사람의 프로필로 이동하기 위해 사용되는 그 사람의 아이디
   const profileId = "2";
 
@@ -25,14 +32,16 @@ export default function MessageTestPage() {
       img: null,
       // 채팅 내용, 만약에 이미지라면 '' 빈 문자열이 들어간다
       content: "ㅎㅇ",
+      // // 몇시에 쓴 채팅인지
+      // time: "오후 12:30",
     },
     {
       userId: "2",
       name: "김상훈",
       msgUserProfile: "/image/joinSample.png",
       img: null,
-      content:
-        "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
+      content: "ㅎㅎ",
+      time: "오후 12:30",
     },
     {
       userId: "1",
@@ -41,6 +50,7 @@ export default function MessageTestPage() {
       img: null,
       content:
         "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
+      time: "오후 12:30",
     },
     {
       userId: "2",
@@ -48,24 +58,121 @@ export default function MessageTestPage() {
       msgUserProfile: "/image/joinSample.png",
       img: "/image/liveImage.png",
       content: "",
+      time: "오후 12:30",
     },
   ];
 
   // 임시 정적 데이터
-  const userId = "1";
-  const userName = "김상훈";
-  const userImage = "/image/profileImage.png";
-  const userAlias = "천재개발자";
+  // const userId = "1";
+  // const userName = "김상훈";
+  // const userImage = "/image/profileImage.png";
+  // const userAlias = "천재개발자";
 
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // 채팅 목록을 저장하는 리스트
   // 소켓으로 에밋받은 채팅 정보들을 여기에 추가해주면 될듯
-  const [messageList, setMessageList] = useState(data);
+  const [messageList, setMessageList] = useState<any[]>();
 
   // 채팅 입력창에서 받은 값 상태 관리
   const [inputChat, setInputChat] = useState("");
+
+  // ------------------------------------------------------------------------------------------
+  // const roomId = userInfo.roomId;
+
+  const params = useParams();
+
+  // 데이터
+  const roomId = params.id;
+
+  const [userId, setUserId] = useState(0);
+  const [userName, setUserName] = useState("");
+
+  const clientHeader = {
+    Authorization: token,
+  };
+
+  const connect = () => {
+    var sockJS = new SockJS("http://localhost:8080/ws-stomp");
+    stompClient = Stomp.over(sockJS);
+
+    stompClient.connect(clientHeader, onConnected, onError);
+  };
+
+  // 첫 연결 및 환영 메세지 보내기
+  function onConnected() {
+    console.log("채팅 앱 첫 연결 실행!");
+    stompClient.subscribe(
+      "/sub/chat/room/" + roomId,
+      onMessageReceivedFromSocket,
+      { userId: userId, chatRoomType: "ONE" }
+    );
+    stompClient.send(
+      "/pub/chat/enterUser",
+      clientHeader,
+      JSON.stringify({
+        meesageType: "ENTER",
+        content: userName + "님 환영합니다!",
+        userId: userId,
+        chatRoomId: roomId,
+      })
+    );
+  }
+
+  function onError(error: any) {
+    console.log(error);
+  }
+
+  const handleSendMessage = (message: any) => {
+    console.log(message);
+    // 소켓으로 메세지 보내기
+    sendMessageToSocket(message);
+  };
+
+  // 메세지 보내는 로직
+  function sendMessageToSocket(message: any) {
+    var chatMessage = {
+      chatRoomId: roomId,
+      userId: userId,
+      content: message,
+      messageType: "TALK",
+    };
+    stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
+  }
+
+  // 메세지 받는 로직 -> subscribe의 두번째 로직으로 넣으면 해당 주소로 들어오는 메세지를 다 받는다.
+  function onMessageReceivedFromSocket(payload: any) {
+    var chat = JSON.parse(payload.body);
+    console.log("들어온 메세지:" + chat.content);
+
+    const messageDTO = {
+      isUser: chat.userId === userId ? true : false,
+      text: chat.content,
+      isTyping: chat.userId === userId ? false : true,
+      id: Date.now(),
+    };
+
+    /*
+         // 내가 쓴 메세지
+      { text: chat.content, isUser: true },
+
+      // ChatBot이 쓴 메세지
+      {
+        text: `당신의 메세지는: "${chat.content}"`,
+        isUser: false,
+        // 타이핑 애니메이션을 내는 트리거
+        isTyping: true,
+        id: Date.now()
+      }
+    */
+
+    // 소켓에서 받은 메세지를 전체 배열에 넣는 걸로 바꿔야함.
+    // 이전 메세지를 받아서 메세지 전체 배열에 저장
+    setMessageList((prevMessages) => prevMessages?.concat(messageDTO));
+  }
+
+  // ---------------------------------------------------------------------------------------
 
   useEffect(() => {
     // chatContainerRef의 current 값이 존재하는 경우 (컴포넌트가 마운트된 경우)
@@ -75,9 +182,42 @@ export default function MessageTestPage() {
         chatContainerRef.current.scrollHeight;
     }
   }, [messageList]);
+  // ds
+  useEffect(() => {
+    // 유저 정보 요청
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        // 유저 아이디 이름 받기
+        setUserId(res.data.data.userId);
+        setUserName(res.data.data.userName);
+      });
+
+    axios
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/load/${roomId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.content != undefined) {
+          setMessageList((pre) => pre?.concat(res.data.content));
+        }
+      });
+
+    connect();
+  }, []);
 
   return (
     <>
+      {/* ------------------------------------------------------- */}
       {/* 피시 화면 */}
       <PC>
         <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
@@ -144,10 +284,7 @@ export default function MessageTestPage() {
             {/* 채팅 하단 부분 */}
             <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-6 rounded-3xl">
               {/* 사진 버튼 */}
-              <Picture
-                messageList={messageList}
-                setMessageList={setMessageList}
-              />
+              <Picture setMessageList={setMessageList} />
               {/* 도감 버튼 */}
               <button>
                 <img
@@ -161,6 +298,10 @@ export default function MessageTestPage() {
                 // 채팅 전송을 눌렀을때 함수
                 onSubmit={(e) => {
                   e.preventDefault();
+                  // const time = new Date();
+                  // const h = time.getHours();
+                  // const m = time.getMinutes();
+
                   // 단순 채팅 보내기라 이미지가 아니다 (이미지는 사진 버튼 눌러서 보낸다)
                   // 데이터 형식
                   const data = {
@@ -201,9 +342,6 @@ export default function MessageTestPage() {
           </div>
         </div>
       </PC>
-
-      {/* ------------------------------------------------------- */}
-
       {/* 모바일 화면 */}
       <Mobile>
         <></>
