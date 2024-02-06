@@ -182,7 +182,7 @@ export default function MessageTestPage() {
         chatContainerRef.current.scrollHeight;
     }
   }, [messageList]);
-
+  // ds
   useEffect(() => {
     // 유저 정보 요청
     axios
