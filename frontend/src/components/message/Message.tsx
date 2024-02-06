@@ -7,32 +7,34 @@ import MessageProfile from "./MessageProfile";
 import classes from "./Message.module.css";
 import MessageUpdatedAt from "./MessageUpdatedAt";
 
-interface messageProps {
-  name: string;
-  alias: string;
-  status: string;
+interface dmProps {
+  chatRoomType: string;
+  friendAlias: string;
+  friendEmail: string;
+  friendId: number;
+  friendImgUrl: string;
+  friendName: string;
   lastMessage: string;
-  unreadMessages: number;
-  updatedAt: string;
+  lastWrittenMessageTime: Date;
+  login: boolean;
+  roomId: string;
+  tenMinute: boolean;
+  unreadMessageCnt: number;
 }
 
-export default function Message({
-  messageInfo,
-}: {
-  messageInfo: messageProps;
-}) {
+export default function Message({ dm }: { dm: dmProps }) {
   return (
     <>
       <div className={classes.wrapper}>
         <MessageProfile />
         <div className="flex flex-col items-center">
-          <UserCurrentAlias alias={messageInfo.alias} />
-          <UserName name={messageInfo.name} />
-          <UserStatus status={messageInfo.status} />
+          <UserCurrentAlias alias={dm.friendAlias} />
+          <UserName name={dm.friendName} />
+          <UserStatus status={dm.login} />
         </div>
-        <MessagePeek lastMessage={messageInfo.lastMessage} />
-        <UnreadMessages unreadMessageNum={messageInfo.unreadMessages} />
-        <MessageUpdatedAt updatedAt={messageInfo.updatedAt} />
+        <MessagePeek lastMessage={dm.lastMessage} />
+        <UnreadMessages unreadMessageNum={dm.unreadMessageCnt} />
+        <MessageUpdatedAt updatedAt={dm.unreadMessageCnt} />
       </div>
     </>
   );
