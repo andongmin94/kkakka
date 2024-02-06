@@ -5,9 +5,12 @@ import { fileURLToPath } from "url";
 import { join, dirname } from "path";
 import electronLocalshortcut from "electron-localshortcut";
 import { createWebSocketConnection } from "league-connect";
-import WebSocket from "ws";
 import { OverlayController } from 'electron-overlay-window';
 import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage } from "electron";
+
+import * as StompJs from '@stomp/stompjs';
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 dotenv.config();
 const isDev = process.env.IS_DEV === "true";
@@ -92,8 +95,8 @@ app
     //////////////////// 리그오브레전드 통신 /////////////////////
 
     // 방 만드는데 쓰는 함수 현재 로그인 접속자의 메일을 쓰게 해야함.
-    async function startBroadcast (user_id) {
-      const url = `${BASE_URL}/api/friends/broadcasts/enter/${user_id}`;
+    async function startBroadcast (userId) {
+      const url = `${BASE_URL}/api/friends/broadcasts/enter/${userId}`;
     
       try {
         const response = await axios.post(url, {}, { // 두 번째 인자를 빈 객체로 설정
@@ -123,8 +126,8 @@ app
         console.log('게임이 시작되었습니다!')
         gameIsRunning = true;
         let oneShotChecker = false;
-        let lastSentEventId = 0;
-        
+        let lastSentEventId = -1;
+        connect();
         // 마지막으로 전송한 이벤트의 ID를 저장하는 변수
         function sendNewEvents(events) {
           let newEvents = events.Events.filter(event => event.EventID > lastSentEventId);
@@ -180,12 +183,12 @@ app
             // playerinfo areas
             
             if (!oneShotChecker) {          
-              OverlayController.attachByTitle(win, 'League of Legends (TM) Client');
-              OverlayController.focusTarget();
-              win.setSize(300, 200);
-              win.setPosition(0, 880);
-              win.setAlwaysOnTop(true);
-              startBroadcast(user_id).then((room_id) => {socket(room_id)})
+              // OverlayController.attachByTitle(win, 'League of Legends (TM) Client');
+              // OverlayController.focusTarget();
+              // win.setSize(300, 200);
+              // win.setPosition(0, 880);
+              // win.setAlwaysOnTop(true);
+              startBroadcast(userId)
               console.log(playerName); // 이 코드는 현재 플레이어의 정보를 콘솔에 출력합니다.
               console.log(players_info); // 이 코드는 모든 플레이어의 정보를 콘솔에 출력합니다.
               oneShotChecker = true;
@@ -193,6 +196,8 @@ app
             
             // console.log(players); // 이 코드는 각 플레이어의 정보를 콘솔에 출력합니다.
             sendNewEvents(events);
+            // sendMessageToSocket(players);
+            sendMessageToSocket("테스트 메세지");
             // will be axios post areas
 
           } catch (error) {};
@@ -230,41 +235,83 @@ let token;
 ipcMain.on("token", (event, message) => {
   token = message;
   console.log("Received from token : ", token);
+  clientHeader = {Authorization: token};
 })
 
-let user_id;
-ipcMain.on("user_id", (event, message) => {
-  user_id = message;
-  console.log("Received from user_id : ", user_id);
+let userInfo;
+let userId;
+ipcMain.on("userInfo", (event, message) => {
+  userInfo = message;
+  userId = userInfo.userId;
+  TESTUSER = userId;
+  roomId = userId;
+  console.log("Received from userInfo : ", userInfo);
 })
 
 ////////////////////////////////////////////////////////////
 
 ////////////////////// 웹소켓 통신 //////////////////////////
 
-// WebSocket 연결을 만드는 함수
-const socket = (roomId) => {
-  // WebSocket 서버의 URL. 여기서는 roomId를 경로에 포함시켰습니다.
-  const url = `ws://localhost:3000/chatroom/${roomId}`;
-  console.log("WebSocket is created now.");
+let stompClient;
+let TESTUSER;
+let roomId;
+let clientHeader;
 
-  // WebSocket 객체를 생성하고 반환합니다.
-  return new WebSocket(url);
+const connect =  (event) => {
+  var sockJS = new SockJS("http://localhost:8080/ws-stomp");
+  stompClient = Stomp.over(sockJS);
+  stompClient.connect(clientHeader,onConnected, onError);
 }
-// 연결이 열릴 때의 이벤트 핸들러
-socket.onopen = (event) => {
-  console.log("WebSocket is open now.");
-};
-// 메시지를 받을 때의 이벤트 핸들러
-socket.onmessage = (event) => {
-  console.log("WebSocket message received:", event.data);
-};
-// 연결이 닫힐 때의 이벤트 핸들러
-socket.onclose = (event) => {
-  console.log("WebSocket is closed now.");
-};
-// 오류가 발생할 때의 이벤트 핸들러
-socket.onerror = (error) => {
-  console.log("WebSocket error: ", error)
+
+// 첫 연결 및 환영 메세지 보내기 
+function onConnected() {
+    console.log("채팅 앱 첫 연결 실행!")
+    stompClient.subscribe("/sub/chat/room/"+ roomId,onMessageReceivedFromSocket ,{userId: userId, chatRoomType: "MANY" } )
+    stompClient.send("/pub/chat/enterUser",clientHeader,JSON.stringify({meesageType: "ENTER", content: userInfo.userName + "님 환영합니다!", userId: userId, chatRoomId: userId }))
 }
+
+function onError (error) {
+  console.log(error);
+}
+
+// 메세지 보내는 로직 
+function sendMessageToSocket(message) {
+
+    var chatMessage = {
+      "chatRoomId": roomId,
+      "userId": TESTUSER,
+      "content": message,
+      "messageType": "MANY"
+    }
+    stompClient.send("/pub/chat/sendMessage", {},JSON.stringify(chatMessage));
+}
+
+// 메세지 받는 로직 -> subscribe의 두번째 로직으로 넣으면 해당 주소로 들어오는 메세지를 다 받는다. 
+function onMessageReceivedFromSocket (payload){
+  
+  var chat = JSON.parse(payload.body);
+  console.log("들어온 메세지:" + chat.content);
+
+  const messageDTO = {
+    isUser: chat.userId === TESTUSER? true : false,
+    text: chat.content,
+    isTyping: chat.userId === TESTUSER? false : true,
+    id: Date.now()
+  }
+
+  /*
+        // 내가 쓴 메세지
+    { text: chat.content, isUser: true },
+
+    // ChatBot이 쓴 메세지 
+    {
+      text: `당신의 메세지는: "${chat.content}"`,
+      isUser: false,
+      // 타이핑 애니메이션을 내는 트리거 
+      isTyping: true,
+      id: Date.now()
+    }
+  */  
+}
+
 ////////////////////////////////////////////////////////////
