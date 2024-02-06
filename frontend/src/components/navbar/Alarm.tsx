@@ -79,6 +79,7 @@ export function Alarm() {
               return (
                 <DropdownMenuRadioItem
                   value="top"
+                  key={alarm.alarmID}
                   onClick={() => {
                     checkAlarm(alarm.alarmID);
                   }}
