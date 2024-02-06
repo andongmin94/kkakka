@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Price from "./Price";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
@@ -39,16 +39,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-// 친구 더미 데이터
-const userId = [
-  { label: "이수민", value: "1" },
-  { label: "오세영", value: "2" },
-  { label: "김지연", value: "3" },
-  { label: "전수민", value: "4" },
-  { label: "김상훈", value: "5" },
-  { label: "이해건", value: "6" },
-] as const;
+import axios from "axios";
+import { FriendType } from "@/types/friendTypes";
 
 const FormSchema = z.object({
   userId: z.string({
@@ -63,15 +55,19 @@ export default function WriteAlias({
   itemName,
   itemPrice,
   itemDesc,
+  myPoint,
+  friends,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
+  myPoint: number;
+  friends: FriendType[];
 }) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -219,7 +215,7 @@ export default function WriteAlias({
                   )}
                 />
                 <div className="font-bold text-center mb-3">
-                  구입 후 잔여 포인트 4000 P
+                  구입 후 잔여 포인트 {myPoint - itemPrice} P
                 </div>
 
                 <DialogFooter className="flex sm:justify-center">
@@ -269,3 +265,13 @@ export default function WriteAlias({
     </Card>
   );
 }
+
+// 친구 더미 데이터
+// const userId = [
+//   { label: "이수민", value: "1" },
+//   { label: "오세영", value: "2" },
+//   { label: "김지연", value: "3" },
+//   { label: "전수민", value: "4" },
+//   { label: "김상훈", value: "5" },
+//   { label: "이해건", value: "6" },
+// ] as const;
