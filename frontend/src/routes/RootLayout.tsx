@@ -39,14 +39,8 @@ export default function RootLayout() {
         console.log(res.data.data);
         setUserData(res.data.data);
         ///////////// 일렉트론에서 쓰는 통신임 //////////////////
-        {
-          typeof electron !== "undefined" &&
-            electron.send("user_id", res.data.data.userId);
-        }
-        {
-          typeof electron !== "undefined" &&
-            electron.send("token", localStorage.getItem("token"));
-        }
+        {typeof electron !== "undefined" && electron.send("userInfo", res.data.data)}
+        {typeof electron !== "undefined" && electron.send("token", localStorage.getItem("token"))}
         ///////////// 일렉트론에서 쓰는 통신임 //////////////////
       });
 
