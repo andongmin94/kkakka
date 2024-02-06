@@ -1,17 +1,13 @@
-# 빌드 단계
-FROM node:14 AS builder
-
+FROM node:14 as build
 WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
 COPY . .
+RUN yarn build
 
-RUN npm install
-RUN npm run build
-
-# 서빙 단계
-FROM nginx:alpine
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-
+# Stage 2 - Production build
+FROM nginx:1.21-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
