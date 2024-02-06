@@ -7,4 +7,5 @@ export interface UserType {
   userAlias: string | null;
   userId: number;
   bankruptcy: boolean;
+  riotId: string | null;
 }

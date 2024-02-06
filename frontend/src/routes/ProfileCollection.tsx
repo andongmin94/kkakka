@@ -54,7 +54,7 @@ export default function ProfileCollection() {
         {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
         <div className="flex justify-center mb-2 fixed bottom-0 left-5">
           {Number(params.id) != (myData && myData.userId) ? (
-            <AddCollection />
+            <AddCollection userId={Number(params.id)} />
           ) : null}
         </div>
       </PC>
