@@ -45,7 +45,7 @@ const router = createBrowserRouter([
       { path: "/main/setting", element: <SettingPage /> },
       { path: "/main/intro", element: <IntroPage /> },
       // 채팅 테스트용
-      { path: "/main/test/:id", element: <MessageTestPage /> },
+      { path: "/main/message/:id", element: <MessageTestPage /> },
       {
         path: "/main/profile/:id",
         element: <ProfilePage />,
