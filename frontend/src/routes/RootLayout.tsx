@@ -10,19 +10,17 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import axios from "axios";
 import useUserStore from "@/store/userStore";
-
+import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+import { source } from "@/services/alarm/subscribe";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
-  const token = localStorage.getItem("token");
 
   const { useUserDataQuery } = useUserData();
   const { data: userData } = useUserDataQuery();
-
   const { userInfo, setUserInfo } = useUserStore();
 
   useEffect(() => {
@@ -35,16 +33,28 @@ export default function RootLayout() {
 
   console.log("유저 정보:", userInfo);
 
-  // 스크롤 내릴땐 네브바가 안보이게
+  const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
+
+  useEffect(() => {
+    source.addEventListener("notification", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
+
+    return () => {
+      source.close();
+    };
+  }, [setLastEventId]);
+
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
   useEffect(() => {
-    // 페이지 이동시마다 스크롤바는 항상 최상단에 위치하게 한다.
     window.scrollTo(0, 0);
   }, [pathname]);
 
   useEffect(() => {
-    // 스크롤바 부분
     let prevScrollPos = window.pageYOffset;
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
@@ -66,35 +76,6 @@ export default function RootLayout() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  // 알림 SSE 구독 -> 로그인시 딱 한번만
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`, {
-      headers: {
-        Authorization: token,
-      },
-    });
-  }, []);
-
-  const [lastEventId, setLastEventId] = useState<string>("");
-  // 마지막 이벤트 아이디 어떻게 받아올지 생각해봐
-
-  // request body로 LastEventId (SSE가 생성한 eventId) 보내야 함.
-  const updateLastEventId = () => {
-    axios
-      .put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/alarm/`,
-        { LastEventId: lastEventId },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      });
-  };
 
   return (
     <>
@@ -198,7 +179,7 @@ export default function RootLayout() {
                     </Link>
 
                     {/* 알림 버튼 */}
-                    <Alarm onClick={updateLastEventId} />
+                    <Alarm />
                     {/* 친구 버튼 */}
                     <FriendsBtn />
                   </div>
