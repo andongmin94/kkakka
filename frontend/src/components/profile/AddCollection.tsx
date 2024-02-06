@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mobile, PC } from "../MediaQuery";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import axios from "axios";
 
-
-export default function AddCollection() {
+export default function AddCollection({ userId }: { userId: number }) {
   // 프로필 사진 저장
   const [dogamImage, setDogamImage]: any = useState(null);
 
@@ -25,6 +32,31 @@ export default function AddCollection() {
         resolve();
       };
     });
+  };
+
+  const [dogamTitle, setDogamTitle] = useState();
+
+  const handleInputChange = (e: any) => {
+    setDogamTitle(e.target.value);
+  };
+
+  const token = localStorage.getItem("token");
+
+  const addDogamHandler = () => {
+    axios.post(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/api/friends/dogam?friend-user-id=${userId}`,
+      {
+        imgUrl: dogamImage,
+        dogamTitle: dogamTitle,
+      },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
   };
 
   return (
@@ -68,7 +100,7 @@ export default function AddCollection() {
                 <Input
                   id="picture"
                   type="file"
-                  onChange={(e) => imgUpload(e)}
+                  onChange={(e) => handleInputChange(e)}
                 />
               </div>
             </div>
@@ -81,8 +113,7 @@ export default function AddCollection() {
                   variant="secondary"
                   className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
                   onClick={() => {
-                    // 저장버튼 눌렀을때 이미지 넘기는거 확인 !
-                    // console.log(dogamImage);
+                    addDogamHandler;
                   }}
                 >
                   저장하기

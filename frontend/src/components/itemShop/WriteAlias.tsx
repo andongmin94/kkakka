@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Price from "./Price";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
@@ -39,40 +39,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-// 친구 더미 데이터
-const userId = [
-  { label: "이수민", value: "1" },
-  { label: "오세영", value: "2" },
-  { label: "김지연", value: "3" },
-  { label: "전수민", value: "4" },
-  { label: "김상훈", value: "5" },
-  { label: "이해건", value: "6" },
-] as const;
+import axios from "axios";
+import { FriendType } from "@/types/friendTypes";
 
 const FormSchema = z.object({
-  userId: z.string({
-    required_error: "친구를 선택하세요!",
-  }),
+  userId: z.number(),
   textAlias: z.string().max(6, {
     message: "6글자 미만으로 입력해주세요!",
   }),
+  name: z.string({
+    required_error: "친구를 선택하세요!",
+  }),
+
 });
 
 export default function WriteAlias({
   itemName,
   itemPrice,
   itemDesc,
+  myPoint,
+  friends,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
+  myPoint: number;
+  friends: FriendType[];
 }) {
-  // 콤보박스 누르면 꺼지게 하는 상태정보
-  const [open, setOpen] = React.useState(false);
-  // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
-  const [openDialog, setOpenDialog] = React.useState(false);
 
+  console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
+
+  // 콤보박스 누르면 꺼지게 하는 상태정보
+  const [open, setOpen] = useState(false);
+
+  // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
+  const [openDialog, setOpenDialog] = useState(false);
+
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -136,7 +139,7 @@ export default function WriteAlias({
                 {/* 콤보박스 부분 */}
                 <FormField
                   control={form.control}
-                  name="userId"
+                  name="name"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel className="font-bold">친구 지정</FormLabel>
@@ -152,10 +155,11 @@ export default function WriteAlias({
                                 !field.value && "text-muted-foreground"
                               )}
                             >
-                              {field.value
-                                ? userId.find(
-                                    (userId) => userId.value === field.value
-                                  )?.label
+                              {
+                              field.value
+                                ? friends.find(
+                                    (friend) => friend.name === field.value
+                                  )?.name
                                 : "친구를 선택하세요"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
@@ -168,24 +172,27 @@ export default function WriteAlias({
                               해당하는 친구가 없습니다.
                             </CommandEmpty>
                             <CommandGroup>
-                              {userId.map((userId) => (
+                              {friends.map((friend) => (
                                 <CommandItem
-                                  value={userId.label}
-                                  key={userId.value}
+                                  value={friend.name}
+                                  key={friend.id}
                                   onSelect={() => {
-                                    form.setValue("userId", userId.value);
+                                    // 콤보박스에 선택한 값이 들어가도록 하는 것 
+                                    form.setValue("name", friend.name);
+                                    form.setValue("userId", friend.userId);
+                                    console.log(friend.id);
                                     setOpen(false);
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       "mr-2 h-4 w-4",
-                                      userId.value === field.value
+                                      friend.name === field.name
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}
                                   />
-                                  {userId.label}
+                                  {friend.name}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
@@ -196,7 +203,6 @@ export default function WriteAlias({
                     </FormItem>
                   )}
                 />
-
                 {/* 텍스트 입력 부분 */}
                 <FormField
                   control={form.control}
@@ -219,7 +225,7 @@ export default function WriteAlias({
                   )}
                 />
                 <div className="font-bold text-center mb-3">
-                  구입 후 잔여 포인트 4000 P
+                  구입 후 잔여 포인트 {myPoint - itemPrice} P
                 </div>
 
                 <DialogFooter className="flex sm:justify-center">
@@ -240,6 +246,9 @@ export default function WriteAlias({
                     variant="secondary"
                     className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
                     onClick={() => {
+
+                      console.log(form.getValues())
+
                       // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
                       // 유효성 검사
                       if (
@@ -248,12 +257,31 @@ export default function WriteAlias({
                         form.getValues().textAlias.length < 7
                       ) {
                         // 보낼 데이터 객체 userId, textAlias
-                        // const data = {
-                        //   userId: form.getValues().userId,
-                        //   textAlias: form.getValues().textAlias,
-                        // };
+                         const data = {
+                           userId: form.getValues().userId,
+                           name: form.getValues.name,
+                           textAlias: form.getValues().textAlias,
+                         };
                         // 데이터 보내는거 확인 완료
-                        // console.log(data);
+                         console.log(data);
+
+                         const token = localStorage.getItem("token");
+                        axios
+                        .post(`${import.meta.env.VITE_API_BASE_URL}/api/friends/alias?receiver-id=${data.userId}`,{
+                          aliasName: data.textAlias
+                        } , {
+                          headers: {
+                            Authorization: token,
+                          },
+                        }).then((res) => {
+                          console.log(res)
+                        })
+                        .catch((error) => {
+                          console.log(error)
+                        })
+                        ; 
+
+
                         setOpenDialog(false);
                       }
                     }}
@@ -269,3 +297,13 @@ export default function WriteAlias({
     </Card>
   );
 }
+
+// 친구 더미 데이터
+// const userId = [
+//   { label: "이수민", value: "1" },
+//   { label: "오세영", value: "2" },
+//   { label: "김지연", value: "3" },
+//   { label: "전수민", value: "4" },
+//   { label: "김상훈", value: "5" },
+//   { label: "이해건", value: "6" },
+// ] as const;

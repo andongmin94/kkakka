@@ -57,46 +57,21 @@ export default function Compliment({
   itemName,
   itemPrice,
   itemDesc,
+  myPoint,
+  friends,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
+  myPoint: number;
+  friends: FriendType[];
 }) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = React.useState(false);
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = React.useState(false);
 
-  const [friends, setFriends] = useState<FriendType[] | null>(null);
-  const [myPoint, setMyPoint] = useState<number | null>(null);
-
   const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data.friendList);
-        setFriends(res.data.data.friendList);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.point);
-        setMyPoint(res.data.point);
-      });
-  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
