@@ -10,13 +10,17 @@ import { UserType } from "@/types/userTypes";
 export default function ProfileCollection() {
   const params = useParams();
   const token = localStorage.getItem("token");
+
+  // 백 api 미완
   const [profileDogams, setProfileDogams] = useState<ProfileDogamType[] | null>(
     null
   );
   useEffect(() => {
     axios
       .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/users/dogam/${params.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/profile/dogam?user-id=${
+          params.id
+        }`,
         {
           headers: {
             Authorization: token,
@@ -72,7 +76,7 @@ export default function ProfileCollection() {
         {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
         <div className="flex justify-center mb-2 fixed bottom-1 right-20">
           {Number(params.id) != (myData && myData.userId) ? (
-            <AddCollection />
+            <AddCollection userId={Number(params.id)} />
           ) : null}
         </div>
       </Mobile>
