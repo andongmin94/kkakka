@@ -29,4 +29,15 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId AND cj.deleted_at is null limit 1) temp )", nativeQuery = true)
     Optional<Integer> getUnreadMessageCnt (@Param("chatRoomId") long chatRoomId);
 
+    // 4) 챗봇 메세지만 뽑아내기
+
+
+    List<Message> findAllByChatJoin_ChatJoinId_ChatRoomIdAndMessageType(
+             long chatRoomId, Message.MessageType messageType
+    );
+
+    // 5) 특정 시간 이후의 메세지만 뽑아내기
+    List<Message> findAllByChatJoin_User_IdAndChatJoin_ChatJoinId_ChatRoomIdAndCreatedAtBefore(
+            long usrId, long chatRoomId, LocalDateTime created_at);
+
 }

@@ -10,10 +10,16 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
+import org.ssafy.ssafy_common2._common.exception.ErrorResponse;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
+import org.ssafy.ssafy_common2._common.response.MsgType;
+import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
@@ -21,14 +27,18 @@ import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
 import org.ssafy.ssafy_common2.chatting.repository.MessageRepository;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
 import org.ssafy.ssafy_common2.chatting.service.ChatService;
+import org.ssafy.ssafy_common2.user.entity.User;
+import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class ChatController {
 
+    private final UserRepository userRepository;
     private final MessageRepository messageRepository;
     private final ChatJoinRepository chatJoinRepository;
     private final ChatRoomMySQLService chatRoomMySQLService;
@@ -47,7 +57,16 @@ public class ChatController {
 
         try{
             ChatMessageDto msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("들어온 ENTER 메세지 {}", msg.toString());
+            log.info("들어온 ENTER 메세지 {}",  "ChatMessageDto{" +
+                    "messageType='" + msg.getMessageType() + '\'' +
+                    ", content='" + msg.getContent() + '\'' +
+                    ", userId=" + msg.getUserId() +
+                    ", userName=" + msg.getUserName() +
+                    ", chatRoomId=" + msg.getChatRoomId() +
+                    ", createdAt=" + msg.getCreatedAt() +
+                    ", updateAt=" + msg.getUpdateAt() +
+                    ", imageCode=" + msg.getImgCode() +
+                    '}');
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -69,6 +88,12 @@ public class ChatController {
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
 
                 messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER, msg.getImgCode()));
+
+                User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                if(sender != null) {
+                    msg.setUserName(sender.getUserName());
+                }
 
             }
 
@@ -95,7 +120,16 @@ public class ChatController {
         ChatMessageDto msg = null;
         try {
             msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("들어온 TALK 메세지 {}", msg.toString());
+            log.info("들어온 ENTER 메세지 {}",  "ChatMessageDto{" +
+                    "messageType='" + msg.getMessageType() + '\'' +
+                    ", content='" + msg.getContent() + '\'' +
+                    ", userId=" + msg.getUserId() +
+                    ", userName=" + msg.getUserName() +
+                    ", chatRoomId=" + msg.getChatRoomId() +
+                    ", createdAt=" + msg.getCreatedAt() +
+                    ", updateAt=" + msg.getUpdateAt() +
+                    ", imageCode=" + msg.getImgCode() +
+                    '}');
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -111,7 +145,14 @@ public class ChatController {
             if(chatJoin != null){
                 if(msg.getImgCode() == null){
                     // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                    messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK, msg.getImgCode()));
+                    messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK, null));
+
+                    User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                    if(sender != null) {
+                        msg.setUserName(sender.getUserName());
+                    }
+
                 }else {
                     ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
 
@@ -143,7 +184,17 @@ public class ChatController {
         ChatMessageDto msg = null;
         try {
             msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("들어온 EXIT 메세지 {}", msg.toString());
+
+            log.info("들어온 ENTER 메세지 {}",  "ChatMessageDto{" +
+                    "messageType='" + msg.getMessageType() + '\'' +
+                    ", content='" + msg.getContent() + '\'' +
+                    ", userId=" + msg.getUserId() +
+                    ", userName=" + msg.getUserName() +
+                    ", chatRoomId=" + msg.getChatRoomId() +
+                    ", createdAt=" + msg.getCreatedAt() +
+                    ", updateAt=" + msg.getUpdateAt() +
+                    ", imageCode=" + msg.getImgCode() +
+                    '}');
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -160,6 +211,13 @@ public class ChatController {
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
                 messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER, msg.getImgCode()));
+
+                User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                if(sender != null) {
+                    msg.setUserName(sender.getUserName());
+                }
+
             }
 
             // 2-3) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기
@@ -191,4 +249,25 @@ public class ChatController {
 
         log.info("headAccessor {}", headerAccessor);
     }
+
+    @GetMapping("/api/friends/chat_bot/{room_id}")
+    public ApiResponseDto<?> getChatBotMessage (
+            @PathVariable(value = "room_id") long roomId
+    ) {
+        List<Message> msgList;
+        try {
+             msgList = messageRepository.findAllByChatJoin_ChatJoinId_ChatRoomIdAndMessageType(roomId, Message.MessageType.CHAT_BOT);
+        }catch (Exception e){
+            throw new CustomException(ErrorType.CANT_LOAD_MESSAGES);
+        }
+
+        List<ChatMessageDto> ans = msgList.stream().map(chatRoomMySQLService::messageDtoConverter).toList();
+
+        return ResponseUtils.ok(ans, MsgType.DATA_SUCCESSFULLY);
+    }
+
+
+
+
+
 }
