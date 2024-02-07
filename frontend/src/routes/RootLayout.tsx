@@ -14,6 +14,7 @@ import useUserStore from "@/store/userStore";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
 import { source } from "@/services/alarm/subscribe";
+import SpeakerToast from "@/components/navbar/SpeakerToast";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
@@ -35,6 +36,10 @@ export default function RootLayout() {
 
   const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
 
+  // 확성기 내용 state
+  const [ speakerToastContent, setSpeakerToastContent ] = useState<string>("");
+  const [ speakerToast, setSpeakerToast ] = useState<boolean>(false);
+
   useEffect(() => {
     source.addEventListener("notification", (e: any) => {
       console.log(e);
@@ -43,10 +48,25 @@ export default function RootLayout() {
       setLastEventId(data.id);
     });
 
+    source.addEventListener("megaphone", (event) => {
+      
+      // useEffect 안에 있어서 set이 잘 안됨는거 같음
+      const parseData = JSON.parse(event.data);
+      
+      setSpeakerToast(true);
+      setSpeakerToastContent(parseData.content);
+    });
+
     return () => {
       source.close();
     };
   }, [setLastEventId]);
+
+  // 확성기 내용이 새로 생길 때 실행
+  useEffect(() => {
+
+    console.log(speakerToastContent);
+  }, [speakerToastContent]);
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
@@ -121,8 +141,8 @@ export default function RootLayout() {
                   <div></div>
 
                   {/* 로고 */}
-                  <h1>확성기 자리</h1>
-
+                  {/* 확성기 자리 */}
+                  {speakerToast && <SpeakerToast setToast={setSpeakerToast} text={speakerToastContent} />}
                   {/* 네브바 오른쪽 영역 */}
                   <div className={classes.nav_right}>
                     {/* 다크모드 버튼 (미완, 후순위) */}
@@ -155,8 +175,8 @@ export default function RootLayout() {
                   <div></div>
 
                   {/* 로고 */}
-                  <h1>확성기 자리</h1>
-
+                  {/* 확성기 자리 */}
+                  {speakerToast && <SpeakerToast setToast={setSpeakerToast} text={speakerToastContent} />}
                   {/* 네브바 오른쪽 영역 */}
                   <div className={classes.nav_right}>
                     {/* 다크모드 버튼 (미완, 후순위) */}
