@@ -7,8 +7,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 # 호스트의 설정 파일을 컨테이너 내부로 복사합니다.
 COPY /etc/nginx/sites-available/default.conf /etc/nginx/conf.d/default.conf
 
-# 프론트엔드 애플리케이션을 컨테이너 내부로 복사합니다.
-COPY /frontend /usr/share/nginx/html
+# 현재 위치인 frontend 디렉토리 내부의 파일을 컨테이너 내부의 /usr/share/nginx/html 디렉토리로 복사합니다.
+COPY ./ /usr/share/nginx/html
 
 # 컨테이너에서 사용할 포트를 엽니다. 프론트엔드는 80번 포트를 사용합니다.
 EXPOSE 80
