@@ -120,7 +120,7 @@ pipeline {
                 echo '프론트 도커 이미지를 Docker Hub에 푸시 완료!'
             }
         }
- 
+
         stage('Deploy to EC2-FE') {
             steps {
                 echo '프론트 EC2에 배포 시작!'
@@ -129,7 +129,7 @@ pipeline {
                     sh "docker rm -f frontend"
                     sh "docker rmi osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
-                    sh "docker pull osy9536/ssafy-fe:latest && docker run -d -p 8081:8080 --name frontend osy9536/ssafy-fe:latest"
+                    sh "docker pull osy9536/ssafy-fe:latest && docker run -d -p 80:80 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
             } 
