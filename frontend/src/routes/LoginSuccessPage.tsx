@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "@/store/user/userStore";
+import { useRef } from "react";
+import { useUserDataPut } from "@/hooks/user/mutations/useUserDataPut";
 
 export default function LoginSuccessPage() {
   const navigate = useNavigate();
@@ -15,35 +17,30 @@ export default function LoginSuccessPage() {
     }
   };
 
+  const { userInfo, setUserInfo } = useUserStore();
+  const mutation = useUserDataPut();
+  const { mutate } = mutation;
+  const lolId = useRef();
+
   const setLolId = (e: any) => {
     e.preventDefault();
-    const lolId = e.target.value;
-    console.log(lolId);
-    const token = localStorage.getItem("token");
-    axios
-      .put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/users/profile-edit`,
-        {
-          lolId: lolId,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        window.alert("롤 아이디가 저장되었습니다.");
-        navigate("/main");
-      });
+    try {
+      console.log(lolId.current.value);
+      mutate({ data: { riotId: lolId.current.value } });
+      window.alert("롤 아이디가 저장되었습니다.");
+      setUserInfo({ ...userInfo, riotId: lolId.current.value });
+      navigate("/main");
+    } catch (error) {
+      console.log(error);
+      window.alert("롤 아이디 저장에 실패했습니다.");
+    }
   };
 
   return (
     <>
       <div>롤 아이디를 입력하세요</div>
       <form action="">
-        <input type="text" />
+        <input type="text" ref={lolId} />
         <Button onClick={setLolId}>저장 </Button>
         <Button onClick={skipHandler}>건너뛰기</Button>
       </form>

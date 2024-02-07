@@ -29,11 +29,10 @@ import LiveChat from "./routes/LiveChat";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
-  { path: "/login", element: <LoginPage /> },
+  { path: "/", element: <LoginPage /> },
   { path: "/loginsuccess", element: <LoginSuccessPage /> },
-
   {
-    path: "/",
+    path: "/main",
     element: <RootLayout />,
     children: [
       { path: "/main", element: <IndexPage /> },

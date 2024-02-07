@@ -9,53 +9,35 @@ import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { UserType } from "@/types/userTypes";
+import useUserStore from "@/store/user/userStore";
+import useProfileStore from "@/store/profileStore";
+import { useProfile } from "@/hooks/profile/queries/useUserProfileQuery";
+import { useEnterDmPost } from "@/hooks/dm/mutations/useEnterDmPost";
 
 export default function ProfilePage() {
   const token = localStorage.getItem("token");
+
   const params = useParams();
+  const { userInfo } = useUserStore();
+  const { profileInfo, setProfileInfo } = useProfileStore();
 
-  const [userProfileData, setUserProfileData] = useState<UserType | null>(null);
-  const [myData, setMyData] = useState<UserType | null>(null);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${params.id}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setUserProfileData(res.data.data);
-      });
-  }, []);
+  const { useUserProfileQuery } = useProfile();
+  const { data: userProfileData } = useUserProfileQuery(params.id);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setMyData(res.data.data);
-      });
-  }, []);
+    if (userProfileData) {
+      setProfileInfo(userProfileData);
+      console.log("프로필 유저 정보", userProfileData);
+    } else {
+      console.log("프로필 유저 정보 없음");
+    }
+  }, [userProfileData, setProfileInfo]);
 
-  const enterChatHandler = (friendId: number) => {
-    axios
-      .post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then(() => {
-        // navigate(`/chat/${friendId}`);
-      });
+  const mutation = useEnterDmPost();
+  const { mutate } = mutation;
+
+  const enterChatHandler = () => {
+    mutate(params.id);
   };
 
   const [friendStatus, setFriendStatus] = useState("");
@@ -100,9 +82,7 @@ export default function ProfilePage() {
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
                     {/* 프사 */}
                     <ProfileImage
-                      userImg={
-                        userProfileData && userProfileData.userProfileImg
-                      }
+                      userImg={profileInfo && profileInfo.userProfileImg}
                     />
                   </div>
                 </div>
@@ -113,15 +93,13 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {userProfileData && userProfileData.bankruptcy ? (
-                    <Poor />
-                  ) : null}
+                  {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {userProfileData &&
-                  userProfileData.userId === (myData && myData.userId) ? (
+                  {profileInfo &&
+                  profileInfo.userId === (userInfo && userInfo.userId) ? (
                     <ProfileEdit />
                   ) : (
                     <>
@@ -130,9 +108,7 @@ export default function ProfilePage() {
                         variant="secondary"
                         className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
                         onClick={() => {
-                          enterChatHandler(
-                            userProfileData && userProfileData.userId
-                          );
+                          enterChatHandler();
                         }}
                       >
                         메세지
@@ -148,12 +124,12 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
-                    {userProfileData && userProfileData.userName}
+                    {profileInfo && profileInfo.userName}
                   </div>
                 </div>
                 <div>
                   <UserCurrentAlias
-                    alias={userProfileData && userProfileData.userAlias}
+                    alias={profileInfo && profileInfo.userAlias}
                   />
                 </div>
               </div>
@@ -192,9 +168,7 @@ export default function ProfilePage() {
                   <div className="m-1 w-[150px] h-[150px] grid place-items-center">
                     {/* 프사 */}
                     <ProfileImage
-                      userImg={
-                        userProfileData && userProfileData.userProfileImg
-                      }
+                      userImg={profileInfo && profileInfo.userProfileImg}
                     />
                   </div>
                 </div>
@@ -205,15 +179,13 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {userProfileData && userProfileData.bankruptcy ? (
-                    <Poor />
-                  ) : null}
+                  {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
                   {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
                   {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {userProfileData &&
-                  userProfileData.userId === (myData && myData.userId) ? (
+                  {profileInfo &&
+                  profileInfo.userId === (userInfo && userInfo.userId) ? (
                     <ProfileEdit />
                   ) : (
                     <Button
@@ -229,12 +201,12 @@ export default function ProfilePage() {
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[5px] justify-between">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center ml-2">
-                    {userProfileData && userProfileData.userName}
+                    {profileInfo && profileInfo.userName}
                   </div>
                 </div>
                 <div className="mr-2">
                   <UserCurrentAlias
-                    alias={userProfileData && userProfileData.userAlias}
+                    alias={profileInfo && profileInfo.userAlias}
                   />
                 </div>
               </div>
@@ -245,23 +217,21 @@ export default function ProfilePage() {
               >
                 <div className="grid grid-cols-3 place-items-center gap-10">
                   <Link
-                    to={`/main/profile/${
-                      userProfileData && userProfileData.userId
-                    }`}
+                    to={`/main/profile/${profileInfo && profileInfo.userId}`}
                     className="h-[30px]"
                   >
                     도감
                   </Link>
                   <Link
                     to={`/main/profile/${
-                      userProfileData && userProfileData.userId
+                      profileInfo && profileInfo.userId
                     }/dishonor`}
                   >
                     불명예 전당
                   </Link>
                   <Link
                     to={`/main/profile/${
-                      userProfileData && userProfileData.userId
+                      profileInfo && profileInfo.userId
                     }/record`}
                   >
                     전적
