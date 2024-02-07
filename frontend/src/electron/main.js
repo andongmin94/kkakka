@@ -253,7 +253,7 @@ const connect =  (event) => {
 function onConnected() {
     console.log("채팅 앱 첫 연결 실행!")
     stompClient.subscribe("/sub/chat/room/"+ roomId,onMessageReceivedFromSocket ,{userId: userId, chatRoomType: "MANY" } )
-    stompClient.send("/pub/chat/enterUser",clientHeader,JSON.stringify({meesageType: "ENTER", content: userInfo.userName + "님 환영합니다!", userId: userId, chatRoomId: roomId }))
+    stompClient.send("/pub/chat/enterUser",clientHeader,JSON.stringify({messageType: "ENTER", content: userInfo.userName + "님 환영합니다!", userId: userId, chatRoomId: roomId }))
 }
 
 function onError (error) {console.log(error)}
