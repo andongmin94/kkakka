@@ -62,7 +62,7 @@ public class ChatController {
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
 
 
-//            log.info("chatJoin 내용: {} ", chatJoin.toString() );
+            // log.info("chatJoin 내용: {} ", chatJoin.toString() );
 
                 // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
