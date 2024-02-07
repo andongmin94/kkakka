@@ -14,8 +14,8 @@ export interface alarmStoreType {
 // auth
 export interface AuthStoreType {
   token: string | null;
-  setToken: (code: string) => void;
-  logout: () => void;
+  setToken: (token: string) => void;
+  setLogout: () => void;
 }
 
 // broadcast
