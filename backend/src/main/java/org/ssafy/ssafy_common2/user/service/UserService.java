@@ -26,6 +26,11 @@ import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.AliasRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -83,7 +88,7 @@ public class UserService {
         return oauthToken;
     }
 
-    public String SaveUserAndGetToken(String token, HttpServletResponse response) {
+    public List<String> SaveUserAndGetToken(String token, HttpServletResponse response) {
 
         //(1)
         KakaoProfile profile = findProfile(token);
@@ -93,11 +98,12 @@ public class UserService {
 
         System.out.println("카카오 이메일 : " + profile.getKakao_account().getProfile().getProfile_image_url());
 
+        boolean isUserNull = false;
 
         //(3)
         if (user == null) {
 
-            DynamicUserInfo userInfo = DynamicUserInfo.of(0, false, 0, null);
+            DynamicUserInfo userInfo = DynamicUserInfo.of(100, false, 0, "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%ED%8B%B0%EB%AA%A8+%EB%B0%B0%EA%B2%BD.jpg");
             user = User.of(
                     profile.getId(),
                     profile.getKakao_account().getProfile().getProfile_image_url(),
@@ -107,11 +113,15 @@ public class UserService {
                     userInfo);
 
             userRepository.save(user);
+            isUserNull = true;
         }
         String jwtToken = jwtUtil.createToken(user.getKakaoEmail());
         response.addHeader("Authorization", jwtToken);
 
-        return jwtToken;
+        List<String> ans = new ArrayList<>();
+        ans.add(jwtToken);
+        ans.add(String.valueOf(isUserNull));
+        return ans;
     }
 
     public User getUser(User nowUser) {

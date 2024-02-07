@@ -1,33 +1,95 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Message from "../components/message/Message";
-import useDmListQuery from "@/apis/dm/queries/useDmListQuery";
+import { DmType } from "@/types/dmTypes";
+import axios from "axios";
+import "./Chat.css";
+
+interface dmProps {
+  chatRoomType: string;
+  friendAlias: string;
+  friendEmail: string;
+  friendId: number;
+  friendImgUrl: string;
+  friendName: string;
+  lastMessage: string;
+  lastWrittenMessageTime: Date;
+  login: boolean;
+  roomId: string;
+  tenMinute: boolean;
+  unreadMessageCnt: number;
+}
 
 export default function MessageListPage() {
   const [position, setPosition] = useState("");
   const navigate = useNavigate();
+  const [friendsInfo, setFriendsInfo] = useState(null);
+  const [roomId, setRoomId] = useState(0);
 
-  const { dmList, isLoading, error } = useDmListQuery();
-  // 현재 500에러 발생중
+  const [dmList, setDmList] = useState<dmProps[] | null>(null);
+  const token = localStorage.getItem("token");
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        // console.log(res.data.data);
+        setDmList(res.data.data);
+      });
+  }, []);
 
-  // 각 채팅방으로 이동하기
-  // const enterChat = (FriendEmail, dmId) => {
-  //   // enter 요청 보내기
-  //   enterDm(FriendEmail); // 보내야하는데 이메일 어디서 받아와야하지
-  //   navigate(`/messagedetail/${dmId}`);
-  // };
+  const enterChatHandler = (friendId: number) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        navigate(`/main/message/${res.data.data}`, { state: friendsInfo }); // 아직 없는듯
+      });
+  };
 
   return (
     <div>
       <div>메시지 목록</div>
-      {/* {dmList &&
-        dmList.length > 0 &&
-        dmList.map((dmId) => {
-          <Message key={dmId} onClick={() => EnterChat(dmId)} />;
-        })} */}
+      {dmList &&
+        dmList.map((dm, idx) => {
+          axios
+            .get(
+              `${import.meta.env.VITE_API_BASE_URL}/api/users/data/${
+                dm.friendId
+              }`,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            )
+            .then((res) => {
+              // console.log(res.data.data);
+              setFriendsInfo(res.data.data);
+            });
+
+          return (
+            <div
+              key={idx}
+              onClick={() => {
+                enterChatHandler(dm.friendId);
+              }}
+            >
+              <Message dm={dm} />
+            </div>
+          );
+        })}
     </div>
   );
 }

@@ -21,12 +21,14 @@ public enum MsgType {
     SEARCH_DOGAM_DETAIL_SUCCESSFULLY("도감 디테일 조회 성공"),
     SEARCH_POINT_SUCCESSFULLY("포인트 조회 성공"),
     SEARCH_EMAIL_SUCCESSFULLY("이메일 조회 성공"),
-    SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY("이메일 프로필 사진 조회 성공"),
+    SEARCH_MY_PROFILE_DATA_SUCCESSFULLY("본인 프로필 데이터 조회 성공"),
     SEND_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 성공"),
     RECEIVE_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 수락 성공"),
     CANCEL_FRIEND_REQUEST_SUCCESSFULLY("친구 요청 취소 성공"),
     BREAK_OFF_FRIEND_RELATIONSHIP_SUCCESSFULLY("친구 관계 끊기 성공"),
-    UPDATE_USER_BACK_IMG_SUCCESSFULLY("유저 배경사진 업데이트 성공"),
+    UPDATE_USER_PROFILE_DATA_SUCCESSFULLY("유저 프로필 데이터 업데이트 성공"),
+    SEARCH_USER_DATA_SUCCESSFULLY("유저 데이터 찾기 성공"),
+    SEARCH_USER_EDIT_DATA_SUCCESSFULLY("유저 편집 데이터 찾기 성공"),
     ;
 
     private final String msg;

@@ -40,18 +40,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-// 친구 더미 데이터
-const userId = [
-  { label: "이수민", value: "1" },
-  { label: "오세영", value: "2" },
-  { label: "김지연", value: "3" },
-  { label: "전수민", value: "4" },
-  { label: "김상훈", value: "5" },
-  { label: "이해건", value: "6" },
-] as const;
-
 const FormSchema = z.object({
-  userId: z.string({
+  userId: z.number(),
+  name: z.string({
     required_error: "친구를 선택하세요!",
   }),
   textComp: z.string().min(2, {
@@ -59,25 +50,27 @@ const FormSchema = z.object({
   }),
 });
 
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FriendType } from "@/types/friendTypes";
+
 export default function Compliment({
   itemName,
   itemPrice,
   itemDesc,
+  myPoint,
+  friends,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
+  myPoint: number;
+  friends: FriendType[];
 }) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = React.useState(false);
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = React.useState(false);
-
-  // const { fetchFriends, friends } = useFriendStore(); // 친구목록
-
-  // useEffect(() => {
-  //   fetchFriends();
-  // }, [fetchFriends]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -142,7 +135,7 @@ export default function Compliment({
                 {/* 콤보박스 부분 */}
                 <FormField
                   control={form.control}
-                  name="userId"
+                  name="name"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel className="font-bold">친구 지정</FormLabel>
@@ -159,9 +152,9 @@ export default function Compliment({
                               )}
                             >
                               {field.value
-                                ? userId.find(
-                                    (userId) => userId.value === field.value
-                                  )?.label
+                                ? friends.find(
+                                    (friend) => friend.name === field.value
+                                  )?.name
                                 : "친구를 선택하세요"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
@@ -174,24 +167,26 @@ export default function Compliment({
                               해당하는 친구가 없습니다.
                             </CommandEmpty>
                             <CommandGroup>
-                              {userId.map((userId) => (
+                              {friends.map((friend) => (
                                 <CommandItem
-                                  value={userId.label}
-                                  key={userId.value}
+                                  value={friend.name}
+                                  key={friend.id}
                                   onSelect={() => {
-                                    form.setValue("userId", userId.value);
+                                    form.setValue("name", friend.name);
+                                    form.setValue("userId", friend.userId);
+                                    console.log(friend.id);
                                     setOpen(false);
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       "mr-2 h-4 w-4",
-                                      userId.value === field.value
+                                      friend.name === field.name
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}
                                   />
-                                  {userId.label}
+                                  {friend.name}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
@@ -225,7 +220,7 @@ export default function Compliment({
                   )}
                 />
                 <div className="font-bold text-center mb-3">
-                  구입 후 잔여 포인트 4000 P
+                  구입 후 잔여 포인트 {myPoint - itemPrice} P
                 </div>
 
                 <DialogFooter className="flex sm:justify-center">
@@ -254,13 +249,37 @@ export default function Compliment({
                         form.getValues().textComp.length > 1
                       ) {
                         // 보낼 데이터 객체 userId, textComp
-                        // const data = {
-                        //   userId: form.getValues().userId,
-                        //   textComp: form.getValues().textComp,
-                        // };
+                        const data = {
+                          receiverId: form.getValues().userId,
+                          receiverName: form.getValues.name,
+                          enfScript: form.getValues().textComp,
+                        };
+
+                        const token = localStorage.getItem("token");
+
+                        // 칭찬권 구매
+                        axios
+                        .post(`${import.meta.env.VITE_API_BASE_URL}/api/friends/compliment`, {
+                          enfScript: data.enfScript,
+                        }, {
+                          params: {
+                            'receiver-id': data.receiverId,
+                          },
+                          headers: {
+                            Authorization: token,
+                          },
+                        }).then((res) =>  {
+                          // 칭찬권 구매 성공
+                          console.log(res)
+                        })
+                        .catch((error) => {
+                          // 칭찬권 구매 실패
+                          console.log(error)
+                        })
 
                         // 데이터 보내기 확인 완료
                         // console.log(data);
+
                         setOpenDialog(false);
                       }
                     }}
@@ -276,3 +295,13 @@ export default function Compliment({
     </Card>
   );
 }
+
+// 친구 더미 데이터
+// const userId = [
+//   { label: "이수민", value: "1" },
+//   { label: "오세영", value: "2" },
+//   { label: "김지연", value: "3" },
+//   { label: "전수민", value: "4" },
+//   { label: "김상훈", value: "5" },
+//   { label: "이해건", value: "6" },
+// ] as const;

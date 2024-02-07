@@ -1,16 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mobile, PC } from "../MediaQuery";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import axios from "axios";
+import { UserType } from "@/types/userTypes";
 
 export default function ProfileEdit() {
-  // 프로필 사진 저장
-  const [profileImage, setProfileImage]: any = useState(null);
+  const [myData, setMyData] = useState<UserType | null>(null);
 
-  // 프로필 배경 저장 저장
-  const [profileBg, setProfileBg]: any = useState(null);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        setMyData(res.data.data);
+      });
+  }, []);
+
+  const [profileImg, setProfileImg] = useState(null);
+  const [backImg, setBackImg] = useState(null);
 
   // 파일을 선택했을때 저장
   const imgUpload = (e: any, check: number) => {
@@ -24,13 +47,41 @@ export default function ProfileEdit() {
     return new Promise<void>((resolve) => {
       reader.onload = () => {
         if (check === 1) {
-          setProfileImage(reader.result || null); // 프로필 사진
+          setProfileImg(reader.result || profileImg); // 프로필 사진
         } else {
-          setProfileBg(reader.result || null); // 프로필 배경
+          setBackImg(reader.result || backImg); // 프로필 배경
         }
         resolve();
       };
     });
+  };
+
+  const [riotId, setRiotId] = useState(null);
+  const lolIdHandler = (e: any) => {
+    setRiotId(e.target.value);
+  };
+
+  console.log("라이엇", riotId);
+  console.log("프로필", profileImg);
+  console.log("배경", backImg);
+  const profileEditHandler = () => {
+    axios
+      .put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/profile-edit`,
+        {
+          riotId: riotId,
+          profileImg: profileImg,
+          backImg: backImg,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      });
   };
 
   return (
@@ -55,7 +106,11 @@ export default function ProfileEdit() {
                 <Label htmlFor="text" className="font-bold">
                   롤 아이디
                 </Label>
-                <Input id="text" placeholder="기존 아이디 나와야 함" />
+                <Input
+                  id="text"
+                  placeholder={myData?.riotId}
+                  onChange={lolIdHandler}
+                />
               </div>
               {/* 프로필 사진 */}
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8">
@@ -84,9 +139,9 @@ export default function ProfileEdit() {
             {/* 하단 부분 */}
             <div className="flex justify-between items-center">
               <div className="flex gap-x-5">
-                {profileImage ? (
+                {profileImg ? (
                   <img
-                    src={profileImage}
+                    src={profileImg}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (
@@ -94,9 +149,9 @@ export default function ProfileEdit() {
                     프사없음
                   </div>
                 )}
-                {profileBg ? (
+                {backImg ? (
                   <img
-                    src={profileBg}
+                    src={backImg}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (
@@ -111,10 +166,7 @@ export default function ProfileEdit() {
                     type="submit"
                     variant="secondary"
                     className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                    onClick={() => {
-                      // 저장버튼 눌렀을때 이미지 넘기는거 확인 !
-                      // console.log(profileImage);
-                    }}
+                    onClick={profileEditHandler}
                   >
                     저장하기
                   </Button>
@@ -176,9 +228,9 @@ export default function ProfileEdit() {
             {/* 하단 부분 */}
             <div className="flex justify-between items-center">
               <div className="flex gap-x-5">
-                {profileImage ? (
+                {profileImg ? (
                   <img
-                    src={profileImage}
+                    src={profileImg}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (
@@ -186,9 +238,9 @@ export default function ProfileEdit() {
                     프사없음
                   </div>
                 )}
-                {profileBg ? (
+                {backImg ? (
                   <img
-                    src={profileBg}
+                    src={backImg}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (

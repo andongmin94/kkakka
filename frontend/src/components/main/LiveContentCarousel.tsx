@@ -7,22 +7,37 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import useBroadcastListQuery from "@/apis/broadcast/queries/useBroadcastListQuery";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BroadcastItemType } from "@/types/broadcastTypes";
 
 export default function LiveContentCarousel() {
-  const { broadcasts, isLoading, error } = useBroadcastListQuery();
-
   const plugin = useRef(
     // 딜레이 시간 조절
     Autoplay({ delay: 3000, stopOnInteraction: false })
   );
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  const token = localStorage.getItem("token");
 
-  if (!broadcasts || broadcasts.length === 0) {
-    return <div>플레이 중인 친구가 없습니다.</div>;
-  }
+  const [broadcastList, setBroadcastList] = useState<
+    BroadcastItemType[] | null
+  >(null);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log("라이브", res.data.data);
+        setBroadcastList(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
   return (
     <Carousel
@@ -31,8 +46,8 @@ export default function LiveContentCarousel() {
       className="h-full w-full"
     >
       <CarouselContent>
-        {Array.isArray(broadcasts) &&
-          broadcasts.map((room, index) => (
+        {broadcastList &&
+          broadcastList.map((room, index) => (
             <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
               <div className="p-1">
                 <CardContent className="flex aspect-square items-center justify-center p-0">
