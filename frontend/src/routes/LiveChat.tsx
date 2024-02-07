@@ -24,11 +24,12 @@ import {
 } from "@/components/ui/dialog";
 import SysMsg from "@/components/message/SysMsg";
 import { DogamDetailType } from "@/types/dogamTypes";
+import BotMsg from "@/components/message/BotMsg";
 
 let stompClient: any;
 let roomId2: any;
 
-export default function MessageTestPage() {
+export default function LiveChat() {
   const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
   const location = useLocation();
@@ -336,15 +337,18 @@ export default function MessageTestPage() {
                 <div className="flex flex-col" key={idx}>
                   <div
                     className={`flex ${
-                      data.messageType === "ENTER"
+                      data.messageType === "ENTER" ||
+                      data.messageType === "CHAT_BOT"
                         ? "justify-center"
                         : data.userId === userInfo.userId
                         ? "justify-end"
                         : "justify-start"
                     } mb-2`}
                   >
-                    {data.messageType === "ENTER" ? (
-                      <SysMsg data={data} />
+                    {data.messageType === "CHAT_BOT" ? (
+                      <BotMsg data={data} key={idx} />
+                    ) : data.messageType === "ENTER" ? (
+                      <SysMsg data={data} key={idx} />
                     ) : data.userId === userInfo.userId ? (
                       // 내 메세지 컴포넌트
                       <MyMsg data={data} key={idx} />

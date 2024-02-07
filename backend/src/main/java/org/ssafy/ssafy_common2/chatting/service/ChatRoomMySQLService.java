@@ -225,6 +225,7 @@ public class ChatRoomMySQLService {
 
 
                 //9-5 방에 대한 값들 얻기
+                elements.setPlayerId(friendInfoList.get(i).getUserId());
                 elements.setPlayerEmail(friendInfoList.get(i).getEmail());
                 elements.setPlayerName(chatRoom.getChatOwnerName());
                 elements.setRoomTitle(RandomPickRoomTitle());
