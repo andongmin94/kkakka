@@ -90,7 +90,12 @@ public class ChatController {
 //                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType()
 //                        ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
-                Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER,msg.getImgCode());
+                Message message = new Message();
+
+                message.setContent(msg.getContent());
+                message.setMessageType(Message.MessageType.ENTER);
+                message.setChatJoin(chatJoin);
+                message.setImgCode(msg.getImgCode());
 
                 messageRepository.save(message);
 
@@ -150,20 +155,26 @@ public class ChatController {
             if(chatJoin != null){
                 if(msg.getImgCode() == null){
                     // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                    log.info("들어가는 메세지는 {}","ChatMessageDto{" +
-                            "messageType='" + msg.getMessageType() + '\'' +
-                            ", content='" + msg.getContent() + '\'' +
-                            ", userId=" + msg.getUserId() +
-                            ", userName=" + msg.getUserName() +
-                            ", chatRoomId=" + msg.getChatRoomId() +
-                            ", createdAt=" + msg.getCreatedAt() +
-                            ", updateAt=" + msg.getUpdateAt() +
-                            ", imageCode=" + msg.getImgCode() +
-                            '}' );
 //                    messageRepository.InsertMessage(msg.getContent(), "TALK"
 //                            ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
-                    Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK,msg.getImgCode());
+                    Message message = new Message();
+
+                    message.setContent(msg.getContent());
+                    if(msg.getMessageType().equals("CHAT_BOT")){
+                        message.setMessageType(Message.MessageType.CHAT_BOT);
+                    }else{
+                        message.setMessageType(Message.MessageType.TALK);
+                    }
+                    message.setChatJoin(chatJoin);
+                    message.setImgCode(msg.getImgCode());
+                    log.info("들어가는 메세지는 " +
+                            "messageType='" + message.getMessageType() + '\'' +
+                            ", content='" + message.getContent() + '\'' +
+                            ", userId=" + message.getChatJoin().getChatJoinId().getUserId() +
+                            ", chatRoomId=" + message.getChatJoin().getChatJoinId().getChatRoomId()+
+                            ", imageCode=" + message.getImgCode() +
+                            '}' );
 
                     messageRepository.save(message);
 
@@ -179,7 +190,14 @@ public class ChatController {
 
                     if(msg.getImgCode().substring(0,4).equals("http")){
                         msg.setContent(msg.getImgCode());
-                        Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK,msg.getImgCode());
+
+
+                        Message message = new Message();
+
+                        message.setContent(msg.getContent());
+                        message.setMessageType(Message.MessageType.TALK);
+                        message.setChatJoin(chatJoin);
+                        message.setImgCode(msg.getImgCode());
 
                         messageRepository.save(message);
                     }else{
@@ -257,9 +275,12 @@ public class ChatController {
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK,msg.getImgCode());
+                Message message = new Message();
 
-                messageRepository.save(message);
+                message.setContent(msg.getContent());
+                message.setMessageType(Message.MessageType.QUIT);
+                message.setChatJoin(chatJoin);
+                message.setImgCode(msg.getImgCode());
 
                 User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
 
