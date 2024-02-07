@@ -17,6 +17,14 @@ import java.util.Optional;
 @Transactional
 public interface MessageRepository extends JpaRepository<Message,Long> {
 
+    // 0) 메세지 넣는 함수
+    @Modifying
+    @Query(value = "insert into message(content, message_type, user_id, chat_room_id, img_code, created_at, updated_at ) " +
+            "values (:content, :message_type, :user_id, :chat_room_id, :img_code, :created_at, :updated_at )",nativeQuery = true)
+    void InsertMessage(@Param("content") String content, @Param("message_type") String message_type,
+                       @Param("user_id") long user_id, @Param("chat_room_id") long chat_room_id,
+                       @Param("img_code") String img_code,
+                       @Param("created_at")LocalDateTime created_at, @Param("updated_at") LocalDateTime updated_at);
 
     // 1) 방번호에 맞는 메세지 찾기
     Page<Message> findAllByChatJoin_ChatRoom_Id(long roomId, Pageable pageable);
