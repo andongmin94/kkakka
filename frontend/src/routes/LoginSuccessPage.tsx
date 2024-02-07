@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/user/userStore";
 import { useRef } from "react";
 import { useUserDataPut } from "@/hooks/user/mutations/useUserDataPut";
 
