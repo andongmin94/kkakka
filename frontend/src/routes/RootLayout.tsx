@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useUserStore from "@/store/userStore";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-import { source } from "@/services/alarm/subscribe";
+import { EventSourcePolyfill } from "event-source-polyfill";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
@@ -31,9 +31,24 @@ export default function RootLayout() {
     }
   }, [userData, setUserInfo]);
 
-  console.log("유저 정보:", userInfo);
-
   const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
+
+  const EventSource = EventSourcePolyfill;
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token not found");
+  }
+
+  const source = new EventSource(
+    `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
 
   useEffect(() => {
     source.addEventListener("notification", (e: any) => {
@@ -42,6 +57,7 @@ export default function RootLayout() {
       console.log(data);
       setLastEventId(data.id);
     });
+    console.log("성공함?");
 
     return () => {
       source.close();
