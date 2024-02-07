@@ -1,14 +1,14 @@
-# Nginx의 Alpine 이미지를 기반으로 합니다.
-FROM nginx:alpine
+# 경로 설정하기
+WORKDIR /app
+# package.json 워킹 디렉토리에 복사 (.은 설정한 워킹 디렉토리를 뜻함)
+COPY package.json .
+# 명령어 실행 (의존성 설치)
+RUN npm install
+# 현재 디렉토리의 모든 파일을 도커 컨테이너의 워킹 디렉토리에 복사한다.
+COPY . .
 
-# 호스트의 설정 파일을 컨테이너 내부로 복사합니다.
-COPY /etc/nginx/sites-available/default.conf /etc/nginx/conf.d/default.conf
+# 3000번 포트 노출
+EXPOSE 3000
 
-# 현재 위치인 frontend 디렉토리 내부의 파일을 컨테이너 내부의 /usr/share/nginx/html 디렉토리로 복사합니다.
-COPY ./ /usr/share/nginx/html
-
-# 컨테이너에서 사용할 포트를 엽니다. 프론트엔드는 80번 포트를 사용합니다.
-EXPOSE 80
-
-# Nginx를 백그라운드에서 실행합니다.
-CMD ["nginx", "-g", "daemon off;"]
+# npm start 스크립트 실행
+CMD ["npm", "dev"]
