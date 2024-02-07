@@ -110,9 +110,9 @@ app.whenReady().then(createWindow).then(async () => {
           // lastSentEventId 이후의 모든 이벤트를 찾습니다.
           if (newEvents.length != 0){
             newEvents.forEach(event => {
-            if (event.EventName === "GameStart") {setTimeout(() => {sendMessageToSocket("게임이 ㄹㅇ로 시작되었습니다.")},3000)}
+            if (event.EventName === "GameStart") {setTimeout(() => {sendMessageToSocket("게임이 ㄹㅇ로 시작되었습니다.")},7000)}
             if (event.EventName === "MinionsSpawning") {sendMessageToSocket("미니언이 생성되었습니다.")}
-
+              
             if (event.EventName === "ChampionKill") { sendMessageToSocket(event.KillerName + "님이 " + event.VictimName + "님을 처치했습니다!") }
             else if (event.EventName === "Multikill") { if (event.KillStreak === 2) { sendMessageToSocket(event.KillerName + "님이 " + "더블킬!") } else if (event.KillStreak === 3) { sendMessageToSocket(event.KillerName + "님이 " + "트리플킬!") } else if (event.KillStreak === 4) { sendMessageToSocket(event.KillerName + "님이 " + "쿼드라킬!") } else if (event.KillStreak === 5) { sendMessageToSocket(event.KillerName + "님이 " + "펜타킬!") }}
             else if (event.EventName === "TurretKilled") { sendMessageToSocket(event.KillerName + "님이 " + "포탑을 파괴했습니다.") }
@@ -170,10 +170,12 @@ app.whenReady().then(createWindow).then(async () => {
             
             if (!oneShotChecker) {
               oneShotChecker = true;
-              players_info.forEach(player => {
-                sendMessageToSocket(player.team + "팀 플레이어 : " + player.summonerName + "(" + player.championName + ")" + ", " + player.summonerSpells1 + "(D) " + player.summonerSpells2 + "(F)");
-              })
-              setTimeout(() => {sendMessageToSocket(userInfo.userName + "이 과연 이길 수 있을까?")}, 2000);
+              for (let i = 0; i < players_info.length; i++) {
+                setTimeout(() => {
+                  sendMessageToSocket(players_info[i].team + "팀 플레이어 : " + players_info[i].summonerName + "(" + players_info[i].championName + ")" + ", " + players_info[i].summonerSpells1 + "(D) " + players_info[i].summonerSpells2 + "(F)");
+                }, i * 500);
+              }
+              setTimeout(() => {sendMessageToSocket(playerName + "(" + userInfo.userName + ")이 과연 이길 수 있을까?")}, 6000);
             }
             
             sendNewEvents(events);
@@ -273,8 +275,8 @@ function onMessageReceivedFromSocket (payload){
   
   var chat = JSON.parse(payload.body);
   console.log("들어온 메세지:" + chat.content);
-  showNotification(chat.userName, chat.content, chat.imgCode);
-
+  if (chat.userName !== userInfo.userName) {showNotification(chat.userName, chat.content, chat.imgCode)}
+  
   const messageDTO = {
     isUser: chat.userId === TESTUSER? true : false,
     text: chat.content,
