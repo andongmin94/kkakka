@@ -87,7 +87,8 @@ public class ChatController {
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
 
-                messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER, msg.getImgCode()));
+                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType()
+                        ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
                 User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
 
@@ -145,7 +146,18 @@ public class ChatController {
             if(chatJoin != null){
                 if(msg.getImgCode() == null){
                     // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                    messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK, null));
+                    log.info("들어가는 메세지는 {}","ChatMessageDto{" +
+                            "messageType='" + msg.getMessageType() + '\'' +
+                            ", content='" + msg.getContent() + '\'' +
+                            ", userId=" + msg.getUserId() +
+                            ", userName=" + msg.getUserName() +
+                            ", chatRoomId=" + msg.getChatRoomId() +
+                            ", createdAt=" + msg.getCreatedAt() +
+                            ", updateAt=" + msg.getUpdateAt() +
+                            ", imageCode=" + msg.getImgCode() +
+                            '}' );
+                    messageRepository.InsertMessage(msg.getContent(), "TALK"
+                            ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
                     User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
 
@@ -156,9 +168,19 @@ public class ChatController {
                 }else {
                     ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
 
-                    System.out.println(msgWithImg.toString());
+                    log.info("들어가는 메세지는 {}","ChatMessageDto{" +
+                            "messageType='" + msg.getMessageType() + '\'' +
+                            ", content='" + msg.getContent() + '\'' +
+                            ", userId=" + msg.getUserId() +
+                            ", userName=" + msg.getUserName() +
+                            ", chatRoomId=" + msg.getChatRoomId() +
+                            ", createdAt=" + msg.getCreatedAt() +
+                            ", updateAt=" + msg.getUpdateAt() +
+                            ", imageCode=" + msg.getImgCode() +
+                            '}' );
 
-                    messageRepository.save(Message.of(msgWithImg.getContent(), chatJoin, Message.MessageType.TALK, msgWithImg.getImgCode()));
+                    messageRepository.InsertMessage(msg.getContent(), "TALK"
+                            ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
                     msg = msgWithImg;
                 }
@@ -210,7 +232,8 @@ public class ChatController {
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER, msg.getImgCode()));
+                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType()
+                        ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
                 User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
 
