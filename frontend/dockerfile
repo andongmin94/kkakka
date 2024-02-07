@@ -20,7 +20,7 @@
 #COPY . .
 
 #RUN npm install
-#RUN npm run build
+#RUN npm run build 
 
 # 서빙 단계
 #FROM nginx:alpine
