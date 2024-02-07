@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Stomp } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
 
 let stompClient: any;

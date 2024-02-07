@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Price from "./Price";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
@@ -50,7 +50,6 @@ const FormSchema = z.object({
   name: z.string({
     required_error: "친구를 선택하세요!",
   }),
-
 });
 
 export default function WriteAlias({
@@ -67,7 +66,7 @@ export default function WriteAlias({
   friends: FriendType[];
 }) {
 
-  console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
+  //console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
 
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = useState(false);
@@ -95,8 +94,8 @@ export default function WriteAlias({
     <Card className="static group/item bg-[url('/image/whriteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">
         <img src="/image/whriteAlias.png" className="h-20 w-20" />
-        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
+        <p className="text-4xl mt-3 font-bold text-white">칭호 지정권</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">친구에게 <br/> 우스꽝스러운 별명을 붙여보아요!</p>
       </div>
 
       {/* 호버 */}
@@ -117,7 +116,7 @@ export default function WriteAlias({
           {/* 헤더 */}
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3 text-4xl">{itemName}</div>
+              <div className="mb-3 text-4xl">칭호 지정권!</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
