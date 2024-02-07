@@ -1,4 +1,12 @@
 # 프론트엔드 도커파일
+FROM node:14 AS builder
+
+WORKDIR /frontend
+COPY . .
+
+RUN npm install
+RUN npm run build
+
 FROM nginx:alpine
 
 # Nginx의 기본 설정 파일 삭제
@@ -8,12 +16,10 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/
 
 # 빌드된 프론트엔드 애플리케이션 파일 복사
-COPY /build /usr/share/nginx/html
+COPY ./frontend/build /usr/share/nginx/html
 
 # 포트 80을 노출
-EXPOSE 3000
+EXPOSE 80
 
 # Nginx를 백그라운드에서 실행
 CMD ["nginx", "-g", "daemon off;"]
-
-
