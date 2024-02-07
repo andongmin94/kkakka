@@ -110,19 +110,18 @@ app.whenReady().then(createWindow).then(async () => {
           // lastSentEventId 이후의 모든 이벤트를 찾습니다.
           if (newEvents.length != 0){
             newEvents.forEach(event => {
-            if (event.EventName === "GameStart") { sendMessageToSocket("게임이 ㄹㅇ로 시작되었습니다."); console.log("게임이 ㄹㅇ로 시작되었습니다.") }
-            if (event.EventName === "MinionsSpawning") { sendMessageToSocket("미니언이 생성되었습니다."); console.log("미니언이 생성되었습니다.") }
+            if (event.EventName === "GameStart") {setTimeout(() => {sendMessageToSocket("게임이 ㄹㅇ로 시작되었습니다.")},3000)}
+            if (event.EventName === "MinionsSpawning") {sendMessageToSocket("미니언이 생성되었습니다.")}
 
-            if (event.EventName === "ChampionKill") { sendMessageToSocket(event.KillerName + "님이 " + event.VictimName + "님을 처치했습니다!"); console.log(event.KillerName + "님이 " + event.VictimName + "님을 처치했습니다!")}
-            else if (event.EventName === "Multikill") { if (event.KillStreak === 2) { sendMessageToSocket(event.KillerName + "님이 " + "더블킬!"); console.log(event.KillerName + "님이 " + "더블킬!") } else if (event.KillStreak === 3) { sendMessageToSocket(event.KillerName + "님이 " + "트리플킬!"); console.log(event.KillerName + "님이 " + "트리플킬!") } else if (event.KillStreak === 4) { sendMessageToSocket(event.KillerName + "님이 " + "쿼드라킬!"); console.log(event.KillerName + "님이 " + "쿼드라킬!") } else if (event.KillStreak === 5) { sendMessageToSocket(event.KillerName + "님이 " + "펜타킬!"); console.log(event.KillerName + "님이 " + "펜타킬!") }}
-            else if (event.EventName === "TurretKilled") { sendMessageToSocket(event.KillerName + "님이 " + "포탑을 파괴했습니다."); console.log(event.KillerName + "님이 " + "포탑을 파괴했습니다.") }
+            if (event.EventName === "ChampionKill") { sendMessageToSocket(event.KillerName + "님이 " + event.VictimName + "님을 처치했습니다!") }
+            else if (event.EventName === "Multikill") { if (event.KillStreak === 2) { sendMessageToSocket(event.KillerName + "님이 " + "더블킬!") } else if (event.KillStreak === 3) { sendMessageToSocket(event.KillerName + "님이 " + "트리플킬!") } else if (event.KillStreak === 4) { sendMessageToSocket(event.KillerName + "님이 " + "쿼드라킬!") } else if (event.KillStreak === 5) { sendMessageToSocket(event.KillerName + "님이 " + "펜타킬!") }}
+            else if (event.EventName === "TurretKilled") { sendMessageToSocket(event.KillerName + "님이 " + "포탑을 파괴했습니다.") }
 
-            if (event.EventName === "HordeKill") { sendMessageToSocket(event.KillerName + "님이 " + "공허 유충을 처치했습니다!"); console.log(event.KillerName + "님이 " + "공허 유충을 처치했습니다!") }
-            else if (event.EventName === "HeraldKill") { sendMessageToSocket(event.KillerName + "님이 " + "협곡의 전령을 처치했습니다!"); console.log(event.KillerName + "님이 " + "협곡의 전령을 처치했습니다!")}
-            else if (event.EventName === "BaronKill") { sendMessageToSocket(event.KillerName + "님이 " + "바론 남작을 처치했습니다!"); console.log(event.KillerName + "님이 " + "바론 남작을 처치했습니다!")}
-            else if (event.EventName === "DragonKill") { sendMessageToSocket(event.KillerName + "님이 " + "용을 처치했습니다!"); console.log(event.KillerName + "님이 " + "용을 처치했습니다!")}
-            })
-          }
+            if (event.EventName === "HordeKill") { sendMessageToSocket(event.KillerName + "님이 " + "공허 유충을 처치했습니다!") }
+            else if (event.EventName === "HeraldKill") { sendMessageToSocket(event.KillerName + "님이 " + "협곡의 전령을 처치했습니다!") }
+            else if (event.EventName === "BaronKill") { sendMessageToSocket(event.KillerName + "님이 " + "바론 남작을 처치했습니다!") }
+            else if (event.EventName === "DragonKill") { sendMessageToSocket(event.KillerName + "님이 " + "용을 처치했습니다!") }
+            })}
           // newEvents를 전송하는 코드를 여기에 작성합니다.
           if (newEvents.length > 0) { lastSentEventId = newEvents[newEvents.length - 1].EventID }
           // 마지막으로 전송한 이벤트의 ID를 업데이트합니다.
@@ -172,10 +171,9 @@ app.whenReady().then(createWindow).then(async () => {
             if (!oneShotChecker) {
               oneShotChecker = true;
               players_info.forEach(player => {
-                sendMessageToSocket(player.team + "팀 | 플레이어 : " + player.summonerName);
-                sendMessageToSocket("챔프 : " + player.championName + " | 스펠 : " + player.summonerSpells1 + " , " + player.summonerSpells2);
-                sendMessageToSocket(playerName + "이 과연 이길 수 있을까?");
-              });
+                sendMessageToSocket(player.team + "팀 플레이어 : " + player.summonerName + "(" + player.championName + ")" + ", " + player.summonerSpells1 + "(D) " + player.summonerSpells2 + "(F)");
+              })
+              setTimeout(() => {sendMessageToSocket(userInfo.userName + "이 과연 이길 수 있을까?")}, 2000);
             }
             
             sendNewEvents(events);
@@ -274,7 +272,6 @@ function sendMessageToSocket(message) {
 function onMessageReceivedFromSocket (payload){
   
   var chat = JSON.parse(payload.body);
-  console.log("들어온 payload:" + payload.body);
   console.log("들어온 메세지:" + chat.content);
   showNotification(chat.userName, chat.content, chat.imgCode);
 
@@ -468,4 +465,3 @@ function onMessageReceivedFromSocket (payload){
 // function getChampionNameInKorean(englishName) {
 //   return championMapping[englishName];
 // }
-
