@@ -9,7 +9,7 @@ import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/user/userStore";
 import useProfileStore from "@/store/profileStore";
 import { useProfile } from "@/hooks/profile/queries/useUserProfileQuery";
 import { useEnterDmPost } from "@/hooks/dm/mutations/useEnterDmPost";
@@ -38,7 +38,6 @@ export default function ProfilePage() {
 
   const enterChatHandler = () => {
     mutate(params.id);
-    // navigate(`/main/message/${??}`);
   };
 
   const [friendStatus, setFriendStatus] = useState("");

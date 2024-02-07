@@ -5,6 +5,5 @@ export const enterDmPost = async (userId: string) => {
     `/api/friends/dm/enter/${userId}`,
     {}
   );
-  console.log(data.data);
-  return data;
+  return data.data;
 };
