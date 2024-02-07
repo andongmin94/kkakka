@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/card";
 import { BroadcastItemType } from "@/types/broadcastTypes";
 import { Button } from "@/components/ui/button";
+import { Link } from 'react-router-dom';
+
 
 export default function LiveContent({
   liveData,
@@ -38,7 +40,11 @@ export default function LiveContent({
         </div>
       </CardHeader>
       <CardContent className="p-1 row-span-2">
-        <Button>입장하기</Button>
+        <Link to={`/main/message/${liveData.roomId}`}>
+            <Button>
+              입장하기
+            </Button>
+        </Link>
       </CardContent>
       <CardFooter className="p-2 row-span-2">
         {/* 플레이중인 친구 프사 props로 전달) */}
