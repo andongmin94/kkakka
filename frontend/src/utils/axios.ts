@@ -10,4 +10,4 @@ const createAxiosInstance = () => {
   return axiosInstance;
 };
 
-export const axiosUsersInstance = createAxiosInstance();
+export const axiosInstance = createAxiosInstance();

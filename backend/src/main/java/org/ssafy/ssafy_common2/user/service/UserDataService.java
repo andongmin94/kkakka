@@ -60,10 +60,12 @@ public class UserDataService {
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
+        System.out.println("라이엇 아이디1 : " + dto.getRiotId());
 
         DynamicUserInfo dynamicUserInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(user.getId()).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_USER_INFO)
         );
+        System.out.println("라이엇 아이디2 : " + dto.getRiotId());
 
         // imgURL을 만들어서 S3에 저장 시작
         String backImgUrl = "";
@@ -75,6 +77,7 @@ public class UserDataService {
                 System.out.println("배경 화면이 비었다");
             }
         }
+        System.out.println("라이엇 아이디3 : " + dto.getRiotId());
 
         String profileImgUrl = "";
         if (dto.getProfileImg() != null) {
@@ -83,6 +86,7 @@ public class UserDataService {
                 user.updateProfileImg(profileImgUrl);
             }
         }
+        System.out.println("라이엇 아이디4 : " + dto.getRiotId());
 
         // imgURL을 만들어서 S3에 저장 끝
         if (dto.getRiotId()!= null) {
@@ -90,6 +94,8 @@ public class UserDataService {
                 user.updateRiotId(dto.getRiotId());
             }
         }
+
+        System.out.println("라이엇 아이디5 : " + dto.getRiotId());
         userRepository.saveAndFlush(user);
         UserProfileResponseDto ans = UserProfileResponseDto.of(profileImgUrl, backImgUrl, dto.getRiotId());
         return ans;

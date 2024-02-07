@@ -10,10 +10,12 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/user/userStore";
+import usePointStore from "@/store/user/pointStore";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-import { source } from "@/services/alarm/subscribe";
+import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
+import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
 
 export default function RootLayout() {
@@ -21,8 +23,12 @@ export default function RootLayout() {
   const { theme } = useTheme();
 
   const { useUserDataQuery } = useUserData();
-  const { data: userData } = useUserDataQuery();
   const { userInfo, setUserInfo } = useUserStore();
+  const { data: userData } = useUserDataQuery();
+
+  const { point, setPoint } = usePointStore();
+  const { usePointQuery } = usePoint();
+  const { data: userPointData } = usePointQuery();
 
   useEffect(() => {
     if (userData) {
@@ -30,15 +36,38 @@ export default function RootLayout() {
     } else {
       console.log("유저 정보 없음");
     }
-  }, [userData, setUserInfo]);
+  }, [userData]);
 
-  console.log("유저 정보:", userInfo);
+  useEffect(() => {
+    if (userPointData) {
+      setPoint(userPointData);
+    } else {
+      console.log("포인트 정보 없음");
+    }
+  }, [userPointData]);
 
   const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
 
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>("");
   const [speakerToast, setSpeakerToast] = useState<boolean>(false);
+
+  const EventSource = EventSourcePolyfill;
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token not found");
+  }
+
+  const source = new EventSource(
+    `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
 
   useEffect(() => {
     source.addEventListener("notification", (e: any) => {
@@ -86,10 +115,7 @@ export default function RootLayout() {
       prevScrollPos = currentScrollPos;
     };
 
-    // 스크롤 이벤트 리스너 등록
     window.addEventListener("scroll", handleScroll);
-
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -146,6 +172,12 @@ export default function RootLayout() {
                       text={speakerToastContent}
                     />
                   )}
+                  {speakerToast && (
+                    <SpeakerToast
+                      setToast={setSpeakerToast}
+                      text={speakerToastContent}
+                    />
+                  )}
                   {/* 네브바 오른쪽 영역 */}
                   <div className={classes.nav_right}>
                     {/* 다크모드 버튼 (미완, 후순위) */}
@@ -155,7 +187,6 @@ export default function RootLayout() {
                       to={`/main/profile/${userInfo && userInfo.userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
-                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                       <Avatar>
                         <AvatarImage
                           src={userInfo && userInfo.userProfileImg}
@@ -167,9 +198,7 @@ export default function RootLayout() {
                       {/* <div className={classes.user_image} /> */}
                     </Link>
 
-                    {/* 알림 버튼 */}
                     <Alarm />
-                    {/* 친구 버튼 */}
                     <FriendsBtn />
                   </div>
                 </nav>
@@ -194,10 +223,9 @@ export default function RootLayout() {
                       to={`/main/profile/${userInfo && userInfo.userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
-                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                       <Avatar>
                         <AvatarImage
-                          src="/image/liveImage.png"
+                          src={userInfo && userInfo.userProfileImg}
                           alt="프사"
                           className="bg-cover"
                         />
@@ -206,9 +234,7 @@ export default function RootLayout() {
                       {/* <div className={classes.user_image} /> */}
                     </Link>
 
-                    {/* 알림 버튼 */}
                     <Alarm />
-                    {/* 친구 버튼 */}
                     <FriendsBtn />
                   </div>
                 </nav>
@@ -250,7 +276,7 @@ export default function RootLayout() {
                   {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                   <Avatar>
                     <AvatarImage
-                      src="/image/liveImage.png"
+                      src={userInfo && userInfo.userProfileImg}
                       alt="프사"
                       className="bg-cover"
                     />
@@ -259,9 +285,7 @@ export default function RootLayout() {
                   {/* <div className={classes.user_image} /> */}
                 </Link>
 
-                {/* 알림 버튼 */}
                 <Alarm />
-                {/* 친구 버튼 */}
                 <FriendsBtn />
               </div>
             </nav>
