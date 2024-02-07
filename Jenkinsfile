@@ -22,7 +22,7 @@ pipeline {
         } 
  
 
-        stage('Clone') {
+        stage('Clone') { 
             steps {
                 echo '클론을 시작!'
                 git branch: 'dev', credentialsId: 'docker-hub', url: 'https://lab.ssafy.com/s10-webmobile2-sub2/S10P12D110.git'
