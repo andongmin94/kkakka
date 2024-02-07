@@ -310,6 +310,7 @@ public class ChatRoomMySQLService {
 
         // 1-1) 방의 타입을 보고   ONE, MANY, DEAD 중 하나 생성
         String roomType = type.equals("dm")? "ONE" : "MANY";
+        // 방주인
         User owner = userRepository.findByIdAndDeletedAtIsNull(userId).orElse(null);
 
         // 1-2) 사용자가 등록되지 않았다면 에러 출력
