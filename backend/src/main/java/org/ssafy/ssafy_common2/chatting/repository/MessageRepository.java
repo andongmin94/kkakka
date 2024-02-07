@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @Transactional
 public interface MessageRepository extends JpaRepository<Message,Long> {
+    
 
     // 0) 메세지 넣는 함수
     @Modifying
