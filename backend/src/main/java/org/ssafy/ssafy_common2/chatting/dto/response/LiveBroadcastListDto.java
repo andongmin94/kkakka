@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LiveBroadcastListDto {
 
+    private long playerId;
     private String playerEmail;
     private String playerName;
     private String playerProfilePic;
