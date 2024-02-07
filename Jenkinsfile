@@ -19,7 +19,7 @@ pipeline {
                     )
                 }
             }
-        }
+        } 
 
 
         stage('Clone') {
