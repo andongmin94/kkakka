@@ -1,14 +1,8 @@
-import NewDogam from "@/components/main/NewDogam";
+import NewDogamList from "@/components/main/NewDogamList";
 import { Mobile, PC } from "@/components/MediaQuery";
 import LiveContentCarousel from "@/components/main/LiveContentCarousel";
-import useDogamFeedListQuery from "@/apis/dogamfeed/queries/useDogamFeedListQuery";
 
 export default function IndexPage() {
-  const { dogamfeedList, isLoading, error } = useDogamFeedListQuery();
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
   return (
     <>
       <PC>
@@ -28,10 +22,7 @@ export default function IndexPage() {
           </div>
           <div className="grid grid-cols-2 place-items-center gap-y-5 mb-5 w-[1050px]">
             {/* 도감 리스트 */}
-            {dogamfeedList &&
-              dogamfeedList.map((data, idx) => {
-                return <NewDogam data={data} key={idx} />;
-              })}
+            <NewDogamList />
           </div>
         </div>
       </PC>
@@ -55,10 +46,7 @@ export default function IndexPage() {
           </div>
           <div className="grid grid-cols-1 place-items-center gap-y-5 mb-5 w-full">
             {/* 도감 리스트 */}
-            {dogamfeedList &&
-              dogamfeedList.map((data, idx) => {
-                return <NewDogam data={data} key={idx} />;
-              })}
+            <NewDogamList />
           </div>
         </div>
       </Mobile>

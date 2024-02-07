@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Comment from "./Comment";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,9 @@ import {
 } from "@/components/ui/form";
 
 import { Mobile, PC } from "../MediaQuery";
-import useDogamDetailQuery from "@/apis/profile/dogam/queries/useDogamDetailQuery";
+import axios from "axios";
+import { DogamCommentResponseType } from "@/types/dogamTypes";
+import { UserType } from "@/types/userTypes";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -30,11 +32,6 @@ const FormSchema = z.object({
 });
 
 export default function CommentModal({ dogamId }: { dogamId: number }) {
-  const { dogamComments, isLoading, error } = useDogamDetailQuery({ dogamId });
-
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
-
   const { theme } = useTheme();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -42,19 +39,74 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
       content: "",
     },
   });
+  const [dogamComments, setDogamComments] = useState<
+    DogamCommentResponseType[]
+  >([]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  // 이거 뭔지 잘 모르겠어서 일단 주석
+   function onSubmit(data: z.infer<typeof FormSchema>) {
+     toast({
+       title: "You submitted the following values:",
+       description: (
+         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+         </pre>
+       ),
+     });
+   }
 
-  // const [commentList, setCommentList] = useState(commentData);
+  const token = localStorage.getItem("token");
+  const [myData, setMyData] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setMyData(res.data.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("도감댓글", res.data.data.dogamCommentResponseDtos);
+        setDogamComments(res.data.data.dogamCommentResponseDtos);
+      });
+  }, []);
+
+  const [inputText, setInputText] = useState<string>("");
+
+  const addDogamCommentHandler = () => {
+    axios
+      .post(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/friends/dogam/comment/${dogamId}`,
+        {
+          comment: inputText,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("댓글등록", res.data);
+      });
+  };
 
   return (
     <>
@@ -76,15 +128,15 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
                 {dogamComments &&
-                  dogamComments.map((com, idx) => {
-                    return <Comment key={idx} data={com} userId={userId} />;
-                  })}
+                  dogamComments.map((dogamcomment, idx) => (
+                    <Comment key={idx} dogamcomment={dogamcomment} />
+                  ))}
 
                 {/* 댓글 입력 부분 */}
                 <div className="">
                   <Form {...form}>
                     <form
-                      onSubmit={form.handleSubmit(onSubmit)}
+                      onSubmit={form.handleSubmit(addDogamCommentHandler)}
                       className="flex items-center"
                     >
                       <FormField
@@ -98,34 +150,23 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                   placeholder="댓글 입력"
                                   {...field}
                                   className="w-[590px]"
-                                  // value={field.value || inputText}
-                                  // onChange={(e) => {
-                                  //   setInputText(e.target.value);
-                                  // }}
+                                  value={field.value || inputText}
+                                  onChange={(e) => {
+                                    setInputText(e.target.value);
+                                  }}
                                 />
                               </FormControl>
                               <Button
                                 type="submit"
                                 variant="secondary"
                                 className="border-solid border-2 border-inherit bg-white font-bold h-[42px] text-lg"
-                                onClick={(_) => {
+                                onClick={() => {
                                   // 2글자 이상만 작성 가능하게
                                   if (
                                     form.getValues().content != undefined &&
                                     form.getValues().content.length > 1
                                   ) {
-                                    // 입력값 받고
-                                    const t = form.getValues().content;
-                                    // 댓글 객체 만들기
-                                    const data = {
-                                      userId: userId,
-                                      name: userName,
-                                      text: t,
-                                      update: userUpdate,
-                                      alias: userAlias,
-                                    };
-                                    // 댓글 리스트에 추가
-                                    setCommentList((pre) => [...pre, data]);
+                                    addDogamCommentHandler();
                                     // 댓글 입력창 초기화
                                     form.setValue("content", "  ");
                                   }
@@ -162,15 +203,15 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
                 {dogamComments &&
-                  dogamComments.map((com, idx) => {
-                    return <Comment key={idx} data={com} userId={userId} />;
-                  })}
+                  dogamComments.map((dogamcomment, idx) => (
+                    <Comment key={idx} dogamcomment={dogamcomment} />
+                  ))}
 
                 {/* 댓글 입력 부분 */}
                 <div className="">
                   <Form {...form}>
                     <form
-                      onSubmit={form.handleSubmit(onSubmit)}
+                      onSubmit={form.handleSubmit(addDogamCommentHandler)}
                       className="flex items-center"
                     >
                       <FormField
@@ -194,24 +235,13 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                 type="submit"
                                 variant="secondary"
                                 className="border-solid border-2 border-inherit bg-white font-bold h-[42px] text-lg"
-                                onClick={(_) => {
+                                onClick={() => {
                                   // 2글자 이상만 작성 가능하게
                                   if (
                                     form.getValues().content != undefined &&
                                     form.getValues().content.length > 1
                                   ) {
-                                    // 입력값 받고
-                                    const t = form.getValues().content;
-                                    // 댓글 객체 만들기
-                                    const data = {
-                                      userId: userId,
-                                      name: userName,
-                                      text: t,
-                                      update: userUpdate,
-                                      alias: userAlias,
-                                    };
-                                    // 댓글 리스트에 추가
-                                    setCommentList((pre) => [...pre, data]);
+                                    addDogamCommentHandler();
                                     // 댓글 입력창 초기화
                                     form.setValue("content", "  ");
                                   }

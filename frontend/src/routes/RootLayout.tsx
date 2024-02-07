@@ -1,6 +1,6 @@
 import cn from "clsx";
 const electron = window.electron;
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alarm } from "@/components/navbar/Alarm";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
@@ -10,25 +10,92 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
+import useUserStore from "@/store/userStore";
+import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
+import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+import { source } from "@/services/alarm/subscribe";
+import SpeakerToast from "@/components/navbar/SpeakerToast";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
+  const { theme } = useTheme();
+
+  const { useUserDataQuery } = useUserData();
+  const { data: userData } = useUserDataQuery();
+  const { userInfo, setUserInfo } = useUserStore();
 
   useEffect(() => {
-    // 페이지 이동시마다 스크롤바는 항상 최상단에 위치하게 한다.
+    if (userData) {
+      setUserInfo(userData);
+    } else {
+      console.log("유저 정보 없음");
+    }
+  }, [userData, setUserInfo]);
+
+  console.log("유저 정보:", userInfo);
+
+  const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
+
+  // 확성기 내용 state
+  const [ speakerToastContent, setSpeakerToastContent ] = useState<string>("");
+  const [ speakerToast, setSpeakerToast ] = useState<boolean>(false);
+
+  useEffect(() => {
+    source.addEventListener("notification", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
+
+    source.addEventListener("megaphone", (event) => {
+      
+      // useEffect 안에 있어서 set이 잘 안됨는거 같음
+      const parseData = JSON.parse(event.data);
+      
+      setSpeakerToast(true);
+      setSpeakerToastContent(parseData.content);
+    });
+
+    return () => {
+      source.close();
+    };
+  }, [setLastEventId]);
+
+  // 확성기 내용이 새로 생길 때 실행
+  useEffect(() => {
+
+    console.log(speakerToastContent);
+  }, [speakerToastContent]);
+
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const { theme } = useTheme();
+  useEffect(() => {
+    let prevScrollPos = window.pageYOffset;
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
 
-  const { userData, isLoading, error } = useMyDataQuery();
+      // 예스크롤을 내릴 때 네브바를 숨김, 올리면 다시 보임
+      setIsNavbarVisible(
+        currentScrollPos <= 0 || currentScrollPos < prevScrollPos
+      );
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+      // 현재 스크롤 위치를 업데이트
+      prevScrollPos = currentScrollPos;
+    };
 
-  // 사용자 아이디 더미 데이터
-  const userId = "1";
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener("scroll", handleScroll);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -68,75 +135,77 @@ export default function RootLayout() {
             })}
           >
             {/* 네브바 */}
-            {theme === "light" ? (
-              <nav className={classes.nav}>
-                <div></div>
+            {isNavbarVisible ? (
+              theme === "light" ? (
+                <nav className={classes.nav}>
+                  <div></div>
 
-                {/* 로고 */}
-                <h1>확성기 자리</h1>
+                  {/* 로고 */}
+                  {/* 확성기 자리 */}
+                  {speakerToast && <SpeakerToast setToast={setSpeakerToast} text={speakerToastContent} />}
+                  {/* 네브바 오른쪽 영역 */}
+                  <div className={classes.nav_right}>
+                    {/* 다크모드 버튼 (미완, 후순위) */}
+                    <ModeToggle />
+                    {/* 사용자 프로필 버튼 */}
+                    <Link
+                      to={`/main/profile/${userInfo && userInfo.userId}`}
+                      className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                    >
+                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
+                      <Avatar>
+                        <AvatarImage
+                          src={userInfo && userInfo.userProfileImg}
+                          alt="프사"
+                          className="bg-cover"
+                        />
+                        <AvatarFallback>프사</AvatarFallback>
+                      </Avatar>
+                      {/* <div className={classes.user_image} /> */}
+                    </Link>
 
-                {/* 네브바 오른쪽 영역 */}
-                <div className={classes.nav_right}>
-                  {/* 다크모드 버튼 (미완, 후순위) */}
-                  <ModeToggle />
-                  {/* 사용자 프로필 버튼 */}
-                  <Link
-                    to={`/main/profile/${userData && userData.userId}`}
-                    className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                  >
-                    {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
-                    <Avatar>
-                      <AvatarImage
-                        src={userData && userData.userProfileImg}
-                        alt="프사"
-                        className="bg-cover"
-                      />
-                      <AvatarFallback>프사</AvatarFallback>
-                    </Avatar>
-                    {/* <div className={classes.user_image} /> */}
-                  </Link>
+                    {/* 알림 버튼 */}
+                    <Alarm />
+                    {/* 친구 버튼 */}
+                    <FriendsBtn />
+                  </div>
+                </nav>
+              ) : (
+                <nav className={classes.nav_dark}>
+                  <div></div>
 
-                  {/* 알림 버튼 */}
-                  <Alarm />
-                  {/* 친구 버튼 */}
-                  <FriendsBtn />
-                </div>
-              </nav>
-            ) : (
-              <nav className={classes.nav_dark}>
-                <div></div>
+                  {/* 로고 */}
+                  {/* 확성기 자리 */}
+                  {speakerToast && <SpeakerToast setToast={setSpeakerToast} text={speakerToastContent} />}
+                  {/* 네브바 오른쪽 영역 */}
+                  <div className={classes.nav_right}>
+                    {/* 다크모드 버튼 (미완, 후순위) */}
+                    <ModeToggle />
+                    {/* 사용자 프로필 버튼 */}
+                    <Link
+                      to={`/main/profile/${userInfo && userInfo.userId}`}
+                      className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                    >
+                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
+                      <Avatar>
+                        <AvatarImage
+                          src="/image/liveImage.png"
+                          alt="프사"
+                          className="bg-cover"
+                        />
+                        <AvatarFallback>프사</AvatarFallback>
+                      </Avatar>
+                      {/* <div className={classes.user_image} /> */}
+                    </Link>
 
-                {/* 로고 */}
-                <h1>확성기 자리</h1>
-
-                {/* 네브바 오른쪽 영역 */}
-                <div className={classes.nav_right}>
-                  {/* 다크모드 버튼 (미완, 후순위) */}
-                  <ModeToggle />
-                  {/* 사용자 프로필 버튼 */}
-                  <Link
-                    to={`/main/profile/${userId}`}
-                    className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                  >
-                    {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
-                    <Avatar>
-                      <AvatarImage
-                        src="/image/liveImage.png"
-                        alt="프사"
-                        className="bg-cover"
-                      />
-                      <AvatarFallback>프사</AvatarFallback>
-                    </Avatar>
-                    {/* <div className={classes.user_image} /> */}
-                  </Link>
-
-                  {/* 알림 버튼 */}
-                  <Alarm />
-                  {/* 친구 버튼 */}
-                  <FriendsBtn />
-                </div>
-              </nav>
-            )}
+                    {/* 알림 버튼 */}
+                    <Alarm />
+                    {/* 친구 버튼 */}
+                    <FriendsBtn />
+                  </div>
+                </nav>
+              )
+            ) : undefined}
 
             {/* 메인 페이지 영역 */}
             <div className={classes.body}>
@@ -167,7 +236,7 @@ export default function RootLayout() {
               <div className={classes.nav_right_M}>
                 {/* 사용자 프로필 버튼 */}
                 <Link
-                  to={`/main/profile/${userId}`}
+                  to={`/main/profile/${userInfo && userInfo.userId}`}
                   className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                 >
                   {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}

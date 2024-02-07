@@ -7,13 +7,13 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { BroadcastItemType } from "@/types/broadcastTypes";
+import { Button } from "@/components/ui/button";
 
 export default function LiveContent({
   liveData,
 }: {
   liveData: BroadcastItemType;
 }) {
-  console.log("liveData", liveData);
   return (
     // 배너 이미지 - 배경이미지는 api로 아직 안들어와서 일단 이렇게 처리했어요
     <Card
@@ -37,7 +37,9 @@ export default function LiveContent({
             })}
         </div>
       </CardHeader>
-      <CardContent className="p-1 row-span-2"></CardContent>
+      <CardContent className="p-1 row-span-2">
+        <Button>입장하기</Button>
+      </CardContent>
       <CardFooter className="p-2 row-span-2">
         {/* 플레이중인 친구 프사 props로 전달) */}
         <LiveProfile

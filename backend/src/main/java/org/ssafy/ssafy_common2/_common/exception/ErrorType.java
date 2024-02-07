@@ -37,6 +37,8 @@ public enum ErrorType {
     NO_MESSAGES_TO_LOAD(404,"해당 채팅방엔 메세지가 더는 없습니다."),
     NO_LIVE_BROADCAST_ROOM(400,"현재 라이브 중인 중계방이 없습니다!"),
     CANT_CALCULATE_BETTING_POINT(500,"죄송합니다. 배팅 포인트 정산에 문제가 생겼습니다."),
+    CANT_LOAD_MESSAGES(500, "메세지를 부를 수 없습니다."),
+    THIS_USER_DIDNT_JOIN_IN_THIS_ROOM(500, "해당 유저의 채팅방 참여 기록이 없습니다."),
     //--------------------------------------------------------------------
     //--------------------------도감 및 칭호 부분----------------------------
     NOT_FOUND_ALIAS(401, "칭호가 존재하지 않습니다."),
@@ -50,6 +52,7 @@ public enum ErrorType {
     NOT_FOUND_ALARM(401, "잘못된 알림 확인 요청입니다."),
     NOT_FOUND_USER_INFO(401, "다이나믹 유저 인포가 존재하지 않습니다"),
     NOT_FOUND_BACK_IMG(401, "배경사진을 추가해 주세요"),
+    NOT_FOUND_PROFILE_IMG(401, "프로필 사진을 추가해 주세요"),
     ;
 
     private int code;

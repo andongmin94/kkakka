@@ -13,7 +13,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
         <div className="w-[500px] flex">
           {/* 왼쪽 구역 */}
           <Link
-            to={`/main/profile/${data.dogamId}`}
+            to={`/main/profile/${data.friendId}`}
             className="w-[200px] border-4 rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center bg-slate-100"
           >
             {/* 프사 */}
@@ -41,14 +41,14 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
               <div className="flex gap-3 pb-3 font-bold items-center">
                 {/* 싫어요 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <ThumbsDown tD={data.hated} />
+                  <ThumbsDown tD={data.hated} dogamId={data.dogamId} />
                 </div>
                 <div className=" flex self-center mr-4 text-xl text-blue-600">
                   {data.dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <CommentModal />
+                  <CommentModal dogamId={data.dogamId} />
                 </div>
                 {/* 등록일 */}
                 <div className="grid grid-col place-items-center font-bold">
@@ -95,14 +95,14 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
               <div className="flex gap-3 pb-3 font-bold items-center">
                 {/* 싫어요 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <ThumbsDown tD={data.hated} />
+                  <ThumbsDown tD={data.hated} dogamId={data.dogamId} />
                 </div>
                 <div className=" flex self-center mr-4 text-xl text-blue-600">
                   {data.dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <CommentModal />
+                  <CommentModal dogamId={data.dogamId} />
                 </div>
                 {/* 등록일 */}
                 <div className="grid grid-col place-items-center font-bold text-[12px]">
