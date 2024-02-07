@@ -36,7 +36,13 @@ export default function MessageTestPage() {
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // 채팅 입력 받은것
   const [inputChat, setInputChat] = useState("");
+
+  // 어떤 도감을 선택했는지 인덱스를 저장
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
 
   // 모든 채팅 메세지 저장
   const [messages, setMessages] = useState<any[]>([]);
@@ -190,6 +196,10 @@ export default function MessageTestPage() {
     // console.log(userInfo);
     // console.log(friendsInfo);
 
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    }, 0);
+
     // 이전 메시지 불러오기
     axios
       .get(
@@ -283,7 +293,7 @@ export default function MessageTestPage() {
       {/* ------------------------------------------------------- */}
       {/* 피시 화면 */}
       <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
-        <div className="w-[800px] h-full border-8 rounded-3xl grid grid-rows-12 border-red-200">
+        <div className="w-[700px] h-full border-8 rounded-3xl grid grid-rows-12 border-red-200">
           {/* 채팅 화면 상단 사용자 정보 바 */}
           <div className="w-full row-span-2 flex justify-between items-center rounded-3xl border-b-4">
             {/* 왼쪽 사용자 정보 */}
@@ -355,7 +365,7 @@ export default function MessageTestPage() {
           {/* -------------------------------------------------------------------------------------------------------------------- */}
 
           {/* 채팅 하단 부분 */}
-          <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-6 rounded-3xl">
+          <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl">
             {/* 사진 버튼 */}
             <Dialog>
               <DialogTrigger asChild>
@@ -440,26 +450,29 @@ export default function MessageTestPage() {
                 <div className="flex flex-col w-full mb-5 mt-5 justify-center">
                   {/* 도감 선택 모달 */}
                   <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
-                    {dogamList.map((dogam, idx) => {
-                      return (
-                        <img
-                          src={dogam.dogamImgUrl}
-                          className="h-20 w-[100px] rounded-lg border-2"
-                          key={idx}
-                          onClick={() => {
-                            console.log(dogam.dogamImgUrl);
-                            setChatImage(dogam.dogamImgUrl);
-                          }}
-                        />
-                      );
-                    })}
+                    {dogamList.map((dogam, idx) => (
+                      <img
+                        src={dogam.dogamImgUrl}
+                        className={`h-20 w-[100px] rounded-lg border-4 ${
+                          selectedImageIndex === idx
+                            ? "border-red-500"
+                            : "border-white"
+                        }`}
+                        key={idx}
+                        onClick={() => {
+                          console.log(dogam.dogamImgUrl);
+                          setChatImage(dogam.dogamImgUrl);
+                          setSelectedImageIndex(idx);
+                        }}
+                      />
+                    ))}
                   </div>
                 </div>
 
                 {/* 하단 부분 */}
                 <div className="flex justify-center items-center">
                   <DialogClose asChild>
-                    {/* 이미지 보내기 버튼 */}
+                    {/* 도감 보내기 버튼 */}
                     <Button
                       type="submit"
                       variant="secondary"
@@ -480,7 +493,7 @@ export default function MessageTestPage() {
 
             {/* 채팅 입력칸 */}
             <form
-              className="flex justify-center items-center gap-4 rounded-3xl w-[600px]"
+              className="flex justify-center items-center gap-4 rounded-3xl w-[530px]"
               // 채팅 전송을 눌렀을때 함수
               onSubmit={(e) => {
                 e.preventDefault();
@@ -493,7 +506,7 @@ export default function MessageTestPage() {
               {/* 채팅 입력창 */}
               <Input
                 type="text"
-                className="w-[520px] font-bold text-xl"
+                className="w-[450px] font-bold text-xl"
                 onChange={(e) => {
                   // 입력받은 정보를 상태관리
                   setInputChat(e.target.value);
