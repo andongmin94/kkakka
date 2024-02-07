@@ -12,17 +12,17 @@ import {
 } from "@/components/ui/dialog";
 import React, { useState } from "react";
 
-interface dataProps {
-  userId: string;
-  name: string;
-  msgUserProfile: string;
-  img: any;
-  content: string;
-}
+// interface dataProps {
+//   userId: string;
+//   name: string;
+//   msgUserProfile: string;
+//   img: any;
+//   content: string;
+// }
 
-interface PictureProps {
-  setMessageList: React.Dispatch<React.SetStateAction<dataProps[]>>;
-}
+// interface PictureProps {
+//   setMessageList: any;
+// }
 
 // 임시 데이터
 // 사진 보내는 사람
@@ -30,7 +30,7 @@ const id = "1";
 const profile = "/image/joinSample.png";
 const name = "이해건";
 
-export default function Picture({ setMessageList }: PictureProps) {
+export default function Picture({ setMessages }: any) {
   const [image, setImage]: any = useState(null);
   return (
     <>
@@ -116,7 +116,7 @@ export default function Picture({ setMessageList }: PictureProps) {
                           //   채팅이 아니고 이미지니깐 '' 빈문자열로
                           content: "",
                         };
-                        setMessageList((pre) => pre.concat(data));
+                        setMessages((pre: any) => pre.concat(data));
                         // 초기화
                         setImage(null);
                       }
