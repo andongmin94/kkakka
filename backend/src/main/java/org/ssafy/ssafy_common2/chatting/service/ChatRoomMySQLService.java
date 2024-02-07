@@ -133,6 +133,7 @@ public class ChatRoomMySQLService {
             if(lastMessage != null) {
                 element.setLastMessage(lastMessage.getContent());
                 element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
+
             }else{
                 element.setLastMessage("아직 서로 대화를 하지 않았어요!, 채팅을 시작하세요!");
                 element.setLastWrittenMessageTime(null);
@@ -180,7 +181,7 @@ public class ChatRoomMySQLService {
                 message.getChatJoin().getChatRoom().getId(),
                 message.getCreatedAt(),
                 message.getUpdatedAt(),
-                null
+                message.getImgCode()
         );
     };
 
@@ -310,6 +311,7 @@ public class ChatRoomMySQLService {
 
         // 1-1) 방의 타입을 보고   ONE, MANY, DEAD 중 하나 생성
         String roomType = type.equals("dm")? "ONE" : "MANY";
+        // 방주인
         User owner = userRepository.findByIdAndDeletedAtIsNull(userId).orElse(null);
 
         // 1-2) 사용자가 등록되지 않았다면 에러 출력

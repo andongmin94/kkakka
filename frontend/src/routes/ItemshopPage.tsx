@@ -101,7 +101,6 @@ export default function ItemshopPage() {
                 itemPrice={items[3].itemPrice}
                 itemDesc={items[3].itemDesc}
                 myPoint={myPoint}
-                friends={friends}
               />
             </div>
           </div>
