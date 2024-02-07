@@ -15,7 +15,7 @@ import org.ssafy.ssafy_common2._common.entity.BaseTime;
 public class Message extends BaseTime  {
 
     public enum MessageType {
-        ENTER, QUIT, TALK
+        ENTER, QUIT, TALK, CHAT_BOT
     }
 
     // 1) 고유 번호
@@ -42,19 +42,25 @@ public class Message extends BaseTime  {
     })
     private  ChatJoin chatJoin;
 
+    // 5) 채팅방 이미지
+    @Column(name="img_code", nullable = true)
+    private String imgCode;
+
 
     @Builder
-    private Message (String content, ChatJoin chatJoin, MessageType messageType){
+    private Message (String content, ChatJoin chatJoin, MessageType messageType, String imgCode){
         this.content = content;
         this.chatJoin = chatJoin;
         this.messageType = messageType;
+        this.imgCode = imgCode;
     }
 
-    public static  Message of(String content, ChatJoin chatJoin, MessageType messageType){
+    public static  Message of(String content, ChatJoin chatJoin, MessageType messageType, String imgCode){
         return  builder()
                 .content(content)
                 .chatJoin(chatJoin)
                 .messageType(messageType)
+                .imgCode(imgCode)
                 .build();
     }
 
@@ -64,7 +70,9 @@ public class Message extends BaseTime  {
                 "id =" + id +
                 ", messageType =" + messageType +
                 ", content ='" + content + '\'' +
-                ", chatJoin =" + chatJoin +
+                ", userId =" + chatJoin.getChatJoinId().getUserId() +
+                ", chatRoomId =" + chatJoin.getChatJoinId().getChatRoomId() +
+                ", ImgCode =" + imgCode +
                 '}';
     }
 }
