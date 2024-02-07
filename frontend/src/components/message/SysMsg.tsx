@@ -23,24 +23,19 @@ export default function SysMsg({ data }: { data: dataProps }) {
         });
   return (
     <>
-      <PC>
-        <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-slate-100 font-bold text-xl text-wrap">
-          {/* 이미지인지 텍스트 채팅인지 판별 */}
-          <TypeIt
-            options={{
-              speed: 50,
-              waitUntilVisible: true,
-              cursor: false,
-            }}
-          >
-            {" "}
-            {data.imgCode !== null ? <img src={data.imgCode} /> : data.content}
-          </TypeIt>
-        </div>
-      </PC>
-      <Mobile>
-        <></>
-      </Mobile>
+      <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-slate-100 font-bold text-xl text-wrap">
+        {/* 이미지인지 텍스트 채팅인지 판별 */}
+        <TypeIt
+          options={{
+            speed: 50,
+            waitUntilVisible: true,
+            cursor: false,
+          }}
+        >
+          {" "}
+          {data.imgCode !== null ? <img src={data.imgCode} /> : data.content}
+        </TypeIt>
+      </div>
     </>
   );
 }
