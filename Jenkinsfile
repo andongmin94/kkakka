@@ -113,7 +113,7 @@ pipeline {
                     sh "docker rm -f frontend"
                     sh "docker rmi osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
-                    sh "docker pull osy9536/ssafy-fe:latest && docker run -d -p 8081:8080 --name frontend osy9536/ssafy-fe:latest"
+                    sh "docker pull osy9536/ssafy-fe:latest && docker run -d -p 80:8080 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
             } 
@@ -123,9 +123,27 @@ pipeline {
     post {
         success {
             echo '파이프라인이 성공적으로 완료되었습니다!'
+            script {
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend (color: 'good', 
+                message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
+                endpoint: '{endpoint입력}', 
+                channel: '{channel입력}'
+                )
+            }
         }
         failure {
             echo '파이프라인이 실패하였습니다. 에러를 확인하세요.'
+            script {
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend (color: 'danger', 
+                message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
+                endpoint: '{endpoint입력}', 
+                channel: '{channel입력}'
+                )
+            }
         }
     }
 }
