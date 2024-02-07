@@ -25,6 +25,7 @@ import SettingPage from "@/electron/SettingPage";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MessageTestPage from "./routes/MessageTestPage";
+import LiveChat from "./routes/LiveChat";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       { path: "/main/intro", element: <IntroPage /> },
       // 채팅 테스트용
       { path: "/main/message/:id", element: <MessageTestPage /> },
+      { path: "/main/liveChat/:id", element: <LiveChat /> },
       {
         path: "/main/profile/:id",
         element: <ProfilePage />,
