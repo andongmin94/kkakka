@@ -1,6 +1,8 @@
+# 프론트엔드 도커파일
 FROM node:14 AS builder
-WORKDIR /app
-COPY ./frontend/package*.json ./
-RUN npm install
+
+WORKDIR /frontend
 COPY . .
+
+RUN npm install
 RUN npm run build
