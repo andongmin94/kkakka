@@ -72,8 +72,6 @@ export default function Compliment({
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = React.useState(false);
 
-  const token = localStorage.getItem("token");
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -256,6 +254,8 @@ export default function Compliment({
                           receiverName: form.getValues.name,
                           enfScript: form.getValues().textComp,
                         };
+
+                        const token = localStorage.getItem("token");
 
                         // 칭찬권 구매
                         axios
