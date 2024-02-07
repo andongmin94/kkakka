@@ -6,96 +6,105 @@ import YouMsg from "@/components/message/YouMsg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Stomp } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
+import TypeIt from "typeit-react";
+import Stack from "react-bootstrap/Stack";
+import useUserStore from "@/store/userStore";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import SysMsg from "@/components/message/SysMsg";
 
 let stompClient: any;
+let roomId2: any;
 
 export default function MessageTestPage() {
+  const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
-
-  // 프로필 버튼을 눌렀을때 해당 사람의 프로필로 이동하기 위해 사용되는 그 사람의 아이디
-  const profileId = "2";
-
-  //   임시 채팅 목록 리스트
-  const data = [
-    {
-      // 유저와 아이디를 대조해서 같으면 내 메세지 다르면 상대 메세지
-      userId: "1",
-      // 내 채팅인지 친구인지 시스템인지 구분
-      name: "이해건",
-      // 유저 프사
-      msgUserProfile: "/image/joinSample.png",
-      // 이미지면 url 정보가 들어가고, 이미지가 아니면 null
-      img: null,
-      // 채팅 내용, 만약에 이미지라면 '' 빈 문자열이 들어간다
-      content: "ㅎㅇ",
-      // // 몇시에 쓴 채팅인지
-      // time: "오후 12:30",
-    },
-    {
-      userId: "2",
-      name: "김상훈",
-      msgUserProfile: "/image/joinSample.png",
-      img: null,
-      content: "ㅎㅎ",
-      time: "오후 12:30",
-    },
-    {
-      userId: "1",
-      name: "이해건",
-      msgUserProfile: "/image/joinSample.png",
-      img: null,
-      content:
-        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-      time: "오후 12:30",
-    },
-    {
-      userId: "2",
-      name: "김상훈",
-      msgUserProfile: "/image/joinSample.png",
-      img: "/image/liveImage.png",
-      content: "",
-      time: "오후 12:30",
-    },
-  ];
-
-  // 임시 정적 데이터
-  // const userId = "1";
-  // const userName = "김상훈";
-  // const userImage = "/image/profileImage.png";
-  // const userAlias = "천재개발자";
-
+  const location = useLocation();
+  const friendsInfo = { ...location.state };
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // 채팅 목록을 저장하는 리스트
-  // 소켓으로 에밋받은 채팅 정보들을 여기에 추가해주면 될듯
-  const [messageList, setMessageList] = useState<any[]>();
-
-  // 채팅 입력창에서 받은 값 상태 관리
   const [inputChat, setInputChat] = useState("");
 
-  // ------------------------------------------------------------------------------------------
+  // 모든 채팅 메세지 저장
+  const [messages, setMessages] = useState<any[]>([]);
+  // 현재 다른 사람이 타이핑하는 메세지를 추적
+  const [currentTypingId, setCurrentTypingId] = useState(null);
+  // 현재 사용자가 업로드한 이미지
+  const [curImg, setImgFile] = useState("");
+  const imgRef = useRef();
+
+  const handleSendMessage = (message: any) => {
+    console.log(message);
+    // 소켓으로 메세지 보내기
+    sendMessageToSocket(message);
+  };
+
+  const handleEndTyping = (id: any) => {
+    setMessages((prevMessages) =>
+      // 이전 메세지들을 전부 순회하면서, 그 중 제일 최근 메세지의 ChatBot Animation 여부를 false로 바꾼다. (isTyping == 챗봇의 애니메이션 여부)
+      prevMessages.map((msg) =>
+        msg.id === id ? { ...msg, isTyping: false } : msg
+      )
+    );
+
+    // 타이핑이 종료되면, 더 이상 타이핑 중인 메세지가 없으므로 currentTypingId의 상태를 null 로 바꾼다.
+
+    setCurrentTypingId(null);
+  };
+
+  //currentTypingId를 최신화 한다.
+  useEffect(() => {
+    // chatContainerRef의 current 값이 존재하는 경우 (컴포넌트가 마운트된 경우)
+    // 채팅창 스크롤을 가장 하단으로 이동
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+    console.log("메세지 배열 혹은 현재 타이핑 ID가 바뀐 것을 확인");
+    if (currentTypingId === null) {
+      console.log(currentTypingId + "== currentTypingId");
+      // User가 아니면서, isTyping이 True인 msg를 messages에서 찾는다.
+      const nextTypingMessage = messages.find(
+        (msg) => !msg.isUser && msg.isTyping
+      );
+
+      // 만약 그런 녀석이 존재한다면, currentTypingId를 그 녀석의 ID로 바꾼다.
+      // 이러면 해당 ID의 메세지에 또 다시 타이핑 애니메이션이 나타난다.
+      if (nextTypingMessage) {
+        setCurrentTypingId(nextTypingMessage.id);
+      }
+    }
+  }, [messages, currentTypingId]);
+
+  //--------------------------웹 소켓 파트 입니다. ------------------------------
+
   // const roomId = userInfo.roomId;
 
   const params = useParams();
-
-  // 데이터
   const roomId = params.id;
-
-  const [userId, setUserId] = useState(0);
-  const [userName, setUserName] = useState("");
+  roomId2 = roomId;
 
   const clientHeader = {
-    Authorization: token,
+    Authorization:
+      " Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3anNhb3MyMDgxQG5hdmVyLmNvbSIsImV4cCI6MTcwOTAwMDc5MywiaWF0IjoxNzA2NDA4NzkzfQ.6QDpfmBeUZ6xSOTNWexdeV0EgJVaMcaEPbAMpad-pDM",
   };
 
   const connect = () => {
     var sockJS = new SockJS("http://localhost:8080/ws-stomp");
     stompClient = Stomp.over(sockJS);
+    console.log(stompClient);
 
     stompClient.connect(clientHeader, onConnected, onError);
   };
@@ -106,15 +115,15 @@ export default function MessageTestPage() {
     stompClient.subscribe(
       "/sub/chat/room/" + roomId,
       onMessageReceivedFromSocket,
-      { userId: userId, chatRoomType: "ONE" }
+      { userId: userInfo.userId, chatRoomType: "ONE" }
     );
     stompClient.send(
       "/pub/chat/enterUser",
       clientHeader,
       JSON.stringify({
-        meesageType: "ENTER",
-        content: userName + "님 환영합니다!",
-        userId: userId,
+        messageType: "ENTER",
+        content: userInfo.userName + "님 환영합니다!",
+        userId: userInfo.userId,
         chatRoomId: roomId,
       })
     );
@@ -124,20 +133,15 @@ export default function MessageTestPage() {
     console.log(error);
   }
 
-  const handleSendMessage = (message: any) => {
-    console.log(message);
-    // 소켓으로 메세지 보내기
-    sendMessageToSocket(message);
-  };
-
   // 메세지 보내는 로직
   function sendMessageToSocket(message: any) {
     var chatMessage = {
       chatRoomId: roomId,
-      userId: userId,
+      userId: userInfo.userId,
       content: message,
       messageType: "TALK",
     };
+    console.log(chatMessage);
     stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
   }
 
@@ -145,23 +149,28 @@ export default function MessageTestPage() {
   function onMessageReceivedFromSocket(payload: any) {
     var chat = JSON.parse(payload.body);
     console.log("들어온 메세지:" + chat.content);
+    console.log(payload.body);
 
     const messageDTO = {
-      isUser: chat.userId === userId ? true : false,
-      text: chat.content,
-      isTyping: chat.userId === userId ? false : true,
+      isUser: chat.userId === userInfo.userId ? true : false,
+      content: chat.content,
+      isTyping: chat.userId === userInfo.userId ? false : true,
       id: Date.now(),
+      imgCode: chat.imgCode,
+      messageType: chat.messageType,
+      userId: chat.userId,
+      createdAt: chat.createdAt,
     };
 
     /*
          // 내가 쓴 메세지
       { text: chat.content, isUser: true },
 
-      // ChatBot이 쓴 메세지
+      // ChatBot이 쓴 메세지 
       {
         text: `당신의 메세지는: "${chat.content}"`,
         isUser: false,
-        // 타이핑 애니메이션을 내는 트리거
+        // 타이핑 애니메이션을 내는 트리거 
         isTyping: true,
         id: Date.now()
       }
@@ -169,33 +178,13 @@ export default function MessageTestPage() {
 
     // 소켓에서 받은 메세지를 전체 배열에 넣는 걸로 바꿔야함.
     // 이전 메세지를 받아서 메세지 전체 배열에 저장
-    setMessageList((prevMessages) => prevMessages?.concat(messageDTO));
+    setMessages((prevMessages) => [...prevMessages, messageDTO]);
   }
 
-  // ---------------------------------------------------------------------------------------
-
   useEffect(() => {
-    // chatContainerRef의 current 값이 존재하는 경우 (컴포넌트가 마운트된 경우)
-    // 채팅창 스크롤을 가장 하단으로 이동
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [messageList]);
-  // ds
-  useEffect(() => {
-    // 유저 정보 요청
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        // 유저 아이디 이름 받기
-        setUserId(res.data.data.userId);
-        setUserName(res.data.data.userName);
-      });
+    connect();
+    // console.log(userInfo);
+    // console.log(friendsInfo);
 
     axios
       .get(
@@ -207,13 +196,71 @@ export default function MessageTestPage() {
         }
       )
       .then((res) => {
-        if (res.data.content != undefined) {
-          setMessageList((pre) => pre?.concat(res.data.content));
-        }
+        console.log(res.data.data.content[0]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          ...res.data.data.content.reverse(),
+        ]);
+        console.log("ddd");
+        console.log(res.data.data.content);
       });
 
-    connect();
+    return () => {
+      stompClient.send(
+        "/pub/chat/enterUser",
+        clientHeader,
+        JSON.stringify({
+          messageType: "QUIT",
+          content: userInfo.userName + "님이 퇴장했습니다.",
+          userId: userInfo.userId,
+          chatRoomId: roomId,
+        })
+      );
+      stompClient
+        .disconnect
+        // function () {
+        //   alert("see you next Time!!");
+        // }
+        // { userId: userInfo.userId, chatRoomId: userInfo.roomId },
+        // { userId: userInfo.userId, chatRoomId: userInfo.roomId }
+        ();
+    };
   }, []);
+
+  const [chatImage, setChatImage]: any = useState(null);
+  const imageChange = async (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const base64 = await convertBase64(file);
+      setChatImage(base64);
+    }
+  };
+
+  const handleImageChange = () => {
+    var chatMessage = {
+      chatRoomId: roomId2,
+      userId: userInfo.userId,
+      content: null,
+      messageType: "TALK",
+      imgCode: chatImage,
+    };
+    stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
+  };
+
+  const convertBase64 = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
   return (
     <>
@@ -228,20 +275,20 @@ export default function MessageTestPage() {
               <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-10">
                 {/* 사용자 프사 */}
                 <img
-                  src={userImage}
+                  src={friendsInfo.userProfileImg}
                   className=" rounded-full w-[80px] h-[80px]"
                 />
                 <div className="flex flex-col items-center gap-3">
                   {/* 칭호 */}
-                  <MessageAlias alias={userAlias} />
+                  <MessageAlias alias={friendsInfo.userAlias} />
                   {/* 이름 */}
-                  <p className="font-bold text-2xl">{userName}</p>
+                  <p className="font-bold text-2xl">{friendsInfo.userName}</p>
                 </div>
               </div>
               {/* 프로필 보기 버튼 */}
               {/* 해당 사람의 프로필로 이동한다 */}
               {/* 임시 정적 데이터로 profileId를 넣었음 */}
-              <Link to={`/main/profile/${profileId}`}>
+              <Link to={`/main/profile/${friendsInfo.userId}`}>
                 <Button
                   type="submit"
                   variant="secondary"
@@ -259,20 +306,31 @@ export default function MessageTestPage() {
               className="w-full row-span-9  overflow-y-auto scrollbar-hide flex-row"
             >
               {/* 채팅 전체 내역을 출력 */}
-              {messageList.map((data, idx) => {
+              {messages.map((data, idx) => {
                 return (
-                  <div className="flex flex-col">
+                  <div className="flex flex-col" key={idx}>
                     <div
                       className={`flex ${
-                        data.userId === userId ? "justify-end" : "justify-start"
+                        data.messageType === "ENTER"
+                          ? "justify-center"
+                          : data.userId === userInfo.userId
+                          ? "justify-end"
+                          : "justify-start"
                       } mb-2`}
                     >
-                      {data.userId === userId ? (
+                      {data.messageType === "ENTER" ? (
+                        <SysMsg data={data} />
+                      ) : data.userId === userInfo.userId ? (
                         // 내 메세지 컴포넌트
                         <MyMsg data={data} key={idx} />
                       ) : (
                         // 상대방 메세지 컴포넌트
-                        <YouMsg data={data} key={idx} />
+                        <YouMsg
+                          data={data}
+                          userName={friendsInfo.userName}
+                          userProfileImg={friendsInfo.userProfileImg}
+                          key={idx}
+                        />
                       )}
                     </div>
                   </div>
@@ -284,7 +342,71 @@ export default function MessageTestPage() {
             {/* 채팅 하단 부분 */}
             <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-6 rounded-3xl">
               {/* 사진 버튼 */}
-              <Picture setMessageList={setMessageList} />
+              <Dialog>
+                <DialogTrigger asChild>
+                  {/*  사진 버튼 */}
+                  <button>
+                    <img
+                      src="/image/messagePicture.png"
+                      className="h-[50px] w-[50px]"
+                    />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>이미지 선택</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col w-full mb-5 mt-5">
+                    {/* 이미지 선택 모달 */}
+                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                      <Label htmlFor="picture2" className="font-bold">
+                        이미지 파일을 선택하세요
+                      </Label>
+                      <Input
+                        id="picture2"
+                        type="file"
+                        // 이미지 파일만 선택되게
+                        accept="image/*"
+                        onChange={imageChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* 하단 부분 */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-x-5">
+                      {chatImage ? (
+                        <img
+                          src={chatImage}
+                          className="h-20 w-[100px] rounded-lg border-2"
+                        />
+                      ) : (
+                        <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
+                          이미지 없음
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <DialogClose asChild>
+                        {/* 이미지 보내기 버튼 */}
+                        <Button
+                          type="submit"
+                          variant="secondary"
+                          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                          onClick={(_) => {
+                            //   이미지는 url 형식임
+                            handleImageChange();
+                            // 초기화
+                            setChatImage(null);
+                          }}
+                        >
+                          보내기
+                        </Button>
+                      </DialogClose>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               {/* 도감 버튼 */}
               <button>
                 <img
@@ -298,27 +420,8 @@ export default function MessageTestPage() {
                 // 채팅 전송을 눌렀을때 함수
                 onSubmit={(e) => {
                   e.preventDefault();
-                  // const time = new Date();
-                  // const h = time.getHours();
-                  // const m = time.getMinutes();
+                  sendMessageToSocket(inputChat);
 
-                  // 단순 채팅 보내기라 이미지가 아니다 (이미지는 사진 버튼 눌러서 보낸다)
-                  // 데이터 형식
-                  const data = {
-                    // 채팅 치는 사람 아이디
-                    userId: userId,
-                    // 채팅 치는 사람 이름
-                    name: userName,
-                    // 채팅 치는 사람 프사 ( 카톡처럼 상대방 채팅일 경우만 표시될거임)
-                    msgUserProfile: userImage,
-                    // 이미지가 아니라서 null
-                    img: null,
-                    // 채팅 입력창에서 받은 값
-                    content: inputChat,
-                  };
-
-                  // 리스트에 정보 저장
-                  setMessageList((pre) => pre.concat(data));
                   // 채팅 입력창 초기화
                   setInputChat("");
                 }}

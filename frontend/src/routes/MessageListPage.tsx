@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Message from "../components/message/Message";
 import { DmType } from "@/types/dmTypes";
 import axios from "axios";
+import "./Chat.css";
 
 interface dmProps {
   chatRoomType: string;
@@ -22,6 +23,8 @@ interface dmProps {
 export default function MessageListPage() {
   const [position, setPosition] = useState("");
   const navigate = useNavigate();
+  const [friendsInfo, setFriendsInfo] = useState(null);
+  const [roomId, setRoomId] = useState(0);
 
   const [dmList, setDmList] = useState<dmProps[] | null>(null);
   const token = localStorage.getItem("token");
@@ -34,7 +37,7 @@ export default function MessageListPage() {
         },
       })
       .then((res) => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setDmList(res.data.data);
       });
   }, []);
@@ -51,7 +54,7 @@ export default function MessageListPage() {
         }
       )
       .then((res) => {
-        navigate(`/main/message/${res.data.data}`); // 아직 없는듯
+        navigate(`/main/message/${res.data.data}`, { state: friendsInfo }); // 아직 없는듯
       });
   };
 
@@ -59,16 +62,34 @@ export default function MessageListPage() {
     <div>
       <div>메시지 목록</div>
       {dmList &&
-        dmList.map((dm, idx) => (
-          <div
-            key={idx}
-            onClick={() => {
-              enterChatHandler(dm.friendId);
-            }}
-          >
-            <Message dm={dm} />
-          </div>
-        ))}
+        dmList.map((dm, idx) => {
+          axios
+            .get(
+              `${import.meta.env.VITE_API_BASE_URL}/api/users/data/${
+                dm.friendId
+              }`,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            )
+            .then((res) => {
+              // console.log(res.data.data);
+              setFriendsInfo(res.data.data);
+            });
+
+          return (
+            <div
+              key={idx}
+              onClick={() => {
+                enterChatHandler(dm.friendId);
+              }}
+            >
+              <Message dm={dm} />
+            </div>
+          );
+        })}
     </div>
   );
 }
