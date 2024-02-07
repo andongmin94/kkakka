@@ -1,4 +1,4 @@
-import { updateUserData } from "@/services/user/api";
+import { updateUserData } from "@/services/user/userDataApi";
 import { useMutation } from "@tanstack/react-query";
 
 interface UserData {

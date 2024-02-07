@@ -10,9 +10,11 @@ import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/user/userStore";
+import usePointStore from "@/store/user/pointStore";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
 
@@ -21,8 +23,12 @@ export default function RootLayout() {
   const { theme } = useTheme();
 
   const { useUserDataQuery } = useUserData();
-  const { data: userData } = useUserDataQuery();
   const { userInfo, setUserInfo } = useUserStore();
+  const { data: userData } = useUserDataQuery();
+
+  const { point, setPoint } = usePointStore();
+  const { usePointQuery } = usePoint();
+  const { data: userPointData } = usePointQuery();
 
   useEffect(() => {
     if (userData) {
@@ -30,7 +36,15 @@ export default function RootLayout() {
     } else {
       console.log("유저 정보 없음");
     }
-  }, [userData, setUserInfo]);
+  }, [userData]);
+
+  useEffect(() => {
+    if (userPointData) {
+      setPoint(userPointData);
+    } else {
+      console.log("포인트 정보 없음");
+    }
+  }, [userPointData]);
 
   const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
 
@@ -70,7 +84,6 @@ export default function RootLayout() {
       setSpeakerToast(true);
       setSpeakerToastContent(parseData.content);
     });
-    console.log("성공함?");
 
     return () => {
       source.close();
@@ -102,10 +115,7 @@ export default function RootLayout() {
       prevScrollPos = currentScrollPos;
     };
 
-    // 스크롤 이벤트 리스너 등록
     window.addEventListener("scroll", handleScroll);
-
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -171,7 +181,6 @@ export default function RootLayout() {
                       to={`/main/profile/${userInfo && userInfo.userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
-                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                       <Avatar>
                         <AvatarImage
                           src={userInfo && userInfo.userProfileImg}
@@ -183,9 +192,7 @@ export default function RootLayout() {
                       {/* <div className={classes.user_image} /> */}
                     </Link>
 
-                    {/* 알림 버튼 */}
                     <Alarm />
-                    {/* 친구 버튼 */}
                     <FriendsBtn />
                   </div>
                 </nav>
@@ -210,10 +217,9 @@ export default function RootLayout() {
                       to={`/main/profile/${userInfo && userInfo.userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
-                      {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                       <Avatar>
                         <AvatarImage
-                          src="/image/liveImage.png"
+                          src={userInfo && userInfo.userProfileImg}
                           alt="프사"
                           className="bg-cover"
                         />
@@ -222,9 +228,7 @@ export default function RootLayout() {
                       {/* <div className={classes.user_image} /> */}
                     </Link>
 
-                    {/* 알림 버튼 */}
                     <Alarm />
-                    {/* 친구 버튼 */}
                     <FriendsBtn />
                   </div>
                 </nav>
@@ -266,7 +270,7 @@ export default function RootLayout() {
                   {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                   <Avatar>
                     <AvatarImage
-                      src="/image/liveImage.png"
+                      src={userInfo && userInfo.userProfileImg}
                       alt="프사"
                       className="bg-cover"
                     />
@@ -275,9 +279,7 @@ export default function RootLayout() {
                   {/* <div className={classes.user_image} /> */}
                 </Link>
 
-                {/* 알림 버튼 */}
                 <Alarm />
-                {/* 친구 버튼 */}
                 <FriendsBtn />
               </div>
             </nav>
