@@ -7,8 +7,10 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
-import org.ssafy.ssafy_common2.user.dto.Request.UserBackImgRequestDto;
+import org.ssafy.ssafy_common2.user.dto.Request.UserProfileRequestDto;
 import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserProfileEditResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserProfileResponseDto;
 import org.ssafy.ssafy_common2.user.service.UserDataService;
 
 import java.io.IOException;
@@ -33,13 +35,27 @@ public class UserDataController {
     public ApiResponseDto<UserDataResponseDto> getEmailProfileImg(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         UserDataResponseDto map = userDataService.getEmailProfileImg(userDetails.getUser());
-        return ResponseUtils.ok(map, MsgType.SEARCH_EMAIL_PROFILE_IMG_SUCCESSFULLY);
+        return ResponseUtils.ok(map, MsgType.SEARCH_MY_PROFILE_DATA_SUCCESSFULLY);
     }
 
-    @PutMapping("/users/back-img")
-    public ApiResponseDto<Void> updateUserBackImg(@AuthenticationPrincipal UserDetailsImpl userDetails, @ModelAttribute UserBackImgRequestDto dto) throws IOException {
+    @GetMapping("/users/data/{user-id}")
+    public ApiResponseDto<UserDataResponseDto> getUserData(@PathVariable(value = "user-id") Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        userDataService.updateUserBackImg(userDetails.getUser(), dto);
-        return ResponseUtils.ok(MsgType.UPDATE_USER_BACK_IMG_SUCCESSFULLY);
+        UserDataResponseDto map = userDataService.getUserData(userId, userDetails.getUser());
+        return ResponseUtils.ok(map, MsgType.SEARCH_USER_DATA_SUCCESSFULLY);
+    }
+
+    @PutMapping("/users/profile-edit")
+    public ApiResponseDto<UserProfileResponseDto> updateUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @ModelAttribute UserProfileRequestDto dto) throws IOException {
+
+        UserProfileResponseDto ans = userDataService.updateUserProfile(userDetails.getUser(), dto);
+        return ResponseUtils.ok(ans, MsgType.UPDATE_USER_PROFILE_DATA_SUCCESSFULLY);
+    }
+
+    @GetMapping("/users/profile-edit")
+    public ApiResponseDto<UserProfileEditResponseDto> getProfileEdit(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        UserProfileEditResponseDto dto = userDataService.getProfileEdit(userDetails.getUser());
+        return ResponseUtils.ok(dto, MsgType.SEARCH_USER_EDIT_DATA_SUCCESSFULLY);
     }
 }

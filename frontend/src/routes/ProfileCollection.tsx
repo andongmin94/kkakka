@@ -2,20 +2,48 @@ import { useParams } from "react-router-dom";
 import { Mobile, PC } from "@/components/MediaQuery";
 import Collection from "@/components/profile/Collection";
 import AddCollection from "@/components/profile/AddCollection";
-import useProfileDogamsQuery from "@/apis/profile/dogam/queries/useProfileDogamsQuery";
-import useMyDataQuery from "@/apis/user/queries/useMyDataQuery";
-// 프로필 도감은 백에서 미완이라 안뜸
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { ProfileDogamType } from "@/types/dogamTypes";
+import { UserType } from "@/types/userTypes";
+
 export default function ProfileCollection() {
   const params = useParams();
+  const token = localStorage.getItem("token");
 
-  const { userData } = useMyDataQuery();
-  const userEmail = userData?.userEmail;
-  const { profileDogams, isLoading, error } = useProfileDogamsQuery({
-    userEmail,
-  });
+  // 백 api 미완
+  const [profileDogams, setProfileDogams] = useState<ProfileDogamType[] | null>(
+    null
+  );
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/profile/dogam?user-id=${
+          params.id
+        }`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        setProfileDogams(res.data.data);
+      });
+  }, []);
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다.{error.message}</div>;
+  const [myData, setMyData] = useState<UserType | null>(null);
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setMyData(res.data.data);
+      });
+  }, []);
 
   return (
     <>
@@ -29,7 +57,9 @@ export default function ProfileCollection() {
         </div>
         {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
         <div className="flex justify-center mb-2 fixed bottom-0 left-5">
-          {params.id != userData.userId ? <AddCollection /> : null}
+          {Number(params.id) != (myData && myData.userId) ? (
+            <AddCollection userId={Number(params.id)} />
+          ) : null}
         </div>
       </PC>
 
@@ -45,7 +75,9 @@ export default function ProfileCollection() {
         </div>
         {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
         <div className="flex justify-center mb-2 fixed bottom-1 right-20">
-          {params.id != userData.userId ? <AddCollection /> : null}
+          {Number(params.id) != (myData && myData.userId) ? (
+            <AddCollection userId={Number(params.id)} />
+          ) : null}
         </div>
       </Mobile>
     </>

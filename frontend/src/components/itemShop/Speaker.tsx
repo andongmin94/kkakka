@@ -8,23 +8,41 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const FormSchema = z.object({
   textSpeaker: z.string().min(2, {
     message: "2글자 이상으로 입력해주세요!",
   }),
 });
+import axios from "axios";
 
 export default function Speaker({
   itemName,
   itemPrice,
   itemDesc,
+  myPoint,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
+  myPoint: number;
 }) {
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -111,7 +129,7 @@ export default function Speaker({
                   )}
                 />
                 <div className="font-bold text-center mb-3">
-                  구입 후 잔여 포인트 4000 P
+                  구입 후 잔여 포인트 {myPoint - itemPrice} P
                 </div>
 
                 <DialogFooter className="flex sm:justify-center">
@@ -139,9 +157,29 @@ export default function Speaker({
                         form.getValues().textSpeaker.length > 1
                       ) {
                         // 보낼 데이터 객체 textSpeaker
-                        // const data = {
-                        //   textSpeaker: form.getValues().textSpeaker,
-                        // };
+                        const data = {
+                          content: form.getValues().textSpeaker,
+                        };
+                        
+                        const token = localStorage.getItem("token");
+
+                        // 확성기 구매
+                        axios
+                        .post(`${import.meta.env.VITE_API_BASE_URL}/api/friends/megaphone`, {
+                          content: data.content,
+                        }, {
+                          headers: {
+                            Authorization: token,
+                          },
+                        }).then((res) =>  {
+                          // 확성기 구매 성공
+                          console.log(res)
+                        })
+                        .catch((error) => {
+                          // 확성기 구매 실패
+                          console.log(error)
+                        })
+
                         // 데이터 보내는거 확인 완료
                         // console.log(data);
                         setOpenDialog(false);

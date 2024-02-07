@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
-import org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.*;
-import org.ssafy.ssafy_common2.chatting.entity.Message;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +32,7 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
 
 
     // 5) 사용자 ID와 RoomID로 해당 채팅참여가 진짜 있는지 확인
-    @Query(value = "SELECT * FROM chat_join cj WHERE cj.user_id = :userId AND cj.chat_room_id = :chatRoomId "
+    @Query(value = "SELECT * FROM chat_join cj WHERE cj.user_id = :userId AND cj.chat_room_id = :chatRoomId AND cj.deleted_at IS NULL "
            , nativeQuery = true)
     Optional<ChatJoin> getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(@Param("userId")long userId, @Param("chatRoomId") long chatRoomId);
 
