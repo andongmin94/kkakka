@@ -23,6 +23,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import SysMsg from "@/components/message/SysMsg";
+import { DogamDetailType } from "@/types/dogamTypes";
 
 let stompClient: any;
 let roomId2: any;
@@ -44,6 +45,9 @@ export default function MessageTestPage() {
   // 현재 사용자가 업로드한 이미지
   const [curImg, setImgFile] = useState("");
   const imgRef = useRef();
+
+  // 도감 전체 목록
+  const [dogamList, setDogamList] = useState<DogamDetailType[]>([]);
 
   const handleSendMessage = (message: any) => {
     console.log(message);
@@ -186,6 +190,7 @@ export default function MessageTestPage() {
     // console.log(userInfo);
     // console.log(friendsInfo);
 
+    // 이전 메시지 불러오기
     axios
       .get(
         `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/load/${roomId}`,
@@ -201,8 +206,19 @@ export default function MessageTestPage() {
           ...prevMessages,
           ...res.data.data.content.reverse(),
         ]);
-        console.log("ddd");
-        console.log(res.data.data.content);
+        // console.log("ddd");
+        // console.log(res.data.data.content);
+      });
+
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res: any) => {
+        console.log(res.data.data);
+        setDogamList(res.data.data);
       });
 
     return () => {
@@ -225,7 +241,7 @@ export default function MessageTestPage() {
         // { userId: userInfo.userId, chatRoomId: userInfo.roomId }
         ();
     };
-  }, []);
+  }, [roomId]);
 
   const [chatImage, setChatImage]: any = useState(null);
   const imageChange = async (e: any) => {
@@ -266,189 +282,234 @@ export default function MessageTestPage() {
     <>
       {/* ------------------------------------------------------- */}
       {/* 피시 화면 */}
-      <PC>
-        <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
-          <div className="w-[800px] h-full border-8 rounded-3xl grid grid-rows-12 border-red-200">
-            {/* 채팅 화면 상단 사용자 정보 바 */}
-            <div className="w-full row-span-2 flex justify-between items-center rounded-3xl border-b-4">
-              {/* 왼쪽 사용자 정보 */}
-              <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-10">
-                {/* 사용자 프사 */}
-                <img
-                  src={friendsInfo.userProfileImg}
-                  className=" rounded-full w-[80px] h-[80px]"
-                />
-                <div className="flex flex-col items-center gap-3">
-                  {/* 칭호 */}
-                  <MessageAlias alias={friendsInfo.userAlias} />
-                  {/* 이름 */}
-                  <p className="font-bold text-2xl">{friendsInfo.userName}</p>
-                </div>
+      <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
+        <div className="w-[800px] h-full border-8 rounded-3xl grid grid-rows-12 border-red-200">
+          {/* 채팅 화면 상단 사용자 정보 바 */}
+          <div className="w-full row-span-2 flex justify-between items-center rounded-3xl border-b-4">
+            {/* 왼쪽 사용자 정보 */}
+            <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-10">
+              {/* 사용자 프사 */}
+              <img
+                src={friendsInfo.userProfileImg}
+                className=" rounded-full w-[80px] h-[80px]"
+              />
+              <div className="flex flex-col items-center gap-3">
+                {/* 칭호 */}
+                <MessageAlias alias={friendsInfo.userAlias} />
+                {/* 이름 */}
+                <p className="font-bold text-2xl">{friendsInfo.userName}</p>
               </div>
-              {/* 프로필 보기 버튼 */}
-              {/* 해당 사람의 프로필로 이동한다 */}
-              {/* 임시 정적 데이터로 profileId를 넣었음 */}
-              <Link to={`/main/profile/${friendsInfo.userId}`}>
-                <Button
-                  type="submit"
-                  variant="secondary"
-                  className="border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] mr-10 rounded-xl"
-                >
-                  프로필 보기
-                </Button>
-              </Link>
             </div>
-            {/* -------------------------------------------------------------------------------------------------------------------- */}
-
-            {/* 채팅창 부분 */}
-            <div
-              ref={chatContainerRef}
-              className="w-full row-span-9  overflow-y-auto scrollbar-hide flex-row"
-            >
-              {/* 채팅 전체 내역을 출력 */}
-              {messages.map((data, idx) => {
-                return (
-                  <div className="flex flex-col" key={idx}>
-                    <div
-                      className={`flex ${
-                        data.messageType === "ENTER"
-                          ? "justify-center"
-                          : data.userId === userInfo.userId
-                          ? "justify-end"
-                          : "justify-start"
-                      } mb-2`}
-                    >
-                      {data.messageType === "ENTER" ? (
-                        <SysMsg data={data} />
-                      ) : data.userId === userInfo.userId ? (
-                        // 내 메세지 컴포넌트
-                        <MyMsg data={data} key={idx} />
-                      ) : (
-                        // 상대방 메세지 컴포넌트
-                        <YouMsg
-                          data={data}
-                          userName={friendsInfo.userName}
-                          userProfileImg={friendsInfo.userProfileImg}
-                          key={idx}
-                        />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            {/* -------------------------------------------------------------------------------------------------------------------- */}
-
-            {/* 채팅 하단 부분 */}
-            <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-6 rounded-3xl">
-              {/* 사진 버튼 */}
-              <Dialog>
-                <DialogTrigger asChild>
-                  {/*  사진 버튼 */}
-                  <button>
-                    <img
-                      src="/image/messagePicture.png"
-                      className="h-[50px] w-[50px]"
-                    />
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>이미지 선택</DialogTitle>
-                  </DialogHeader>
-                  <div className="flex flex-col w-full mb-5 mt-5">
-                    {/* 이미지 선택 모달 */}
-                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                      <Label htmlFor="picture2" className="font-bold">
-                        이미지 파일을 선택하세요
-                      </Label>
-                      <Input
-                        id="picture2"
-                        type="file"
-                        // 이미지 파일만 선택되게
-                        accept="image/*"
-                        onChange={imageChange}
-                      />
-                    </div>
-                  </div>
-
-                  {/* 하단 부분 */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-x-5">
-                      {chatImage ? (
-                        <img
-                          src={chatImage}
-                          className="h-20 w-[100px] rounded-lg border-2"
-                        />
-                      ) : (
-                        <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
-                          이미지 없음
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <DialogClose asChild>
-                        {/* 이미지 보내기 버튼 */}
-                        <Button
-                          type="submit"
-                          variant="secondary"
-                          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                          onClick={(_) => {
-                            //   이미지는 url 형식임
-                            handleImageChange();
-                            // 초기화
-                            setChatImage(null);
-                          }}
-                        >
-                          보내기
-                        </Button>
-                      </DialogClose>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              {/* 도감 버튼 */}
-              <button>
-                <img
-                  src="/image/messageDogam.png"
-                  className="h-[50px] w-[50px]"
-                />
-              </button>
-              {/* 채팅 입력칸 */}
-              <form
-                className="flex justify-center items-center gap-4 rounded-3xl w-[600px]"
-                // 채팅 전송을 눌렀을때 함수
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendMessageToSocket(inputChat);
-
-                  // 채팅 입력창 초기화
-                  setInputChat("");
-                }}
+            {/* 프로필 보기 버튼 */}
+            {/* 해당 사람의 프로필로 이동한다 */}
+            {/* 임시 정적 데이터로 profileId를 넣었음 */}
+            <Link to={`/main/profile/${friendsInfo.userId}`}>
+              <Button
+                type="submit"
+                variant="secondary"
+                className="border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] mr-10 rounded-xl"
               >
-                {/* 채팅 입력창 */}
-                <Input
-                  type="text"
-                  className="w-[520px] font-bold text-xl"
-                  onChange={(e) => {
-                    // 입력받은 정보를 상태관리
-                    setInputChat(e.target.value);
-                  }}
-                  value={inputChat}
-                />
-                {/* 채팅 입력 버튼 */}
-                <button type="submit">
-                  <img src="/image/chatBtn.png" className="h-[50px] w-[50px]" />
+                프로필 보기
+              </Button>
+            </Link>
+          </div>
+          {/* -------------------------------------------------------------------------------------------------------------------- */}
+
+          {/* 채팅창 부분 */}
+          <div
+            ref={chatContainerRef}
+            className="w-full row-span-9  overflow-y-auto scrollbar-hide flex-row"
+          >
+            {/* 채팅 전체 내역을 출력 */}
+            {messages.map((data, idx) => {
+              return (
+                <div className="flex flex-col" key={idx}>
+                  <div
+                    className={`flex ${
+                      data.messageType === "ENTER"
+                        ? "justify-center"
+                        : data.userId === userInfo.userId
+                        ? "justify-end"
+                        : "justify-start"
+                    } mb-2`}
+                  >
+                    {data.messageType === "ENTER" ? (
+                      <SysMsg data={data} />
+                    ) : data.userId === userInfo.userId ? (
+                      // 내 메세지 컴포넌트
+                      <MyMsg data={data} key={idx} />
+                    ) : (
+                      // 상대방 메세지 컴포넌트
+                      <YouMsg
+                        data={data}
+                        userName={friendsInfo.userName}
+                        userProfileImg={friendsInfo.userProfileImg}
+                        key={idx}
+                      />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {/* -------------------------------------------------------------------------------------------------------------------- */}
+
+          {/* 채팅 하단 부분 */}
+          <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-6 rounded-3xl">
+            {/* 사진 버튼 */}
+            <Dialog>
+              <DialogTrigger asChild>
+                {/*  사진 버튼 */}
+                <button>
+                  <img
+                    src="/image/messagePicture.png"
+                    className="h-[50px] w-[50px]"
+                  />
                 </button>
-              </form>
-            </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>이미지 선택</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col w-full mb-5 mt-5">
+                  {/* 이미지 선택 모달 */}
+                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="picture2" className="font-bold">
+                      이미지 파일을 선택하세요
+                    </Label>
+                    <Input
+                      id="picture2"
+                      type="file"
+                      // 이미지 파일만 선택되게
+                      accept="image/*"
+                      onChange={imageChange}
+                    />
+                  </div>
+                </div>
+
+                {/* 하단 부분 */}
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-x-5">
+                    {chatImage ? (
+                      <img
+                        src={chatImage}
+                        className="h-20 w-[100px] rounded-lg border-2"
+                      />
+                    ) : (
+                      <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
+                        이미지 없음
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <DialogClose asChild>
+                      {/* 이미지 보내기 버튼 */}
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                        onClick={(_) => {
+                          //   이미지는 url 형식임
+                          handleImageChange();
+                          // 초기화
+                          setChatImage(null);
+                        }}
+                      >
+                        보내기
+                      </Button>
+                    </DialogClose>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            {/* 도감 버튼 */}
+            <Dialog>
+              <DialogTrigger asChild>
+                {/* 도감버튼 */}
+                <button>
+                  <img
+                    src="/image/messageDogam.png"
+                    className="h-[50px] w-[50px]"
+                  />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>도감 선택</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col w-full mb-5 mt-5 justify-center">
+                  {/* 도감 선택 모달 */}
+                  <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
+                    {dogamList.map((dogam, idx) => {
+                      return (
+                        <img
+                          src={dogam.dogamImgUrl}
+                          className="h-20 w-[100px] rounded-lg border-2"
+                          key={idx}
+                          onClick={() => {
+                            console.log(dogam.dogamImgUrl);
+                            setChatImage(dogam.dogamImgUrl);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 하단 부분 */}
+                <div className="flex justify-center items-center">
+                  <DialogClose asChild>
+                    {/* 이미지 보내기 버튼 */}
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                      onClick={(_) => {
+                        //   이미지는 url 형식임
+                        handleImageChange();
+                        // 초기화
+                        setChatImage(null);
+                      }}
+                    >
+                      보내기
+                    </Button>
+                  </DialogClose>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* 채팅 입력칸 */}
+            <form
+              className="flex justify-center items-center gap-4 rounded-3xl w-[600px]"
+              // 채팅 전송을 눌렀을때 함수
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendMessageToSocket(inputChat);
+
+                // 채팅 입력창 초기화
+                setInputChat("");
+              }}
+            >
+              {/* 채팅 입력창 */}
+              <Input
+                type="text"
+                className="w-[520px] font-bold text-xl"
+                onChange={(e) => {
+                  // 입력받은 정보를 상태관리
+                  setInputChat(e.target.value);
+                }}
+                value={inputChat}
+              />
+              {/* 채팅 입력 버튼 */}
+              <button type="submit">
+                <img src="/image/chatBtn.png" className="h-[50px] w-[50px]" />
+              </button>
+            </form>
           </div>
         </div>
-      </PC>
+      </div>
+
       {/* 모바일 화면 */}
-      <Mobile>
-        <></>
-      </Mobile>
     </>
   );
 }
