@@ -45,7 +45,7 @@ COPY nginx.conf /etc/nginx/conf.d/
 COPY /build /usr/share/nginx/html
 
 # 포트 80을 노출
-EXPOSE 80
+EXPOSE 3000
 
 # Nginx를 백그라운드에서 실행
 CMD ["nginx", "-g", "daemon off;"]
