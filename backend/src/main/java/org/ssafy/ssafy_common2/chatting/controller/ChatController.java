@@ -16,7 +16,6 @@ import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
-import org.ssafy.ssafy_common2.chatting.entity.Message;
 import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
 import org.ssafy.ssafy_common2.chatting.repository.MessageRepository;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
@@ -67,7 +66,7 @@ public class ChatController {
                 // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
+                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(), null,
                         msg.getCreatedAt(), msg.getUpdateAt());
             }
 
@@ -110,7 +109,7 @@ public class ChatController {
             if(chatJoin != null){
                 if(msg.getImgCode() == null){
                     // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                    messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
+                    messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(), null,
                             msg.getCreatedAt(), msg.getUpdateAt());
                 }else {
                     ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
@@ -121,6 +120,7 @@ public class ChatController {
                             msgWithImg.getMessageType(),
                             msgWithImg.getUserId(),
                             msgWithImg.getChatRoomId(),
+                            msgWithImg.getImgCode(),
                             msgWithImg.getCreatedAt()
                     ,msgWithImg.getUpdateAt());
 
@@ -165,7 +165,7 @@ public class ChatController {
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
                 messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
-                        msg.getCreatedAt(), msg.getUpdateAt());
+                   null,     msg.getCreatedAt(), msg.getUpdateAt());
             }
 
             // 2-3) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기

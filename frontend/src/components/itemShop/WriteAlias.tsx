@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Price from "./Price";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
@@ -50,7 +50,6 @@ const FormSchema = z.object({
   name: z.string({
     required_error: "친구를 선택하세요!",
   }),
-
 });
 
 export default function WriteAlias({
@@ -67,7 +66,7 @@ export default function WriteAlias({
   friends: FriendType[];
 }) {
 
-  console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
+  //console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
 
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = useState(false);
