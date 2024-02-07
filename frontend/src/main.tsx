@@ -25,6 +25,7 @@ import SettingPage from "@/electron/SettingPage";
 /////////////////////////////////////////////////////
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MessageTestPage from "./routes/MessageTestPage";
+import LiveChat from "./routes/LiveChat";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       { path: "/main/intro", element: <IntroPage /> },
       // 채팅 테스트용
       { path: "/main/message/:id", element: <MessageTestPage /> },
+      { path: "/main/liveChat/:id", element: <LiveChat /> },
       {
         path: "/main/profile/:id",
         element: <ProfilePage />,
@@ -69,12 +71,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode> 이녀석 킹받으니까 일단 주석 처리
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <QueryClientProvider client={queryClient}>
-        {typeof electron !== "undefined" && <TitleBar />}
-        <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ThemeProvider>
+  <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <QueryClientProvider client={queryClient}>
+      {typeof electron !== "undefined" && <TitleBar />}
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </ThemeProvider>
   // </React.StrictMode>
 );
