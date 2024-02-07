@@ -1,5 +1,6 @@
 import LiveProfile from "./LiveProfile";
 import Live from "@/components/ani/Live";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -8,18 +9,37 @@ import {
 } from "@/components/ui/card";
 import { BroadcastItemType } from "@/types/broadcastTypes";
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
-
+import axios from "axios";
 
 export default function LiveContent({
   liveData,
 }: {
   liveData: BroadcastItemType;
 }) {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   return (
     // 배너 이미지 - 배경이미지는 api로 아직 안들어와서 일단 이렇게 처리했어요
     <Card
       className={`border-solid border-4 rounded-3xl bg-[url(${liveData.playerKakaoImg})] bg-cover h-[15rem] w-[23rem] grid grid-rows-5 lg:hover:scale-105 transition-transform ease-in-out duration-500`}
+      onClick={() => {
+        // console.log(liveData);
+        axios
+          .post(
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/broadcasts/enter/${liveData.playerId}`,
+            {},
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
+          .then((res) => {
+            navigate(`/main/liveChat/${res.data.data}`, { state: liveData });
+          });
+      }}
     >
       <CardHeader className="p-1 grid grid-cols-2">
         <Live />
@@ -40,11 +60,7 @@ export default function LiveContent({
         </div>
       </CardHeader>
       <CardContent className="p-1 row-span-2">
-        <Link to={`/main/message/${liveData.roomId}`}>
-            <Button>
-              입장하기
-            </Button>
-        </Link>
+        {/* <Button>입장하기</Button> */}
       </CardContent>
       <CardFooter className="p-2 row-span-2">
         {/* 플레이중인 친구 프사 props로 전달) */}

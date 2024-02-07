@@ -5,6 +5,7 @@ export interface CrowdType {
 }
 
 export interface BroadcastItemType {
+  playerId: number;
   playerEmail: string;
   playerName: string;
   playerKakaoImg: string;
