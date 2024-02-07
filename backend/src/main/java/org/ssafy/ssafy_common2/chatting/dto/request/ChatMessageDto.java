@@ -18,8 +18,11 @@ public class ChatMessageDto {
     // 메세지 내용
     private String content;
 
-    // 보낸 이
+    // 보낸 사람의 아이디
     private long userId;
+
+    // 보낸 사람의 이름
+    private String userName;
 
     // 메세지가 보내진 채팅방
     private long chatRoomId;
@@ -46,8 +49,8 @@ public class ChatMessageDto {
         this.imgCode = imgCode;
     }
 
-    public static ChatMessageDto of (String messageType, String content, long userId, long chatRoomId,
-                                     LocalDateTime createdAt, LocalDateTime updateAt, String imgCode){
+    public static ChatMessageDto of (String messageType, String content, long userId,
+                                     long chatRoomId, LocalDateTime createdAt, LocalDateTime updateAt, String imgCode){
         return  builder().messageType(messageType)
                 .content(content)
                 .userId(userId)
@@ -66,6 +69,7 @@ public class ChatMessageDto {
                 "messageType='" + messageType + '\'' +
                 ", content='" + content + '\'' +
                 ", userId=" + userId +
+                ", userName=" + userName +
                 ", chatRoomId=" + chatRoomId +
                 ", createdAt=" + createdAt +
                 ", updateAt=" + updateAt +
