@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
-import org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.*;
-import org.ssafy.ssafy_common2.chatting.entity.Message;
 
 import java.time.LocalDateTime;
 import java.util.List;

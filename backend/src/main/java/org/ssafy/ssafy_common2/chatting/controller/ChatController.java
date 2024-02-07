@@ -67,8 +67,9 @@ public class ChatController {
                 // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
-                        msg.getCreatedAt(), msg.getUpdateAt());
+
+                messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER, msg.getImgCode()));
+
             }
 
 
@@ -110,19 +111,13 @@ public class ChatController {
             if(chatJoin != null){
                 if(msg.getImgCode() == null){
                     // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                    messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
-                            msg.getCreatedAt(), msg.getUpdateAt());
+                    messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK, msg.getImgCode()));
                 }else {
                     ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
 
                     System.out.println(msgWithImg.toString());
 
-                    messageRepository.InsertMessage(msgWithImg.getContent(),
-                            msgWithImg.getMessageType(),
-                            msgWithImg.getUserId(),
-                            msgWithImg.getChatRoomId(),
-                            msgWithImg.getCreatedAt()
-                    ,msgWithImg.getUpdateAt());
+                    messageRepository.save(Message.of(msgWithImg.getContent(), chatJoin, Message.MessageType.TALK, msgWithImg.getImgCode()));
 
                     msg = msgWithImg;
                 }
@@ -164,8 +159,7 @@ public class ChatController {
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
-                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType(), msg.getUserId(), msg.getChatRoomId(),
-                        msg.getCreatedAt(), msg.getUpdateAt());
+                messageRepository.save(Message.of(msg.getContent(), chatJoin, Message.MessageType.ENTER, msg.getImgCode()));
             }
 
             // 2-3) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기
