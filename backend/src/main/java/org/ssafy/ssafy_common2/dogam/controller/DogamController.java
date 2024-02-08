@@ -11,6 +11,7 @@ import org.ssafy.ssafy_common2.dogam.dto.response.DogamDetailResponseDto;
 import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
 import org.ssafy.ssafy_common2.dogam.dto.response.DogamCreateResponseDto;
 import org.ssafy.ssafy_common2.dogam.dto.response.DogamMainListResponseDto;
+import org.ssafy.ssafy_common2.dogam.dto.response.DogamProfileListResponseDto;
 import org.ssafy.ssafy_common2.dogam.service.DogamService;
 
 import java.io.IOException;
@@ -29,13 +30,12 @@ public class DogamController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        return ResponseUtils.ok(dogamService.dogamList(userDetails.getUser(), page, size), MsgType.CREATE_DOGAM_LIST_SUCCESSFULLY);
+        return ResponseUtils.ok(dogamService.dogamList(userDetails.getUser(), page, size), MsgType.SEARCH_MAIN_DOGAM_LIST_SUCCESSFULLY);
     }
 
 
-
     @PostMapping("/friends/dogam")
-    public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "friend-user-id", required = true) Long friendId , @ModelAttribute DogamCreateRequestDto dto
+    public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "friend-user-id", required = true) Long friendId, @ModelAttribute DogamCreateRequestDto dto
             , @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
         return ResponseUtils.ok(dogamService.createDogam(dto, friendId, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
@@ -52,5 +52,16 @@ public class DogamController {
     public ApiResponseDto<DogamDetailResponseDto> dogamDetail(@PathVariable(value = "dogam-id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseUtils.ok(dogamService
                 .dogamDetail(dogamId, userDetails.getUser()), MsgType.SEARCH_DOGAM_DETAIL_SUCCESSFULLY);
+    }
+
+    @GetMapping("/friends/dogam/users/{user-id}")
+    public ApiResponseDto<List<DogamProfileListResponseDto>> dogamProfileList(
+            @PathVariable(value = "user-id") Long userId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseUtils.ok(dogamService
+                .dogamProfileList(userId, userDetails.getUser(),page,size), MsgType.SEARCH_PROFILE_DOGAM_LIST_SUCCESSFULLY);
     }
 }
