@@ -26,7 +26,7 @@ export default function RootLayout() {
   const { userInfo, setUserInfo } = useUserStore();
   const { data: userData } = useUserDataQuery();
 
-  const { point, setPoint } = usePointStore();
+  const { setPoint } = usePointStore();
   const { usePointQuery } = usePoint();
   const { data: userPointData } = usePointQuery();
 
@@ -46,7 +46,7 @@ export default function RootLayout() {
     }
   }, [userPointData]);
 
-  const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
+  const { setLastEventId } = useAlarmSubscribeStore();
 
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>("");
@@ -77,7 +77,7 @@ export default function RootLayout() {
       setLastEventId(data.id);
     });
 
-    source.addEventListener("megaphone", (event) => {
+    source.addEventListener("megaphone", (event: any) => {
       // useEffect 안에 있어서 set이 잘 안됨는거 같음
       const parseData = JSON.parse(event.data);
 
