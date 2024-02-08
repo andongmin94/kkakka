@@ -218,7 +218,18 @@ public class ChatController {
 
                         Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK,msg.getImgCode());
 
+
+
                         messageRepository.save(message);
+
+                        User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                        if(sender != null) {
+                            msgWithImg.setUserName(sender.getUserName());
+                            msgWithImg.setUserProfileImg(sender.getKakaoProfileImg());
+                            msgWithImg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
+                        }
+
 
                         msg = msgWithImg;
                     }
