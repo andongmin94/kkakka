@@ -14,6 +14,7 @@ public class LiveBroadcastListDto {
     private long playerId;
     private String playerEmail;
     private String playerName;
+    private String playerAlias;
     private String playerProfilePic;
     private String playerBackgroundPic;
     private long roomId;

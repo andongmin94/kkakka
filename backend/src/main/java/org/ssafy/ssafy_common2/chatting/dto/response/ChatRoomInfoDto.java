@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +27,7 @@ public class ChatRoomInfoDto {
     private LocalDateTime lastWrittenMessageTime;
     private int unreadMessageCnt;
     private boolean tenMinute;
+    private List<CrowdDto> crowdDtoList;
 
     @Builder
     private ChatRoomInfoDto (Long friendId,Long roomId, ChatRoom.ChatRoomType chatRoomType, String friendName, String friendEmail, String friendImgUrl,
