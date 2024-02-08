@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useUserStore from "@/store/user/userStore";
 import { useRef } from "react";
 import { useUserDataPut } from "@/hooks/user/mutations/useUserDataPut";
+const electron = window.electron;
 
 export default function LoginSuccessPage() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function LoginSuccessPage() {
 
   return (
     <>
+    <br /><br /><br /><br /><br />
       <div>롤 아이디를 입력하세요</div>
       <form action="">
         <input type="text" ref={lolId} />
