@@ -48,8 +48,8 @@ function startNotification (title = "까까 앱 가동", body = "copyright 2024 
   new Notification(notification).show()
 }
 
-function showNotification (title = "까까 앱 가동", body = "copyright 2024 김상훈", icon) {
-  let notification = { title, body, icon }
+function showNotification (title = "까까 앱 가동", body = "copyright 2024 김상훈") {
+  let notification = { title, body }
   new Notification(notification).show()
 }
 
@@ -141,8 +141,7 @@ app.whenReady().then(createWindow).then(async () => {
             });
 
             const allGameData = response.data;
-            const activePlayer = allGameData.activePlayer;
-            const playerName = activePlayer.summonerName;
+
             const events = allGameData.events;
             // variable areas
 
@@ -175,7 +174,7 @@ app.whenReady().then(createWindow).then(async () => {
                   sendMessageToSocket(players_info[i].team + "팀 플레이어 : " + players_info[i].summonerName + "(" + players_info[i].championName + ")" + ", " + players_info[i].summonerSpells1 + "(D) " + players_info[i].summonerSpells2 + "(F)");
                 }, i * 500);
               }
-              setTimeout(() => {sendMessageToSocket(playerName + "(" + userInfo.userName + ")이 과연 이길 수 있을까?")}, 6000);
+              setTimeout(() => {sendMessageToSocket(userInfo.riotId + "(" + userInfo.userName + ")이 과연 이길 수 있을까?")}, 6000);
             }
             
             sendNewEvents(events);
@@ -244,7 +243,7 @@ let roomId;
 let clientHeader;
 
 const connect =  (event) => {
-  var sockJS = new SockJS("http://localhost:8080/ws-stomp");
+  var sockJS = new SockJS(BASE_URL + "/ws-stomp");
   stompClient = Stomp.over(sockJS);
   stompClient.connect(clientHeader,onConnected, onError);
 }
@@ -274,8 +273,11 @@ function sendMessageToSocket(message) {
 function onMessageReceivedFromSocket (payload){
   
   var chat = JSON.parse(payload.body);
+  console.log("들어온 메세지:" + payload.body);
   console.log("들어온 메세지:" + chat.content);
-  if (chat.userName !== userInfo.userName) {showNotification(chat.userName, chat.content, chat.imgCode)}
+  // if (chat.userName !== userInfo.userName) {
+    showNotification(chat.userName, chat.content, chat.imgCode)
+  // }
   
   const messageDTO = {
     isUser: chat.userId === TESTUSER? true : false,
