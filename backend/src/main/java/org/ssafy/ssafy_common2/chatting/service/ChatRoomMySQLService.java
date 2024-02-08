@@ -113,9 +113,34 @@ public class ChatRoomMySQLService {
 
             element.setRoomId(temp.get(i).getChatJoinId().getChatRoomId());
             element.setChatRoomType(Optional.ofNullable(roomInfo.getChatRoomType()).orElse(ChatRoom.ChatRoomType.DEAD));
-            element.setFriendName(Optional.ofNullable(roomInfo.getChatOwnerName()).orElse("해당 채팅방의 주인ID을 찾지 못했습니다."));
             element.setFriendEmail(Optional.ofNullable(roomInfo.getChatOwnerEmail()).orElse("해당 채팅방 주인의Email을 찾지 못했습니다."));
             element.setTenMinute(Optional.ofNullable(roomInfo.isTenMinute()).orElse(false));
+
+            // 참여한 사람들 List 얻기
+
+            // 참여 정보 얻기
+            List<ChatJoin> chatJoin = chatJoinRepository.findChatJoinByChatJoinId_ChatRoomId(roomInfo.getId());
+
+
+            // 빈 객체
+            ArrayList<CrowdDto> crowdList = new ArrayList<>();
+
+            // 값 넣기
+            for (int j = 0; j < chatJoin.size(); j++) {
+                CrowdDto one = new CrowdDto();
+                User crowdMember = userRepository.findByIdAndDeletedAtIsNull(chatJoin.get(j).getUser().getId()).orElse(null);
+
+                one.setAttenderEmail(crowdMember.getKakaoEmail());
+                one.setAttenderProfileImg(crowdMember.getKakaoProfileImg());
+                one.setAttenderName(crowdMember.getUserName());
+
+                crowdList.add(one);
+            }
+
+            // 9-5) 답 속에 포함
+            element.setCrowdDtoList(crowdList);
+
+
             // 6-2) 유저 아이디로 유저 정보 얻기
             User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
@@ -228,6 +253,7 @@ public class ChatRoomMySQLService {
                 elements.setPlayerId(friendInfoList.get(i).getUserId());
                 elements.setPlayerEmail(friendInfoList.get(i).getEmail());
                 elements.setPlayerName(chatRoom.getChatOwnerName());
+                elements.setPlayerAlias(friendInfoList.get(i).getCurAlias());
                 elements.setRoomTitle(RandomPickRoomTitle());
                 elements.setRoomId(chatRoom.getId());
                 elements.setPlayerProfilePic(friend.getKakaoProfileImg());
