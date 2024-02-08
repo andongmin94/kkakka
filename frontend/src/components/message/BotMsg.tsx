@@ -1,5 +1,5 @@
 import TypeIt from "typeit-react";
-import { Mobile, PC } from "../MediaQuery";
+// import { Mobile, PC } from "../MediaQuery";
 
 interface dataProps {
   chatRoomId: number;

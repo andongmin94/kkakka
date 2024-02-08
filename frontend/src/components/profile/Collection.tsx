@@ -14,7 +14,7 @@ export default function Collection({ dogam }: { dogam: ProfileDogamType }) {
         <div className="flex gap-3 pb-3 font-bold items-center">
           {/* 싫어요 */}
           <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-            <ThumbsDown tD={dogam.hated} />
+            <ThumbsDown tD={dogam.hated} dogamId={dogam.dogamId} />
           </div>
           <div className=" flex self-center mr-4 text-xl text-blue-600">
             {dogam.dogamDislikeNum}

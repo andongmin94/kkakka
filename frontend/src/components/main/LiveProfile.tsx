@@ -14,7 +14,7 @@ function Skeleton({
 }
 
 export default function LiveProfile({
-  playerName,
+  // playerName,
   roomTitle,
   playerProfilePic,
 }: LiveProfileProps) {

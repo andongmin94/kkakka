@@ -17,7 +17,7 @@ export const useUserDataPut = () => {
       updateUserData({ data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userData"] });
-      window.alert("저장되었습니다.");
+      console.log("수정 성공");
     },
   });
 

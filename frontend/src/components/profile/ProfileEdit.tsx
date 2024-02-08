@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Mobile, PC } from "../MediaQuery";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,47 +12,53 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import axios from "axios";
-import { UserType } from "@/types/userTypes";
+import useUserStore from "@/store/user/userStore";
 
 export default function ProfileEdit() {
-  const [myData, setMyData] = useState<UserType | null>(null);
-
+  const { userInfo } = useUserStore();
+  const userprofileImage = userInfo.userProfileImg;
+  const userbackImage = userInfo.userBackImg;
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        setMyData(res.data.data);
-      });
-  }, []);
+  const [profileImg, setProfileImg] = useState<string | ArrayBuffer | null>(
+    userprofileImage
+  );
+  const [backImg, setBackImg] = useState<string | ArrayBuffer | null>(
+    userbackImage
+  );
 
-  const [profileImg, setProfileImg] = useState(null);
-  const [backImg, setBackImg] = useState(null);
+  // 미리보기 이미지 프로세싱
+  const processFile = (
+    currentFile: File
+  ): Promise<string | ArrayBuffer | null> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(currentFile);
+      reader.onload = () => {
+        const result = reader.result;
+        resolve(result);
+      };
+    });
+  };
+
+  const parseFile = async (currentFile: File) => {
+    const parsedFile: string | ArrayBuffer | null = await processFile(
+      currentFile
+    );
+    return parsedFile;
+  };
 
   // 파일을 선택했을때 저장
   const imgUpload = (e: any, check: number) => {
-    // 파일 객체를 가져와서
     const file = e.target.files[0];
-    const reader = new FileReader();
-    // 읽을 수 있게
-    reader.readAsDataURL(file);
+    const previewSrc = parseFile(file);
 
-    // 업로드 되면 보여주기
-    return new Promise<void>((resolve) => {
-      reader.onload = () => {
-        if (check === 1) {
-          setProfileImg(reader.result || profileImg); // 프로필 사진
-        } else {
-          setBackImg(reader.result || backImg); // 프로필 배경
-        }
-        resolve();
-      };
+    previewSrc.then((res) => {
+      if (check === 1) {
+        setProfileImg(res);
+      } else {
+        setBackImg(res);
+      }
     });
   };
 
@@ -64,6 +70,7 @@ export default function ProfileEdit() {
   console.log("라이엇", riotId);
   console.log("프로필", profileImg);
   console.log("배경", backImg);
+
   const profileEditHandler = () => {
     axios
       .put(
@@ -108,7 +115,7 @@ export default function ProfileEdit() {
                 </Label>
                 <Input
                   id="text"
-                  placeholder={myData?.riotId}
+                  placeholder={userInfo.riotId ? userInfo.riotId : ""}
                   onChange={lolIdHandler}
                 />
               </div>
@@ -140,9 +147,12 @@ export default function ProfileEdit() {
             <div className="flex justify-between items-center">
               <div className="flex gap-x-5">
                 {profileImg ? (
-                  <img
-                    src={profileImg}
-                    className="h-20 w-20 rounded-lg border-2"
+                  <div
+                    style={{
+                      backgroundImage: `url("${profileImg}")`,
+                      backgroundSize: "cover",
+                    }}
+                    className="h-20 w-20 rounded-lg border-2 bg"
                   />
                 ) : (
                   <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
@@ -150,8 +160,11 @@ export default function ProfileEdit() {
                   </div>
                 )}
                 {backImg ? (
-                  <img
-                    src={backImg}
+                  <div
+                    style={{
+                      backgroundImage: `url("${backImg}")`,
+                      backgroundSize: "cover",
+                    }}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (
@@ -199,7 +212,11 @@ export default function ProfileEdit() {
                 <Label htmlFor="text" className="font-bold">
                   롤 아이디
                 </Label>
-                <Input id="text" placeholder="기존 아이디 나와야 함" />
+                <Input
+                  id="text"
+                  placeholder={userInfo.riotId ? userInfo.riotId : ""}
+                  onChange={lolIdHandler}
+                />
               </div>
               {/* 프로필 사진 */}
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8">
@@ -229,8 +246,11 @@ export default function ProfileEdit() {
             <div className="flex justify-between items-center">
               <div className="flex gap-x-5">
                 {profileImg ? (
-                  <img
-                    src={profileImg}
+                  <div
+                    style={{
+                      backgroundImage: `url("${profileImg}")`,
+                      backgroundSize: "cover",
+                    }}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (
@@ -239,8 +259,11 @@ export default function ProfileEdit() {
                   </div>
                 )}
                 {backImg ? (
-                  <img
-                    src={backImg}
+                  <div
+                    style={{
+                      backgroundImage: `url("${backImg}")`,
+                      backgroundSize: "cover",
+                    }}
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (

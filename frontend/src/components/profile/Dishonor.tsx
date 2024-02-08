@@ -1,13 +1,8 @@
 import { Mobile, PC } from "../MediaQuery";
 import DishonorAlias from "./DishonorAlias";
+import { AliasType } from "@/types/aliasTypes";
 
-interface data {
-  alias: string;
-  name: string;
-  createdAt: string;
-}
-
-export default function Dishonor({ data }: { data: data }) {
+export default function Dishonor({ data }: { data: AliasType }) {
   return (
     <>
       <PC>
@@ -15,8 +10,8 @@ export default function Dishonor({ data }: { data: data }) {
           <div className="self-center mb-6">
             <DishonorAlias alias={data.alias} />
           </div>
-          <div className=" text-center font-bold">{data.createdAt}</div>
-          <div className="text-center font-bold">{data.name}</div>
+          <div className=" text-center font-bold">{data.createAt}</div>
+          <div className="text-center font-bold">{data.creator}</div>
         </div>
       </PC>
 
@@ -27,8 +22,8 @@ export default function Dishonor({ data }: { data: data }) {
           <div className="self-center mb-6">
             <DishonorAlias alias={data.alias} />
           </div>
-          <div className=" text-center font-bold">{data.createdAt}</div>
-          <div className="text-center font-bold">{data.name}</div>
+          <div className=" text-center font-bold">{data.createAt}</div>
+          <div className="text-center font-bold">{data.creator}</div>
         </div>
       </Mobile>
     </>

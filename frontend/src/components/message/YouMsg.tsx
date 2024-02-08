@@ -1,12 +1,5 @@
-import { Mobile, PC } from "../MediaQuery";
+// import { Mobile, PC } from "../MediaQuery";
 
-// interface dataProps {
-//   userId: string;
-//   name: string;
-//   msgUserProfile: string;
-//   img: any;
-//   content: string;
-// }
 interface dataProps {
   chatRoomId: number;
   userId: number;
@@ -17,22 +10,9 @@ interface dataProps {
   userName: string;
   userCurAlias: string;
   userProfileImg: string;
-  // userId: string;
-  // name: string;
-  // msgUserProfile: string;
-  // img: any; // 아무리 해도 해결이 안돼서 일단 any
-  // content: string;
 }
 
-export default function YouMsg({
-  data,
-  userName,
-  userProfileImg,
-}: {
-  data: dataProps;
-  userName: string;
-  userProfileImg: any;
-}) {
+export default function YouMsg({ data }: { data: dataProps }) {
   // 상대방 채팅의 경우 상대방의 이름과 프사가 보여야 한다.
   const formattedTime = new Date(data.createdAt).toLocaleTimeString([], {
     hour: "2-digit",

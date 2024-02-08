@@ -1,5 +1,4 @@
 import "@/globals.css";
-import React from "react";
 import Loading from "@/components/app/Loading";
 import ReactDOM from "react-dom/client";
 import IndexPage from "@/routes/IndexPage";
@@ -9,16 +8,16 @@ import RootLayout from "@/routes/RootLayout.tsx";
 import ProfilePage from "@/routes/ProfilePage.tsx";
 import ItemshopPage from "@/routes/ItemshopPage.tsx";
 import MessageListPage from "@/routes/MessageListPage";
-import MessageDetailPage from "@/routes/MessageDetailPage";
+// import MessageDetailPage from "@/routes/MessageDetailPage";
 import ProfileRecordPage from "@/routes/ProfileRecordPage";
 import ProfileCollection from "@/routes/ProfileCollection";
-import LoginSuccessPage from "@/routes/LoginSuccessPage.tsx";
+import FirstLoginPage from "@/routes/FirstLoginPage.js";
+import LoginSuccessPage from "@/routes/LoginSuccessPage.js";
 import KakaoCallbackPage from "@/routes/KakaoCallbackPage.tsx";
 import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Chat from "./routes/Chat.jsx";
 ////////////////일렉트론 컴포넌트/////////////////////
 const electron = window.electron;
 import TitleBar from "@/electron/TitleBar.tsx";
@@ -31,7 +30,8 @@ import LiveChat from "./routes/LiveChat";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage /> },
-  { path: "/loginsuccess", element: <LoginSuccessPage /> },
+  { path: "/first-login", element: <FirstLoginPage /> },
+  { path: "/login-success", element: <LoginSuccessPage /> },
   {
     path: "/main",
     element: <RootLayout />,
@@ -39,10 +39,10 @@ const router = createBrowserRouter([
       { path: "/main", element: <IndexPage /> },
       { path: "/main/item", element: <ItemshopPage /> },
       { path: "/main/messagelist", element: <MessageListPage /> },
-      {
-        path: "/main/messagedetail",
-        element: <MessageDetailPage user={undefined} />,
-      },
+      // {
+      //   path: "/main/messagedetail",
+      //   element: <MessageDetailPage user={undefined} />,
+      // },
 
       { path: "/main/setting", element: <SettingPage /> },
       { path: "/main/intro", element: <IntroPage /> },

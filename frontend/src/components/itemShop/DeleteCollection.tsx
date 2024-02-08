@@ -1,22 +1,22 @@
 import Price from "./Price";
-import Purchase from "./Purchase";
+// import Purchase from "./Purchase";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+// import { Input } from "@/components/ui/input"
+// import { Label } from "@/components/ui/label"
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 import {
   Dialog,
   DialogContent,
-  DialogClose,
+  // DialogClose,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -29,60 +29,61 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
+} from "@/components/ui/carousel";
 
-import { DogamDetailType } from "@/types/dogamTypes"
+import { ProfileDogamType } from "@/types/dogamTypes";
 
 export default function TitleItemshop({
-  itemName,
+  // itemName,
   itemPrice,
-  itemDesc,
-  myPoint,
-}: {
-  itemName: string;
+}: // itemDesc,
+// myPoint,
+{
+  // itemName: string;
   itemPrice: number;
-  itemDesc: string;
-  myPoint: number;
+  // itemDesc: string;
+  // myPoint: number;
 }) {
-
-
   const token = localStorage.getItem("token");
 
-  const [dogamList, setDogamList] = useState<DogamDetailType[]>([]);
-
+  const [dogamList, setDogamList] = useState<ProfileDogamType[]>([]);
 
   const GetMyDogamList = () => {
     axios
-    .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
         headers: {
           Authorization: token,
         },
       })
-    .then((res:any)=> {
+      .then((res: any) => {
         console.log(res.data);
-        setDogamList([...res.data.data])
-    })
-  }
+        setDogamList([...res.data.data]);
+      });
+  };
 
-  const DeleteMyDogam = (dogamId:number) => {
+  const DeleteMyDogam = (dogamId: number) => {
     axios
-    .delete(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`, {
-      headers: {
-        Authorization: token,
-      },
-    })
-    .then((res) => {console.log(res)})
-    .catch((error) => {console.log(error)})
-  }
+      .delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
+  useEffect(() => {
+    GetMyDogamList();
+  }, []);
 
-  useEffect(
-    () => {
-      GetMyDogamList();
-    }
-  ,[])
-
-  const CarouselSize = (props: {dogamList: any}) => {
+  const CarouselSize = ({ dogamList }: { dogamList: ProfileDogamType[] }) => {
     return (
       <Carousel
         opts={{
@@ -92,33 +93,52 @@ export default function TitleItemshop({
       >
         <CarouselContent>
           {dogamList.map((dogam, index) => (
-            <CarouselItem key={index} >
+            <CarouselItem key={index}>
               <div className="p-1">
                 <Card>
-                  <CardContent className="flex aspect-square items-center justify-center p-3" style={{backgroundImage: `url(${dogam.dogamImgUrl})`, backgroundSize: "cover"}}>
+                  <CardContent
+                    className="flex aspect-square items-center justify-center p-3"
+                    style={{
+                      backgroundImage: `url(${dogam.dogamImgUrl})`,
+                      backgroundSize: "cover",
+                    }}
+                  >
                     <span className="text-3xl font-semibold">
-                    <Button style={{position: "relative", top: "10rem"}} variant="destructive"
-                    onClick={(e) =>DeleteMyDogam(dogam.dogamId)}
-                    >삭제!</Button>    
-                        <Popover >
-                          <PopoverTrigger asChild>
-                            <Button style={{position: "relative", top: "10rem", margin: 10}} variant="outline">상세정보 보기</Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-80">
-                            <div className="grid gap-4">
-                              <div className="space-y-2">
-                                <h4 className="font-medium leading-none">{dogam.dogamTitle} </h4>
-                                <p className="text-sm text-muted-foreground">
-                                이걸 선물한 사람: {dogam.friendName}
-                                </p>
-                              </div>
-                          
+                      <Button
+                        style={{ position: "relative", top: "10rem" }}
+                        variant="destructive"
+                        onClick={() => DeleteMyDogam(dogam.dogamId)}
+                      >
+                        삭제!
+                      </Button>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            style={{
+                              position: "relative",
+                              top: "10rem",
+                              margin: 10,
+                            }}
+                            variant="outline"
+                          >
+                            상세정보 보기
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80">
+                          <div className="grid gap-4">
+                            <div className="space-y-2">
+                              <h4 className="font-medium leading-none">
+                                {dogam.dogamTitle}{" "}
+                              </h4>
+                              <p className="text-sm text-muted-foreground">
+                                {/* 이걸 선물한 사람: {dogam.friendName} -- 이 정보는 안 받고있음*/}
+                              </p>
                             </div>
-                          </PopoverContent>
-                        </Popover>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </span>
                   </CardContent>
-                  
                 </Card>
               </div>
             </CarouselItem>
@@ -127,19 +147,17 @@ export default function TitleItemshop({
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-    )
-}
-
-
-
-
+    );
+  };
 
   return (
     <Card className="static group/item bg-[url('/image/deleteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">
         <img src="/image/deleteCollection.png" className="h-20 w-20" />
         <p className="text-4xl mt-3 font-bold text-white">도감 삭제권</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">좋아하지 않는 도감을 삭제해보아요!</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">
+          좋아하지 않는 도감을 삭제해보아요!
+        </p>
       </div>
 
       {/* 호버 */}
@@ -160,7 +178,7 @@ export default function TitleItemshop({
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
               <div className="mb-3">도감 삭제권</div>
-              
+
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
@@ -176,12 +194,11 @@ export default function TitleItemshop({
           <div className="flex justify-center w-full" />
           <div className="font-bold text-center">
             <div className="overflow-y-auto scrollbar-hide flex-now">
-             < CarouselSize dogamList={dogamList} />
+              <CarouselSize dogamList={dogamList} />
             </div>
             구입 후 잔여 포인트 4000 P
           </div>
-          <DialogFooter className="flex sm:justify-center">
-          </DialogFooter>
+          <DialogFooter className="flex sm:justify-center"></DialogFooter>
         </DialogContent>
       </Dialog>
     </Card>

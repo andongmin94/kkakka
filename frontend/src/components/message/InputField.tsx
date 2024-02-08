@@ -1,7 +1,15 @@
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 
-export default function InputField({ message, setMessage, sendMessage }) {
+export default function InputField({
+  message,
+  setMessage,
+  sendMessage,
+}: {
+  message: string;
+  setMessage: any;
+  sendMessage: any;
+}) {
   return (
     <div>
       <div>+</div>

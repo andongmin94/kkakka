@@ -1,7 +1,7 @@
-import { Mobile, PC } from "@/components/MediaQuery";
+// import { Mobile, PC } from "@/components/MediaQuery";
 import MessageAlias from "@/components/message/MessageAlias";
 import MyMsg from "@/components/message/MyMsg";
-import Picture from "@/components/message/Picture";
+// import Picture from "@/components/message/Picture";
 import YouMsg from "@/components/message/YouMsg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +10,8 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
-import TypeIt from "typeit-react";
-import Stack from "react-bootstrap/Stack";
+// import TypeIt from "typeit-react";
+// import Stack from "react-bootstrap/Stack";
 import useUserStore from "@/store/user/userStore";
 import { Label } from "@/components/ui/label";
 import {
@@ -27,13 +27,19 @@ import { DogamDetailType } from "@/types/dogamTypes";
 import BotMsg from "@/components/message/BotMsg";
 
 let stompClient: any;
-let roomId2: any;
+
+interface playerInfoType {
+  playerProfilePic: string;
+  playerAlias: string;
+  playerName: string;
+  playerId: number;
+}
 
 export default function LiveChat() {
   const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
   const location = useLocation();
-  const friendsInfo = { ...location.state };
+  const friendsInfo: playerInfoType = { ...location.state };
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -50,30 +56,30 @@ export default function LiveChat() {
   // 현재 다른 사람이 타이핑하는 메세지를 추적
   const [currentTypingId, setCurrentTypingId] = useState(null);
   // 현재 사용자가 업로드한 이미지
-  const [curImg, setImgFile] = useState("");
-  const imgRef = useRef();
+  // const [curImg, setImgFile] = useState("");
+  // const imgRef = useRef();
 
   // 도감 전체 목록
   const [dogamList, setDogamList] = useState<DogamDetailType[]>([]);
 
-  const handleSendMessage = (message: any) => {
-    console.log(message);
-    // 소켓으로 메세지 보내기
-    sendMessageToSocket(message);
-  };
+  // const handleSendMessage = (message: any) => {
+  //   console.log(message);
+  //   // 소켓으로 메세지 보내기
+  //   sendMessageToSocket(message);
+  // };
 
-  const handleEndTyping = (id: any) => {
-    setMessages((prevMessages) =>
-      // 이전 메세지들을 전부 순회하면서, 그 중 제일 최근 메세지의 ChatBot Animation 여부를 false로 바꾼다. (isTyping == 챗봇의 애니메이션 여부)
-      prevMessages.map((msg) =>
-        msg.id === id ? { ...msg, isTyping: false } : msg
-      )
-    );
+  // const handleEndTyping = (id: any) => {
+  //   setMessages((prevMessages) =>
+  //     // 이전 메세지들을 전부 순회하면서, 그 중 제일 최근 메세지의 ChatBot Animation 여부를 false로 바꾼다. (isTyping == 챗봇의 애니메이션 여부)
+  //     prevMessages.map((msg) =>
+  //       msg.id === id ? { ...msg, isTyping: false } : msg
+  //     )
+  //   );
 
-    // 타이핑이 종료되면, 더 이상 타이핑 중인 메세지가 없으므로 currentTypingId의 상태를 null 로 바꾼다.
+  // 타이핑이 종료되면, 더 이상 타이핑 중인 메세지가 없으므로 currentTypingId의 상태를 null 로 바꾼다.
 
-    setCurrentTypingId(null);
-  };
+  //   setCurrentTypingId(null);
+  // };
 
   //currentTypingId를 최신화 한다.
   useEffect(() => {
@@ -105,7 +111,7 @@ export default function LiveChat() {
 
   const params = useParams();
   const roomId = params.id;
-  roomId2 = roomId;
+  const roomId2 = roomId;
 
   const clientHeader = {
     Authorization:
@@ -359,12 +365,7 @@ export default function LiveChat() {
                       <MyMsg data={data} key={idx} />
                     ) : (
                       // 상대방 메세지 컴포넌트
-                      <YouMsg
-                        data={data}
-                        userName={friendsInfo.playerName}
-                        userProfileImg={friendsInfo.playerProfilePic}
-                        key={idx}
-                      />
+                      <YouMsg data={data} key={idx} />
                     )}
                   </div>
                 </div>
