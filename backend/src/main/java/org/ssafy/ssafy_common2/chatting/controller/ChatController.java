@@ -182,6 +182,8 @@ public class ChatController {
 
                     if(sender != null) {
                         msg.setUserName(sender.getUserName());
+                        msg.setUserProfileImg(sender.getKakaoProfileImg());
+                        msg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
                     }
 
                 }else {
