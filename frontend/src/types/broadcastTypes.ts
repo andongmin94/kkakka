@@ -1,4 +1,5 @@
 export interface CrowdType {
+  [x: string]: any;
   email: string;
   name: string;
   profilePic: string;
