@@ -7,10 +7,7 @@ import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.service.S3Uploader;
 import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamCommentResponseDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamCreateResponseDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamDetailResponseDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamMainListResponseDto;
+import org.ssafy.ssafy_common2.dogam.dto.response.*;
 import org.ssafy.ssafy_common2.dogam.entity.CommentDogam;
 import org.ssafy.ssafy_common2.dogam.entity.DislikeDogam;
 import org.ssafy.ssafy_common2.dogam.entity.Dogam;
@@ -231,6 +228,38 @@ public class DogamService {
                         dogamId
                 )
         );
+    }
+
+    // 프로필 도감 리스트
+    public List<DogamProfileListResponseDto> dogamProfileList(Long userId, User user, int page, int size) {
+
+        // 유저 정보가 있는지 확인
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        List<Dogam> dogamList = dogamRepository.findAllByUserIdAndDeletedAtIsNull(userId);
+        List<DogamProfileListResponseDto> dtoList = new ArrayList<>();
+        // 페이지 인덱스 계산
+        int startIndex = page * size;
+        int endIndex = Math.min(startIndex + size, dogamList.size());
+
+        for (int i = startIndex; i < endIndex; i++) {
+            Dogam d = dogamList.get(i);
+            int dislikeDogamNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
+            DislikeDogam userDislike = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(), d.getId()).orElse(
+                    null
+            );
+            int commentNum = commentDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
+
+            boolean isHated = false;
+            if (userDislike != null) {
+                isHated = userDislike.isDislike();
+            }
+
+            dtoList.add(DogamProfileListResponseDto.of(d.getId(), d.getDogamImage(), d.getDogamTitle(), d.getCreatedAt(), dislikeDogamNum, isHated, commentNum));
+        }
+        return dtoList;
     }
 
 

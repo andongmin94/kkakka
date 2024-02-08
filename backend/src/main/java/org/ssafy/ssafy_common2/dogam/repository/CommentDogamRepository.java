@@ -12,4 +12,6 @@ public interface CommentDogamRepository extends JpaRepository<CommentDogam,Long>
     CommentDogam findFirstByDogamIdAndDeletedAtIsNullOrderByCreatedAtDesc(Long id);
 
     Optional<CommentDogam> findByIdAndDeletedAtIsNull(Long commentId);
+
+    int countByDogamIdAndDeletedAtIsNull(Long id);
 }
