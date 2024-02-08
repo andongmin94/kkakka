@@ -1,4 +1,3 @@
-import { Progress } from "@/components/ui/progress";
 import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 export default function Loading() {
@@ -7,9 +6,5 @@ export default function Loading() {
   const isMutating = useIsMutating();
   const display = isFetching || isMutating ? "inherit" : "none";
 
-  return (
-    <Progress>
-      <div>Loading...</div>
-    </Progress>
-  );
+  return <div>Loading...</div>;
 }

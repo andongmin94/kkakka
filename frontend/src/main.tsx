@@ -1,5 +1,6 @@
 import "@/globals.css";
 import React from "react";
+import Loading from "@/components/app/Loading";
 import ReactDOM from "react-dom/client";
 import IndexPage from "@/routes/IndexPage";
 import LoginPage from "@/routes/LoginPage.tsx";
@@ -17,7 +18,7 @@ import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Chat from './routes/Chat.jsx';
+import Chat from "./routes/Chat.jsx";
 ////////////////일렉트론 컴포넌트/////////////////////
 const electron = window.electron;
 import TitleBar from "@/electron/TitleBar.tsx";
@@ -73,6 +74,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
     <QueryClientProvider client={queryClient}>
       {typeof electron !== "undefined" && <TitleBar />}
+      <Loading />
       <RouterProvider router={router} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
