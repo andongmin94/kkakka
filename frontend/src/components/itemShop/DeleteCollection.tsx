@@ -34,15 +34,15 @@ import {
 import { ProfileDogamType } from "@/types/dogamTypes";
 
 export default function TitleItemshop({
-  // itemName,
+  itemName,
   itemPrice,
-}: // itemDesc,
-// myPoint,
-{
-  // itemName: string;
+  itemDesc,
+  myPoint,
+}: {
+  itemName: string;
   itemPrice: number;
-  // itemDesc: string;
-  // myPoint: number;
+  itemDesc: string;
+  myPoint: number;
 }) {
   const token = localStorage.getItem("token");
 
@@ -154,10 +154,8 @@ export default function TitleItemshop({
     <Card className="static group/item bg-[url('/image/deleteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">
         <img src="/image/deleteCollection.png" className="h-20 w-20" />
-        <p className="text-4xl mt-3 font-bold text-white">도감 삭제권</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">
-          좋아하지 않는 도감을 삭제해보아요!
-        </p>
+        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
       </div>
 
       {/* 호버 */}
@@ -177,7 +175,7 @@ export default function TitleItemshop({
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3">도감 삭제권</div>
+              <div className="mb-3">{itemName}</div>
 
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
@@ -196,7 +194,7 @@ export default function TitleItemshop({
             <div className="overflow-y-auto scrollbar-hide flex-now">
               <CarouselSize dogamList={dogamList} />
             </div>
-            구입 후 잔여 포인트 4000 P
+            구입 후 잔여 포인트 {myPoint - itemPrice} P
           </div>
           <DialogFooter className="flex sm:justify-center"></DialogFooter>
         </DialogContent>
