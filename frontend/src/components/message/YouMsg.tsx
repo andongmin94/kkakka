@@ -35,6 +35,8 @@ export default function YouMsg({
     hour: "2-digit",
     minute: "2-digit",
   });
+  // console.log("youMsg");
+  // console.log(data);
   return (
     <>
       <div className="flex">
@@ -47,7 +49,7 @@ export default function YouMsg({
           {/* 상대방 이름 */}
           <p className="font-bold">{userName}</p>
           <div className="flex">
-            <div className="max-w-[80%] m-2 p-3 rounded-2xl self-end bg-blue-300 text-white font-bold text-xl text-wrap">
+            <div className="max-w-[80%] m-2 p-3 rounded-2xl self-end bg-slate-200 font-bold text-xl text-wrap">
               {/* 이미지인지 텍스트 채팅인지 판별 */}
               {data.imgCode !== null ? (
                 <img src={data.imgCode} />
