@@ -18,5 +18,5 @@ public interface FriendListRepository extends JpaRepository<FriendList,Long> {
             "and fl.receiver=:user and fl.isCheck=true and fl.deletedAt is null")
     List<User> findFriendsByUser(@Param("user") User user);
 
-    List<FriendList> findAllBySenderOrReceiverAndIsCheckAndDeletedAtIsNull(User sender, User receiver, boolean b);
+    List<FriendList> findAllBySenderAndIsCheckAndDeletedAtIsNull(User sender, boolean b);
 }
