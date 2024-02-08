@@ -222,10 +222,6 @@ public class ChatController {
                     }
 
 
-
-
-
-
                 }
             }else{
                 throw new CustomException(ErrorType.THIS_USER_DIDNT_JOIN_IN_THIS_ROOM);
