@@ -55,7 +55,7 @@ public class DogamService {
     private final NotificationService notificationService;
 
     // 도감 만들기
-    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, String email, User sender) throws IOException {
+    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, Long friendId, User sender) throws IOException {
 
         if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
@@ -72,7 +72,7 @@ public class DogamService {
         userInfo.minusPoint(10);
         // 포인트 차감 로직 끝
 
-        User receiver = userRepository.findByKakaoEmailAndDeletedAtIsNull(email).orElseThrow(
+        User receiver = userRepository.findByIdAndDeletedAtIsNull(friendId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_RECEIVER)
         );
 
