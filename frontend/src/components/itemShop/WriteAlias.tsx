@@ -53,19 +53,18 @@ const FormSchema = z.object({
 });
 
 export default function WriteAlias({
-  itemName,
+  // itemName,
   itemPrice,
-  itemDesc,
+  // itemDesc,
   myPoint,
   friends,
 }: {
-  itemName: string;
+  // itemName: string;
   itemPrice: number;
-  itemDesc: string;
+  // itemDesc: string;
   myPoint: number;
   friends: FriendType[];
 }) {
-
   //console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
 
   // 콤보박스 누르면 꺼지게 하는 상태정보
@@ -74,7 +73,6 @@ export default function WriteAlias({
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = useState(false);
 
-  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -95,7 +93,9 @@ export default function WriteAlias({
       <div className="flex flex-col items-center">
         <img src="/image/whriteAlias.png" className="h-20 w-20" />
         <p className="text-4xl mt-3 font-bold text-white">칭호 지정권</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">친구에게 <br/> 우스꽝스러운 별명을 붙여보아요!</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">
+          친구에게 <br /> 우스꽝스러운 별명을 붙여보아요!
+        </p>
       </div>
 
       {/* 호버 */}
@@ -154,8 +154,7 @@ export default function WriteAlias({
                                 !field.value && "text-muted-foreground"
                               )}
                             >
-                              {
-                              field.value
+                              {field.value
                                 ? friends.find(
                                     (friend) => friend.name === field.value
                                   )?.name
@@ -176,9 +175,9 @@ export default function WriteAlias({
                                   value={friend.name}
                                   key={friend.id}
                                   onSelect={() => {
-                                    // 콤보박스에 선택한 값이 들어가도록 하는 것 
+                                    // 콤보박스에 선택한 값이 들어가도록 하는 것
                                     form.setValue("name", friend.name);
-                                    form.setValue("userId", friend.userId);
+                                    form.setValue("userId", friend.id);
                                     console.log(friend.id);
                                     setOpen(false);
                                   }}
@@ -245,8 +244,7 @@ export default function WriteAlias({
                     variant="secondary"
                     className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
                     onClick={() => {
-
-                      console.log(form.getValues())
+                      console.log(form.getValues());
 
                       // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
                       // 유효성 검사
@@ -256,30 +254,35 @@ export default function WriteAlias({
                         form.getValues().textAlias.length < 7
                       ) {
                         // 보낼 데이터 객체 userId, textAlias
-                         const data = {
-                           userId: form.getValues().userId,
-                           name: form.getValues.name,
-                           textAlias: form.getValues().textAlias,
-                         };
+                        const data = {
+                          userId: form.getValues().userId,
+                          name: form.getValues.name,
+                          textAlias: form.getValues().textAlias,
+                        };
                         // 데이터 보내는거 확인 완료
-                         console.log(data);
+                        console.log(data);
 
-                         const token = localStorage.getItem("token");
+                        const token = localStorage.getItem("token");
                         axios
-                        .post(`${import.meta.env.VITE_API_BASE_URL}/api/friends/alias?receiver-id=${data.userId}`,{
-                          aliasName: data.textAlias
-                        } , {
-                          headers: {
-                            Authorization: token,
-                          },
-                        }).then((res) => {
-                          console.log(res)
-                        })
-                        .catch((error) => {
-                          console.log(error)
-                        })
-                        ; 
-
+                          .post(
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/api/friends/alias?receiver-id=${data.userId}`,
+                            {
+                              aliasName: data.textAlias,
+                            },
+                            {
+                              headers: {
+                                Authorization: token,
+                              },
+                            }
+                          )
+                          .then((res) => {
+                            console.log(res);
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                          });
 
                         setOpenDialog(false);
                       }
@@ -296,13 +299,3 @@ export default function WriteAlias({
     </Card>
   );
 }
-
-// 친구 더미 데이터
-// const userId = [
-//   { label: "이수민", value: "1" },
-//   { label: "오세영", value: "2" },
-//   { label: "김지연", value: "3" },
-//   { label: "전수민", value: "4" },
-//   { label: "김상훈", value: "5" },
-//   { label: "이해건", value: "6" },
-// ] as const;

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
+// import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 import {
@@ -23,7 +23,6 @@ import {
 import { Mobile, PC } from "../MediaQuery";
 import axios from "axios";
 import { DogamCommentResponseType } from "@/types/dogamTypes";
-import { UserType } from "@/types/userTypes";
 
 const FormSchema = z.object({
   content: z.string().min(2, {
@@ -43,32 +42,19 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
     DogamCommentResponseType[]
   >([]);
 
-  // 이거 뭔지 잘 모르겠어서 일단 주석
-   function onSubmit(data: z.infer<typeof FormSchema>) {
-     toast({
-       title: "You submitted the following values:",
-       description: (
-         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-         </pre>
-       ),
-     });
-   }
+  // 뭔지 모르겠는데 안쓰니까 주석함
+  //  function onSubmit(data: z.infer<typeof FormSchema>) {
+  //    toast({
+  //      title: "You submitted the following values:",
+  //      description: (
+  //        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+  //          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //        </pre>
+  //      ),
+  //    });
+  //  }
 
   const token = localStorage.getItem("token");
-  const [myData, setMyData] = useState<UserType | null>(null);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setMyData(res.data.data);
-      });
-  }, []);
 
   useEffect(() => {
     axios
@@ -265,24 +251,3 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
     </>
   );
 }
-
-//----------------------------------------- 임시 데이터
-
-// 사용자 이름
-// const userName = "전수민";
-// const userId = "1";
-// const userUpdate = "2024.01.26 오후 3:50";
-// const userAlias = "10년째 실버";
-
-// // 임시 댓글 리스트
-// const commentData = [
-//   {
-//     userId: "2",
-//     name: "이해건",
-//     text: "개못하네",
-//     update: "2024.01.26 오후 2:06",
-//     alias: "인의동손잭스",
-//   },
-// ];
-
-//-----------------------------------------

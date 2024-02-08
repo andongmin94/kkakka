@@ -1,5 +1,5 @@
 import Poor from "@/components/profile/Poor";
-import Check from "@/components/profile/Check";
+// import Check from "@/components/profile/Check";
 import classes from "./ProfilePage.module.css";
 import { Button } from "@/components/ui/button";
 import { Mobile, PC } from "@/components/MediaQuery";
@@ -7,22 +7,26 @@ import ProfileEdit from "@/components/profile/ProfileEdit";
 import { Link, Outlet, useParams } from "react-router-dom";
 import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useUserStore from "@/store/user/userStore";
-import useProfileStore from "@/store/profileStore";
+import useProfileStore from "@/store/profile/profileStore";
+import useFriendshipStore from "@/store/profile/friendshipStore";
 import { useProfile } from "@/hooks/profile/queries/useUserProfileQuery";
+import { useFriendship } from "@/hooks/profile/queries/useFriendshipQuery";
 import { useEnterDmPost } from "@/hooks/dm/mutations/useEnterDmPost";
+import { useFriendshipChangePost } from "@/hooks/profile/mutations/useFriendshipChangePost";
 
 export default function ProfilePage() {
-  const token = localStorage.getItem("token");
-
   const params = useParams();
   const { userInfo } = useUserStore();
   const { profileInfo, setProfileInfo } = useProfileStore();
+  const { friendship, setFriendship } = useFriendshipStore();
 
   const { useUserProfileQuery } = useProfile();
-  const { data: userProfileData } = useUserProfileQuery(params.id);
+  const { data: userProfileData } = useUserProfileQuery(params.id!);
+
+  const { useFriendshipQuery } = useFriendship();
+  const { data: friendshipData } = useFriendshipQuery(params.id!);
 
   useEffect(() => {
     if (userProfileData) {
@@ -33,38 +37,27 @@ export default function ProfilePage() {
     }
   }, [userProfileData, setProfileInfo]);
 
-  const mutation = useEnterDmPost();
-  const { mutate } = mutation;
+  const enterDmMutation = useEnterDmPost();
+  const { mutate: dmMutate } = enterDmMutation;
 
   const enterChatHandler = () => {
-    mutate(params.id);
+    dmMutate(params.id!);
   };
 
-  const [friendStatus, setFriendStatus] = useState("");
-
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/${params.id}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data.state);
-        setFriendStatus(res.data.data.state);
-      });
-  }, []);
+    if (friendshipData) {
+      setFriendship(friendshipData);
+      console.log("프로필 유저와 친구관계", friendshipData);
+    } else {
+      console.log("프로필 유저와 친구관계 없음");
+    }
+  }, [friendship, setFriendship]);
+
+  const friendshipChangeMutation = useFriendshipChangePost();
+  const { mutate: friendshipChangeMutate } = friendshipChangeMutation;
 
   const changeFriendStatusHandler = () => {
-    axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/api/friends/${params.id}`,
-      {},
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+    friendshipChangeMutate(params.id!);
   };
 
   return (
@@ -81,9 +74,7 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage
-                      userImg={profileInfo && profileInfo.userProfileImg}
-                    />
+                    <ProfileImage userImg={profileInfo.userProfileImg} />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
@@ -92,14 +83,10 @@ export default function ProfilePage() {
                     {/* <Check check={check} /> */}
                   </div>
                   {/* 파산 이미지 */}
-                  {/* 파산일때만 보이게 */}
-                  {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
+                  {profileInfo.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
-                  {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
-                  {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {profileInfo &&
-                  profileInfo.userId === (userInfo && userInfo.userId) ? (
+                  {profileInfo.userId === userInfo.userId ? (
                     <ProfileEdit />
                   ) : (
                     <>
@@ -113,10 +100,26 @@ export default function ProfilePage() {
                       >
                         메세지
                       </Button>
-
-                      <Button onClick={changeFriendStatusHandler}>
-                        친구신청하기/끊기/요청중/받아주기
-                      </Button>
+                      {(friendship === "FRIEND" && (
+                        <Button onClick={changeFriendStatusHandler}>
+                          친구끊기
+                        </Button>
+                      )) ||
+                        (friendship === "RECEIVE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            수락
+                          </Button>
+                        )) ||
+                        (friendship === "SEND" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            요청취소
+                          </Button>
+                        )) ||
+                        (friendship === "NONE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            친구신청
+                          </Button>
+                        ))}
                     </>
                   )}
                 </div>
@@ -128,9 +131,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div>
-                  <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
-                  />
+                  <UserCurrentAlias alias={profileInfo.userAlias} />
                 </div>
               </div>
             </div>
@@ -167,9 +168,7 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[150px] h-[150px] grid place-items-center">
                     {/* 프사 */}
-                    <ProfileImage
-                      userImg={profileInfo && profileInfo.userProfileImg}
-                    />
+                    <ProfileImage userImg={profileInfo.userProfileImg} />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
@@ -179,35 +178,52 @@ export default function ProfilePage() {
                   </div>
                   {/* 파산 이미지 */}
                   {/* 파산일때만 보이게 */}
-                  {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
+                  {profileInfo.bankruptcy ? <Poor /> : null}
 
                   {/* 프로필 편집 or 메세지 버튼 */}
-                  {/* 자신의 프로필이면 프로필 편집 버튼이 나타나게 */}
-                  {/* 친구의 프로필이면 메세지 버튼이 나타나게 */}
-                  {profileInfo &&
-                  profileInfo.userId === (userInfo && userInfo.userId) ? (
+                  {profileInfo.userId === userInfo.userId ? (
                     <ProfileEdit />
                   ) : (
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                    >
-                      메세지
-                    </Button>
+                    <>
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                      >
+                        메세지
+                      </Button>
+                      {(friendship === "FRIEND" && (
+                        <Button onClick={changeFriendStatusHandler}>
+                          친구끊기
+                        </Button>
+                      )) ||
+                        (friendship === "RECEIVE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            수락
+                          </Button>
+                        )) ||
+                        (friendship === "SEND" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            요청취소
+                          </Button>
+                        )) ||
+                        (friendship === "NONE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            친구신청
+                          </Button>
+                        ))}
+                    </>
                   )}
                 </div>
               </div>
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[5px] justify-between">
                 <div className="font-bold text-4xl">
                   <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center ml-2">
-                    {profileInfo && profileInfo.userName}
+                    {profileInfo.userName}
                   </div>
                 </div>
                 <div className="mr-2">
-                  <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
-                  />
+                  <UserCurrentAlias alias={profileInfo.userAlias} />
                 </div>
               </div>
             </div>
@@ -217,23 +233,15 @@ export default function ProfilePage() {
               >
                 <div className="grid grid-cols-3 place-items-center gap-10">
                   <Link
-                    to={`/main/profile/${profileInfo && profileInfo.userId}`}
+                    to={`/main/profile/${profileInfo.userId}`}
                     className="h-[30px]"
                   >
                     도감
                   </Link>
-                  <Link
-                    to={`/main/profile/${
-                      profileInfo && profileInfo.userId
-                    }/dishonor`}
-                  >
+                  <Link to={`/main/profile/${profileInfo.userId}/dishonor`}>
                     불명예 전당
                   </Link>
-                  <Link
-                    to={`/main/profile/${
-                      profileInfo && profileInfo.userId
-                    }/record`}
-                  >
+                  <Link to={`/main/profile/${profileInfo.userId}/record`}>
                     전적
                   </Link>
                 </div>
@@ -247,24 +255,3 @@ export default function ProfilePage() {
     </>
   );
 }
-
-// // 사용자 아이디 더미 데이터
-// const userId = "1";
-
-// // 사용자 이름
-// const userName = "이수민";
-
-// // 사용자 프사
-// const userImg = "/image/joinSample.png";
-
-// // 사용자 프로필 배경
-// // const profileBg = "/image/profileBg.png";
-
-// // 파산 플래그
-// const poorFlag = true;
-
-// // 칭호 내용
-// const alias = "생태계파괴자";
-
-// // 체크 버튼 플래그
-// const check = false;
