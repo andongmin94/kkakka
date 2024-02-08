@@ -30,9 +30,7 @@ import org.ssafy.ssafy_common2.user.repository.FriendListRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -129,7 +127,7 @@ public class DogamService {
         }
 
         // 유저의 친구 목록 조회
-        List<FriendList> friendLists = friendListRepository.findAllBySenderOrReceiverAndIsCheckAndDeletedAtIsNull(user, user, true);
+        List<FriendList> friendLists = friendListRepository.findAllBySenderAndIsCheckAndDeletedAtIsNull(user, true);
         List<Dogam> dogamList = new ArrayList<>();
 
         // 친구의 도감 목록 조회
@@ -141,11 +139,14 @@ public class DogamService {
             }
         }
 
+        dogamList.sort(Comparator.comparing(Dogam::getCreatedAt).reversed());
+
         List<DogamMainListResponseDto> responseDtoList = new ArrayList<>();
 
         // 페이지 인덱스 계산
         int startIndex = page * size;
         int endIndex = Math.min(startIndex + size, dogamList.size());
+
 
         // 데이터 가져오기
         for (int i = startIndex; i < endIndex; i++) {
