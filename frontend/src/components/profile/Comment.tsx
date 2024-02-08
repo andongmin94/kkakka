@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import CommentAlias from "./CommentAlias";
+// import CommentAlias from "./CommentAlias";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserType } from "@/types/userTypes";

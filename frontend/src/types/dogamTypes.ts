@@ -12,6 +12,7 @@ export interface DogamCommentResponseType {
 export interface DogamDetailType {
   dogamTitle: string;
   dogamId: number;
+  createdAt: string;
   friendId: number;
   friendName: string;
   friendEmail: string;

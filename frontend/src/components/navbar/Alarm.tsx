@@ -75,7 +75,7 @@ export function Alarm() {
           onValueChange={setPosition}
         >
           {alarmList &&
-            alarmList.map((alarm, idx) => {
+            alarmList.map((alarm) => {
               return (
                 <DropdownMenuRadioItem
                   value="top"

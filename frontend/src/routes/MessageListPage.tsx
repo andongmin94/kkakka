@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Message from "../components/message/Message";
-import { DmType } from "@/types/dmTypes";
+// import { DmType } from "@/types/dmTypes";
 import axios from "axios";
 import "./Chat.css";
 
@@ -21,10 +21,10 @@ interface dmProps {
 }
 
 export default function MessageListPage() {
-  const [position, setPosition] = useState("");
+  // const [position, setPosition] = useState("");
   const navigate = useNavigate();
   const [friendsInfo, setFriendsInfo] = useState(null);
-  const [roomId, setRoomId] = useState(0);
+  // const [roomId, setRoomId] = useState(0);
 
   const [dmList, setDmList] = useState<dmProps[] | null>(null);
   const token = localStorage.getItem("token");

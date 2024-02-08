@@ -1,5 +1,5 @@
 export interface AliasType {
   alias: string;
-  createAt: Date;
+  createAt: string;
   creator: string;
 }
