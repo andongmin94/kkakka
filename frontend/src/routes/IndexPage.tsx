@@ -1,8 +1,23 @@
 import NewDogamList from "@/components/main/NewDogamList";
 import { Mobile, PC } from "@/components/MediaQuery";
 import LiveContentCarousel from "@/components/main/LiveContentCarousel";
+import { useEffect } from "react";
+import useItemshopStore from "@/store/itemshop/itemshopStore";
+import { useItemList } from "@/hooks/itemshop/queries/useItemListQuery";
 
 export default function IndexPage() {
+  const { setItemList } = useItemshopStore();
+  const { useItemListQuery } = useItemList();
+  const { data: itemListData } = useItemListQuery();
+
+  useEffect(() => {
+    if (itemListData) {
+      setItemList(itemListData);
+    } else {
+      console.log("아이템샵 데이터없음");
+    }
+  }, [itemListData]);
+
   return (
     <>
       <PC>
@@ -53,58 +68,3 @@ export default function IndexPage() {
     </>
   );
 }
-
-// // 임시 배열
-// const dataList = [
-//   {
-//     // 도감 주인 아이디
-//     id: "1",
-//     // 도감 주인 프사
-//     userImg: "/image/profileImage.png",
-//     //   도감 사진
-//     dogamImg: "/image/liveImage.png",
-//     // 도감 주인 이름
-//     name: "김상훈",
-//     // 도감 주인 칭호
-//     alias: "천재개발자",
-//     //   도감 정보
-//     dogamTitle: "냠냠",
-//     createdAt: "2020-01-01 00:00:00",
-//     dogamHateAmount: 100,
-//     isHated: false,
-//   },
-//   {
-//     // 도감 주인 아이디
-//     id: "1",
-//     // 도감 주인 프사
-//     userImg: "/image/profileImage.png",
-//     //   도감 사진
-//     dogamImg: "/image/liveImage.png",
-//     // 도감 주인 이름
-//     name: "김상훈",
-//     // 도감 주인 칭호
-//     alias: "천재개발자",
-//     //   도감 정보
-//     dogamTitle: "냠냠",
-//     createdAt: "2020-01-01 00:00:00",
-//     dogamHateAmount: 100,
-//     isHated: false,
-//   },
-//   {
-//     // 도감 주인 아이디
-//     id: "1",
-//     // 도감 주인 프사
-//     userImg: "/image/profileImage.png",
-//     //   도감 사진
-//     dogamImg: "/image/liveImage.png",
-//     // 도감 주인 이름
-//     name: "김상훈",
-//     // 도감 주인 칭호
-//     alias: "천재개발자",
-//     //   도감 정보
-//     dogamTitle: "냠냠",
-//     createdAt: "2020-01-01 00:00:00",
-//     dogamHateAmount: 100,
-//     isHated: false,
-//   },
-// ];

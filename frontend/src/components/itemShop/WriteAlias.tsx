@@ -53,15 +53,15 @@ const FormSchema = z.object({
 });
 
 export default function WriteAlias({
-  // itemName,
+  itemName,
   itemPrice,
-  // itemDesc,
+  itemDesc,
   myPoint,
   friends,
 }: {
-  // itemName: string;
+  itemName: string;
   itemPrice: number;
-  // itemDesc: string;
+  itemDesc: string;
   myPoint: number;
   friends: FriendType[];
 }) {
@@ -92,10 +92,8 @@ export default function WriteAlias({
     <Card className="static group/item bg-[url('/image/whriteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
       <div className="flex flex-col items-center">
         <img src="/image/whriteAlias.png" className="h-20 w-20" />
-        <p className="text-4xl mt-3 font-bold text-white">칭호 지정권</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">
-          친구에게 <br /> 우스꽝스러운 별명을 붙여보아요!
-        </p>
+        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
+        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
       </div>
 
       {/* 호버 */}
