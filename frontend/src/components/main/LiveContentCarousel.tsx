@@ -32,6 +32,7 @@ export default function LiveContentCarousel() {
       })
       .then((res) => {
         console.log("라이브", res.data.data);
+        console.log(res.data.data);
         setBroadcastList(res.data.data);
       })
       .catch((err) => {

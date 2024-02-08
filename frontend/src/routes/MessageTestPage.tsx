@@ -12,7 +12,7 @@ import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
 import TypeIt from "typeit-react";
 import Stack from "react-bootstrap/Stack";
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/user/userStore";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -112,7 +112,9 @@ export default function MessageTestPage() {
   };
 
   const connect = () => {
-    var sockJS = new SockJS("http://localhost:8080/ws-stomp");
+    // var sockJS = new SockJS("http://i10d110.p.ssafy.io:8080/ws-stomp");
+    var sockJS = new SockJS(`${import.meta.env.VITE_API_BASE_URL}/ws-stomp`);
+
     stompClient = Stomp.over(sockJS);
     console.log(stompClient);
 
@@ -171,6 +173,9 @@ export default function MessageTestPage() {
       messageType: chat.messageType,
       userId: chat.userId,
       createdAt: chat.createdAt,
+      userName: chat.userName,
+      userCurAlias: chat.userCurAlias,
+      userProfileImg: chat.userProfileImg,
     };
 
     /*
