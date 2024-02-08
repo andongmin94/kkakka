@@ -14,6 +14,9 @@ interface dataProps {
   messageType: string;
   imgCode: any;
   createdAt: Date | string;
+  userName: string;
+  userCurAlias: string;
+  userProfileImg: string;
   // userId: string;
   // name: string;
   // msgUserProfile: string;
@@ -42,12 +45,14 @@ export default function YouMsg({
       <div className="flex">
         {/* 상대방 프사 */}
         <img
-          src={userProfileImg}
+          src={data.userProfileImg}
           className="h-[50px] w-[50px] rounded-full mx-2"
         />
         <div>
           {/* 상대방 이름 */}
-          <p className="font-bold">{userName}</p>
+          <p className="font-bold">
+            {data.userCurAlias} {data.userName}
+          </p>
           <div className="flex">
             <div className="max-w-[80%] m-2 p-3 rounded-2xl self-end bg-slate-200 font-bold text-xl text-wrap">
               {/* 이미지인지 텍스트 채팅인지 판별 */}
