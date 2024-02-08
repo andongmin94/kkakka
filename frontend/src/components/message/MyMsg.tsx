@@ -17,7 +17,8 @@ interface dataProps {
 // chatRoomId: num;
 
 export default function MyMsg({ data }: { data: dataProps }) {
-  // console.log(data);
+  console.log("myMsg");
+  console.log(data);
   const formattedTime =
     typeof data.createdAt === "string"
       ? new Date(data.createdAt).toLocaleTimeString([], {
@@ -31,7 +32,7 @@ export default function MyMsg({ data }: { data: dataProps }) {
   return (
     <>
       <div className=" self-end">{formattedTime}</div>
-      <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-orange-300 text-white font-bold text-xl text-wrap">
+      <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-blue-100 font-bold text-xl text-wrap">
         {/* 이미지인지 텍스트 채팅인지 판별 */}
         {data.imgCode !== null ? <img src={data.imgCode} /> : data.content}
       </div>
