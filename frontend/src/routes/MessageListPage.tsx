@@ -15,7 +15,7 @@ interface dmProps {
   lastMessage: string;
   lastWrittenMessageTime: Date;
   login: boolean;
-  roomId: string;
+  roomId: number;
   tenMinute: boolean;
   unreadMessageCnt: number;
 }
@@ -42,20 +42,22 @@ export default function MessageListPage() {
       });
   }, []);
 
-  const enterChatHandler = (friendId: number) => {
-    axios
-      .post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        navigate(`/main/message/${res.data.data}`, { state: friendsInfo }); // 아직 없는듯
-      });
+  const enterChatHandler = (roomId: number) => {
+    // axios
+    //   .post(
+    //     `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
+    //     {},
+    //     {
+    //       headers: {
+    //         Authorization: token,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     navigate(`/main/message/${res.data.data}`, { state: friendsInfo }); // 아직 없는듯
+    //   });
+
+    navigate(`/main/message/${roomId}`, { state: friendsInfo });
   };
 
   return (
@@ -83,7 +85,7 @@ export default function MessageListPage() {
             <div
               key={idx}
               onClick={() => {
-                enterChatHandler(dm.friendId);
+                enterChatHandler(dm.roomId);
               }}
             >
               <Message dm={dm} />
