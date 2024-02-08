@@ -14,7 +14,7 @@ interface dmProps {
   friendName: string;
   lastMessage: string;
   lastWrittenMessageTime: Date;
-  login: boolean;
+  state: string;
   roomId: number;
   tenMinute: boolean;
   unreadMessageCnt: number;
