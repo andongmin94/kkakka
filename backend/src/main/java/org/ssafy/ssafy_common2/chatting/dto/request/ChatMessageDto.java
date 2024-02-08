@@ -24,6 +24,12 @@ public class ChatMessageDto {
     // 보낸 사람의 이름
     private String userName;
 
+    // 보낸 사람 프로필 사진
+    private String userProfileImg;
+
+    // 보낸 사람 현재 칭호
+    private String userCurAlias;
+
     // 메세지가 보내진 채팅방
     private long chatRoomId;
 
