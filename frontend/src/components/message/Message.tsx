@@ -16,7 +16,7 @@ interface dmProps {
   friendName: string;
   lastMessage: string;
   lastWrittenMessageTime: Date;
-  login: boolean;
+  state: string;
   roomId: number;
   tenMinute: boolean;
   unreadMessageCnt: number;
@@ -30,7 +30,7 @@ export default function Message({ dm }: { dm: dmProps }) {
         <div className="flex flex-col items-center">
           <UserCurrentAlias alias={dm.friendAlias} />
           <UserName name={dm.friendName} />
-          <UserStatus status={dm.login} />
+          <UserStatus status={dm.state} />
         </div>
         <MessagePeek lastMessage={dm.lastMessage} />
         <UnreadMessages unreadMessageNum={dm.unreadMessageCnt} />
