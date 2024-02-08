@@ -244,6 +244,7 @@ public class DogamService {
         // 페이지 인덱스 계산
         int startIndex = page * size;
         int endIndex = Math.min(startIndex + size, dogamList.size());
+        dogamList.sort(Comparator.comparing(Dogam::getCreatedAt).reversed());
 
         for (int i = startIndex; i < endIndex; i++) {
             Dogam d = dogamList.get(i);
