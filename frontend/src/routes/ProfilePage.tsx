@@ -1,5 +1,5 @@
 import Poor from "@/components/profile/Poor";
-import Check from "@/components/profile/Check";
+// import Check from "@/components/profile/Check";
 import classes from "./ProfilePage.module.css";
 import { Button } from "@/components/ui/button";
 import { Mobile, PC } from "@/components/MediaQuery";
@@ -23,10 +23,10 @@ export default function ProfilePage() {
   const { friendship, setFriendship } = useFriendshipStore();
 
   const { useUserProfileQuery } = useProfile();
-  const { data: userProfileData } = useUserProfileQuery(params.id);
+  const { data: userProfileData } = useUserProfileQuery(params.id!);
 
   const { useFriendshipQuery } = useFriendship();
-  const { data: friendshipData } = useFriendshipQuery(params.id);
+  const { data: friendshipData } = useFriendshipQuery(params.id!);
 
   useEffect(() => {
     if (userProfileData) {
@@ -41,7 +41,7 @@ export default function ProfilePage() {
   const { mutate: dmMutate } = enterDmMutation;
 
   const enterChatHandler = () => {
-    dmMutate(params.id);
+    dmMutate(params.id!);
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function ProfilePage() {
   const { mutate: friendshipChangeMutate } = friendshipChangeMutation;
 
   const changeFriendStatusHandler = () => {
-    friendshipChangeMutate(params.id);
+    friendshipChangeMutate(params.id!);
   };
 
   return (
@@ -255,24 +255,3 @@ export default function ProfilePage() {
     </>
   );
 }
-
-// // 사용자 아이디 더미 데이터
-// const userId = "1";
-
-// // 사용자 이름
-// const userName = "이수민";
-
-// // 사용자 프사
-// const userImg = "/image/joinSample.png";
-
-// // 사용자 프로필 배경
-// // const profileBg = "/image/profileBg.png";
-
-// // 파산 플래그
-// const poorFlag = true;
-
-// // 칭호 내용
-// const alias = "생태계파괴자";
-
-// // 체크 버튼 플래그
-// const check = false;

@@ -1,9 +1,8 @@
 import axios from "axios";
 const electron = window.electron;
-import { Slider } from "@/components/ui/slider";
+// import { Slider } from "@/components/ui/slider";
 
 export default function SettingPage() {
-
   /// 환경 체크
   if (typeof electron !== "undefined") {
     // 일렉트론 환경
@@ -32,23 +31,23 @@ export default function SettingPage() {
     if (!("Notification" in window)) {
       alert("This browser does not support desktop notification");
     }
-  
+
     // Let's check whether notification permissions have already been granted
     else if (Notification.permission === "granted") {
       // If it's okay let's create a notification
-      var notification = new Notification("Hi there!");
+      // var notification = new Notification("Hi there!");
     }
-  
+
     // Otherwise, we need to ask the user for permission
     else if (Notification.permission !== "denied") {
       Notification.requestPermission(function (permission) {
         // If the user accepts, let's create a notification
         if (permission === "granted") {
-          var notification = new Notification("Hi there!");
+          // var notification = new Notification("Hi there!");
         }
       });
     }
-  
+
     // At last, if the user has denied notifications, and you
     // want to be respectful there is no need to bother them any more.
   }
@@ -67,4 +66,3 @@ export default function SettingPage() {
     </div>
   );
 }
-

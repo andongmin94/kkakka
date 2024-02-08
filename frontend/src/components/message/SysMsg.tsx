@@ -1,5 +1,5 @@
 import TypeIt from "typeit-react";
-import { Mobile, PC } from "../MediaQuery";
+// import { Mobile, PC } from "../MediaQuery";
 
 interface dataProps {
   chatRoomId: number;
@@ -11,16 +11,16 @@ interface dataProps {
 }
 
 export default function SysMsg({ data }: { data: dataProps }) {
-  const formattedTime =
-    typeof data.createdAt === "string"
-      ? new Date(data.createdAt).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : new Date(data.createdAt).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+  // const formattedTime =
+  //   typeof data.createdAt === "string"
+  //     ? new Date(data.createdAt).toLocaleTimeString([], {
+  //         hour: "2-digit",
+  //         minute: "2-digit",
+  //       })
+  //     : new Date(data.createdAt).toLocaleTimeString([], {
+  //         hour: "2-digit",
+  //         minute: "2-digit",
+  //       });
   return (
     <>
       <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-slate-400 text-white font-bold text-xl text-wrap">

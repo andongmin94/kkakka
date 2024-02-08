@@ -1,6 +1,6 @@
 import LiveProfile from "./LiveProfile";
 import Live from "@/components/ani/Live";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -8,9 +8,9 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { BroadcastItemType } from "@/types/broadcastTypes";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useState } from "react";
+// import { useState } from "react";
 
 export default function LiveContent({
   liveData,
@@ -29,8 +29,6 @@ export default function LiveContent({
         backgroundSize: "cover",
       }}
       onClick={() => {
-        // console.log("rarararara");
-        // console.log(liveData);
         axios
           .post(
             `${

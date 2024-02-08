@@ -51,7 +51,6 @@ const FormSchema = z.object({
 });
 
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { FriendType } from "@/types/friendTypes";
 
 export default function Compliment({
@@ -173,7 +172,7 @@ export default function Compliment({
                                   key={friend.id}
                                   onSelect={() => {
                                     form.setValue("name", friend.name);
-                                    form.setValue("userId", friend.userId);
+                                    form.setValue("userId", friend.id);
                                     console.log(friend.id);
                                     setOpen(false);
                                   }}
@@ -259,23 +258,30 @@ export default function Compliment({
 
                         // 칭찬권 구매
                         axios
-                        .post(`${import.meta.env.VITE_API_BASE_URL}/api/friends/compliment`, {
-                          enfScript: data.enfScript,
-                        }, {
-                          params: {
-                            'receiver-id': data.receiverId,
-                          },
-                          headers: {
-                            Authorization: token,
-                          },
-                        }).then((res) =>  {
-                          // 칭찬권 구매 성공
-                          console.log(res)
-                        })
-                        .catch((error) => {
-                          // 칭찬권 구매 실패
-                          console.log(error)
-                        })
+                          .post(
+                            `${
+                              import.meta.env.VITE_API_BASE_URL
+                            }/api/friends/compliment`,
+                            {
+                              enfScript: data.enfScript,
+                            },
+                            {
+                              params: {
+                                "receiver-id": data.receiverId,
+                              },
+                              headers: {
+                                Authorization: token,
+                              },
+                            }
+                          )
+                          .then((res) => {
+                            // 칭찬권 구매 성공
+                            console.log(res);
+                          })
+                          .catch((error) => {
+                            // 칭찬권 구매 실패
+                            console.log(error);
+                          });
 
                         // 데이터 보내기 확인 완료
                         // console.log(data);
@@ -295,13 +301,3 @@ export default function Compliment({
     </Card>
   );
 }
-
-// 친구 더미 데이터
-// const userId = [
-//   { label: "이수민", value: "1" },
-//   { label: "오세영", value: "2" },
-//   { label: "김지연", value: "3" },
-//   { label: "전수민", value: "4" },
-//   { label: "김상훈", value: "5" },
-//   { label: "이해건", value: "6" },
-// ] as const;

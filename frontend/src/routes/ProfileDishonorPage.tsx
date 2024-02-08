@@ -13,9 +13,9 @@ export default function ProfileDishonorPage() {
   useEffect(() => {
     axios
       .get(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/api/profile/alias?user-id=${Number(params.id)}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/profile/alias?user-id=${
+          params.id
+        }`,
         {
           headers: {
             Authorization: token,
@@ -52,22 +52,3 @@ export default function ProfileDishonorPage() {
     </>
   );
 }
-
-// 칭호 갯수 임시 데이터
-// const profileAlias = [
-//   {
-//     alias: "인의동 손잭스",
-//     name: "이해건",
-//     createdAt: "2024년 1월 1일",
-//   },
-//   {
-//     alias: "천재 개발자",
-//     name: "김상훈",
-//     createdAt: "2024년 1월 2일",
-//   },
-//   {
-//     alias: "말파나 하십쇼",
-//     name: "오세영",
-//     createdAt: "2024년 1월 3일",
-//   },
-// ];
