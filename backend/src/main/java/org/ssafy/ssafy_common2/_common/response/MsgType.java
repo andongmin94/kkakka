@@ -12,7 +12,7 @@ public enum MsgType {
     GENERATE_TOKEN_SUCCESSFULLY("토큰 생성 성공"),
     CREATE_DOGAM_SUCCESSFULLY("도감 생성 성공"),
     DELETE_DOGAM_SUCCESSFULLY("도감 삭제 성공"),
-    CREATE_DOGAM_LIST_SUCCESSFULLY("메인 도감 리스트 생성 성공"),
+    SEARCH_MAIN_DOGAM_LIST_SUCCESSFULLY("메인 도감 리스트 생성 성공"),
     DELETE_DOGAM_COMMENT_SUCCESSFULLY("도감 댓글 삭제 성공"),
     CREATE_DOGAM_COMMENT_SUCCESSFULLY("도감 댓글 생성 성공"),
     CREATE_DOGAM_DISLIKE_SUCCESSFULLY("도감 싫어요 생성 성공"),
@@ -29,6 +29,7 @@ public enum MsgType {
     UPDATE_USER_PROFILE_DATA_SUCCESSFULLY("유저 프로필 데이터 업데이트 성공"),
     SEARCH_USER_DATA_SUCCESSFULLY("유저 데이터 찾기 성공"),
     SEARCH_USER_EDIT_DATA_SUCCESSFULLY("유저 편집 데이터 찾기 성공"),
+    SEARCH_PROFILE_DOGAM_LIST_SUCCESSFULLY("프로필 도감 리스트 생성 성공"),
     ;
 
     private final String msg;
