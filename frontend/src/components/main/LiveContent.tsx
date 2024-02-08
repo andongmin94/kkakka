@@ -57,8 +57,8 @@ export default function LiveContent({
           {liveData.crowdDtoList &&
             Array.isArray(liveData.crowdDtoList) &&
             liveData.crowdDtoList.map((crowd, id) => {
-              console.log("cccccccccccccccccccccccccccccccc");
-              console.log(liveData.crowdDtoList);
+              // console.log("cccccccccccccccccccccccccccccccc");
+              // console.log(liveData.crowdDtoList);
               return (
                 <div
                   key={id}

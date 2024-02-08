@@ -113,7 +113,8 @@ export default function LiveChat() {
   };
 
   const connect = () => {
-    var sockJS = new SockJS("http://localhost:8080/ws-stomp");
+    // var sockJS = new SockJS("http://i10d110.p.ssafy.io:8080/ws-stomp");
+    var sockJS = new SockJS(`${import.meta.env.VITE_API_BASE_URL}/ws-stomp`);
     stompClient = Stomp.over(sockJS);
     console.log(stompClient);
 
@@ -151,6 +152,7 @@ export default function LiveChat() {
       userId: userInfo.userId,
       content: message,
       messageType: "TALK",
+      userName: userInfo.userName,
     };
     console.log(chatMessage);
     stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
@@ -160,7 +162,7 @@ export default function LiveChat() {
   function onMessageReceivedFromSocket(payload: any) {
     var chat = JSON.parse(payload.body);
     console.log("들어온 메세지:" + chat.content);
-    console.log(payload.body);
+    // console.log(payload.body);
 
     const messageDTO = {
       isUser: chat.userId === userInfo.userId ? true : false,
@@ -171,6 +173,9 @@ export default function LiveChat() {
       messageType: chat.messageType,
       userId: chat.userId,
       createdAt: chat.createdAt,
+      userName: chat.userName,
+      userCurAlias: chat.userCurAlias,
+      userProfileImg: chat.userProfileImg,
     };
 
     /*
@@ -306,7 +311,7 @@ export default function LiveChat() {
               />
               <div className="flex flex-col items-center gap-3">
                 {/* 칭호 */}
-                <MessageAlias alias={friendsInfo.userAlias} />
+                <MessageAlias alias={friendsInfo.playerAlias} />
                 {/* 이름 */}
                 <p className="font-bold text-2xl">{friendsInfo.playerName}</p>
               </div>
