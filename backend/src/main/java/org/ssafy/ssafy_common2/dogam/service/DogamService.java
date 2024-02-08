@@ -55,7 +55,7 @@ public class DogamService {
     private final NotificationService notificationService;
 
     // 도감 만들기
-    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, String email, User sender) throws IOException {
+    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, Long friendId, User sender) throws IOException {
 
         if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
@@ -72,7 +72,7 @@ public class DogamService {
         userInfo.minusPoint(10);
         // 포인트 차감 로직 끝
 
-        User receiver = userRepository.findByKakaoEmailAndDeletedAtIsNull(email).orElseThrow(
+        User receiver = userRepository.findByIdAndDeletedAtIsNull(friendId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_RECEIVER)
         );
 
@@ -125,16 +125,17 @@ public class DogamService {
     }
 
     // 메인 페이지 도감 리스트 불러오기 메서드
-    public List<DogamMainListResponseDto> dogamList(User user) {
-
+    public List<DogamMainListResponseDto> dogamList(User user, int page, int size) {
+        // 유저 정보가 있는지 확인
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
-        // 수정 예정 -> 적절한 도감 리스트 띄우는 로직 개발 필요, 현재는 해당 유저의 친구들의 도감만 나옴
+        // 유저의 친구 목록 조회
         List<FriendList> friendLists = friendListRepository.findAllBySenderOrReceiverAndIsCheckAndDeletedAtIsNull(user, user, true);
         List<Dogam> dogamList = new ArrayList<>();
-        //찬구의 도감 리스트 전부 불러오기
+
+        // 친구의 도감 목록 조회
         for (FriendList f : friendLists) {
             if (Objects.equals(f.getReceiver().getId(), user.getId())) {
                 dogamList.addAll(dogamRepository.findAllByUserIdAndDeletedAtIsNull(f.getSender().getId()));
@@ -142,17 +143,26 @@ public class DogamService {
                 dogamList.addAll(dogamRepository.findAllByUserIdAndDeletedAtIsNull(f.getReceiver().getId()));
             }
         }
+
         List<DogamMainListResponseDto> responseDtoList = new ArrayList<>();
 
-        for (Dogam d : dogamList) {
+        // 페이지 인덱스 계산
+        int startIndex = page * size;
+        int endIndex = Math.min(startIndex + size, dogamList.size());
 
-            // 친구의 가장 최근 칭호 불러오기
+        // 데이터 가져오기
+        for (int i = startIndex; i < endIndex; i++) {
+            Dogam d = dogamList.get(i);
+
+            // 최신 칭호 조회
             Alias alias = aliasRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getUser().getId()).orElse(null);
+            String alias1 = d.getUser().getUserInfoId().getCurAlias();
+            if (!Objects.equals(alias1, alias != null ? alias.getAliasName() : null)) {
+                throw new CustomException(ErrorType.NOT_FOUND_ALIAS);
+            }
 
-            // 해당 도감의 가장 최근 댓글 불러오기
+            // 최신 댓글 조회
             CommentDogam commentDogam = commentDogamRepository.findFirstByDogamIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getId());
-
-            // 위에서 찾은 댓글의 주인
             User commentUser = null;
             if (commentDogam != null) {
                 commentUser = userRepository.findByKakaoEmailAndDeletedAtIsNull(commentDogam.getUserEmail()).orElseThrow(
@@ -161,14 +171,10 @@ public class DogamService {
             }
             boolean isHated = false;
             DislikeDogam dislikeDogam = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(), d.getId()).orElse(null);
-            if (dislikeDogam != null) {
-                if (dislikeDogam.isDislike()) {
-                    isHated = true;
-                }
+            if (dislikeDogam != null && dislikeDogam.isDislike()) {
+                isHated = true;
             }
 
-
-            // 댓글 주인의 프로필 사진, 댓글의 내용, 댓글 주인의 이름, 댓글 주인의 이메일 저장
             DogamCommentResponseDto dogamCommentResponseDto = DogamCommentResponseDto.of(
                     commentDogam != null ? commentDogam.getId() : null,
                     commentUser != null ? commentUser.getId() : null,

@@ -24,15 +24,21 @@ public class DogamController {
     private final DogamService dogamService;
 
     @GetMapping("/friends/dogam")
-    public ApiResponseDto<List<DogamMainListResponseDto>> dogamList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseUtils.ok(dogamService.dogamList(userDetails.getUser()), MsgType.CREATE_DOGAM_LIST_SUCCESSFULLY);
+    public ApiResponseDto<List<DogamMainListResponseDto>> dogamList(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseUtils.ok(dogamService.dogamList(userDetails.getUser(), page, size), MsgType.CREATE_DOGAM_LIST_SUCCESSFULLY);
     }
 
+
+
     @PostMapping("/friends/dogam")
-    public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "email", required = true) String email , @ModelAttribute DogamCreateRequestDto dto
+    public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "friend-user-id", required = true) Long friendId , @ModelAttribute DogamCreateRequestDto dto
             , @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-        return ResponseUtils.ok(dogamService.createDogam(dto, email, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
+        return ResponseUtils.ok(dogamService.createDogam(dto, friendId, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
     }
 
     @DeleteMapping("/friends/dogam/{dogam-id}")
