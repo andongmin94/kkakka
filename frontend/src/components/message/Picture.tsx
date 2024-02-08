@@ -10,7 +10,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import { useState } from "react";
 
 // interface dataProps {
 //   userId: string;

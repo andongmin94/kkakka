@@ -1,4 +1,21 @@
-export default function MessageContainer({ messageList, user }) {
+interface UserType {
+  name: string;
+  id: number;
+}
+
+interface MessageType {
+  user: UserType;
+  chat: string;
+  _id: number;
+}
+
+export default function MessageContainer({
+  messageList,
+  user,
+}: {
+  messageList: MessageType[];
+  user: UserType;
+}) {
   return (
     <div>
       {messageList.map((message, index) => {
