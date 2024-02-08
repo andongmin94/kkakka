@@ -156,6 +156,11 @@ public class DogamService {
 
             // 최신 칭호 조회
             Alias alias = aliasRepository.findFirstByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getUser().getId()).orElse(null);
+            String alias1 = d.getUser().getUserInfoId().getCurAlias();
+            if (!Objects.equals(alias1, alias != null ? alias.getAliasName() : null)) {
+                throw new CustomException(ErrorType.NOT_FOUND_ALIAS);
+            }
+
             // 최신 댓글 조회
             CommentDogam commentDogam = commentDogamRepository.findFirstByDogamIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getId());
             User commentUser = null;
