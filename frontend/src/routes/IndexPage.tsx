@@ -14,7 +14,7 @@ export default function IndexPage() {
     if (itemListData) {
       setItemList(itemListData);
     } else {
-      console.log("아이템샵 데이터없음");
+      console.log("아이템샵 데이터 없음");
     }
   }, [itemListData]);
 
