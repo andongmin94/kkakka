@@ -135,6 +135,7 @@ export default function MessageTestPage() {
         content: userInfo.userName + "님 환영합니다!",
         userId: userInfo.userId,
         chatRoomId: roomId,
+        userName: userInfo.userName,
       })
     );
   }

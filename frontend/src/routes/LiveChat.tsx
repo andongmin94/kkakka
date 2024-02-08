@@ -294,27 +294,27 @@ export default function LiveChat() {
       {/* ------------------------------------------------------- */}
       {/* 피시 화면 */}
       <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
-        <div className="w-[700px] h-full border-8 rounded-3xl grid grid-rows-12 border-red-200">
+        <div className="w-[700px] h-full border-4 rounded-xl grid grid-rows-12">
           {/* 채팅 화면 상단 사용자 정보 바 */}
           <div className="w-full row-span-2 flex justify-between items-center rounded-3xl border-b-4">
             {/* 왼쪽 사용자 정보 */}
             <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-10">
               {/* 사용자 프사 */}
               <img
-                src={friendsInfo.userProfileImg}
+                src={friendsInfo.playerProfilePic}
                 className=" rounded-full w-[80px] h-[80px]"
               />
               <div className="flex flex-col items-center gap-3">
                 {/* 칭호 */}
                 <MessageAlias alias={friendsInfo.userAlias} />
                 {/* 이름 */}
-                <p className="font-bold text-2xl">{friendsInfo.userName}</p>
+                <p className="font-bold text-2xl">{friendsInfo.playerName}</p>
               </div>
             </div>
             {/* 프로필 보기 버튼 */}
             {/* 해당 사람의 프로필로 이동한다 */}
             {/* 임시 정적 데이터로 profileId를 넣었음 */}
-            <Link to={`/main/profile/${friendsInfo.userId}`}>
+            <Link to={`/main/profile/${friendsInfo.playerId}`}>
               <Button
                 type="submit"
                 variant="secondary"
@@ -356,8 +356,8 @@ export default function LiveChat() {
                       // 상대방 메세지 컴포넌트
                       <YouMsg
                         data={data}
-                        userName={friendsInfo.userName}
-                        userProfileImg={friendsInfo.userProfileImg}
+                        userName={friendsInfo.playerName}
+                        userProfileImg={friendsInfo.playerProfilePic}
                         key={idx}
                       />
                     )}
