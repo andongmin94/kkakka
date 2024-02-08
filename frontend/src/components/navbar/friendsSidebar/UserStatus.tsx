@@ -1,6 +1,6 @@
 import classes from "./UserStatus.module.css";
 
-export default function UserStatus({ status }: { status: string }) {
+export default function UserStatus({ status }: { status: boolean }) {
   return (
     <div className="flex flex-row">
       <div className={classes.text}>{status}</div>
