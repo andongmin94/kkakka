@@ -41,7 +41,7 @@ pipeline {
                     // application properties 파일 복사
                     // sh "echo $BuildGradle > ./build.gradle"
             
-                    sh "./gradlew --debug clean build --exclude-task test"
+                    sh "./gradlew clean build --exclude-task test"
                 
                 }
                 echo '백엔드 빌드 및 테스트 완료!' 
