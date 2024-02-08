@@ -27,7 +27,6 @@ export default function LoginSuccessPage() {
     try {
       console.log(lolId.current.value);
       mutate({ data: { riotId: lolId.current.value } });
-      window.alert("롤 아이디가 저장되었습니다.");
       setUserInfo({ ...userInfo, riotId: lolId.current.value });
       navigate("/main");
     } catch (error) {
