@@ -161,12 +161,6 @@ export default function RootLayout() {
                       text={speakerToastContent}
                     />
                   )}
-                  {speakerToast && (
-                    <SpeakerToast
-                      setToast={setSpeakerToast}
-                      text={speakerToastContent}
-                    />
-                  )}
                   {/* 네브바 오른쪽 영역 */}
                   <div className={classes.nav_right}>
                     {/* 다크모드 버튼 (미완, 후순위) */}
