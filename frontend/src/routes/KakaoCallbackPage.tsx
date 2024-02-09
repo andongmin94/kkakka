@@ -14,7 +14,7 @@ export default function KakaoCallbackPage() {
         .get(
           `${
             import.meta.env.VITE_API_BASE_URL
-          }/api/oauth/callback/kakao/token?code=${code}`
+          }/api/oauth/callback/kakao/token/local?code=${code}`
         )
         .then((res) => {
           localStorage.setItem("token", res.headers.authorization);
