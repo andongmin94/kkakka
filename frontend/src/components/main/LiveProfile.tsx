@@ -21,7 +21,11 @@ export default function LiveProfile({
   return (
     <div className="flex items-center space-x-3">
       <Skeleton
-        className={`w-[80px] h-[80px] rounded-full border-4  border-red-500 bg-[url('${playerProfilePic}')] bg-cover`}
+        className={`w-[80px] h-[80px] rounded-full border-4  border-red-500 `}
+        style={{
+          backgroundImage: `url("${playerProfilePic}")`,
+          backgroundSize: "cover",
+        }}
       />
       <div className="space-y-2">
         <Skeleton className="h-auto grid grid-rows-1 place-items-stretch w-[250px]">
