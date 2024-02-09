@@ -51,7 +51,7 @@ export default function LiveContent({
         backgroundImage: `url("${liveData.playerBackgroundPic}")`,
         backgroundSize: "cover",
       }}
-      onClick={(e) => {
+      onClick={() => {
         enterLiveHandler(liveData);
       }}
     >
