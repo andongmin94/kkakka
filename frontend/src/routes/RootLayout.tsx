@@ -2,18 +2,18 @@ import cn from "clsx";
 const electron = window.electron;
 import { useEffect, useState } from "react";
 import { Alarm } from "@/components/navbar/Alarm";
+import useUserStore from "@/store/user/userStore";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
+import { EventSourcePolyfill } from "event-source-polyfill";
+import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
+import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
-import { EventSourcePolyfill } from "event-source-polyfill";
-import SpeakerToast from "@/components/navbar/SpeakerToast";
-import useUserStore from "@/store/user/userStore";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
@@ -172,7 +172,6 @@ export default function RootLayout() {
                       </Avatar>
                       {/* <div className={classes.user_image} /> */}
                     </Link>
-
                     <Alarm />
                     <FriendsBtn />
                   </div>
@@ -195,7 +194,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/profile/${userInfo.userId}`}
+                      to={`/main/my-profile`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>
@@ -236,7 +235,6 @@ export default function RootLayout() {
             {/* 네브바 */}
             <nav className={classes.nav_M}>
               {/* 로고 */}
-              {/* 로고 이미지 */}
               <Link to="/main" className="ml-5">
                 <img alt="logo" src="/image/logo.png" />
               </Link>
@@ -245,10 +243,9 @@ export default function RootLayout() {
               <div className={classes.nav_right_M}>
                 {/* 사용자 프로필 버튼 */}
                 <Link
-                  to={`/main/profile/${userInfo.userId}`}
+                  to={`/main/my-profile`}
                   className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                 >
-                  {/* 일단 나중에 동적으로 프사 받을 수 있도록 형식 변경함 */}
                   <Avatar>
                     <AvatarImage
                       src={userInfo.userProfileImg}

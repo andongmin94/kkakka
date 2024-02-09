@@ -2,32 +2,14 @@ import Speaker from "@/components/itemShop/Speaker";
 import WriteAlias from "@/components/itemShop/WriteAlias";
 import Compliment from "@/components/itemShop/Compliment";
 import DeleteCollection from "@/components/itemShop/DeleteCollection";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { FriendType } from "@/types/friendTypes";
 import useItemshopStore from "@/store/itemshop/itemshopStore";
 import usePointStore from "@/store/user/pointStore";
+import useFriendStore from "@/store/friend/friendStore";
 
 export default function ItemshopPage() {
-  const token = localStorage.getItem("token");
-
   const { itemList } = useItemshopStore();
   const { point } = usePointStore();
-
-  const [friends, setFriends] = useState<FriendType[]>([]);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log("친구목록", res.data.data.friendList);
-        setFriends(res.data.data.friendList);
-      });
-  }, []);
+  const { friendList } = useFriendStore();
 
   return (
     <>
@@ -44,7 +26,7 @@ export default function ItemshopPage() {
                 itemPrice={itemList[0].itemPrice}
                 itemDesc={itemList[0].itemDesc}
                 myPoint={point}
-                friends={friends}
+                friends={friendList}
               />
             </div>
             <div className="flex flex-col items-center">
@@ -61,7 +43,7 @@ export default function ItemshopPage() {
                 itemPrice={itemList[2].itemPrice}
                 itemDesc={itemList[2].itemDesc}
                 myPoint={point}
-                friends={friends}
+                friends={friendList}
               />
             </div>
             <div className="flex flex-col items-center">

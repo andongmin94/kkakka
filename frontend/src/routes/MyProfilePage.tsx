@@ -7,7 +7,7 @@ import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
 import useUserStore from "@/store/user/userStore";
 
-export default function ProfilePage() {
+export default function MyProfilePage() {
   const { userInfo } = useUserStore();
 
   return (
