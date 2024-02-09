@@ -7,26 +7,23 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { FriendType } from "@/types/friendTypes";
+
+import { useEffect } from "react";
+import useFriendStore from "@/store/friend/friendStore";
+import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
 
 export default function FriendsBtn() {
-  const [friends, setFriends] = useState<FriendType[] | null>(null);
-  const token = localStorage.getItem("token");
+  const { friendList, setFriendList } = useFriendStore();
+  const { useFriendListQuery } = useFriendList();
+  const { data: friendListData } = useFriendListQuery();
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data.friendList);
-        setFriends(res.data.data.friendList);
-      });
-  }, []);
+    if (friendListData) {
+      setFriendList(friendListData);
+    } else {
+      console.log("친구 목록 없음");
+    }
+  }, [friendListData, setFriendList]);
 
   return (
     <Sheet>
@@ -41,11 +38,9 @@ export default function FriendsBtn() {
           </SheetTitle>
           <div className={classes.scrollbar}>
             {/* 친구 카드 생성 */}
-            {friends &&
-              Array.isArray(friends) &&
-              friends.map((friend) => {
-                return <FriendsCard key={friend.id} info={friend} />;
-              })}
+            {friendList.map((friend) => {
+              return <FriendsCard key={friend.id} info={friend} />;
+            })}
           </div>
         </SheetHeader>
       </SheetContent>
