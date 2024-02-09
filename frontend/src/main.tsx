@@ -9,7 +9,6 @@ import ProfilePage from "@/routes/ProfilePage.tsx";
 import ItemshopPage from "@/routes/ItemshopPage.tsx";
 import MessageListPage from "@/routes/MessageListPage";
 // import MessageDetailPage from "@/routes/MessageDetailPage";
-import ProfileRecordPage from "@/routes/ProfileRecordPage";
 import ProfileCollection from "@/routes/ProfileCollection";
 import FirstLoginPage from "@/routes/FirstLoginPage.js";
 import LoginSuccessPage from "@/routes/LoginSuccessPage.js";
@@ -58,7 +57,6 @@ const router = createBrowserRouter([
             path: "/main/profile/:id/dishonor",
             element: <ProfileDishonorPage />,
           },
-          { path: "/main/profile/:id/record", element: <ProfileRecordPage /> },
         ],
       },
     ],
