@@ -53,19 +53,20 @@ public class DogamDislikeService {
         dislikeDogamRepository.save(dislikeDogam);
     }
 
-    public void deleteDogamDislike(Long commentId, User user) throws CustomException {
+    public void deleteDogamDislike(Long dogamId, User user) throws CustomException {
 
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
-        DislikeDogam dislikeDogam = dislikeDogamRepository.findByIdAndDeletedAtIsNull(commentId).orElseThrow(
+        DislikeDogam dislikeDogam = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(),dogamId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_DOGAM_DISLIKE)
         );
 
-        if (!Objects.equals(dislikeDogam.getUserEmail(), user.getKakaoEmail())) {
-            throw new CustomException(ErrorType.NOT_MATCHING_DISLIKE_USER);
+        if (!dislikeDogam.isDislike()) {
+            throw new CustomException(ErrorType.ALREADY_EXIST_NON_DISLIKE);
         }
-        dislikeDogamRepository.delete(dislikeDogam);
+
+        dislikeDogam.setDislike(false);
     }
 }
