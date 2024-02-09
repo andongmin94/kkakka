@@ -202,9 +202,9 @@ export default function RootLayout() {
 
                   {/* 로고 */}
                   {/* 확성기 자리 */}
-                  {speakerToast && (
+                  {showSpeakerToast && (
                     <SpeakerToast
-                      setToast={setSpeakerToast}
+                      setToast={setShowSpeakerToast}
                       text={speakerToastContent}
                     />
                   )}
