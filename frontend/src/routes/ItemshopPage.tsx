@@ -33,7 +33,7 @@ export default function ItemshopPage() {
               <DeleteCollection
                 itemName={itemList[1].itemName}
                 itemPrice={itemList[1].itemPrice}
-                itemDesc={itemList[1].itemDesc}
+                // itemDesc={itemList[1].itemDesc}
                 myPoint={point}
               />
             </div>
@@ -41,7 +41,7 @@ export default function ItemshopPage() {
               <Compliment
                 itemName={itemList[2].itemName}
                 itemPrice={itemList[2].itemPrice}
-                itemDesc={itemList[2].itemDesc}
+                // itemDesc={itemList[2].itemDesc}
                 myPoint={point}
                 friends={friendList}
               />
@@ -50,7 +50,7 @@ export default function ItemshopPage() {
               <Speaker
                 itemName={itemList[3].itemName}
                 itemPrice={itemList[3].itemPrice}
-                itemDesc={itemList[3].itemDesc}
+                // itemDesc={itemList[3].itemDesc}
                 myPoint={point}
               />
             </div>

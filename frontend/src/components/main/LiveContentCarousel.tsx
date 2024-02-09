@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { CardContent } from "@/components/ui/card";
 import LiveContent from "@/components/main/LiveContent";
@@ -7,9 +7,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { BroadcastItemType } from "@/types/broadcastTypes";
+import useBroadcastStore from "@/store/broadcast/broadcastStore";
+import { useBroadcastList } from "@/hooks/broadcast/queries/useBroadcastListQuery";
 
 export default function LiveContentCarousel() {
   const plugin = useRef(
@@ -17,28 +16,15 @@ export default function LiveContentCarousel() {
     Autoplay({ delay: 3000, stopOnInteraction: false })
   );
 
-  const token = localStorage.getItem("token");
-
-  const [broadcastList, setBroadcastList] = useState<
-    BroadcastItemType[] | null
-  >(null);
+  const { broadcastList, setBroadcastList } = useBroadcastStore();
+  const { useBroadcastListQuery } = useBroadcastList();
+  const { data: broadcasts } = useBroadcastListQuery();
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log("라이브", res.data.data);
-        console.log(res.data.data);
-        setBroadcastList(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
+    if (broadcasts) {
+      setBroadcastList(broadcasts);
+    }
+  }, [broadcasts]);
 
   return (
     <Carousel
@@ -47,16 +33,15 @@ export default function LiveContentCarousel() {
       className="h-full w-full"
     >
       <CarouselContent>
-        {broadcastList &&
-          broadcastList.map((room, index) => (
-            <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/3">
-              <div className="p-1">
-                <CardContent className="flex aspect-square items-center justify-center p-0">
-                  <LiveContent liveData={room} />
-                </CardContent>
-              </div>
-            </CarouselItem>
-          ))}
+        {broadcastList.map((room) => (
+          <CarouselItem key={room.roomId} className="md:basis-1/1 lg:basis-1/3">
+            <div className="p-1">
+              <CardContent className="flex aspect-square items-center justify-center p-0">
+                <LiveContent liveData={room} />
+              </CardContent>
+            </div>
+          </CarouselItem>
+        ))}
       </CarouselContent>
     </Carousel>
   );

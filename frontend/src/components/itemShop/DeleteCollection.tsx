@@ -1,4 +1,3 @@
-import Price from "./Price";
 // import Purchase from "./Purchase";
 import { useEffect, useState, useRef } from "react";
 import classes from "./ItemShopCard.module.css";
@@ -37,12 +36,10 @@ import { ProfileDogamType } from "@/types/dogamTypes";
 export default function TitleItemshop({
   itemName,
   itemPrice,
-  itemDesc,
   myPoint,
 }: {
   itemName: string;
   itemPrice: number;
-  itemDesc: string;
   myPoint: number;
 }) {
   const token = localStorage.getItem("token");
@@ -162,8 +159,8 @@ export default function TitleItemshop({
       const rotateY = (-1 / 5) * x + 20;
       const rotateX = (4 / 30) * y - 20;
 
-      overlayRef.current.style.filter = 'opacity(10)';
-      overlayRef.current.style.backgroundPosition = ` ${160-x}% ${250-y}%`;
+      overlayRef.current.style.filter = "opacity(10)";
+      overlayRef.current.style.backgroundPosition = ` ${160 - x}% ${250 - y}%`;
 
       containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
@@ -171,8 +168,9 @@ export default function TitleItemshop({
 
   const handleMouseOut = () => {
     if (overlayRef.current && containerRef.current) {
-      overlayRef.current.style.filter = 'opacity(0)';
-      containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+      overlayRef.current.style.filter = "opacity(0)";
+      containerRef.current.style.transform =
+        "perspective(350px) rotateY(0deg) rotateX(0deg)";
     }
   };
 
@@ -180,11 +178,19 @@ export default function TitleItemshop({
     <Card className="border-0">
       <Dialog>
         <DialogTrigger asChild>
-          <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
-              <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
-              <div className={`${classes.itemElemCard}`}>
-                <h1 className={`${classes.itemElemContent}`}>도감삭제권</h1>
-              </div>
+          <div
+            className={`${classes.itemElemContainer}`}
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseOut={handleMouseOut}
+          >
+            <div
+              className={`${classes.itemElemOverlay}`}
+              ref={overlayRef}
+            ></div>
+            <div className={`${classes.itemElemCard}`}>
+              <h1 className={`${classes.itemElemContent}`}>도감삭제권</h1>
+            </div>
           </div>
         </DialogTrigger>
 
