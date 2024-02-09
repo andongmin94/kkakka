@@ -65,8 +65,6 @@ export default function WriteAlias({
   myPoint: number;
   friends: FriendType[];
 }) {
-  //console.log("칭호 부분으로 넘어온 친구 리스트: " , friends)
-
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = useState(false);
 
