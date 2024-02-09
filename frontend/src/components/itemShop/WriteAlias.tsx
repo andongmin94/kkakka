@@ -39,8 +39,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import axios from "axios";
 import { FriendType } from "@/types/friendTypes";
+import { useBuyWriteAliasPost } from "@/hooks/itemshop/mutations/useBuyWritealiasPost";
 
 const FormSchema = z.object({
   userId: z.number(),
@@ -87,6 +87,19 @@ export default function WriteAlias({
       ),
     });
   }
+
+  interface dataType {
+    userId: number;
+    textAlias: string;
+    name: string;
+  }
+
+  // 구입 api 요청하기
+  const itemBuyHandler = (data: dataType) => {
+    const mutation = useBuyWriteAliasPost(data);
+    const { mutate } = mutation;
+    mutate();
+  };
 
   return (
     <Card className="static group/item bg-[url('/image/whriteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
@@ -260,27 +273,7 @@ export default function WriteAlias({
                         // 데이터 보내는거 확인 완료
                         console.log(data);
 
-                        const token = localStorage.getItem("token");
-                        axios
-                          .post(
-                            `${
-                              import.meta.env.VITE_API_BASE_URL
-                            }/api/friends/alias?receiver-id=${data.userId}`,
-                            {
-                              aliasName: data.textAlias,
-                            },
-                            {
-                              headers: {
-                                Authorization: token,
-                              },
-                            }
-                          )
-                          .then((res) => {
-                            console.log(res);
-                          })
-                          .catch((error) => {
-                            console.log(error);
-                          });
+                        itemBuyHandler(data);
 
                         setOpenDialog(false);
                       }
