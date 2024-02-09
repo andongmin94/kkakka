@@ -11,34 +11,34 @@ import { BroadcastItemType } from "@/types/broadcastTypes";
 // import { Button } from "@/components/ui/button";
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-const navigate = useNavigate();
-
-const enterLiveHandler = (liveData: BroadcastItemType) => {
-  axios
-    .post(
-      `${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts/enter/${
-        liveData.playerId
-      }`,
-      {},
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
-    .then((res) => {
-      console.log("라이브데이터");
-      console.log(liveData);
-      navigate(`/main/liveChat/${res.data.data}`, { state: liveData });
-    });
-};
-
 export default function LiveContent({
   liveData,
 }: {
   liveData: BroadcastItemType;
 }) {
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  const enterLiveHandler = (liveData: BroadcastItemType) => {
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts/enter/${
+          liveData.playerId
+        }`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("라이브데이터");
+        console.log(liveData);
+        navigate(`/main/liveChat/${res.data.data}`, { state: liveData });
+      });
+  };
+
   return (
     <Card
       className={`border-solid border-4 rounded-3xl h-[15rem] w-[23rem] grid grid-rows-5 lg:hover:scale-105 transition-transform ease-in-out duration-500`}
