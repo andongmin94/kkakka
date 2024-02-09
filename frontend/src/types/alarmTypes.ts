@@ -1,5 +1,5 @@
 export interface AlarmType {
-  alarmID: number;
+  alarmId: number;
   alarmContent: string;
   alarmPic: string;
   isChecked: boolean;
