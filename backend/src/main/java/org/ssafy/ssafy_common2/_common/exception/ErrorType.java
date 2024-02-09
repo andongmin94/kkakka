@@ -53,6 +53,7 @@ public enum ErrorType {
     NOT_FOUND_USER_INFO(401, "다이나믹 유저 인포가 존재하지 않습니다"),
     NOT_FOUND_BACK_IMG(401, "배경사진을 추가해 주세요"),
     NOT_FOUND_PROFILE_IMG(401, "프로필 사진을 추가해 주세요"),
+    ALREADY_EXIST_NON_DISLIKE(401, "싫어요가 없습니다. 싫어요를 하고 취소해 주세요"),
     ;
 
     private int code;
