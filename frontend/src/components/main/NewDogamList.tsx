@@ -7,6 +7,7 @@ import InfiniteScroll from "react-infinite-scroller";
 interface PageData {
   results: NewDogamType[];
   nextPageParam: number;
+  theLastPage: number;
 }
 
 const token = localStorage.getItem("token");
@@ -24,6 +25,7 @@ const fetchDogamList = async (pageParam: number): Promise<PageData> => {
   return {
     results: res.data.data, // 실제 도감 리스트임
     nextPageParam: pageParam + 1, // 다음페이지
+    theLastPage: res.data.totalPages,
   };
 };
 
@@ -34,7 +36,7 @@ export default function NewDogamList() {
       fetchDogamList(pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage: PageData) => {
-      if (lastPage.nextPageParam === 3) {
+      if (lastPage.nextPageParam === lastPage.theLastPage) {
         return undefined;
       } else {
         return lastPage.nextPageParam;
