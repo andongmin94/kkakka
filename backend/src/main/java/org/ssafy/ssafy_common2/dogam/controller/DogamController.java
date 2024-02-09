@@ -12,6 +12,7 @@ import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
 import org.ssafy.ssafy_common2.dogam.service.DogamService;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -38,10 +39,9 @@ public class DogamController {
     }
 
     @DeleteMapping("/friends/dogam/{dogam-id}")
-    public ApiResponseDto<Void> deleteDogam(@PathVariable(value = "dogam-id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto<Map<String, Integer>> deleteDogam(@PathVariable(value = "dogam-id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        dogamService.deleteDogam(dogamId, userDetails.getUser());
-        return ResponseUtils.ok(MsgType.DELETE_DOGAM_SUCCESSFULLY);
+        return ResponseUtils.ok(dogamService.deleteDogam(dogamId, userDetails.getUser()), MsgType.DELETE_DOGAM_SUCCESSFULLY);
     }
 
     @GetMapping("/friends/dogam/{dogam-id}")

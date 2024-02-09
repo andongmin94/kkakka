@@ -37,6 +37,8 @@ import java.util.*;
 @Transactional
 public class DogamService {
 
+    private static final int DOGAM_DELETE_POINT = 1000;
+
     private final S3Uploader s3Uploader;
     private final DogamRepository dogamRepository;
     private final UserRepository userRepository;
@@ -102,7 +104,7 @@ public class DogamService {
         return responseDto;
     }
 
-    public void deleteDogam(Long dogamId, User user) {
+    public Map<String, Integer> deleteDogam(Long dogamId, User user) {
 
         Dogam dogam = dogamRepository.findByIdAndDeletedAtIsNull(dogamId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_DOGAM)
@@ -117,6 +119,13 @@ public class DogamService {
         }
 
         dogamRepository.delete(dogam);
+
+        user.getUserInfoId().minusPoint(DOGAM_DELETE_POINT);
+        userRepository.saveAndFlush(user);
+
+        Map<String, Integer> ans = new HashMap<>();
+        ans.put("UserPoint : ", user.getUserInfoId().getPoint());
+        return ans;
     }
 
     // 메인 페이지 도감 리스트 불러오기 메서드
