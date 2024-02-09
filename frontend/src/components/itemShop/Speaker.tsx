@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { Alert } from "@/components/ui/alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -32,6 +34,8 @@ const FormSchema = z.object({
   }),
 });
 import axios from "axios";
+import { useEffect, useRef } from "react";
+import classes from "./ItemShopCard.module.css";
 
 export default function Speaker({
   itemName,
@@ -62,24 +66,69 @@ export default function Speaker({
     });
   }
 
-  return (
-    <Card className="static group/item bg-[url('/image/speakerBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
-      <div className="flex flex-col items-center">
-        <img src="/image/speaker.png" className="h-20 w-20 pt-3" />
-        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
-      </div>
+    // Item Card CSS 세팅
+    const containerRef = useRef<HTMLDivElement>(null);
+    const overlayRef = useRef<HTMLDivElement>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
+  
+    useEffect(() => {
+      if (cardRef.current != null){
+        cardRef.current.style.backgroundImage = `url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAAEsCAMAAABgwwj8AAAAA1BMVEUTJ0OMCoK8AAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+BsYMAAFjd3WkAAAAAElFTkSuQmCC')`;
+      }
+    })
+  
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (containerRef.current && overlayRef.current) {
+        const x = e.nativeEvent.offsetX;
+        const y = e.nativeEvent.offsetY;
+        const rotateY = (-1 / 5) * x + 20;
+        const rotateX = (4 / 30) * y - 20;
+  
+        overlayRef.current.style.filter = 'opacity(10)';
+        overlayRef.current.style.backgroundPosition = ` ${160-x}% ${250-y}%`;
+  
+        containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      }
+    };
+  
+    const handleMouseOut = () => {
+      if (overlayRef.current && containerRef.current) {
+        overlayRef.current.style.filter = 'opacity(0)';
+        containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+      }
+    };
+  
+    const makeToast = (content: string) => {
+   
+      // 개인 포인트 조회
+      // const token = localStorage.getItem("token");
+  
+      // axios
+      // .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
+      //   headers: {
+      //     Authorization: token,
+      //   },
+      // })
+      // .then((res) => {
+      //   console.log("포인트조회", res.data.data.Point);
+      //   setMyPoint(res.data.data.Point);
+      // });
 
-      {/* 호버 */}
-      <div className="opacity-50 absolute top-[-4px] right-[-4px] border-solid border-4 rounded-3xl bg-slate-400 h-[23rem] w-[23rem] group/edit invisible group-hover/item:visible" />
+      toast({
+        title: "아이템 구매",
+        description: content,
+      })
+    }
+
+  return (
+    <Card className="border-0">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
-          <div className="group/edit invisible group-hover/item:visible h-[23rem] w-[23rem] grid place-items-center z-10">
-            {/* 호버 가격 버튼 */}
-            <Price itemPrice={itemPrice} />
-
-            {/* 호버 구매하기 버튼 */}
-            <Purchase />
+            <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
+              <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
+              <div className={`${classes.itemElemCard}`} ref={cardRef}>
+                <h1 className={`${classes.itemElemContent}`}>확성기</h1>
+            </div>
           </div>
         </DialogTrigger>
 
@@ -173,10 +222,12 @@ export default function Speaker({
                           },
                         }).then((res) =>  {
                           // 확성기 구매 성공
+                          makeToast("확성기 구매 성공");
                           console.log(res)
                         })
                         .catch((error) => {
                           // 확성기 구매 실패
+                          makeToast("확성기 구매 실패");
                           console.log(error)
                         })
 
@@ -194,6 +245,7 @@ export default function Speaker({
           </div>
         </DialogContent>
       </Dialog>
+      <Toaster />
     </Card>
   );
 }
