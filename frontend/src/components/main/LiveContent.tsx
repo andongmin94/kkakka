@@ -14,11 +14,6 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 const navigate = useNavigate();
 
-if (!token) {
-  window.alert("로그인이 필요한 서비스입니다.");
-  navigate("/");
-}
-
 const enterLiveHandler = (liveData: BroadcastItemType) => {
   axios
     .post(
