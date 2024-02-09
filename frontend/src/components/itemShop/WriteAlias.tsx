@@ -1,8 +1,6 @@
 import * as z from "zod";
-import Price from "./Price";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
-import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -106,10 +104,10 @@ export default function WriteAlias({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (cardRef.current != null){
+    if (cardRef.current != null) {
       cardRef.current.style.backgroundImage = `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfP6YEtvDE4IhCTv0534ffLaaVFlE8RB34Uw&usqp=CAU')`;
     }
-  })
+  });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (containerRef.current && overlayRef.current) {
@@ -118,9 +116,9 @@ export default function WriteAlias({
       const rotateY = (-1 / 5) * x + 20;
       const rotateX = (4 / 30) * y - 20;
 
-      <div className="opacity-50 absolute top-[-4px] right-[-4px] border-solid border-4 rounded-3xl bg-slate-400 h-[23rem] w-[23rem] group/edit invisible group-hover/item:visible" />
-      overlayRef.current.style.filter = 'opacity(10)';
-      overlayRef.current.style.backgroundPosition = `${160-x}% ${250-y}%`;
+      <div className="opacity-50 absolute top-[-4px] right-[-4px] border-solid border-4 rounded-3xl bg-slate-400 h-[23rem] w-[23rem] group/edit invisible group-hover/item:visible" />;
+      overlayRef.current.style.filter = "opacity(10)";
+      overlayRef.current.style.backgroundPosition = `${160 - x}% ${250 - y}%`;
 
       containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
@@ -128,8 +126,9 @@ export default function WriteAlias({
 
   const handleMouseOut = () => {
     if (overlayRef.current && containerRef.current) {
-      overlayRef.current.style.filter = 'opacity(0)';
-      containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+      overlayRef.current.style.filter = "opacity(0)";
+      containerRef.current.style.transform =
+        "perspective(350px) rotateY(0deg) rotateX(0deg)";
     }
   };
 
@@ -137,8 +136,16 @@ export default function WriteAlias({
     <Card className="border-0">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
-          <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
-            <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
+          <div
+            className={`${classes.itemElemContainer}`}
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseOut={handleMouseOut}
+          >
+            <div
+              className={`${classes.itemElemOverlay}`}
+              ref={overlayRef}
+            ></div>
             <div className={`${classes.itemElemCard}`} ref={cardRef}>
               <h1 className={`${classes.itemElemContent}`}>칭호지정권</h1>
             </div>
