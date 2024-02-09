@@ -57,7 +57,7 @@ export default function LiveContent({
               return (
                 <div
                   key={crowd.attenderId}
-                  className={`rounded-full border-[3px] h-10 w-10`}
+                  className={`rounded-full border-[2px] h-10 w-10`}
                   style={{
                     backgroundImage: `url("${crowd.attenderProfileImg}")`,
                     backgroundSize: "cover",
