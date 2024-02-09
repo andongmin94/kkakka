@@ -38,8 +38,10 @@ export default function RootLayout() {
   const { setLastEventId } = useAlarmSubscribeStore();
 
   // 확성기 내용 state
-  const [speakerToastContent, setSpeakerToastContent] = useState<string>("");
-  const [speakerToast, setSpeakerToast] = useState<boolean>(false);
+  const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
+  const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
+  const [speakerToastList, setSpeakerToastList] = useState<string[]>([]); 
+  const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill;
 
@@ -67,11 +69,14 @@ export default function RootLayout() {
     });
 
     source.addEventListener("megaphone", (event: any) => {
-      // useEffect 안에 있어서 set이 잘 안됨는거 같음
       const parseData = JSON.parse(event.data);
+      
+      // 새로운 확성기가 있음을 표시
+      setNewSpeakerContent(parseData.content);
+      setSpeakerToastList((prev) => {
+        return prev.concat(parseData.content);
+      });
 
-      setSpeakerToast(true);
-      setSpeakerToastContent(parseData.content);
     });
 
     return () => {
@@ -79,10 +84,17 @@ export default function RootLayout() {
     };
   }, [setLastEventId]);
 
-  // 확성기 내용이 새로 생길 때 실행
   useEffect(() => {
-    console.log(speakerToastContent);
-  }, [speakerToastContent]);
+    if (!showSpeakerToast && speakerToastList.length != 0) {
+      
+      // 확성기 리스트 중 첫번째 요소를 보여주기
+      setSpeakerToastContent(speakerToastList[0]);
+      setSpeakerToastList((prev) => prev.slice(1));
+      setShowSpeakerToast(true);
+
+
+    }
+  }, [newSpeakerContent, showSpeakerToast]);
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
@@ -155,9 +167,9 @@ export default function RootLayout() {
 
                   {/* 로고 */}
                   {/* 확성기 자리 */}
-                  {speakerToast && (
+                  {showSpeakerToast && (
                     <SpeakerToast
-                      setToast={setSpeakerToast}
+                      setToast={setShowSpeakerToast}
                       text={speakerToastContent}
                     />
                   )}
