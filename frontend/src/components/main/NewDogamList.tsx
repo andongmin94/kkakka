@@ -1,30 +1,63 @@
 import NewDogam from "@/components/main/NewDogam";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import { NewDogamType } from "@/types/dogamTypes";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import InfiniteScroll from "react-infinite-scroller";
+
+interface PageData {
+  results: NewDogamType[];
+  nextPageParam: number;
+}
+
+const token = localStorage.getItem("token");
+
+const fetchDogamList = async (pageParam: number): Promise<PageData> => {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_BASE_URL}/api/dogam/feed?page=${pageParam}`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+  console.log("페치도감리스트", res);
+  return {
+    results: res.data.data, // 실제 도감 리스트임
+    nextPageParam: pageParam + 1, // 다음페이지
+  };
+};
 
 export default function NewDogamList() {
-  const [dogamfeedList, setDogamfeedList] = useState<NewDogamType[] | null>([]);
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        setDogamfeedList(res.data.data);
-      });
-  }, []);
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["dogamfeed"],
+    queryFn: ({ pageParam }: { pageParam: number }) =>
+      fetchDogamList(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: PageData) => {
+      if (lastPage.nextPageParam === 3) {
+        return undefined;
+      } else {
+        return lastPage.nextPageParam;
+      }
+    },
+  });
 
   return (
     <div>
-      {dogamfeedList &&
-        dogamfeedList.map((data, idx) => {
-          return <NewDogam data={data} key={idx} />;
+      <InfiniteScroll
+        loadMore={() => {
+          if (!isFetching) {
+            fetchNextPage();
+          }
+        }}
+        hasMore={hasNextPage}
+      >
+        {data!.pages.map((pageData) => {
+          return pageData.results.map((dogam: NewDogamType) => {
+            return <NewDogam key={dogam.dogamId} data={dogam} />;
+          });
         })}
+      </InfiniteScroll>
     </div>
   );
 }
