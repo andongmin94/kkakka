@@ -6,26 +6,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FriendType } from "@/types/friendTypes";
 import useItemshopStore from "@/store/itemshop/itemshopStore";
+import usePointStore from "@/store/user/pointStore";
 
 export default function ItemshopPage() {
   const token = localStorage.getItem("token");
 
   const { itemList } = useItemshopStore();
-
-  const [myPoint, setMyPoint] = useState<number>(0);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log("포인트조회", res.data.data.Point);
-        setMyPoint(res.data.data.Point);
-      });
-  }, []);
+  const { point } = usePointStore();
 
   const [friends, setFriends] = useState<FriendType[]>([]);
 
@@ -56,7 +43,7 @@ export default function ItemshopPage() {
                 itemName={itemList[0].itemName}
                 itemPrice={itemList[0].itemPrice}
                 itemDesc={itemList[0].itemDesc}
-                myPoint={myPoint}
+                myPoint={point}
                 friends={friends}
               />
             </div>
@@ -65,7 +52,7 @@ export default function ItemshopPage() {
                 itemName={itemList[1].itemName}
                 itemPrice={itemList[1].itemPrice}
                 itemDesc={itemList[1].itemDesc}
-                myPoint={myPoint}
+                myPoint={point}
               />
             </div>
             <div className="flex flex-col items-center">
@@ -73,7 +60,7 @@ export default function ItemshopPage() {
                 itemName={itemList[2].itemName}
                 itemPrice={itemList[2].itemPrice}
                 itemDesc={itemList[2].itemDesc}
-                myPoint={myPoint}
+                myPoint={point}
                 friends={friends}
               />
             </div>
@@ -82,7 +69,7 @@ export default function ItemshopPage() {
                 itemName={itemList[3].itemName}
                 itemPrice={itemList[3].itemPrice}
                 itemDesc={itemList[3].itemDesc}
-                myPoint={myPoint}
+                myPoint={point}
               />
             </div>
           </div>
