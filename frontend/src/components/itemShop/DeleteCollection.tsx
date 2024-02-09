@@ -1,6 +1,7 @@
 import Price from "./Price";
 // import Purchase from "./Purchase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import classes from "./ItemShopCard.module.css";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -150,24 +151,40 @@ export default function TitleItemshop({
     );
   };
 
-  return (
-    <Card className="static group/item bg-[url('/image/deleteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
-      <div className="flex flex-col items-center">
-        <img src="/image/deleteCollection.png" className="h-20 w-20" />
-        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
-      </div>
+  // Item Card CSS 세팅
+  const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
-      {/* 호버 */}
-      <div className="opacity-50 absolute top-[-4px] right-[-4px] border-solid border-4 rounded-3xl bg-slate-400 h-[23rem] w-[23rem] group/edit invisible group-hover/item:visible" />
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (containerRef.current && overlayRef.current) {
+      const x = e.nativeEvent.offsetX;
+      const y = e.nativeEvent.offsetY;
+      const rotateY = (-1 / 5) * x + 20;
+      const rotateX = (4 / 30) * y - 20;
+
+      overlayRef.current.style.filter = 'opacity(10)';
+      overlayRef.current.style.backgroundPosition = ` ${160-x}% ${250-y}%`;
+
+      containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+  };
+
+  const handleMouseOut = () => {
+    if (overlayRef.current && containerRef.current) {
+      overlayRef.current.style.filter = 'opacity(0)';
+      containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+    }
+  };
+
+  return (
+    <Card className="border-0">
       <Dialog>
         <DialogTrigger asChild>
-          <div className="group/edit invisible group-hover/item:visible h-[23rem] w-[23rem] grid place-items-center z-10">
-            {/* 호버 가격 버튼 */}
-            <Price itemPrice={itemPrice} />
-
-            {/* 호버 구매하기 버튼 */}
-            {/*<Purchase />*/}
+          <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
+              <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
+              <div className={`${classes.itemElemCard}`}>
+                <h1 className={`${classes.itemElemContent}`}>도감삭제권</h1>
+              </div>
           </div>
         </DialogTrigger>
 

@@ -14,12 +14,12 @@ export default function ItemshopPage() {
   return (
     <>
       <div className="text-3xl mb-10 flex">
-        <img src="/image/itemShop.png" className="h-[50px] w-[50px]" />
+        {/* <img src="/image/itemShop.png" className="h-[50px] w-[50px]" /> */}
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
       </div>
       {itemList && (
         <div className="flex flex-col items-center">
-          <div className="grid grid-cols-2 row-auto w-[900px] h-[900px]">
+          <div className="grid grid-cols-4 row-auto w-[1000px] h-[900px]">
             <div className="flex flex-col items-center">
               <WriteAlias
                 itemName={itemList[0].itemName}
