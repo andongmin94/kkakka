@@ -16,8 +16,9 @@ export default function SpeakerToast({
   }, [setToast]);
 
   return (
-    <div>
-      <p>{text}</p>
+    <div className="inline-flex align-middle">
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Winking%20Face%20with%20Tongue.png" width="50" height="50"/>
+      <h1 className="text-2xl font-bold ml-2">{text}</h1>
     </div>
   );
 }

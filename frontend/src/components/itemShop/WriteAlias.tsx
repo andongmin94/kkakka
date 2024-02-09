@@ -1,6 +1,6 @@
 import * as z from "zod";
 import Price from "./Price";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/dialog";
 import { FriendType } from "@/types/friendTypes";
 import { useBuyWriteAliasPost } from "@/hooks/itemshop/mutations/useBuyWritealiasPost";
+import classes from "./ItemShopCard.module.css";
 
 const FormSchema = z.object({
   userId: z.number(),
@@ -99,24 +100,48 @@ export default function WriteAlias({
     mutate();
   };
 
-  return (
-    <Card className="static group/item bg-[url('/image/whriteAliasBg.png')] border-solid border-4 rounded-3xl bg-cover h-[23rem] w-[23rem] lg:hover:scale-105 transition-transform ease-in-out duration-500">
-      <div className="flex flex-col items-center">
-        <img src="/image/whriteAlias.png" className="h-20 w-20" />
-        <p className="text-4xl mt-3 font-bold text-white">{itemName}</p>
-        <p className="text-xl mt-10 font-bold text-white mx-10">{itemDesc}</p>
-      </div>
+  // Item Card CSS 세팅
+  const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-      {/* 호버 */}
+  useEffect(() => {
+    if (cardRef.current != null){
+      cardRef.current.style.backgroundImage = `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfP6YEtvDE4IhCTv0534ffLaaVFlE8RB34Uw&usqp=CAU')`;
+    }
+  })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (containerRef.current && overlayRef.current) {
+      const x = e.nativeEvent.offsetX;
+      const y = e.nativeEvent.offsetY;
+      const rotateY = (-1 / 5) * x + 20;
+      const rotateX = (4 / 30) * y - 20;
+
       <div className="opacity-50 absolute top-[-4px] right-[-4px] border-solid border-4 rounded-3xl bg-slate-400 h-[23rem] w-[23rem] group/edit invisible group-hover/item:visible" />
+      overlayRef.current.style.filter = 'opacity(10)';
+      overlayRef.current.style.backgroundPosition = `${160-x}% ${250-y}%`;
+
+      containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+  };
+
+  const handleMouseOut = () => {
+    if (overlayRef.current && containerRef.current) {
+      overlayRef.current.style.filter = 'opacity(0)';
+      containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+    }
+  };
+
+  return (
+    <Card className="border-0">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
-          <div className="group/edit invisible group-hover/item:visible h-[23rem] w-[23rem] grid place-items-center z-10">
-            {/* 호버 가격 버튼 */}
-            <Price itemPrice={itemPrice} />
-
-            {/* 호버 구매하기 버튼 */}
-            <Purchase />
+          <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
+            <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
+            <div className={`${classes.itemElemCard}`} ref={cardRef}>
+              <h1 className={`${classes.itemElemContent}`}>칭호지정권</h1>
+            </div>
           </div>
         </DialogTrigger>
 
@@ -125,7 +150,8 @@ export default function WriteAlias({
           {/* 헤더 */}
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3 text-4xl">{itemName}</div>
+              <div className="mb-2 text-4xl">{itemName}</div>
+              <div className="mb-3 text-base">{itemDesc}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
