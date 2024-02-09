@@ -1,15 +1,15 @@
 export interface CrowdType {
   [x: string]: any;
-  email: string;
-  name: string;
-  profilePic: string;
+  attenderEmail: string;
+  attenderName: string;
+  attenderProfileImg: string;
 }
 
 export interface BroadcastItemType {
   playerId: number;
   playerEmail: string;
   playerName: string;
-  playerKakaoImg: string;
+  playerProfilePic: string;
   playerBackgroundPic: string;
   roomId: number;
   roomTitle: string;
