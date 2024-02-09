@@ -59,7 +59,7 @@ export default function LiveContent({
             liveData.crowdDtoList.map((crowd) => {
               return (
                 <div
-                  key={crowd.attenderId}
+                  key={crowd.attenderEmail}
                   className={`rounded-full border-[2px] h-10 w-10`}
                   style={{
                     backgroundImage: `url("${crowd.attenderProfileImg}")`,
@@ -78,7 +78,7 @@ export default function LiveContent({
         <LiveProfile
           playerName={liveData.playerName}
           roomTitle={liveData.roomTitle}
-          playerProfilePic={liveData.playerKakaoImg}
+          playerProfilePic={liveData.playerProfilePic}
         />
       </CardFooter>
     </Card>
