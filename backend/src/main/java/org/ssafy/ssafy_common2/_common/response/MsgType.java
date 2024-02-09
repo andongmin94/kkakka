@@ -30,6 +30,7 @@ public enum MsgType {
     SEARCH_USER_DATA_SUCCESSFULLY("유저 데이터 찾기 성공"),
     SEARCH_USER_EDIT_DATA_SUCCESSFULLY("유저 편집 데이터 찾기 성공"),
     SEARCH_PROFILE_DOGAM_LIST_SUCCESSFULLY("프로필 도감 리스트 생성 성공"),
+    CANCEL_DOGAM_DISLIKE_SUCCESSFULLY("도감 싫어요 취소 성공"),
     ;
 
     private final String msg;

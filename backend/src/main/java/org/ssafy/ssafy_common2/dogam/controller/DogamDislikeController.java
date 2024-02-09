@@ -25,10 +25,10 @@ public class DogamDislikeController {
         return ResponseUtils.ok(MsgType.CREATE_DOGAM_DISLIKE_SUCCESSFULLY);
     }
 
-    @DeleteMapping("/friends/dogam/hate/{hate-id}")
-    public ApiResponseDto<Void> deleteDogamDislike(@PathVariable(value = "hate-id") Long hateId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @DeleteMapping("/friends/dogam/hate/{dogam-id}")
+    public ApiResponseDto<Void> deleteDogamDislike(@PathVariable(value = "dogam-id") Long dogamId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        dogamDislikeService.deleteDogamDislike(hateId, userDetails.getUser());
-        return ResponseUtils.ok(MsgType.DELETE_DOGAM_COMMENT_SUCCESSFULLY);
+        dogamDislikeService.deleteDogamDislike(dogamId, userDetails.getUser());
+        return ResponseUtils.ok(MsgType.CANCEL_DOGAM_DISLIKE_SUCCESSFULLY);
     }
 }
