@@ -125,7 +125,7 @@ export default function WriteAlias({
           {/* 헤더 */}
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3 text-4xl">칭호 지정권!</div>
+              <div className="mb-3 text-4xl">{itemName}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
@@ -187,7 +187,6 @@ export default function WriteAlias({
                                     // 콤보박스에 선택한 값이 들어가도록 하는 것
                                     form.setValue("name", friend.name);
                                     form.setValue("userId", friend.id);
-                                    console.log(friend.id);
                                     setOpen(false);
                                   }}
                                 >
@@ -252,7 +251,8 @@ export default function WriteAlias({
                     type="submit"
                     variant="secondary"
                     className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       console.log(form.getValues());
 
                       // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
@@ -272,7 +272,6 @@ export default function WriteAlias({
                         console.log(data);
 
                         itemBuyHandler(data);
-
                         setOpenDialog(false);
                       }
                     }}

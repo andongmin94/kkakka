@@ -8,22 +8,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { useEffect } from "react";
 import useFriendStore from "@/store/friend/friendStore";
-import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
 
 export default function FriendsBtn() {
-  const { friendList, setFriendList } = useFriendStore();
-  const { useFriendListQuery } = useFriendList();
-  const { data: friendListData } = useFriendListQuery();
-
-  useEffect(() => {
-    if (friendListData) {
-      setFriendList(friendListData);
-    } else {
-      console.log("친구 목록 없음");
-    }
-  }, [friendListData, setFriendList]);
+  const { friendList } = useFriendStore();
 
   return (
     <Sheet>

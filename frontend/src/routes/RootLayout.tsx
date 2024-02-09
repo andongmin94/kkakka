@@ -14,12 +14,26 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useFriendStore from "@/store/friend/friendStore";
+import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
 
   const { userInfo } = useUserStore();
+
+  const { setFriendList } = useFriendStore();
+  const { useFriendListQuery } = useFriendList();
+  const { data: friendListData } = useFriendListQuery();
+
+  useEffect(() => {
+    if (friendListData) {
+      setFriendList(friendListData);
+    } else {
+      console.log("친구 목록 없음");
+    }
+  }, []);
 
   const { setLastEventId } = useAlarmSubscribeStore();
 
