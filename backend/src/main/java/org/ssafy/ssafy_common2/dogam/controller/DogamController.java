@@ -7,15 +7,11 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamDetailResponseDto;
+import org.ssafy.ssafy_common2.dogam.dto.response.*;
 import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamCreateResponseDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamMainListResponseDto;
-import org.ssafy.ssafy_common2.dogam.dto.response.DogamProfileListResponseDto;
 import org.ssafy.ssafy_common2.dogam.service.DogamService;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -25,12 +21,12 @@ public class DogamController {
     private final DogamService dogamService;
 
     @GetMapping("/friends/dogam")
-    public ApiResponseDto<List<DogamMainListResponseDto>> dogamList(
+    public ApiResponseDto<PaginationResponse<DogamMainListResponseDto>> dogamList(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        return ResponseUtils.ok(dogamService.dogamList(userDetails.getUser(), page, size), MsgType.SEARCH_MAIN_DOGAM_LIST_SUCCESSFULLY);
+        return ResponseUtils.ok(dogamService.getDogamListWithPagination(userDetails.getUser(), page, size), MsgType.SEARCH_MAIN_DOGAM_LIST_SUCCESSFULLY);
     }
 
 
@@ -55,7 +51,7 @@ public class DogamController {
     }
 
     @GetMapping("/friends/dogam/users/{user-id}")
-    public ApiResponseDto<List<DogamProfileListResponseDto>> dogamProfileList(
+    public ApiResponseDto<PaginationResponse<DogamProfileListResponseDto>> dogamProfileList(
             @PathVariable(value = "user-id") Long userId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(defaultValue = "0") int page,

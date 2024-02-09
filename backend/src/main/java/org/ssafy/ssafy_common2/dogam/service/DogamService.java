@@ -120,7 +120,7 @@ public class DogamService {
     }
 
     // 메인 페이지 도감 리스트 불러오기 메서드
-    public List<DogamMainListResponseDto> dogamList(User user, int page, int size) {
+    public PaginationResponse<DogamMainListResponseDto> getDogamListWithPagination(User user, int page, int size) {
         // 유저 정보가 있는지 확인
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
@@ -139,14 +139,27 @@ public class DogamService {
             }
         }
 
+        // 도감 리스트를 최신순으로 정렬
         dogamList.sort(Comparator.comparing(Dogam::getCreatedAt).reversed());
 
-        List<DogamMainListResponseDto> responseDtoList = new ArrayList<>();
+        // 전체 아이템 수
+        long totalItems = dogamList.size();
+
+        // 전체 페이지 수
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        // 현재 페이지가 범위를 벗어나면 기본값 설정
+        if (page < 0) {
+            page = 0;
+        } else if (page >= totalPages) {
+            page = totalPages - 1;
+        }
 
         // 페이지 인덱스 계산
         int startIndex = page * size;
-        int endIndex = Math.min(startIndex + size, dogamList.size());
+        int endIndex = Math.min(startIndex + size, (int) totalItems);
 
+        List<DogamMainListResponseDto> responseDtoList = new ArrayList<>();
 
         // 데이터 가져오기
         for (int i = startIndex; i < endIndex; i++) {
@@ -183,12 +196,14 @@ public class DogamService {
                     commentUser != null ? commentUser.getCreatedAt() : null);
 
             int dislikeNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
-            responseDtoList.add(DogamMainListResponseDto.of(d.getUser().getId(), d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias!=null?alias.getAliasName():null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
+            responseDtoList.add(DogamMainListResponseDto.of(d.getUser().getId(), d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias != null ? alias.getAliasName() : null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
                     dislikeNum, isHated, dogamCommentResponseDto));
         }
 
-        return responseDtoList;
+        return new PaginationResponse<>(responseDtoList, page, totalPages, totalItems);
     }
+
+
 
     public DogamDetailResponseDto dogamDetail(Long dogamId, User user) {
 
@@ -232,26 +247,29 @@ public class DogamService {
     }
 
     // 프로필 도감 리스트
-    public List<DogamProfileListResponseDto> dogamProfileList(Long userId, User user, int page, int size) {
-
+    public PaginationResponse<DogamProfileListResponseDto> dogamProfileList(Long userId, User user, int page, int size) {
         // 유저 정보가 있는지 확인
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
+        // 해당 유저의 도감 목록 조회
         List<Dogam> dogamList = dogamRepository.findAllByUserIdAndDeletedAtIsNull(userId);
-        List<DogamProfileListResponseDto> dtoList = new ArrayList<>();
+
         // 페이지 인덱스 계산
         int startIndex = page * size;
         int endIndex = Math.min(startIndex + size, dogamList.size());
+
+        // 도감 리스트를 최신순으로 정렬
         dogamList.sort(Comparator.comparing(Dogam::getCreatedAt).reversed());
 
+        List<DogamProfileListResponseDto> dtoList = new ArrayList<>();
+
+        // 데이터 가져오기
         for (int i = startIndex; i < endIndex; i++) {
             Dogam d = dogamList.get(i);
             int dislikeDogamNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
-            DislikeDogam userDislike = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(), d.getId()).orElse(
-                    null
-            );
+            DislikeDogam userDislike = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(), d.getId()).orElse(null);
             int commentNum = commentDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
 
             boolean isHated = false;
@@ -261,9 +279,22 @@ public class DogamService {
 
             dtoList.add(DogamProfileListResponseDto.of(d.getId(), d.getDogamImage(), d.getDogamTitle(), d.getCreatedAt(), dislikeDogamNum, isHated, commentNum));
         }
-        return dtoList;
-    }
 
+        // 전체 아이템 수
+        long totalItems = dogamList.size();
+
+        // 전체 페이지 수
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        // 현재 페이지가 범위를 벗어나면 기본값 설정
+        if (page < 0) {
+            page = 0;
+        } else if (page >= totalPages) {
+            page = totalPages - 1;
+        }
+
+        return new PaginationResponse<>(dtoList, page, totalPages, totalItems);
+    }
 
     //해당 유저의 친구 목록 불러오기
 
