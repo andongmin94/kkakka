@@ -1,0 +1,41 @@
+.itemElemContainer {
+    width: 220px; height: 310px; transition: all 0.1s;
+}
+
+.itemElemCard {
+    width: 220px; height: 310px;
+    background-image :url('https://png.pngtree.com/thumb_back/fw800/back_our/20200730/ourmid/pngtree-simple-audio-black-background-material-png-image_378344.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 3%;
+    box-shadow : 7px 7px 10px 3px rgba(0, 0, 0, 0.3);
+}
+
+.itemElemOverlay {
+    position: absolute;
+    width: 220px;
+    height: 310px;
+    background: radial-gradient(rgba(255, 255, 255, 0.5), transparent 70%, rgba(255, 255, 255, 0.5), transparent 70%);
+    /* background: radial-gradient(circle, rgba(255,0,0, 1), transparent 10%, rgba(255, 0, 0, 1), transparent 10%); */
+    /* background: linear-gradient(105deg, 
+    transparent 40%,
+    rgba(255,219, 112, 0.8) 45%,
+    rgba(132, 50, 255, 0.6) 50%,
+    transparent 54%); */
+
+    filter: brightness(100%) opacity(100%);
+    mix-blend-mode: hard-light;
+    background-size: 120% 120%;
+    background-repeat: no-repeat;
+    background-position: 1000%;
+    transition: all 0.1s;
+    border-radius: 3%;
+}
+
+.itemElemContent {
+    padding: 60% 0%;
+    color:white;
+    text-align: center;
+    font-size: 30px;
+    text-shadow: 2px 2px black;
+}
