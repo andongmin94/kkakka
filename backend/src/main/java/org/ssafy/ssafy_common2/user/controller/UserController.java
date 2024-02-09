@@ -18,7 +18,6 @@ import org.ssafy.ssafy_common2.user.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -30,10 +29,41 @@ public class UserController {
 // 프론트에서 인가코드 돌려 받는 주소
 // 인가 코드로 엑세스 토큰 발급 -> 사용자 정보 조회 -> DB 저장 -> jwt 토큰 발급 -> 프론트에 토큰 전달
     @GetMapping("/oauth/callback/kakao/token")
-    public ApiResponseDto<Map<String, Boolean>> getLogin(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
+    public ApiResponseDto<Map<String, Boolean>> getLoginDist(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
         System.out.println("code : " + code);
         // code 변경
-        OauthToken oauthToken = userService.getAccessToken(code);
+        OauthToken oauthToken = userService.getAccessTokenDist(code);
+
+        // 발급 받은 accessToken 으로 카카오 회원 정보 DB 저장
+        List<String> ans = userService.SaveUserAndGetToken(oauthToken.getAccess_token(), response);
+        String jwtToken = ans.get(0);
+        boolean isFirst = false;
+
+        System.out.println("code : " + code);
+        System.out.println("oauthToken : " + oauthToken);
+        System.out.println("jwtToken : " + jwtToken);
+        if (ans.get(1).equals("true")) {
+            isFirst = true;
+        }
+        Map<String, Boolean> ret = new HashMap<>();
+//        ret.put("isFirst", isFirst);
+        boolean test = false;
+        double a = Math.random();
+        if (a < 0.5) {
+            test = true;
+        }
+
+        System.out.println("랜덤값 몇이야? 0.5 이하면 true가 된다 " + a);
+        ret.put("isFirst", test);
+        System.out.println("첫 가입인가? : " + isFirst);
+        return ResponseUtils.ok(ret, MsgType.GENERATE_TOKEN_SUCCESSFULLY);
+    }
+
+    @GetMapping("/oauth/callback/kakao/token/local")
+    public ApiResponseDto<Map<String, Boolean>> getLoginLocal(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
+        System.out.println("code : " + code);
+        // code 변경
+        OauthToken oauthToken = userService.getAccessTokenLocal(code);
 
         // 발급 받은 accessToken 으로 카카오 회원 정보 DB 저장
         List<String> ans = userService.SaveUserAndGetToken(oauthToken.getAccess_token(), response);

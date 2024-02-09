@@ -27,9 +27,7 @@ import org.ssafy.ssafy_common2.user.repository.AliasRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +45,7 @@ public class UserService {
     @Value("${kakao.secret}")
     String client_secret;
 
-    public OauthToken getAccessToken(String code) {
+    public OauthToken getAccessTokenDist(String code) {
 
         OauthToken oauthToken = null;
         try {
@@ -58,6 +56,47 @@ public class UserService {
             params.add("grant_type", "authorization_code");
             params.add("client_id", client_id);
             params.add("redirect_uri", "http://i10d110.p.ssafy.io:3000/api/oauth/callback/kakao/token");
+            params.add("code", code);
+            params.add("client_secret", client_secret);
+
+//            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            RestTemplate rt = new RestTemplate();
+            HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
+                    new HttpEntity<>(params, headers);
+
+
+            ObjectMapper objectMapper =
+                    new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//                    new ObjectMapper();
+
+            // POST 방식으로 key=value 데이터 요청
+
+            ResponseEntity<String> accessTokenResponse = rt.exchange(
+                    "https://kauth.kakao.com/oauth/token",
+                    HttpMethod.POST,
+                    kakaoTokenRequest,
+                    String.class
+            );
+            oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
+            System.out.println(oauthToken.getAccess_token());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return oauthToken;
+    }
+
+    public OauthToken getAccessTokenLocal(String code) {
+
+        OauthToken oauthToken = null;
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+            // HttpBody 오브젝트 생성
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("grant_type", "authorization_code");
+            params.add("client_id", client_id);
+            params.add("redirect_uri", "http://localhost:3000/api/oauth/callback/kakao/token");
             params.add("code", code);
             params.add("client_secret", client_secret);
 
