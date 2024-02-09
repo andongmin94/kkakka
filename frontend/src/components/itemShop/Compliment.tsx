@@ -1,8 +1,6 @@
 import * as z from "zod";
-import Price from "./Price";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import Purchase from "./Purchase";
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -52,19 +50,19 @@ const FormSchema = z.object({
 
 import axios from "axios";
 import { FriendType } from "@/types/friendTypes";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import classes from "./ItemShopCard.module.css";
 
 export default function Compliment({
   itemName,
   itemPrice,
-  itemDesc,
+  // itemDesc,
   myPoint,
   friends,
 }: {
   itemName: string;
   itemPrice: number;
-  itemDesc: string;
+  // itemDesc: string;
   myPoint: number;
   friends: FriendType[];
 }) {
@@ -99,8 +97,8 @@ export default function Compliment({
       const rotateY = (-1 / 5) * x + 20;
       const rotateX = (4 / 30) * y - 20;
 
-      overlayRef.current.style.filter = 'opacity(10)';
-      overlayRef.current.style.backgroundPosition = ` ${160-x}% ${250-y}%`;
+      overlayRef.current.style.filter = "opacity(10)";
+      overlayRef.current.style.backgroundPosition = ` ${160 - x}% ${250 - y}%`;
 
       containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
@@ -108,8 +106,9 @@ export default function Compliment({
 
   const handleMouseOut = () => {
     if (overlayRef.current && containerRef.current) {
-      overlayRef.current.style.filter = 'opacity(0)';
-      containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+      overlayRef.current.style.filter = "opacity(0)";
+      containerRef.current.style.transform =
+        "perspective(350px) rotateY(0deg) rotateX(0deg)";
     }
   };
 
@@ -117,11 +116,19 @@ export default function Compliment({
     <Card className="border-0">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
-          <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
-              <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
-              <div className={`${classes.itemElemCard}`}>
-                <h1 className={`${classes.itemElemContent}`}>강제칭찬권</h1>
-              </div>
+          <div
+            className={`${classes.itemElemContainer}`}
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseOut={handleMouseOut}
+          >
+            <div
+              className={`${classes.itemElemOverlay}`}
+              ref={overlayRef}
+            ></div>
+            <div className={`${classes.itemElemCard}`}>
+              <h1 className={`${classes.itemElemContent}`}>강제칭찬권</h1>
+            </div>
           </div>
         </DialogTrigger>
 
