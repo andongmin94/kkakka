@@ -3,11 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 
 export const useDislikeDogam = () => {
   const dislikeDogamMutation = useMutation({
-    mutationFn: (alarmId: number) => checkAlarm(alarmId),
+    mutationFn: (dogamId: number) => dislikeDogam(dogamId),
     onSuccess: (res) => {
-      console.log("알람을 확인했다", res);
+      console.log("도감싫어요 잘눌렸다", res);
     },
   });
 
-  return checkAlarmMutation;
+  return dislikeDogamMutation;
 };

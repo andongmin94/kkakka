@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDislikeDogam } from "@/hooks/dogamfeed/mutations/useDislikePost";
+import { useDislikeDeleteDogam } from "@/hooks/dogamfeed/mutations/useDislikeDelete";
 
 export default function ThumbsDown({
   tD,
@@ -9,9 +11,17 @@ export default function ThumbsDown({
 }) {
   const [thumbs, setThumbs] = useState(tD);
 
-  const hateCancelHandler = {};
+  const dislikeDogamMutation = useDislikeDogam();
+  const { mutate: dislikeMutate } = dislikeDogamMutation;
+  const hateClickHandler = (dogamId: number) => {
+    dislikeMutate(dogamId);
+  };
 
-  const hateClickHandler = {};
+  const cancleDislikeDogamMutation = useDislikeDeleteDogam();
+  const { mutate: cancleDislikeMutate } = cancleDislikeDogamMutation;
+  const hateCancelHandler = (dogamId: number) => {
+    cancleDislikeMutate(dogamId);
+  };
 
   return (
     <div

@@ -11,7 +11,7 @@ import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
-// import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
+import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useFriendStore from "@/store/friend/friendStore";
@@ -62,7 +62,7 @@ export default function RootLayout() {
     }
   }, []);
 
-  // const { setLastEventId } = useAlarmSubscribeStore();
+  const { setLastEventId } = useAlarmSubscribeStore();
 
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
@@ -91,15 +91,15 @@ export default function RootLayout() {
   source.onerror = (event) => {
     console.log(event);
     source.close();
-  }
+  };
 
   useEffect(() => {
-    // source.addEventListener("notification", (e: any) => {
-    //   console.log(e);
-    //   const data = JSON.parse(e.data);
-    //   console.log(data);
-    //   setLastEventId(data.id);
-    // });
+    source.addEventListener("notification", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
 
     source.addEventListener("megaphone", (event: any) => {
       const parseData = JSON.parse(event.data);
@@ -209,7 +209,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/profile/${userInfo.userId}`}
+                      to={`/main/my-profile`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>
