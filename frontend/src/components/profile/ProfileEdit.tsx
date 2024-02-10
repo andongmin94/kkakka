@@ -72,17 +72,24 @@ export default function ProfileEdit() {
   console.log("배경", backImg);
 
   const profileEditHandler = () => {
+    const formData = new FormData();
+    if (profileImg instanceof File) {
+      formData.append("profileImg", profileImg);
+    }
+    if (backImg instanceof File) {
+      formData.append("backImg", backImg);
+    }
+    if (riotId !== null) {
+      formData.append("riotId", riotId);
+    }
     axios
       .put(
         `${import.meta.env.VITE_API_BASE_URL}/api/users/profile-edit`,
-        {
-          riotId: riotId,
-          profileImg: profileImg,
-          backImg: backImg,
-        },
+        formData,
         {
           headers: {
             Authorization: token,
+            "Content-Type": "multipart/form-data",
           },
         }
       )
@@ -278,10 +285,7 @@ export default function ProfileEdit() {
                     type="submit"
                     variant="secondary"
                     className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                    onClick={() => {
-                      // 저장버튼 눌렀을때 이미지 넘기는거 확인 !
-                      // console.log(profileImage);
-                    }}
+                    onClick={profileEditHandler}
                   >
                     저장하기
                   </Button>

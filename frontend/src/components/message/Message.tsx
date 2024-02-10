@@ -4,7 +4,7 @@ import UserName from "../navbar/friendsSidebar/UserName";
 import UserStatus from "../navbar/friendsSidebar/UserStatus";
 import UserCurrentAlias from "../UserCurrentAlias";
 import MessageProfile from "./MessageProfile";
-// import classes from "./Message.module.css";
+import classes from "./Message.module.css";
 import MessageUpdatedAt from "./MessageUpdatedAt";
 
 interface dmProps {
