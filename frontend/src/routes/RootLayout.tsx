@@ -19,6 +19,8 @@ import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
 import usePointStore from "@/store/user/pointStore";
 import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
+// import { UserType } from "@/types/userTypes";
+import axios from "axios";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
@@ -53,6 +55,8 @@ export default function RootLayout() {
       console.log("포인트 정보 없음");
     }
   }, [userPointData]);
+  // const { userInfo } = useUserStore();
+  // const [userInfo, setUserInfo] = useState<UserType | null>(null);
 
   const { setFriendList } = useFriendStore();
   const { useFriendListQuery } = useFriendList();
@@ -77,6 +81,8 @@ export default function RootLayout() {
   const EventSource = EventSourcePolyfill;
 
   const token = localStorage.getItem("token");
+  const userProfileImg = localStorage.getItem("userProfileImg");
+  const userId = localStorage.getItem("userId");
 
   if (!token) {
     throw new Error("Token not found");
@@ -96,8 +102,29 @@ export default function RootLayout() {
     console.log(event);
     source.close();
   };
+  };
 
   useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        localStorage.setItem("userId", res.data.data.userId);
+        localStorage.setItem("userName", res.data.data.userName);
+        localStorage.setItem("userProfileImg", res.data.data.userProfileImg);
+        localStorage.setItem("userBackImg", res.data.data.userBackImg);
+        localStorage.setItem("userAlias", res.data.data.userAlias);
+        // setUserInfo(res.data.data);
+      });
+    // source.addEventListener("notification", (e: any) => {
+    //   console.log(e);
+    //   const data = JSON.parse(e.data);
+    //   console.log(data);
+    //   setLastEventId(data.id);
+    // });
     source.addEventListener("notification", (e: any) => {
       console.log(e);
       const data = JSON.parse(e.data);
@@ -119,6 +146,10 @@ export default function RootLayout() {
       source.close();
     };
   }, []);
+
+  // useEffect(()=>{
+  //   localStorage.setItem('userInfo',userInfo);
+  // },[userInfo])
 
   useEffect(() => {
     if (!showSpeakerToast && speakerToastList.length != 0) {
@@ -213,12 +244,12 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/my-profile`}
+                      to={`/main/profile/${userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>
                         <AvatarImage
-                          src={userInfo.userProfileImg}
+                          src={userProfileImg ?? "/default-image.png"}
                           alt="프사"
                           className="bg-cover"
                         />
@@ -247,7 +278,7 @@ export default function RootLayout() {
                     >
                       <Avatar>
                         <AvatarImage
-                          src={userInfo.userProfileImg}
+                          src={userProfileImg ?? "/default-image.png"}
                           alt="프사"
                           className="bg-cover"
                         />
@@ -305,7 +336,7 @@ export default function RootLayout() {
                 >
                   <Avatar>
                     <AvatarImage
-                      src={userInfo.userProfileImg}
+                      src={userProfileImg ?? "/default-image.png"}
                       alt="프사"
                       className="bg-cover"
                     />

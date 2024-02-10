@@ -18,8 +18,8 @@ export default function YouMsg({ data }: { data: dataProps }) {
     hour: "2-digit",
     minute: "2-digit",
   });
-  console.log("youMsg");
-  console.log(data);
+  // console.log("youMsg");
+  // console.log(data);
   return (
     <>
       <div className="flex">

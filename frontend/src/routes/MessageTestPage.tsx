@@ -12,7 +12,6 @@ import SockJS from "sockjs-client/dist/sockjs";
 import axios from "axios";
 // import TypeIt from "typeit-react";
 // import Stack from "react-bootstrap/Stack";
-import useUserStore from "@/store/user/userStore";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -29,7 +28,7 @@ let stompClient: any;
 let roomId2: any;
 
 export default function MessageTestPage() {
-  const { userInfo } = useUserStore();
+  // const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
   const location = useLocation();
   const friendsInfo = { ...location.state };
@@ -43,6 +42,11 @@ export default function MessageTestPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   );
+  const userIdString = localStorage.getItem("userId");
+  const userInfo = {
+    userId: userIdString !== null ? parseInt(userIdString, 10) : undefined,
+    userName: localStorage.getItem("userName"),
+  };
 
   // 모든 채팅 메세지 저장
   const [messages, setMessages] = useState<any[]>([]);
@@ -238,6 +242,7 @@ export default function MessageTestPage() {
         }
       )
       .then((res: any) => {
+        console.log("도감리스트");
         console.log(res.data.data);
         setDogamList(res.data.data);
       });
@@ -456,7 +461,7 @@ export default function MessageTestPage() {
                 <div className="flex flex-col w-full mb-5 mt-5 justify-center">
                   {/* 도감 선택 모달 */}
                   <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
-                    {/* {dogamList.map((dogam, idx) => (
+                    {dogamList.map((dogam, idx) => (
                       <img
                         src={dogam.dogamImgUrl}
                         className={`h-20 w-[100px] rounded-lg border-4 ${
@@ -471,7 +476,7 @@ export default function MessageTestPage() {
                           setSelectedImageIndex(idx);
                         }}
                       />
-                    ))} */}
+                    ))}
                   </div>
                 </div>
 

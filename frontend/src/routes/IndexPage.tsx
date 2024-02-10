@@ -19,7 +19,7 @@ export default function IndexPage() {
           <div className="h-[100px] w-[1200px] flex flex-col items-center">
             <LiveContentCarousel />
           </div>
-          <div className="text-xl mt-[300px] mb-10 flex ">
+          <div className="text-xl mt-[350px] mb-10 flex ">
             <p className="grid  ml-2 font-bold">새로 올라온 도감</p>
           </div>
           <div className="grid grid-cols-2 gap-y-5 mb-5 w-[1050px]">
