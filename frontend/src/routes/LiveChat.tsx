@@ -233,11 +233,16 @@ export default function LiveChat() {
       });
 
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam${
+          friendsInfo.playerId
+        }?page=0&size=5`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((res: any) => {
         console.log(res.data.data);
         setDogamList(res.data.data);

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 // import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "@/components/navbar/ThemeProvider";
+import { toast } from "@/components/ui/use-toast";
 import {
   Popover,
   PopoverContent,
@@ -43,20 +44,21 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
   >([]);
 
   // 뭔지 모르겠는데 안쓰니까 주석함
-  //  function onSubmit(data: z.infer<typeof FormSchema>) {
-  //    toast({
-  //      title: "You submitted the following values:",
-  //      description: (
-  //        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-  //          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-  //        </pre>
-  //      ),
-  //    });
-  //  }
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+    // addDogamCommentHandler;
+  }
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
+  const getDogamComment = () => {
     axios
       .get(
         `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
@@ -70,6 +72,10 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
         console.log("도감댓글", res.data.data.dogamCommentResponseDtos);
         setDogamComments(res.data.data.dogamCommentResponseDtos);
       });
+  };
+
+  useEffect(() => {
+    getDogamComment();
   }, []);
 
   const [inputText, setInputText] = useState<string>("");
@@ -91,6 +97,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
       )
       .then((res) => {
         console.log("댓글등록", res.data);
+        getDogamComment();
       });
   };
 
@@ -115,7 +122,12 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                 <div className="border-2 border-black w-full" />
                 {dogamComments &&
                   dogamComments.map((dogamcomment, idx) => (
-                    <Comment key={idx} dogamcomment={dogamcomment} />
+                    <Comment
+                      key={idx}
+                      dogamcomment={dogamcomment}
+                      setDogamComments={setDogamComments}
+                      dogamId={dogamId}
+                    />
                   ))}
 
                 {/* 댓글 입력 부분 */}
@@ -136,10 +148,10 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                   placeholder="댓글 입력"
                                   {...field}
                                   className="w-[590px]"
-                                  value={field.value || inputText}
-                                  onChange={(e) => {
-                                    setInputText(e.target.value);
-                                  }}
+                                  // value={field.value || inputText}
+                                  // onChange={(e) => {
+                                  //   setInputText(e.target.value);
+                                  // }}
                                 />
                               </FormControl>
                               <Button
@@ -152,7 +164,10 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                                     form.getValues().content != undefined &&
                                     form.getValues().content.length > 1
                                   ) {
-                                    addDogamCommentHandler();
+                                    setInputText(form.getValues().content);
+                                    // getDogamComment();
+                                    // addDogamCommentHandler();
+                                    // setDogamComments((pre) => [...pre, data]);
                                     // 댓글 입력창 초기화
                                     form.setValue("content", "  ");
                                   }
@@ -190,7 +205,12 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
                 <div className="border-2 border-black w-full" />
                 {dogamComments &&
                   dogamComments.map((dogamcomment, idx) => (
-                    <Comment key={idx} dogamcomment={dogamcomment} />
+                    <Comment
+                      key={idx}
+                      dogamcomment={dogamcomment}
+                      setDogamComments={setDogamComments}
+                      dogamId={dogamId}
+                    />
                   ))}
 
                 {/* 댓글 입력 부분 */}
