@@ -7,11 +7,30 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import useFriendStore from "@/store/friend/friendStore";
+import axios from "axios";
+import { useEffect, useState } from "react";
+// import useFriendStore from "@/store/friend/friendStore";
+import { FriendType } from "@/types/friendTypes";
 
 export default function FriendsBtn() {
-  const { friendList } = useFriendStore();
+  // const { friendList } = useFriendStore();
+  const [friendList, setFriendList] = useState([]);
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log("친구목록", res.data.data.friendList);
+        setFriendList(res.data.data.friendList);
+      })
+      .catch((error) => {
+        console.error("친구목록을 불러오는 중 에러 발생:", error);
+      });
+  }, []);
 
   return (
     <Sheet>
@@ -26,7 +45,7 @@ export default function FriendsBtn() {
           </SheetTitle>
           <div className={classes.scrollbar}>
             {/* 친구 카드 생성 */}
-            {friendList.map((friend) => {
+            {friendList.map((friend: FriendType) => {
               return <FriendsCard key={friend.id} info={friend} />;
             })}
           </div>

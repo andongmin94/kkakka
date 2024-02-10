@@ -1,32 +1,25 @@
 import { Mobile, PC } from "@/components/MediaQuery";
 import Dishonor from "@/components/profile/Dishonor";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { AliasType } from "@/types/aliasTypes";
 import { useParams } from "react-router-dom";
+import useDishonorStore from "@/store/profile/dishonorStore";
+import { useDishonor } from "@/hooks/profile/queries/useDishonorQuery";
+import { useEffect } from "react";
 
 export default function ProfileDishonorPage() {
   const params = useParams();
-  const [aliases, setAliases] = useState<AliasType[] | null>(null);
-  const token = localStorage.getItem("token");
+  const { useDishonorQuery } = useDishonor();
+  const { aliases, setAliases } = useDishonorStore();
+  const { data: aliasList, refetch } = useDishonorQuery(params.id || ""); // refetch 함수 추가
 
   useEffect(() => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/profile/alias?user-id=${
-          params.id
-        }`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log("불명예", res.data.data.aliasList);
-        setAliases(res.data.data.aliasList);
-      });
-  }, []);
+    refetch();
+  }, [refetch]);
+
+  useEffect(() => {
+    if (aliasList) {
+      setAliases(aliasList);
+    }
+  }, [aliasList, setAliases]);
 
   return (
     <>

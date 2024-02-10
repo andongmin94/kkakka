@@ -20,7 +20,6 @@ export default function NewDogamList() {
           data.pages.map((pageData) => {
             console.log("페이지데이터", pageData);
             return pageData.results.map((dogam: NewDogamType) => {
-              console.log("results도감", dogam);
               return <NewDogam key={dogam.dogamId} data={dogam} />;
             });
           })}

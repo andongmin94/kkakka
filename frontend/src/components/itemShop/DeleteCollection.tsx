@@ -1,28 +1,22 @@
-// import Purchase from "./Purchase";
 import { useEffect, useState, useRef } from "react";
 import classes from "./ItemShopCard.module.css";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
-
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import {
   Dialog,
   DialogContent,
-  // DialogClose,
+  DialogClose,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   Carousel,
   CarouselContent,
@@ -30,9 +24,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
 import { ProfileDogamType } from "@/types/dogamTypes";
-
+import useUserStore from "@/store/user/userStore";
+// import { useProfileDogamQuery } from "@/hooks/profile/queries/useProfileDogamQuery";
+// import InfiniteScroll from "react-infinite-scroller";
+import { useDeleteCollectionDelete } from "@/hooks/itemshop/mutations/useDeleteCollectionDelete";
+import { useNavigate } from "react-router-dom";
 export default function TitleItemshop({
   itemName,
   itemPrice,
@@ -42,111 +39,10 @@ export default function TitleItemshop({
   itemPrice: number;
   myPoint: number;
 }) {
-  const token = localStorage.getItem("token");
-
-  const [dogamList, setDogamList] = useState<ProfileDogamType[]>([]);
-
-  const GetMyDogamList = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res: any) => {
-        console.log(res.data);
-        setDogamList([...res.data.data]);
-      });
-  };
-
-  const DeleteMyDogam = (dogamId: number) => {
-    axios
-      .delete(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    GetMyDogamList();
-  }, []);
-
-  const CarouselSize = ({ dogamList }: { dogamList: ProfileDogamType[] }) => {
-    return (
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full max-w-sm"
-      >
-        <CarouselContent>
-          {dogamList.map((dogam, index) => (
-            <CarouselItem key={index}>
-              <div className="p-1">
-                <Card>
-                  <CardContent
-                    className="flex aspect-square items-center justify-center p-3"
-                    style={{
-                      backgroundImage: `url(${dogam.dogamImgUrl})`,
-                      backgroundSize: "cover",
-                    }}
-                  >
-                    <span className="text-3xl font-semibold">
-                      <Button
-                        style={{ position: "relative", top: "10rem" }}
-                        variant="destructive"
-                        onClick={() => DeleteMyDogam(dogam.dogamId)}
-                      >
-                        삭제!
-                      </Button>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            style={{
-                              position: "relative",
-                              top: "10rem",
-                              margin: 10,
-                            }}
-                            variant="outline"
-                          >
-                            상세정보 보기
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-80">
-                          <div className="grid gap-4">
-                            <div className="space-y-2">
-                              <h4 className="font-medium leading-none">
-                                {dogam.dogamTitle}{" "}
-                              </h4>
-                              <p className="text-sm text-muted-foreground">
-                                {/* 이걸 선물한 사람: {dogam.friendName} -- 이 정보는 안 받고있음*/}
-                              </p>
-                            </div>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </span>
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-    );
-  };
+  const { userInfo } = useUserStore();
+  const mutation = useDeleteCollectionDelete();
+  const { mutate } = mutation;
+  const navigate = useNavigate();
 
   // Item Card CSS 세팅
   const containerRef = useRef<HTMLDivElement>(null);
@@ -214,12 +110,33 @@ export default function TitleItemshop({
           {/* 본문 */}
           <div className="flex justify-center w-full" />
           <div className="font-bold text-center">
-            <div className="overflow-y-auto scrollbar-hide flex-now">
-              <CarouselSize dogamList={dogamList} />
-            </div>
+            <div className="overflow-y-auto scrollbar-hide flex-now"></div>
             구입 후 잔여 포인트 {myPoint - itemPrice} P
           </div>
-          <DialogFooter className="flex sm:justify-center"></DialogFooter>
+          <DialogFooter className="flex sm:justify-center">
+            {/* 취소 버튼 */}
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant="secondary"
+                className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
+              >
+                취소
+              </Button>
+            </DialogClose>
+
+            {/* 구매 버튼 */}
+            <Button
+              type="button"
+              variant="secondary"
+              className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
+              onClick={() => {
+                navigate(`/main/profile/:${userInfo.userId}/dishonor`);
+              }}
+            >
+              구입
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </Card>

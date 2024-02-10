@@ -1,22 +1,13 @@
 import NewDogamList from "@/components/main/NewDogamList";
 import { Mobile, PC } from "@/components/MediaQuery";
 import LiveContentCarousel from "@/components/main/LiveContentCarousel";
-import { useEffect } from "react";
-import useItemshopStore from "@/store/itemshop/itemshopStore";
-import { useItemList } from "@/hooks/itemshop/queries/useItemListQuery";
+// import { useEffect } from "react";
+// import useItemshopStore from "@/store/itemshop/itemshopStore";
+// import { useItemList } from "@/hooks/itemshop/queries/useItemListQuery";
 
 export default function IndexPage() {
-  const { setItemList } = useItemshopStore();
-  const { useItemListQuery } = useItemList();
-  const { data: itemListData } = useItemListQuery();
-
-  useEffect(() => {
-    if (itemListData) {
-      setItemList(itemListData);
-    } else {
-      console.log("아이템샵 데이터 없음");
-    }
-  }, [itemListData]);
+  // const { setItemList } = useItemshopStore();
+  // const { useItemListQuery } = useItemList();
 
   return (
     <>

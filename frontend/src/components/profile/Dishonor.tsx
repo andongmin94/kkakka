@@ -10,7 +10,7 @@ export default function Dishonor({ data }: { data: AliasType }) {
           <div className="self-center mb-6">
             <DishonorAlias alias={data.alias} />
           </div>
-          <div className=" text-center font-bold">{data.createAt}</div>
+          <div className=" text-center font-bold">{data.createdAt}</div>
           <div className="text-center font-bold">{data.creator}</div>
         </div>
       </PC>
@@ -22,7 +22,7 @@ export default function Dishonor({ data }: { data: AliasType }) {
           <div className="self-center mb-6">
             <DishonorAlias alias={data.alias} />
           </div>
-          <div className=" text-center font-bold">{data.createAt}</div>
+          <div className=" text-center font-bold">{data.createdAt}</div>
           <div className="text-center font-bold">{data.creator}</div>
         </div>
       </Mobile>
