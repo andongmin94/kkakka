@@ -11,29 +11,38 @@ export default function ThumbsDown({
   const token = localStorage.getItem("token");
   const [thumbs, setThumbs] = useState(tD);
 
-  const hateClickHandler = async (dogamId: number) => {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
-      {},
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-    console.log("hateClickHandler", res);
-  };
+  const hateClickHandler = async () => {
+    try {
+      // setThumbs를 호출한 후 thumbs 상태가 변경되었을 때를 기다립니다.
+      await setThumbs(!thumbs);
 
-  const hateCancelHandler = async (dogamId: number) => {
-    const res = await axios.delete(
-      `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-    console.log("hateCancelHandler", res);
+      const res = thumbs
+        ? await axios.delete(
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/dogam/hate/${dogamId}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
+        : await axios.post(
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/dogam/hate/${dogamId}`,
+            {},
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+      console.log("hateClickHandler", res);
+    } catch (error) {
+      console.error("Error in hateClickHandler:", error);
+    }
   };
 
   return (
@@ -41,7 +50,7 @@ export default function ThumbsDown({
       className="h-[50px] w-[50px] ml-2 grid grid-col place-items-center"
       onClick={() => {
         setThumbs(!thumbs);
-        thumbs ? hateCancelHandler(dogamId) : hateClickHandler(dogamId);
+        hateClickHandler();
         // !tD;
       }}
     >
