@@ -133,14 +133,14 @@ export default function RootLayout() {
               <img alt="logo" src="/image/logo.png" />
             </Link>
             {/* 사이드바 메뉴 */}
-            <Link to="/main/item" className={classes.menu}>
+            <Link to="/main/item" className={`${classes.menu}`}>
               <h1>아이템샵</h1>
             </Link>
-            <Link to="/main/messagelist" className={classes.menu}>
+            <Link to="/main/messagelist" className={`${classes.menu}`}>
               <h1>메세지함</h1>
             </Link>
             {typeof electron !== "undefined" && (
-              <Link to="/main/setting" className={classes.menu}>
+              <Link to="/main/setting" className={`${classes.menu}`}>
                 <h1>환경 설정</h1>
               </Link>
             )}
@@ -219,7 +219,9 @@ export default function RootLayout() {
                           alt="프사"
                           className="bg-cover"
                         />
-                        <AvatarFallback>프사</AvatarFallback>
+                        <AvatarFallback className="text-xs">
+                          프사
+                        </AvatarFallback>
                       </Avatar>
                       {/* <div className={classes.user_image} /> */}
                     </Link>
@@ -268,7 +270,7 @@ export default function RootLayout() {
                       alt="프사"
                       className="bg-cover"
                     />
-                    <AvatarFallback>프사</AvatarFallback>
+                    <AvatarFallback className="text-xs">프사</AvatarFallback>
                   </Avatar>
                   {/* <div className={classes.user_image} /> */}
                 </Link>
