@@ -1,7 +1,7 @@
 /* 친구 버튼 */
 .friends_image {
-  height: 55px;
-  width: 55px;
+  height: 35px;
+  width: 35px;
   background-image: url("/image/friendsOff.png");
   background-size: cover;
   background-position: center;
