@@ -22,20 +22,16 @@ export default function IndexPage() {
     <>
       <PC>
         <div>
-          <div className="text-3xl mb-0 flex">
-            <img src="/image/playing.png" className="h-[50px] w-[50px]" />
-            <p className="grid place-items-center ml-2 font-bold">라이브</p>
+          <div className="text-xl mb-0 flex">
+            <p className="grid ml-2 font-bold">라이브</p>
           </div>
           <div className="h-[100px] w-[1200px] flex flex-col items-center">
             <LiveContentCarousel />
           </div>
-          <div className="text-3xl mt-[300px] mb-10 flex ">
-            <img src="/image/dogam.png" className="h-[50px] w-[50px]" />
-            <p className="grid place-items-center ml-2 font-bold">
-              새로 올라온 도감
-            </p>
+          <div className="text-xl mt-[300px] mb-10 flex ">
+            <p className="grid  ml-2 font-bold">새로 올라온 도감</p>
           </div>
-          <div className="grid grid-cols-2 place-items-center gap-y-5 mb-5 w-[1050px]">
+          <div className="grid grid-cols-2 gap-y-5 mb-5 w-[1050px]">
             {/* 도감 리스트 */}
             <NewDogamList />
           </div>
@@ -46,15 +42,13 @@ export default function IndexPage() {
 
       <Mobile>
         <div>
-          <div className="text-3xl mb-0 flex">
-            <img src="/image/playing.png" className="h-[50px] w-[50px]" />
+          <div className="text-xl mb-0 flex">
             <p className="grid place-items-center ml-2 font-bold">라이브</p>
           </div>
           <div className="h-[100px] w-[1200px] flex flex-col items-center">
             {/* <LiveContentCarousel /> */}
           </div>
-          <div className="text-3xl mt-[300px] mb-10 flex ">
-            <img src="/image/dogam.png" className="h-[50px] w-[50px]" />
+          <div className="text-xl mt-[300px] mb-10 flex ">
             <p className="grid place-items-center ml-2 font-bold">
               새로 올라온 도감
             </p>
