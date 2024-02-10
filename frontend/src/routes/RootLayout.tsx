@@ -11,34 +11,63 @@ import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
-// import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
+import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useFriendStore from "@/store/friend/friendStore";
 import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
+import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+import usePointStore from "@/store/user/pointStore";
+import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
 // import { UserType } from "@/types/userTypes";
 import axios from "axios";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
+  const { userInfo } = useUserStore();
 
-  // const { userInfo } = useUserStore();
-  // const [userInfo, setUserInfo] = useState<UserType | null>(null);
-
-  const { setFriendList } = useFriendStore();
-  const { useFriendListQuery } = useFriendList();
-  const { data: friendListData } = useFriendListQuery();
+  const { useUserDataQuery } = useUserData();
+  const { setUserInfo } = useUserStore();
+  const { data: userData, refetch } = useUserDataQuery();
 
   useEffect(() => {
-    if (friendListData) {
-      setFriendList(friendListData);
+    if (userData) {
+      setUserInfo(userData);
     } else {
-      console.log("친구 목록 없음");
+      console.log("유저 정보 없음");
     }
-  }, []);
+  }, [userData]);
 
-  // const { setLastEventId } = useAlarmSubscribeStore();
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  // const { setPoint } = usePointStore();
+  // const { usePointQuery } = usePoint();
+  // const { data: userPointData } = usePointQuery();
+
+  // useEffect(() => {
+  //   if (userPointData) {
+  //     setPoint(userPointData);
+  //   } else {
+  //     console.log("포인트 정보 없음");
+  //   }
+  // }, [userPointData]);
+
+  // const { setFriendList } = useFriendStore();
+  // const { useFriendListQuery } = useFriendList();
+  // const { data: friendListData } = useFriendListQuery();
+
+  // useEffect(() => {
+  //   if (friendListData) {
+  //     setFriendList(friendListData);
+  //   } else {
+  //     console.log("친구 목록 없음");
+  //   }
+  // }, []);
+
+  const { setLastEventId } = useAlarmSubscribeStore();
 
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
@@ -49,8 +78,6 @@ export default function RootLayout() {
   const EventSource = EventSourcePolyfill;
 
   const token = localStorage.getItem("token");
-  const userProfileImg = localStorage.getItem("userProfileImg");
-  const userId = localStorage.getItem("userId");
 
   if (!token) {
     throw new Error("Token not found");
@@ -86,12 +113,28 @@ export default function RootLayout() {
         localStorage.setItem("userAlias", res.data.data.userAlias);
         // setUserInfo(res.data.data);
       });
-    // source.addEventListener("notification", (e: any) => {
-    //   console.log(e);
-    //   const data = JSON.parse(e.data);
-    //   console.log(data);
-    //   setLastEventId(data.id);
-    // });
+  }, []);
+
+  const userProfileImg = localStorage.getItem("userProfileImg");
+  const userId = localStorage.getItem("userId");
+
+  // useEffect(()=>{
+  //   localStorage.setItem('userInfo',userInfo);
+  // },[userInfo])
+
+  useEffect(() => {
+    source.addEventListener("notification", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
+    source.addEventListener("notification", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
 
     source.addEventListener("megaphone", (event: any) => {
       const parseData = JSON.parse(event.data);
@@ -106,11 +149,7 @@ export default function RootLayout() {
     return () => {
       source.close();
     };
-  }, []);
-
-  // useEffect(()=>{
-  //   localStorage.setItem('userInfo',userInfo);
-  // },[userInfo])
+  });
 
   useEffect(() => {
     if (!showSpeakerToast && speakerToastList.length != 0) {
@@ -205,7 +244,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/profile/${userId}`}
+                      to={`/main/my-profile`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>

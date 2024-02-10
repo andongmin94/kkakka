@@ -21,10 +21,13 @@ export default function ProfilePage() {
   const { friendship, setFriendship } = useFriendshipStore();
 
   const { useUserProfileQuery } = useProfile();
-  const { data: userProfileData } = useUserProfileQuery(params.id!);
+  const { data: userProfileData, refetch: dataRefetch } = useUserProfileQuery(
+    params.id!
+  );
 
   const { useFriendshipQuery } = useFriendship();
-  const { data: friendshipData } = useFriendshipQuery(params.id!);
+  const { data: friendshipData, refetch: friendshipRefetch } =
+    useFriendshipQuery(params.id!);
 
   useEffect(() => {
     if (userProfileData) {
@@ -34,6 +37,12 @@ export default function ProfilePage() {
       console.log("프로필 유저 정보 없음");
     }
   }, [userProfileData, setProfileInfo]);
+
+  useEffect(() => {
+    friendshipRefetch();
+    dataRefetch();
+  }, [friendshipRefetch, dataRefetch]);
+
   const enterDmMutation = useEnterDmPost();
   const { mutate: dmMutate } = enterDmMutation;
 
@@ -130,7 +139,7 @@ export default function ProfilePage() {
                   도감
                 </Link>
                 <Link to={`/main/profile/${params.id}/dishonor`}>
-                  불명예 전당
+                  불명예의 전당
                 </Link>
               </div>
             </div>
@@ -214,7 +223,7 @@ export default function ProfilePage() {
                     도감
                   </Link>
                   <Link to={`/main/profile/${profileInfo.userId}/dishonor`}>
-                    불명예 전당
+                    불명예의 전당
                   </Link>
                 </div>
               </div>

@@ -22,18 +22,6 @@ export default function FirstLoginPage() {
     }
   };
 
-  const { setPoint } = usePointStore();
-  const { usePointQuery } = usePoint();
-  const { data: userPointData } = usePointQuery();
-
-  useEffect(() => {
-    if (userPointData) {
-      setPoint(userPointData);
-    } else {
-      console.log("포인트 정보 없음");
-    }
-  }, [userPointData]);
-
   const { userInfo, setUserInfo } = useUserStore();
   const { useUserDataQuery } = useUserData();
   const { data: userData } = useUserDataQuery();

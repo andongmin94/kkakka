@@ -40,6 +40,7 @@ export default function MessageListPage() {
       .then((res) => {
         console.log(res.data.data);
         setDmList(res.data.data);
+        console.log(dmList);
       });
   }, []);
 
@@ -87,7 +88,7 @@ export default function MessageListPage() {
         dmList.map((dm, idx) => {
           return (
             <div
-              key={idx}
+              key={dm.friendEmail}
               onClick={() => {
                 setRoomId(dm.roomId);
                 enterChatHandler(dm.friendId);
