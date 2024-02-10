@@ -84,8 +84,14 @@ export default function RootLayout() {
       headers: {
         Authorization: token,
       },
+      heartbeatTimeout: 3600000,
     }
   );
+
+  source.onerror = (event) => {
+    console.log(event);
+    source.close();
+  }
 
   useEffect(() => {
     // source.addEventListener("notification", (e: any) => {
@@ -148,6 +154,13 @@ export default function RootLayout() {
   return (
     <>
       <PC>
+        {/* 확성기 자리 */}
+        {showSpeakerToast && (
+          <SpeakerToast
+            setToast={setShowSpeakerToast}
+            text={speakerToastContent}
+          />
+        )}
         <main className={classes.page}>
           {/* 왼쪽 사이드바 영역*/}
           <div
@@ -189,13 +202,7 @@ export default function RootLayout() {
                   <div></div>
 
                   {/* 로고 */}
-                  {/* 확성기 자리 */}
-                  {showSpeakerToast && (
-                    <SpeakerToast
-                      setToast={setShowSpeakerToast}
-                      text={speakerToastContent}
-                    />
-                  )}
+
                   {/* 네브바 오른쪽 영역 */}
                   <div className={classes.nav_right}>
                     {/* 다크모드 버튼 (미완, 후순위) */}
@@ -224,13 +231,7 @@ export default function RootLayout() {
                   <div></div>
 
                   {/* 로고 */}
-                  {/* 확성기 자리 */}
-                  {showSpeakerToast && (
-                    <SpeakerToast
-                      setToast={setShowSpeakerToast}
-                      text={speakerToastContent}
-                    />
-                  )}
+
                   {/* 네브바 오른쪽 영역 */}
                   <div className={classes.nav_right}>
                     {/* 다크모드 버튼 (미완, 후순위) */}
@@ -270,6 +271,13 @@ export default function RootLayout() {
       </PC>
 
       <Mobile>
+        {/* 확성기 자리 */}
+        {showSpeakerToast && (
+          <SpeakerToast
+            setToast={setShowSpeakerToast}
+            text={speakerToastContent}
+          />
+        )}
         <main className={classes.page}>
           {/* 네브바와 메인 페이지를 포함하는 영역 */}
           <div
