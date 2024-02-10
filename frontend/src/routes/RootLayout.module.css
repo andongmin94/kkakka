@@ -124,7 +124,7 @@ menu:hover::before {
 
 .nav_M {
   position: fixed;
-  width: 95%;
+  width: 70%;
   height: 100px;
   background-color: rgba(255, 255, 255, 0.9);
   margin-top: 10px;
@@ -140,7 +140,7 @@ menu:hover::before {
 .nav_dark {
   position: fixed;
   width: 74%;
-  height: 100px;
+  height: 60px;
   background-color: rgba(0, 0, 0, 0.9);
   margin-top: 10px;
   display: flex;

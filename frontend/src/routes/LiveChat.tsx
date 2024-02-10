@@ -36,12 +36,18 @@ interface playerInfoType {
 }
 
 export default function LiveChat() {
-  const { userInfo } = useUserStore();
+  // const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
   const location = useLocation();
   const friendsInfo: playerInfoType = { ...location.state };
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const userIdString = localStorage.getItem("userId");
+  const userInfo = {
+    userId: userIdString !== null ? parseInt(userIdString, 10) : undefined,
+    userName: localStorage.getItem("userName"),
+  };
 
   // 채팅 입력 받은것
   const [inputChat, setInputChat] = useState("");
