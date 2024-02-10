@@ -11,28 +11,61 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import axios from "axios";
+import { useAddDogamPost } from "@/hooks/profile/mutations/useAddDogamPost";
+import { axiosInstance } from "@/utils/axios";
 
 export default function AddCollection({ userId }: { userId: number }) {
   // 프로필 사진 저장
-  const [dogamImage, setDogamImage]: any = useState(null);
+  const [dogamImage, setDogamImage] = useState("");
 
-  // 파일을 선택했을때 저장
-  const imgUpload = (e: any) => {
-    // 파일 객체를 가져와서
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    // 읽을 수 있게
-    reader.readAsDataURL(file);
+  // // 파일을 선택했을때 저장
+  // const imgUpload = (e: any) => {
+  //   // 파일 객체를 가져와서
+  //   const file = e.target.files[0];
+  //   const reader = new FileReader();
+  //   // 읽을 수 있게
+  //   reader.readAsDataURL(file);
 
-    // 업로드 되면 보여주기
-    return new Promise<void>((resolve) => {
+  //   // 업로드 되면 보여주기
+  //   return new Promise<void>((resolve) => {
+  //     reader.onload = () => {
+  //       setDogamImage(reader.result); // 프로필 사진
+  //       resolve();
+  //     };
+  //   });
+  // };
+
+  const processFile = (
+    currentFile: File
+  ): Promise<string | ArrayBuffer | null> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(currentFile);
       reader.onload = () => {
-        setDogamImage(reader.result || null); // 프로필 사진
-        resolve();
+        const result = reader.result;
+        resolve(result);
       };
     });
   };
+
+  const parseFile = async (currentFile: File) => {
+    const parsedFile: string | ArrayBuffer | null = await processFile(
+      currentFile
+    );
+    return parsedFile;
+  };
+
+  // 파일을 선택했을때 저장
+  const imgUpload = (e: any) => {
+    const file = e.target.files[0];
+    const previewSrc = parseFile(file);
+
+    previewSrc.then((res) => {
+      return setDogamImage(res);
+    });
+  };
+
+  console.log("이미지", dogamImage);
 
   const [dogamTitle, setDogamTitle] = useState();
 
@@ -40,21 +73,19 @@ export default function AddCollection({ userId }: { userId: number }) {
     setDogamTitle(e.target.value);
   };
 
-  const token = localStorage.getItem("token");
+  // const mutation = useAddDogamPost(userId, data);
 
-  const addDogamHandler = () => {
-    axios.post(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/api/friends/dogam?friend-user-id=${userId}`,
+  const addDogamHandler = async () => {
+    const formData = new FormData();
+    formData.append("imgUrl", dogamImage);
+    formData.append("dogamTitle", dogamTitle!);
+
+    console.log("폼", formData.get("imgUrl"));
+
+    const res = await axiosInstance.post(
+      `/api/friends/dogam?friend-user-id=${userId}`,
       {
-        imgUrl: dogamImage,
-        dogamTitle: dogamTitle,
-      },
-      {
-        headers: {
-          Authorization: token,
-        },
+        formData,
       }
     );
   };
@@ -113,7 +144,7 @@ export default function AddCollection({ userId }: { userId: number }) {
                   variant="secondary"
                   className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
                   onClick={() => {
-                    addDogamHandler;
+                    addDogamHandler();
                   }}
                 >
                   저장하기
@@ -178,8 +209,7 @@ export default function AddCollection({ userId }: { userId: number }) {
                   variant="secondary"
                   className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
                   onClick={() => {
-                    // 저장버튼 눌렀을때 이미지 넘기는거 확인 !
-                    // console.log(dogamImage);
+                    addDogamHandler();
                   }}
                 >
                   저장하기

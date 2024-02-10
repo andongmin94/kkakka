@@ -23,3 +23,15 @@ export const fetchProfileDogamList = async (
 
   return data;
 };
+
+export const addProfileDogam = async (userId: number, data: any) => {
+  const formData = new FormData();
+  formData.append("imgUrl", data.imgUrl);
+  formData.append("dogamTitle", data.dogamTitle);
+  const res = await axiosInstance.post(
+    `/api/friends/dogam?friend-user-id=${userId}`
+  );
+  console.log(res);
+
+  return res;
+};
