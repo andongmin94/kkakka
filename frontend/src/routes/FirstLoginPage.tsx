@@ -7,6 +7,7 @@ import { useUserDataPut } from "@/hooks/user/mutations/useUserDataPut";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
 import usePointStore from "@/store/user/pointStore";
 import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
+import { Input } from "@/components/ui/input";
 
 export default function FirstLoginPage() {
   const navigate = useNavigate();
@@ -66,21 +67,26 @@ export default function FirstLoginPage() {
 
   return (
     <>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <div>롤 아이디를 입력하세요</div>
-      <form action="">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <Button onClick={setLolId}>저장 </Button>
-        <Button onClick={skipHandler}>건너뛰기</Button>
-      </form>
+      <div className="h-screen w-full bg-[url('/image/loginBg.jpg')] bg-cover flex justify-center items-center">
+        <div className="bg-white h-[300px] w-[500px] rounded-xl flex flex-col items-center lg:hover:scale-105 transition-transform ease-in-out duration-500">
+          <div className="flex flex-col items-center mt-10">
+            <div className=" font-bold text-3xl mb-20">
+              롤 아이디를 입력하세요
+            </div>
+            <form action="">
+              <Input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              <div className="mt-5 flex justify-center gap-3">
+                <Button onClick={setLolId}>저장 </Button>
+                <Button onClick={skipHandler}>건너뛰기</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

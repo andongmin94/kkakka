@@ -44,17 +44,17 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
   >([]);
 
   // 뭔지 모르겠는데 안쓰니까 주석함
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    // addDogamCommentHandler;
-  }
+  // function onSubmit(data: z.infer<typeof FormSchema>) {
+  //   toast({
+  //     title: "You submitted the following values:",
+  //     description: (
+  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
+  //     ),
+  //   });
+  //   // addDogamCommentHandler;
+  // }
 
   const token = localStorage.getItem("token");
 

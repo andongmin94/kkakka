@@ -17,8 +17,8 @@ interface dataProps {
 // chatRoomId: num;
 
 export default function MyMsg({ data }: { data: dataProps }) {
-  console.log("myMsg");
-  console.log(data);
+  // console.log("myMsg");
+  // console.log(data);
   const formattedTime =
     typeof data.createdAt === "string"
       ? new Date(data.createdAt).toLocaleTimeString([], {
