@@ -77,7 +77,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
     <QueryClientProvider client={queryClient}>
       {typeof electron !== "undefined" && <TitleBar />}
-      <Loading />
       <RouterProvider router={router} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
