@@ -11,7 +11,7 @@ import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
-import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
+// import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useFriendStore from "@/store/friend/friendStore";
@@ -35,12 +35,12 @@ export default function RootLayout() {
     }
   }, []);
 
-  const { setLastEventId } = useAlarmSubscribeStore();
+  // const { setLastEventId } = useAlarmSubscribeStore();
 
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
   const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
-  const [speakerToastList, setSpeakerToastList] = useState<string[]>([]); 
+  const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
   const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill;
@@ -61,38 +61,34 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
-    source.addEventListener("notification", (e: any) => {
-      console.log(e);
-      const data = JSON.parse(e.data);
-      console.log(data);
-      setLastEventId(data.id);
-    });
+    // source.addEventListener("notification", (e: any) => {
+    //   console.log(e);
+    //   const data = JSON.parse(e.data);
+    //   console.log(data);
+    //   setLastEventId(data.id);
+    // });
 
     source.addEventListener("megaphone", (event: any) => {
       const parseData = JSON.parse(event.data);
-      
+
       // 새로운 확성기가 있음을 표시
       setNewSpeakerContent(parseData.content);
       setSpeakerToastList((prev) => {
         return prev.concat(parseData.content);
       });
-
     });
 
     return () => {
       source.close();
     };
-  }, [setLastEventId]);
+  }, []);
 
   useEffect(() => {
     if (!showSpeakerToast && speakerToastList.length != 0) {
-      
       // 확성기 리스트 중 첫번째 요소를 보여주기
       setSpeakerToastContent(speakerToastList[0]);
       setSpeakerToastList((prev) => prev.slice(1));
       setShowSpeakerToast(true);
-
-
     }
   }, [newSpeakerContent, showSpeakerToast]);
 
