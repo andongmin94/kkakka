@@ -18,7 +18,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           >
             {/* 프사 */}
             <img
-              src={data.dogamImgUrl}
+              src={data.friendImgUrl}
               className="w-[130px] h-[130px] mb-5 rounded-full"
             />
             {/* 이름 */}
@@ -31,7 +31,11 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           <div>
             {/* 이미지  */}
             <div
-              className={`h-[200px] w-[320px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 bg-[url('${data.dogamImgUrl}')] bg-cover rounded-b-none border-b-0`}
+              className={`h-[200px] w-[320px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 rounded-b-none border-b-0`}
+              style={{
+                backgroundImage: `url(${data.dogamImgUrl})`,
+                backgroundSize: "cover",
+              }}
             />
             <div className="w-[320px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               {/* 제목 */}
@@ -50,10 +54,10 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
                   <CommentModal dogamId={data.dogamId} />
                 </div>
-                {/* 등록일 */}
+                {/* 등록일
                 <div className="grid grid-col place-items-center font-bold">
                   <div className="text-center">{data.createdAt}</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -67,7 +71,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
         <div className="w-[450px] flex">
           {/* 왼쪽 구역 */}
           <Link
-            to={`/main/profile/${data.dogamId}`}
+            to={`/main/profile/${data.friendId}`}
             className="w-[200px] border-4 rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center bg-slate-100"
           >
             {/* 프사 */}
@@ -85,7 +89,11 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           <div>
             {/* 이미지 */}
             <div
-              className={`h-[200px] w-[270px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 bg-[url('${data.dogamImgUrl}')] bg-cover rounded-b-none border-b-0`}
+              className={`h-[200px] w-[270px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 rounded-b-none border-b-0`}
+              style={{
+                backgroundImage: `url(${data.dogamImgUrl})`,
+                backgroundSize: "cover",
+              }}
             />
             <div className="w-[270px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               {/* 제목 */}
@@ -104,10 +112,10 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
                   <CommentModal dogamId={data.dogamId} />
                 </div>
-                {/* 등록일 */}
+                {/* 등록일
                 <div className="grid grid-col place-items-center font-bold text-[12px]">
                   <div className="text-center">{data.createdAt}</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
