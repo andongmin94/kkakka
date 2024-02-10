@@ -26,7 +26,7 @@ export default function Message({ dm }: { dm: dmProps }) {
   return (
     <>
       <div className={classes.wrapper}>
-        <MessageProfile />
+        <MessageProfile friendImgUrl={dm.friendImgUrl} />
         <div className="flex flex-col items-center">
           <UserCurrentAlias alias={dm.friendAlias} />
           <UserName name={dm.friendName} />

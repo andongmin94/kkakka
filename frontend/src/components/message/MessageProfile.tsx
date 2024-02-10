@@ -7,13 +7,18 @@ function Skeleton({
   return <div className={cn("rounded-md", className)} {...props} />;
 }
 
-export default function MessageProfile() {
+export default function MessageProfile({
+  friendImgUrl,
+}: {
+  friendImgUrl: string;
+}) {
   return (
     <div className="flex items-center space-x-3">
       <Skeleton
-        className="w-[80px] h-[80px] rounded-full border-4  border-red-500"
+        className="w-[80px] h-[80px] rounded-full "
         style={{
-          backgroundImage: `url("/image/profile.png")`,
+          backgroundImage: `url(${friendImgUrl})`,
+          backgroundSize: "cover",
         }}
       />
     </div>
