@@ -21,7 +21,7 @@ export default function LiveProfile({
   return (
     <div>
       <Skeleton
-        className={`w-[80px] h-[80px] rounded-full border-3 border-red-500 `}
+        className={`w-[80px] h-[80px] rounded-full border-4  border-red-500 `}
         style={{
           backgroundImage: `url("${playerProfilePic}")`,
           backgroundSize: "cover",
