@@ -32,7 +32,7 @@ public class DogamController {
 
 
     @PostMapping("/friends/dogam")
-    public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "friend-user-id", required = true) Long friendId, @ModelAttribute DogamCreateRequestDto dto
+    public ApiResponseDto<DogamCreateResponseDto> createDogam(@RequestParam(value = "friends-user-id", required = true) Long friendId, @ModelAttribute DogamCreateRequestDto dto
             , @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
         return ResponseUtils.ok(dogamService.createDogam(dto, friendId, userDetails.getUser()), MsgType.CREATE_DOGAM_SUCCESSFULLY);
