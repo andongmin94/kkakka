@@ -1,12 +1,12 @@
-FROM node:alpine as builder
-WORKDIR /frontend
-COPY package.json .
-# RUN npm install
-COPY ./ ./
+FROM node:16 as build-stage
+WORKDIR /app
+ADD . .
+RUN npm install
 RUN npm run build
 
-# 3000번 포트 노출
-EXPOSE 3000
+FROM nginx:stable-alpine as production-stage
+#컨테이너 안에 nginx.conf를 옆 해당겨로에 옮겨준다.
+COPY  ./nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
 
-# npm start 스크립트 실행
-CMD ["npm", "run", "dev"]
+COPY --from=build-stage /app/build /var/www/html
+CMD ["nginx", "-g", "daemon off;"]
