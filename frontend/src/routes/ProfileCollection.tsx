@@ -31,10 +31,8 @@ export default function ProfileCollection() {
             >
               {data &&
                 data.pages.map((pageData) => {
-                  console.log("페이지데이터", pageData);
                   return pageData.results.map(
                     (profiledogam: ProfileDogamType) => {
-                      console.log("results프로필도감", profiledogam);
                       return (
                         <Collection
                           key={profiledogam.dogamId}
@@ -47,7 +45,6 @@ export default function ProfileCollection() {
             </InfiniteScroll>
           </div>
         </div>
-        {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
         <div className="flex justify-center mb-2 fixed bottom-0 left-5">
           {paramsId != userInfo.userId ? (
             <AddCollection userId={paramsId} />
@@ -70,10 +67,8 @@ export default function ProfileCollection() {
             >
               {data &&
                 data.pages.map((pageData) => {
-                  console.log("페이지데이터", pageData);
                   return pageData.results.map(
                     (profiledogam: ProfileDogamType) => {
-                      console.log("results프로필도감", profiledogam);
                       return (
                         <Collection
                           key={profiledogam.dogamId}
@@ -86,7 +81,6 @@ export default function ProfileCollection() {
             </InfiniteScroll>
           </div>
         </div>
-        {/* 자기 프로필이 아닐때만 도감 추가 가능하게 */}
         <div className="flex justify-center mb-2 fixed bottom-1 right-20">
           {paramsId != userInfo.userId ? (
             <AddCollection userId={paramsId} />

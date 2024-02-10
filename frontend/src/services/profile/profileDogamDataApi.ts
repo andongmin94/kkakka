@@ -14,7 +14,6 @@ export const fetchProfileDogamList = async (
   const res = await axiosInstance.get(
     `/api/friends/dogam/users/${userId}?page=${pageParam}&size=5`
   );
-  console.log("페치프로필도감 service", res.data.data);
 
   const data = {
     results: res.data.data.data,

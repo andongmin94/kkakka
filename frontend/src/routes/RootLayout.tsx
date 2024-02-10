@@ -16,12 +16,39 @@ import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useFriendStore from "@/store/friend/friendStore";
 import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
+import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+import usePointStore from "@/store/user/pointStore";
+import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
 
   const { userInfo } = useUserStore();
+
+  const { useUserDataQuery } = useUserData();
+  const { setUserInfo } = useUserStore();
+  const { data: userData } = useUserDataQuery();
+
+  useEffect(() => {
+    if (userData) {
+      setUserInfo(userData);
+    } else {
+      console.log("유저 정보 없음");
+    }
+  }, [userData]);
+
+  const { setPoint } = usePointStore();
+  const { usePointQuery } = usePoint();
+  const { data: userPointData } = usePointQuery();
+
+  useEffect(() => {
+    if (userPointData) {
+      setPoint(userPointData);
+    } else {
+      console.log("포인트 정보 없음");
+    }
+  }, [userPointData]);
 
   const { setFriendList } = useFriendStore();
   const { useFriendListQuery } = useFriendList();
