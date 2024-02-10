@@ -5,8 +5,17 @@ import DeleteCollection from "@/components/itemShop/DeleteCollection";
 import useItemshopStore from "@/store/itemshop/itemshopStore";
 import usePointStore from "@/store/user/pointStore";
 import useFriendStore from "@/store/friend/friendStore";
+import { useEffect } from "react";
+import { useItemList } from "@/hooks/itemshop/queries/useItemListQuery";
 
 export default function ItemshopPage() {
+  const { useItemListQuery } = useItemList();
+  const { data, refetch } = useItemListQuery();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   const { itemList } = useItemshopStore();
   const { point } = usePointStore();
   const { friendList } = useFriendStore();

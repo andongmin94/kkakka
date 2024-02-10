@@ -9,7 +9,11 @@ export default function ProfileDishonorPage() {
   const params = useParams();
   const { useDishonorQuery } = useDishonor();
   const { aliases, setAliases } = useDishonorStore();
-  const { data: aliasList } = useDishonorQuery(params.id || "");
+  const { data: aliasList, refetch } = useDishonorQuery(params.id || ""); // refetch 함수 추가
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (aliasList) {

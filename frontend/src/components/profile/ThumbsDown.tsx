@@ -27,7 +27,6 @@ export default function ThumbsDown({
   const hateCancelHandler = async (dogamId: number) => {
     const res = await axios.delete(
       `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
-
       {
         headers: {
           Authorization: token,
