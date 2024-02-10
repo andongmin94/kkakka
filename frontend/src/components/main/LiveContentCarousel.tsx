@@ -32,9 +32,12 @@ export default function LiveContentCarousel() {
       plugins={[plugin.current]}
       className="h-full w-full"
     >
-      <CarouselContent>
+      <CarouselContent className="ml-1">
         {broadcastList.map((room) => (
-          <CarouselItem key={room.roomId} className="md:basis-1/1 lg:basis-1/3">
+          <CarouselItem
+            key={room.roomId}
+            className="md:basis-1/1 lg:basis-1/3 mr-5"
+          >
             <div className="p-1">
               <CardContent className="flex aspect-square items-center justify-center p-0">
                 <LiveContent liveData={room} />
