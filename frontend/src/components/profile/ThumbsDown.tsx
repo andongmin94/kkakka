@@ -9,54 +9,57 @@ export default function ThumbsDown({
   dogamId: number;
 }) {
   const token = localStorage.getItem("token");
-
-  const hateClickHandler = (dogamId: number) => {
-    axios
-      .post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/dogam/hate/${dogamId}`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
-  };
-
-  const hateCancelHandler = (dogamId: number) => {
-    axios
-      .delete(
-        `${import.meta.env.VITE_API_BASE_URL}/api/dogam/hate/${dogamId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
-  };
-
   const [thumbs, setThumbs] = useState(tD);
+
+  const hateClickHandler = async () => {
+    try {
+      // setThumbs를 호출한 후 thumbs 상태가 변경되었을 때를 기다립니다.
+      await setThumbs(!thumbs);
+
+      const res = thumbs
+        ? await axios.delete(
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/dogam/hate/${dogamId}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
+        : await axios.post(
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/dogam/hate/${dogamId}`,
+            {},
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+      console.log("hateClickHandler", res);
+    } catch (error) {
+      console.error("Error in hateClickHandler:", error);
+    }
+  };
 
   return (
     <div
       className="h-[50px] w-[50px] ml-2 grid grid-col place-items-center"
       onClick={() => {
         setThumbs(!thumbs);
-        thumbs ? hateCancelHandler(dogamId) : hateClickHandler(dogamId);
+        hateClickHandler();
         // !tD;
-        // 싫어요 누를때 post 요청보내야 함 (dogamId)
       }}
     >
       {thumbs ? (
-        <img src="/image/thumbsDownOn.png" />
+        // <img src="/image/thumbsDownOn.png" />
+        <div>👎</div>
       ) : (
-        <img src="/image/thumbsDown.png" />
+        // <img src="/image/thumbsDown.png" />
+        <div>👍</div>
       )}
     </div>
   );
