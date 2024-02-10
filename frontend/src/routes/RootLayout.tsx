@@ -28,7 +28,7 @@ export default function RootLayout() {
 
   const { useUserDataQuery } = useUserData();
   const { setUserInfo } = useUserStore();
-  const { data: userData } = useUserDataQuery();
+  const { data: userData, refetch } = useUserDataQuery();
 
   useEffect(() => {
     if (userData) {
@@ -37,6 +37,10 @@ export default function RootLayout() {
       console.log("유저 정보 없음");
     }
   }, [userData]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const { setPoint } = usePointStore();
   const { usePointQuery } = usePoint();

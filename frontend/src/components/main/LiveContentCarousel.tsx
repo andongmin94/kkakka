@@ -18,7 +18,11 @@ export default function LiveContentCarousel() {
 
   const { broadcastList, setBroadcastList } = useBroadcastStore();
   const { useBroadcastListQuery } = useBroadcastList();
-  const { data: broadcasts } = useBroadcastListQuery();
+  const { data: broadcasts, refetch } = useBroadcastListQuery();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (broadcasts) {
