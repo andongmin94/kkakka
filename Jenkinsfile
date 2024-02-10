@@ -19,13 +19,13 @@ pipeline {
                     )
                 }
             }
-        } 
-  
+        }
+
 
         stage('Clone') { 
             steps {
                 echo '클론을 시작!'
-                git branch: 'dev', credentialsId: 'docker-hub', url: 'https://lab.ssafy.com/s10-webmobile2-sub2/S10P12D110.git'
+                git branch: 'nginx', credentialsId: 'docker-hub', url: 'https://lab.ssafy.com/s10-webmobile2-sub2/S10P12D110.git'
                 echo '클론을 완료!'
             }
         }  
@@ -129,7 +129,7 @@ pipeline {
                     sh "docker rm -f frontend"
                     sh "docker rmi osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
-                    sh "docker run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
+                    sh "docker run -d -p 80:80 -p 443:443 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
             } 
