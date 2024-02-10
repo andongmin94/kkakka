@@ -200,7 +200,7 @@ export default function MessageTestPage() {
   useEffect(() => {
     connect();
     // console.log(userInfo);
-    // console.log(friendsInfo);
+    console.log("프랜즈인포", friendsInfo);
 
     setTimeout(() => {
       window.scrollTo(0, document.body.scrollHeight);
@@ -227,11 +227,16 @@ export default function MessageTestPage() {
       });
 
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam`, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam${
+          friendsInfo.userId
+        }?page=0&size=5`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((res: any) => {
         console.log(res.data.data);
         setDogamList(res.data.data);
@@ -451,7 +456,7 @@ export default function MessageTestPage() {
                 <div className="flex flex-col w-full mb-5 mt-5 justify-center">
                   {/* 도감 선택 모달 */}
                   <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
-                    {dogamList.map((dogam, idx) => (
+                    {/* {dogamList.map((dogam, idx) => (
                       <img
                         src={dogam.dogamImgUrl}
                         className={`h-20 w-[100px] rounded-lg border-4 ${
@@ -466,7 +471,7 @@ export default function MessageTestPage() {
                           setSelectedImageIndex(idx);
                         }}
                       />
-                    ))}
+                    ))} */}
                   </div>
                 </div>
 
