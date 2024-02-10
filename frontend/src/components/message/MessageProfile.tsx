@@ -10,7 +10,12 @@ function Skeleton({
 export default function MessageProfile() {
   return (
     <div className="flex items-center space-x-3">
-      <Skeleton className="w-[80px] h-[80px] rounded-full border-4  border-red-500 bg-[url('/image/profileImage.png')] bg-cover" />
+      <Skeleton
+        className="w-[80px] h-[80px] rounded-full border-4  border-red-500"
+        style={{
+          backgroundImage: `url("/image/profile.png")`,
+        }}
+      />
     </div>
   );
 }
