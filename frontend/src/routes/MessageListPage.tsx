@@ -24,12 +24,13 @@ export default function MessageListPage() {
   // const [position, setPosition] = useState("");
   const navigate = useNavigate();
   const [friendsInfo, setFriendsInfo] = useState(null);
-  // const [roomId, setRoomId] = useState(0);
+  const [roomId, setRoomId] = useState(0);
 
   const [dmList, setDmList] = useState<dmProps[] | null>(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    console.log("메세지함");
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`, {
         headers: {
@@ -37,12 +38,12 @@ export default function MessageListPage() {
         },
       })
       .then((res) => {
-        // console.log(res.data.data);
+        console.log(res.data.data);
         setDmList(res.data.data);
       });
   }, []);
 
-  const enterChatHandler = (roomId: number) => {
+  const enterChatHandler = (friendId: number) => {
     // axios
     //   .post(
     //     `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
@@ -57,35 +58,39 @@ export default function MessageListPage() {
     //     navigate(`/main/message/${res.data.data}`, { state: friendsInfo }); // 아직 없는듯
     //   });
 
-    navigate(`/main/message/${roomId}`, { state: friendsInfo });
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${friendId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log("정보");
+
+        setFriendsInfo(res.data.data);
+        console.log(friendsInfo);
+        // navigate(`/main/message/${roomId}`, { state: friendsInfo });
+      });
   };
+
+  useEffect(() => {
+    if (friendsInfo) {
+      console.log("정보", friendsInfo);
+      navigate(`/main/message/${roomId}`, { state: friendsInfo });
+    }
+  }, [friendsInfo, navigate]);
 
   return (
     <div>
       <div>메시지 목록</div>
       {dmList &&
         dmList.map((dm, idx) => {
-          axios
-            .get(
-              `${import.meta.env.VITE_API_BASE_URL}/api/users/data/${
-                dm.friendId
-              }`,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
-            )
-            .then((res) => {
-              // console.log(res.data.data);
-              setFriendsInfo(res.data.data);
-            });
-
           return (
             <div
               key={idx}
               onClick={() => {
-                enterChatHandler(dm.roomId);
+                setRoomId(dm.roomId);
+                enterChatHandler(dm.friendId);
               }}
             >
               <Message dm={dm} />
