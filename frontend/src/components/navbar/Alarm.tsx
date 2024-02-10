@@ -84,16 +84,13 @@ export function Alarm() {
                     checkAlarm(alarm.alarmId);
                   }}
                 >
+                  {/*  이거 사진으로 어떻게 만드는지 모르겠음  */}
                   {alarm.alarmPic}
                   {alarm.alarmContent}
                   {alarm.createdAt.toString()}
                 </DropdownMenuRadioItem>
               );
             })}
-
-          <DropdownMenuRadioItem value="top">알림 1</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="bottom">알림 2</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="right">알림 3</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
