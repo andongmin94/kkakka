@@ -15,6 +15,11 @@ export default function ItemshopPage() {
   // const { friendList } = useFriendStore();
   const [itemList, setItemList] = useState<ItemType[]>([]);
   const [friendList, setFriendList] = useState([]);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+
+  if (successMessage !== "") {
+    // window.location.reload();
+  }
 
   useEffect(() => {
     // 아이템샵 목록을 불러오는 API 호출
@@ -23,6 +28,7 @@ export default function ItemshopPage() {
       .then((res) => {
         // 아이템 목록을 상태에 설정
         setItemList(res.data.data.itemList);
+        setSuccessMessage("아이템 목록을 불러왔습니다.");
       })
       .catch((error) => {
         console.error("아이템 목록을 불러오는 중 에러 발생:", error);
@@ -43,7 +49,7 @@ export default function ItemshopPage() {
       .catch((error) => {
         console.error("친구목록을 불러오는 중 에러 발생:", error);
       });
-  }, []);
+  }, [setFriendList]);
 
   return (
     <>

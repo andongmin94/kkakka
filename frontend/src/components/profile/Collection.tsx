@@ -29,7 +29,7 @@ export default function Collection({
               dogamId={profiledogam.dogamId}
             />
           </div>
-          <div className=" flex self-center mr-4 text-xl text-blue-600">
+          <div className=" flex self-center mr-4 text-sm text-blue-600">
             {profiledogam.dogamDislikeNum}
           </div>
           {/* 댓글 */}

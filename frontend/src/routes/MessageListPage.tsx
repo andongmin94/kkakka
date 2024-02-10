@@ -37,8 +37,9 @@ export default function MessageListPage() {
         },
       })
       .then((res) => {
-        // console.log(res.data.data);
+        console.log(res.data.data);
         setDmList(res.data.data);
+        console.log(dmList);
       });
   }, []);
 
@@ -64,7 +65,7 @@ export default function MessageListPage() {
     <div>
       <div>메시지 목록</div>
       {dmList &&
-        dmList.map((dm, idx) => {
+        dmList.map((dm) => {
           axios
             .get(
               `${import.meta.env.VITE_API_BASE_URL}/api/users/data/${
@@ -83,7 +84,7 @@ export default function MessageListPage() {
 
           return (
             <div
-              key={idx}
+              key={dm.friendEmail}
               onClick={() => {
                 enterChatHandler(dm.roomId);
               }}
