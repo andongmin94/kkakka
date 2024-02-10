@@ -130,7 +130,7 @@ export default function ProfilePage() {
                   도감
                 </Link>
                 <Link to={`/main/profile/${params.id}/dishonor`}>
-                  불명예 전당
+                  불명예의 전당
                 </Link>
               </div>
             </div>
@@ -214,7 +214,7 @@ export default function ProfilePage() {
                     도감
                   </Link>
                   <Link to={`/main/profile/${profileInfo.userId}/dishonor`}>
-                    불명예 전당
+                    불명예의 전당
                   </Link>
                 </div>
               </div>

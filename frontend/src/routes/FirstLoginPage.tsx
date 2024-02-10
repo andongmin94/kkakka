@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 import { useUserDataPut } from "@/hooks/user/mutations/useUserDataPut";
 // const electron = window.electron;
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-import usePointStore from "@/store/user/pointStore";
-import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
 
 export default function FirstLoginPage() {
   const navigate = useNavigate();
@@ -20,18 +18,6 @@ export default function FirstLoginPage() {
       return;
     }
   };
-
-  const { setPoint } = usePointStore();
-  const { usePointQuery } = usePoint();
-  const { data: userPointData } = usePointQuery();
-
-  useEffect(() => {
-    if (userPointData) {
-      setPoint(userPointData);
-    } else {
-      console.log("포인트 정보 없음");
-    }
-  }, [userPointData]);
 
   const { userInfo, setUserInfo } = useUserStore();
   const { useUserDataQuery } = useUserData();
