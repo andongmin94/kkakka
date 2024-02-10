@@ -9,7 +9,13 @@ export default function Collection({
 }) {
   return (
     <div className="">
-      <div className="h-[200px] w-[320px] border-4 border-inherit mt-5 rounded-3xl bg-[url('/image/liveImage.png')] bg-cover rounded-b-none border-b-0" />
+      <div
+        className="h-[200px] w-[320px] border-4 border-inherit mt-5 rounded-3xl  rounded-b-none border-b-0"
+        style={{
+          backgroundImage: `url(${profiledogam.dogamImgUrl})`,
+          backgroundSize: "cover",
+        }}
+      />
       <div className="w-[320px] border-4 border-inherit rounded-3xl bg-cover rounded-t-none border-t-0 mt-0 mb-5">
         {/* 제목 */}
         <div className="w-full font-bold text-2xl px-2 py-3">

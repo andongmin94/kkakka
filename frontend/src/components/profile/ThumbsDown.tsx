@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useDislikeDogam } from "@/hooks/dogamfeed/mutations/useDislikePost";
-import { useDislikeDeleteDogam } from "@/hooks/dogamfeed/mutations/useDislikeDelete";
+import axios from "axios";
 
 export default function ThumbsDown({
   tD,
@@ -9,18 +8,33 @@ export default function ThumbsDown({
   tD: boolean;
   dogamId: number;
 }) {
+  const token = localStorage.getItem("token");
   const [thumbs, setThumbs] = useState(tD);
 
-  const dislikeDogamMutation = useDislikeDogam();
-  const { mutate: dislikeMutate } = dislikeDogamMutation;
-  const hateClickHandler = (dogamId: number) => {
-    dislikeMutate(dogamId);
+  const hateClickHandler = async (dogamId: number) => {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    console.log("hateClickHandler", res);
   };
 
-  const cancleDislikeDogamMutation = useDislikeDeleteDogam();
-  const { mutate: cancleDislikeMutate } = cancleDislikeDogamMutation;
-  const hateCancelHandler = (dogamId: number) => {
-    cancleDislikeMutate(dogamId);
+  const hateCancelHandler = async (dogamId: number) => {
+    const res = await axios.delete(
+      `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
+
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    console.log("hateCancelHandler", res);
   };
 
   return (
