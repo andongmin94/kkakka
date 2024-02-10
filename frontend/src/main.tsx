@@ -1,5 +1,4 @@
 import "@/globals.css";
-import Loading from "@/components/app/Loading";
 import ReactDOM from "react-dom/client";
 import IndexPage from "@/routes/IndexPage";
 import LoginPage from "@/routes/LoginPage.tsx";

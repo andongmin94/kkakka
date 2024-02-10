@@ -25,7 +25,6 @@ import axios from "axios";
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
-
   const { userInfo } = useUserStore();
 
   const { useUserDataQuery } = useUserData();
@@ -44,31 +43,29 @@ export default function RootLayout() {
     refetch();
   }, [refetch]);
 
-  const { setPoint } = usePointStore();
-  const { usePointQuery } = usePoint();
-  const { data: userPointData } = usePointQuery();
+  // const { setPoint } = usePointStore();
+  // const { usePointQuery } = usePoint();
+  // const { data: userPointData } = usePointQuery();
 
-  useEffect(() => {
-    if (userPointData) {
-      setPoint(userPointData);
-    } else {
-      console.log("포인트 정보 없음");
-    }
-  }, [userPointData]);
-  // const { userInfo } = useUserStore();
-  // const [userInfo, setUserInfo] = useState<UserType | null>(null);
+  // useEffect(() => {
+  //   if (userPointData) {
+  //     setPoint(userPointData);
+  //   } else {
+  //     console.log("포인트 정보 없음");
+  //   }
+  // }, [userPointData]);
 
-  const { setFriendList } = useFriendStore();
-  const { useFriendListQuery } = useFriendList();
-  const { data: friendListData } = useFriendListQuery();
+  // const { setFriendList } = useFriendStore();
+  // const { useFriendListQuery } = useFriendList();
+  // const { data: friendListData } = useFriendListQuery();
 
-  useEffect(() => {
-    if (friendListData) {
-      setFriendList(friendListData);
-    } else {
-      console.log("친구 목록 없음");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (friendListData) {
+  //     setFriendList(friendListData);
+  //   } else {
+  //     console.log("친구 목록 없음");
+  //   }
+  // }, []);
 
   const { setLastEventId } = useAlarmSubscribeStore();
 
@@ -81,8 +78,6 @@ export default function RootLayout() {
   const EventSource = EventSourcePolyfill;
 
   const token = localStorage.getItem("token");
-  const userProfileImg = localStorage.getItem("userProfileImg");
-  const userId = localStorage.getItem("userId");
 
   if (!token) {
     throw new Error("Token not found");
@@ -102,7 +97,6 @@ export default function RootLayout() {
     console.log(event);
     source.close();
   };
-  };
 
   useEffect(() => {
     axios
@@ -119,12 +113,22 @@ export default function RootLayout() {
         localStorage.setItem("userAlias", res.data.data.userAlias);
         // setUserInfo(res.data.data);
       });
-    // source.addEventListener("notification", (e: any) => {
-    //   console.log(e);
-    //   const data = JSON.parse(e.data);
-    //   console.log(data);
-    //   setLastEventId(data.id);
-    // });
+  }, []);
+
+  const userProfileImg = localStorage.getItem("userProfileImg");
+  const userId = localStorage.getItem("userId");
+
+  // useEffect(()=>{
+  //   localStorage.setItem('userInfo',userInfo);
+  // },[userInfo])
+
+  useEffect(() => {
+    source.addEventListener("notification", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
     source.addEventListener("notification", (e: any) => {
       console.log(e);
       const data = JSON.parse(e.data);
@@ -145,11 +149,7 @@ export default function RootLayout() {
     return () => {
       source.close();
     };
-  }, []);
-
-  // useEffect(()=>{
-  //   localStorage.setItem('userInfo',userInfo);
-  // },[userInfo])
+  });
 
   useEffect(() => {
     if (!showSpeakerToast && speakerToastList.length != 0) {
@@ -244,7 +244,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/profile/${userId}`}
+                      to={`/main/my-profile`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>
