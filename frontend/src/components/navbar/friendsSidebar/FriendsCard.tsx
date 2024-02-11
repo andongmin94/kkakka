@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 export default function FriendsCard({ info }: { info: FriendType }) {
   return (
-    <Link to={`/main/profile/${info.id}`}>
+    <Link to={`/main/profile/${info.userId}`}>
       <div className={classes.card}>
         <FriendsProfile image={info.profileImg} />
         <div className={classes.textWrapper}>
