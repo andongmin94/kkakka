@@ -76,7 +76,8 @@ export default function WriteAlias({
 
   function onSubmit() {
     toast({
-      title: "친구의 칭호가 변경되었습니다.",
+      title: "아이템 구매",
+      description: "친구의 칭호가 변경되었습니다.",
       // description: (
       //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
       //     <code className="text-white">{JSON.stringify(data, null, 2)}</code>
