@@ -14,18 +14,13 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useFriendStore from "@/store/friend/friendStore";
-import { useFriendList } from "@/hooks/friend/queries/useFriendListQuery";
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-import usePointStore from "@/store/user/pointStore";
-import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
 // import { UserType } from "@/types/userTypes";
 import axios from "axios";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
-  const { userInfo } = useUserStore();
 
   const { useUserDataQuery } = useUserData();
   const { setUserInfo } = useUserStore();
@@ -116,7 +111,6 @@ export default function RootLayout() {
   }, []);
 
   const userProfileImg = localStorage.getItem("userProfileImg");
-  const userId = localStorage.getItem("userId");
 
   // useEffect(()=>{
   //   localStorage.setItem('userInfo',userInfo);
