@@ -62,7 +62,7 @@ export default function ProfilePage() {
       .then((res: any) => {
         console.log("채팅방 입장성공", res.data.data);
         const roomId = res.data.data;
-        navigate(`/main/message/${roomId}`);
+        navigate(`/main/message/${roomId}`, { state: profileInfo });
       });
   };
 
