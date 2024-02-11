@@ -8,6 +8,7 @@ import usePointStore from "@/store/user/pointStore";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ItemType } from "@/types/itemTypes";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function ItemshopPage() {
   // const { itemList, setItemList } = useItemshopStore();
@@ -101,6 +102,7 @@ export default function ItemshopPage() {
           </div>
         </div>
       )}
+      <Toaster/>
     </>
   );
 }

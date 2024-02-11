@@ -141,7 +141,7 @@ public class NotificationService {
 //                    .reconnectTime(1000L) // 재연결 시도
                     .data(data));
 
-        } catch (IOException exception) {
+        } catch (IllegalStateException | IOException exception){
             // 클라이언트와의 연결이 끊긴 경우, emitter를 만료시킨다.
             emitter.complete();
             emitterRepository.deleteById(emitterId);

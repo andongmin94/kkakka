@@ -76,14 +76,64 @@ export default function Compliment({
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
+    // 유효성 검사
+    if (
+      data.textComp != undefined &&
+      data.userId &&
+      data.textComp.length > 1
+    ) {
+      // 보낼 데이터 객체 userId, textComp
+      const requestData = {
+        receiverId: data.userId,
+        receiverName: data.name,
+        enfScript: data.textComp,
+      };
+
+      const token = localStorage.getItem("token");
+
+      // 칭찬권 구매
+      axios
+        .post(
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/friends/compliment`,
+          {
+            enfScript: requestData.enfScript,
+          },
+          {
+            params: {
+              "receiver-id": requestData.receiverId,
+            },
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          // 칭찬권 구매 성공
+          makeToast("강제 칭찬권 구매 성공");
+          console.log(res);
+        })
+        .catch((error) => {
+          // 칭찬권 구매 실패
+          makeToast("강제 칭찬권 구매 실패");
+          console.log(error);
+        });
+
+      // 데이터 보내기 확인 완료
+      // console.log(data);
+
+      setOpenDialog(false);
+    }
+
+  }
+  
+  const makeToast = (content: string) => {
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+      title: "아이템 구매",
+      description: content,
+    })
   }
 
   // Item Card CSS 세팅
@@ -194,11 +244,11 @@ export default function Compliment({
                               {friends.map((friend) => (
                                 <CommandItem
                                   value={friend.name}
-                                  key={friend.id}
+                                  key={friend.userId}
                                   onSelect={() => {
                                     form.setValue("name", friend.name);
-                                    form.setValue("userId", friend.id);
-                                    console.log(friend.id);
+                                    form.setValue("userId", friend.userId);
+                                    console.log(friend.userId);
                                     setOpen(false);
                                   }}
                                 >
@@ -261,59 +311,9 @@ export default function Compliment({
 
                   {/* 구매 버튼 */}
                   <Button
-                    type="button"
+                    type="submit"
                     variant="secondary"
                     className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
-                    onClick={() => {
-                      // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
-                      // 유효성 검사
-                      if (
-                        form.getValues().textComp != undefined &&
-                        form.getValues().userId &&
-                        form.getValues().textComp.length > 1
-                      ) {
-                        // 보낼 데이터 객체 userId, textComp
-                        const data = {
-                          receiverId: form.getValues().userId,
-                          receiverName: form.getValues.name,
-                          enfScript: form.getValues().textComp,
-                        };
-
-                        const token = localStorage.getItem("token");
-
-                        // 칭찬권 구매
-                        axios
-                          .post(
-                            `${
-                              import.meta.env.VITE_API_BASE_URL
-                            }/api/friends/compliment`,
-                            {
-                              enfScript: data.enfScript,
-                            },
-                            {
-                              params: {
-                                "receiver-id": data.receiverId,
-                              },
-                              headers: {
-                                Authorization: token,
-                              },
-                            }
-                          )
-                          .then((res) => {
-                            // 칭찬권 구매 성공
-                            console.log(res);
-                          })
-                          .catch((error) => {
-                            // 칭찬권 구매 실패
-                            console.log(error);
-                          });
-
-                        // 데이터 보내기 확인 완료
-                        // console.log(data);
-
-                        setOpenDialog(false);
-                      }
-                    }}
                   >
                     구입
                   </Button>
