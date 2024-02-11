@@ -13,7 +13,6 @@ import FirstLoginPage from "@/routes/FirstLoginPage.js";
 import LoginSuccessPage from "@/routes/LoginSuccessPage.js";
 import KakaoCallbackPage from "@/routes/KakaoCallbackPage.tsx";
 import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
-import MyProfilePage from "@/routes/MyProfilePage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
