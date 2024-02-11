@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -38,93 +35,45 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AliasRepository aliasRepository;
+    private static final String distUri = "i10d110.p.ssafy.io";
 
     @Value("${kakao.clientId}")
-    String client_id;
+    String clientId;
 
     @Value("${kakao.secret}")
-    String client_secret;
+    String clientSecret;
 
-    public OauthToken getAccessTokenDist(String code) {
-
-        OauthToken oauthToken = null;
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-            // HttpBody 오브젝트 생성
-            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            params.add("grant_type", "authorization_code");
-            params.add("client_id", client_id);
-            params.add("redirect_uri", "http://i10d110.p.ssafy.io:3000/api/oauth/callback/kakao/token");
-            params.add("code", code);
-            params.add("client_secret", client_secret);
-
-//            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-            RestTemplate rt = new RestTemplate();
-            HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
-                    new HttpEntity<>(params, headers);
-
-
-            ObjectMapper objectMapper =
-                    new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//                    new ObjectMapper();
-
-            // POST 방식으로 key=value 데이터 요청
-
-            ResponseEntity<String> accessTokenResponse = rt.exchange(
-                    "https://kauth.kakao.com/oauth/token",
-                    HttpMethod.POST,
-                    kakaoTokenRequest,
-                    String.class
-            );
-            oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
-            System.out.println(oauthToken.getAccess_token());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return oauthToken;
+    public OauthToken getAccessToken(String code, String redirectUri) {
+        return requestAccessToken(code, redirectUri);
     }
 
-    public OauthToken getAccessTokenLocal(String code) {
+    private OauthToken requestAccessToken(String code, String redirectUri) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        OauthToken oauthToken = null;
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", clientId);
+        params.add("redirect_uri", redirectUri);
+        params.add("code", code);
+        params.add("client_secret", clientSecret);
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+
+        ResponseEntity<String> responseEntity = new RestTemplate().exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-            // HttpBody 오브젝트 생성
-            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            params.add("grant_type", "authorization_code");
-            params.add("client_id", client_id);
-            params.add("redirect_uri", "http://localhost:3000/api/oauth/callback/kakao/token");
-            params.add("code", code);
-            params.add("client_secret", client_secret);
-
-//            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-            RestTemplate rt = new RestTemplate();
-            HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
-                    new HttpEntity<>(params, headers);
-
-
-            ObjectMapper objectMapper =
-                    new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//                    new ObjectMapper();
-
-            // POST 방식으로 key=value 데이터 요청
-
-            ResponseEntity<String> accessTokenResponse = rt.exchange(
-                    "https://kauth.kakao.com/oauth/token",
-                    HttpMethod.POST,
-                    kakaoTokenRequest,
-                    String.class
-            );
-            oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
-            System.out.println(oauthToken.getAccess_token());
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return objectMapper.readValue(responseEntity.getBody(), OauthToken.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
-        return oauthToken;
     }
 
     public List<String> SaveUserAndGetToken(String token, HttpServletResponse response) {
