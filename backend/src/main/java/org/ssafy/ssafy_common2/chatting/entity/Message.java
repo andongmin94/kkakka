@@ -35,10 +35,10 @@ public class Message extends BaseTime  {
 
     // 4) 보낸 사람 & 대화하고 있는 채팅방
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "user_id"),
-            @JoinColumn(name = "chat_room_id")
-    })
+//    @JoinColumns({
+//            @JoinColumn(name = "user_id"),
+//            @JoinColumn(name = "chat_room_id")
+//    })
     private  ChatJoin chatJoin;
 
     // 5) 채팅방 이미지
