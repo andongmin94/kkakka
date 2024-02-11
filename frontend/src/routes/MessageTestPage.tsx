@@ -328,7 +328,6 @@ export default function MessageTestPage() {
             </div>
             {/* 프로필 보기 버튼 */}
             {/* 해당 사람의 프로필로 이동한다 */}
-            {/* 임시 정적 데이터로 profileId를 넣었음 */}
             <Link to={`/main/profile/${friendsInfo.userId}`}>
               <Button
                 type="submit"
