@@ -1,7 +1,7 @@
 import Speaker from "@/components/itemShop/Speaker";
 import WriteAlias from "@/components/itemShop/WriteAlias";
 import Compliment from "@/components/itemShop/Compliment";
-import DeleteCollection from "@/components/itemShop/DeleteCollection";
+// import DeleteCollection from "@/components/itemShop/DeleteCollection";
 // import useItemshopStore from "@/store/itemshop/itemshopStore";
 import usePointStore from "@/store/user/pointStore";
 // import useFriendStore from "@/store/friend/friendStore";
@@ -72,14 +72,14 @@ export default function ItemshopPage() {
                     friends={friendList}
                   />
                 )}
-                {item.itemName === "도감 삭제권" && (
+                {/* {item.itemName === "도감 삭제권" && (
                   <DeleteCollection
                     itemName={item.itemName}
                     itemPrice={item.itemPrice}
                     // itemDesc={item.itemDesc}
                     myPoint={point}
                   />
-                )}
+                )} */}
                 {item.itemName === "강제 칭찬권" && (
                   <Compliment
                     itemName={item.itemName}
@@ -102,7 +102,7 @@ export default function ItemshopPage() {
           </div>
         </div>
       )}
-      <Toaster/>
+      <Toaster />
     </>
   );
 }

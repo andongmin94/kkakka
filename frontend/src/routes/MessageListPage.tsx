@@ -45,20 +45,6 @@ export default function MessageListPage() {
   }, []);
 
   const enterChatHandler = (friendId: number) => {
-    // axios
-    //   .post(
-    //     `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/enter/${friendId}`,
-    //     {},
-    //     {
-    //       headers: {
-    //         Authorization: token,
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     navigate(`/main/message/${res.data.data}`, { state: friendsInfo }); // 아직 없는듯
-    //   });
-
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${friendId}`, {
         headers: {
@@ -85,7 +71,7 @@ export default function MessageListPage() {
     <div>
       <div>메시지 목록</div>
       {dmList &&
-        dmList.map((dm, idx) => {
+        dmList.map((dm) => {
           return (
             <div
               key={dm.friendEmail}
