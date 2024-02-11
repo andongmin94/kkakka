@@ -133,17 +133,17 @@ export default function MessageTestPage() {
       onMessageReceivedFromSocket,
       { userId: userInfo.userId, chatRoomType: "ONE" }
     );
-    stompClient.send(
-      "/pub/chat/enterUser",
-      clientHeader,
-      JSON.stringify({
-        messageType: "ENTER",
-        content: userInfo.userName + "님 환영합니다!",
-        userId: userInfo.userId,
-        chatRoomId: roomId,
-        userName: userInfo.userName,
-      })
-    );
+    // stompClient.send(
+    //   "/pub/chat/enterUser",
+    //   clientHeader,
+    //   JSON.stringify({
+    //     messageType: "ENTER",
+    //     content: userInfo.userName + "님 환영합니다!",
+    //     userId: userInfo.userId,
+    //     chatRoomId: roomId,
+    //     userName: userInfo.userName,
+    //   })
+    // );
   }
 
   function onError(error: any) {
@@ -248,16 +248,16 @@ export default function MessageTestPage() {
       });
 
     return () => {
-      stompClient.send(
-        "/pub/chat/enterUser",
-        clientHeader,
-        JSON.stringify({
-          messageType: "QUIT",
-          content: userInfo.userName + "님이 퇴장했습니다.",
-          userId: userInfo.userId,
-          chatRoomId: roomId,
-        })
-      );
+      // stompClient.send(
+      //   "/pub/chat/enterUser",
+      //   clientHeader,
+      //   JSON.stringify({
+      //     messageType: "QUIT",
+      //     content: userInfo.userName + "님이 퇴장했습니다.",
+      //     userId: userInfo.userId,
+      //     chatRoomId: roomId,
+      //   })
+      // );
       stompClient
         .disconnect
         // function () {
