@@ -113,7 +113,8 @@ public class ChatRoomMySQLService {
 
             element.setRoomId(temp.get(i).getChatJoinId().getChatRoomId());
             element.setChatRoomType(Optional.ofNullable(roomInfo.getChatRoomType()).orElse(ChatRoom.ChatRoomType.DEAD));
-            element.setFriendEmail(Optional.ofNullable(roomInfo.getChatOwnerEmail()).orElse("해당 채팅방 주인의Email을 찾지 못했습니다."));
+            element.setFriendEmail(Optional.ofNullable(roomInfo.getChatOwnerEmail()).orElse("해당 채팅방 주인의 Email을 찾지 못했습니다."));
+            element.setFriendName(Optional.ofNullable(roomInfo.getChatOwnerName()).orElse("해당 채팅방 주인의 이름을 찾지 못했습니다."));
             element.setTenMinute(Optional.ofNullable(roomInfo.isTenMinute()).orElse(false));
 
             // 참여한 사람들 List 얻기
