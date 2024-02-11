@@ -124,6 +124,11 @@ public class ChatRoomMySQLService {
 
             if(friend !=null) {
                 element.setFriendId(friend.getId());
+                element.setFriendEmail(friend.getKakaoEmail());
+                element.setFriendImgUrl(friend.getKakaoProfileImg());
+                element.setFriendAlias(friend.getUserInfoId().getCurAlias());
+                element.setLogin(friend.getUserInfoId().isLogin());
+                element.setFriendName(friend.getUserName());
             }
 
             // 6-3) 참여한 사람들 List 얻기
