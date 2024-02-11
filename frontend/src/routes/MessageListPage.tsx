@@ -30,7 +30,6 @@ export default function MessageListPage() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    console.log("메세지함");
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`, {
         headers: {
@@ -40,7 +39,6 @@ export default function MessageListPage() {
       .then((res) => {
         console.log(res.data.data);
         setDmList(res.data.data);
-        console.log(dmList);
       });
   }, []);
 
@@ -52,10 +50,8 @@ export default function MessageListPage() {
         },
       })
       .then((res) => {
-        console.log("정보");
-
+        console.log("정보", res.data);
         setFriendsInfo(res.data.data);
-        console.log(friendsInfo);
         // navigate(`/main/message/${roomId}`, { state: friendsInfo });
       });
   };
@@ -74,7 +70,7 @@ export default function MessageListPage() {
         dmList.map((dm) => {
           return (
             <div
-              key={dm.friendEmail}
+              key={dm.roomId}
               onClick={() => {
                 setRoomId(dm.roomId);
                 enterChatHandler(dm.friendId);

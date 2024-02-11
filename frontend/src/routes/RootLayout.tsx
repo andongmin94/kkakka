@@ -2,7 +2,6 @@ import cn from "clsx";
 const electron = window.electron;
 import { useEffect, useState } from "react";
 import { Alarm } from "@/components/navbar/Alarm";
-// import useUserStore from "@/store/user/userStore";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
@@ -14,53 +13,12 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-// import { UserType } from "@/types/userTypes";
+
 import axios from "axios";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
-
-  // const { useUserDataQuery } = useUserData();
-  // const { setUserInfo } = useUserStore();
-  // const { data: userData, refetch } = useUserDataQuery();
-
-  // useEffect(() => {
-  //   if (userData) {
-  //     setUserInfo(userData);
-  //   } else {
-  //     console.log("유저 정보 없음");
-  //   }
-  // }, [userData]);
-
-  // useEffect(() => {
-  //   refetch();
-  // }, [refetch]);
-
-  // const { setPoint } = usePointStore();
-  // const { usePointQuery } = usePoint();
-  // const { data: userPointData } = usePointQuery();
-
-  // useEffect(() => {
-  //   if (userPointData) {
-  //     setPoint(userPointData);
-  //   } else {
-  //     console.log("포인트 정보 없음");
-  //   }
-  // }, [userPointData]);
-
-  // const { setFriendList } = useFriendStore();
-  // const { useFriendListQuery } = useFriendList();
-  // const { data: friendListData } = useFriendListQuery();
-
-  // useEffect(() => {
-  //   if (friendListData) {
-  //     setFriendList(friendListData);
-  //   } else {
-  //     console.log("친구 목록 없음");
-  //   }
-  // }, []);
 
   const { setLastEventId } = useAlarmSubscribeStore();
 
@@ -110,6 +68,7 @@ export default function RootLayout() {
       });
   }, []);
 
+  const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
 
   // useEffect(()=>{
@@ -238,7 +197,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/my-profile`}
+                      to={`/main/profile/${userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>
@@ -267,7 +226,7 @@ export default function RootLayout() {
                     <ModeToggle />
                     {/* 사용자 프로필 버튼 */}
                     <Link
-                      to={`/main/my-profile`}
+                      to={`/main/profile/${userId}`}
                       className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                     >
                       <Avatar>
@@ -325,7 +284,7 @@ export default function RootLayout() {
               <div className={classes.nav_right_M}>
                 {/* 사용자 프로필 버튼 */}
                 <Link
-                  to={`/main/my-profile`}
+                  to={`/main/profile/${userId}`}
                   className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
                 >
                   <Avatar>
@@ -368,3 +327,48 @@ export default function RootLayout() {
     </>
   );
 }
+
+// import useUserStore from "@/store/user/userStore";
+
+// import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+// import { UserType } from "@/types/userTypes";
+
+// const { useUserDataQuery } = useUserData();
+// const { setUserInfo } = useUserStore();
+// const { data: userData, refetch } = useUserDataQuery();
+
+// useEffect(() => {
+//   if (userData) {
+//     setUserInfo(userData);
+//   } else {
+//     console.log("유저 정보 없음");
+//   }
+// }, [userData]);
+
+// useEffect(() => {
+//   refetch();
+// }, [refetch]);
+
+// const { setPoint } = usePointStore();
+// const { usePointQuery } = usePoint();
+// const { data: userPointData } = usePointQuery();
+
+// useEffect(() => {
+//   if (userPointData) {
+//     setPoint(userPointData);
+//   } else {
+//     console.log("포인트 정보 없음");
+//   }
+// }, [userPointData]);
+
+// const { setFriendList } = useFriendStore();
+// const { useFriendListQuery } = useFriendList();
+// const { data: friendListData } = useFriendListQuery();
+
+// useEffect(() => {
+//   if (friendListData) {
+//     setFriendList(friendListData);
+//   } else {
+//     console.log("친구 목록 없음");
+//   }
+// }, []);

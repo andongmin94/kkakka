@@ -6,6 +6,7 @@ import UserCurrentAlias from "../UserCurrentAlias";
 import MessageProfile from "./MessageProfile";
 import classes from "./Message.module.css";
 import MessageUpdatedAt from "./MessageUpdatedAt";
+import { useEffect } from "react";
 
 interface dmProps {
   chatRoomType: string;
@@ -31,7 +32,7 @@ export default function Message({ dm }: { dm: dmProps }) {
           <UserCurrentAlias alias={dm.friendAlias} />
           <div className="flex justify-center items-center">
             <UserName name={dm.friendName} />
-            <UserStatus status={dm.state} />
+            {/* <UserStatus login={dm.login} status={""} /> */}
           </div>
         </div>
         <div className=" col-span-3">

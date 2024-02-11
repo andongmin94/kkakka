@@ -38,9 +38,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FriendType } from "@/types/friendTypes";
-import { useBuyWriteAliasPost } from "@/hooks/itemshop/mutations/useBuyWritealiasPost";
+// import { useBuyWriteAliasPost } from "@/hooks/itemshop/mutations/useBuyWritealiasPost";
 import classes from "./ItemShopCard.module.css";
-
+import axios from "axios";
 const FormSchema = z.object({
   userId: z.number(),
   textAlias: z.string().max(6, {
@@ -74,14 +74,14 @@ export default function WriteAlias({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit() {
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: "친구의 칭호가 변경되었습니다.",
+      // description: (
+      //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //     <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+      //   </pre>
+      // ),
     });
   }
 
@@ -93,9 +93,27 @@ export default function WriteAlias({
 
   // 구입 api 요청하기
   const itemBuyHandler = (data: dataType) => {
-    const mutation = useBuyWriteAliasPost(data);
-    const { mutate } = mutation;
-    mutate();
+    const token = localStorage.getItem("token");
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/alias?receiver-id=${
+          data.userId
+        }`,
+        {
+          aliasName: data.textAlias,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   // Item Card CSS 세팅
@@ -284,8 +302,7 @@ export default function WriteAlias({
                     type="submit"
                     variant="secondary"
                     className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       console.log(form.getValues());
 
                       // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
