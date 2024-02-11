@@ -101,7 +101,13 @@ export default function ProfilePage() {
           {/* 프로필 배경 */}
           <div className="border-8 rounded-2xl border-red-200">
             <div
-              className={`border-4 w-[1000px] h-[350px] flex-col m-1 border-blue-200 bg-[url("/image/profileBg.png")] bg-cover rounded-2xl`}
+              className={`border-4 w-[1000px] h-[350px] flex-col m-1 border-blue-200 rounded-2xl`}
+              style={{
+                backgroundImage: `url(${
+                  profileInfo && profileInfo.userBackImg
+                })`,
+                backgroundSize: "cover",
+              }}
             >
               <div className="flex justify-between m-1">
                 <div className="m-1 w-[550px] h-[220px]">
@@ -188,7 +194,13 @@ export default function ProfilePage() {
           {/* 프로필 배경 */}
           <div className="border-8 rounded-2xl w-full border-red-200 flex flex-col">
             <div
-              className={`border-4 w-full h-[350px] flex-col border-blue-200 bg-[url("/image/profileBg.png")] bg-cover rounded-2xl`}
+              className={`border-4 w-full h-[350px] flex-col border-blue-200 rounded-2xl`}
+              style={{
+                backgroundImage: `url(${
+                  profileInfo && profileInfo.userBackImg
+                })`,
+                backgroundSize: "cover",
+              }}
             >
               <div className="flex justify-between m-1">
                 <div className="m-1 w-[550px] h-[220px]">
