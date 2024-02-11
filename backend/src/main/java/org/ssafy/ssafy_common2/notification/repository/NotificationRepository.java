@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
 
-    List<Notification> findAllByUserAndIsCheckedIsFalseAndDeletedAtIsNull(User user);
+    List<Notification> findAllByUserAndIsCheckedIsFalseAndDeletedAtIsNullOrderByCreatedAtDesc(User user);
 
     // user의 읽지 않은 알림의 수
     Integer countByUserAndIsCheckedIsFalseAndDeletedAtIsNull(User user);
