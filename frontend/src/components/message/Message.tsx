@@ -20,7 +20,6 @@ interface dmProps {
   state: string;
   roomId: number;
   tenMinute: boolean;
-  login: boolean;
   unreadMessageCnt: number;
 }
 
