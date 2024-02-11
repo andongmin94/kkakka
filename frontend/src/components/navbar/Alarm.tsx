@@ -14,11 +14,13 @@ import {
 import useAlarmStore from "@/store/alarm/alarmStore";
 import { useCheckAlarm } from "@/hooks/alarm/mutations/useCheckAlarmPut";
 import axios from "axios";
+import { AlarmType } from "@/types/alarmTypes";
+import { useNavigate } from "react-router-dom";
 
 export function Alarm() {
   const { theme } = useTheme();
   const [position, setPosition] = useState("");
-
+  const navigate = useNavigate();
   const checkAlarmMutation = useCheckAlarm();
   const { mutate } = checkAlarmMutation;
 
@@ -32,6 +34,9 @@ export function Alarm() {
     setAlarmList,
     setNumOfUncheckedAlarm,
   } = useAlarmStore();
+
+  const userId = localStorage.getItem("userId");
+  const userEmail = localStorage.getItem("userEmail");
 
   useEffect(() => {
     axios
@@ -49,6 +54,14 @@ export function Alarm() {
         console.error("알람 정보를 가져오는데 실패했습니다.", err);
       });
   }, []);
+
+  const moveToAlarmContentHandler = (alarm: AlarmType) => {
+    if (alarm.frqEmail === userEmail) {
+      navigate(`/main/profile/${userId}`);
+    } else {
+      navigate(`/main/profile/${alarm.relatedContentId}`);
+    }
+  };
 
   return (
     <div>
@@ -78,6 +91,7 @@ export function Alarm() {
                     key={alarm.alarmId}
                     onClick={() => {
                       checkAlarmHandler(alarm.alarmId);
+                      moveToAlarmContentHandler(alarm);
                     }}
                   >
                     <div className="flex justify-center items-center">
