@@ -52,103 +52,113 @@ export default function Speaker({
   function onSubmit(data: z.infer<typeof FormSchema>) {
     // 구입 버튼을 누르면 텍스트를 보내준다.
     // 유효성 검사
-    if (
-      data.textSpeaker != undefined &&
-      data.textSpeaker.length > 1
-    ) {
-      
+    if (data.textSpeaker != undefined && data.textSpeaker.length > 1) {
       const token = localStorage.getItem("token");
 
       // 확성기 구매
       axios
-      .post(`${import.meta.env.VITE_API_BASE_URL}/api/friends/megaphone`, {
-        content: data.textSpeaker,
-      }, {
-        headers: {
-          Authorization: token,
-        },
-      }).then((res) =>  {
-        // 확성기 구매 성공
-        makeToast("확성기 구매 성공");
-        console.log(res)
-      })
-      .catch((error) => {
-        // 확성기 구매 실패
-        makeToast("확성기 구매 실패");
-        console.log(error)
-      })
+        .post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/friends/megaphone`,
+          {
+            content: data.textSpeaker,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          // 확성기 구매 성공
+          makeToast("확성기 구매 성공");
+          console.log(res);
+        })
+        .catch((error) => {
+          // 확성기 구매 실패
+          makeToast("확성기 구매 실패");
+          console.log(error);
+        });
 
       // 데이터 보내는거 확인 완료
       // console.log(data);
       setOpenDialog(false);
-    }
-    else {
-      console.log("유효성 검사 실패")
+    } else {
+      console.log("유효성 검사 실패");
     }
   }
 
-    // Item Card CSS 세팅
-    const containerRef = useRef<HTMLDivElement>(null);
-    const overlayRef = useRef<HTMLDivElement>(null);
-    const cardRef = useRef<HTMLDivElement>(null);
-  
-    useEffect(() => {
-      if (cardRef.current != null){
-        cardRef.current.style.backgroundImage = `url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAAEsCAMAAABgwwj8AAAAA1BMVEUTJ0OMCoK8AAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+BsYMAAFjd3WkAAAAAElFTkSuQmCC')`;
-      }
-    })
-  
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-      if (containerRef.current && overlayRef.current) {
-        const x = e.nativeEvent.offsetX;
-        const y = e.nativeEvent.offsetY;
-        const rotateY = (-1 / 5) * x + 20;
-        const rotateX = (4 / 30) * y - 20;
-  
-        overlayRef.current.style.filter = 'opacity(10)';
-        overlayRef.current.style.backgroundPosition = ` ${160-x}% ${250-y}%`;
-  
-        containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      }
-    };
-  
-    const handleMouseOut = () => {
-      if (overlayRef.current && containerRef.current) {
-        overlayRef.current.style.filter = 'opacity(0)';
-        containerRef.current.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
-      }
-    };
-  
-    const makeToast = (content: string) => {
-   
-      // 개인 포인트 조회
-      // const token = localStorage.getItem("token");
-  
-      // axios
-      // .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
-      //   headers: {
-      //     Authorization: token,
-      //   },
-      // })
-      // .then((res) => {
-      //   console.log("포인트조회", res.data.data.Point);
-      //   setMyPoint(res.data.data.Point);
-      // });
+  // Item Card CSS 세팅
+  const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-      toast({
-        title: "아이템 구매",
-        description: content,
-      })
+  // useEffect(() => {
+  //   if (cardRef.current != null) {
+  //     // cardRef.current.style.backgroundImage = `url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAAEsCAMAAABgwwj8AAAAA1BMVEUTJ0OMCoK8AAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+BsYMAAFjd3WkAAAAAElFTkSuQmCC')`;
+  //   }
+  // });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (containerRef.current && overlayRef.current) {
+      const x = e.nativeEvent.offsetX;
+      const y = e.nativeEvent.offsetY;
+      const rotateY = (-1 / 5) * x + 20;
+      const rotateX = (4 / 30) * y - 20;
+
+      overlayRef.current.style.filter = "opacity(10)";
+      overlayRef.current.style.backgroundPosition = ` ${160 - x}% ${250 - y}%`;
+
+      containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
+  };
+
+  const handleMouseOut = () => {
+    if (overlayRef.current && containerRef.current) {
+      overlayRef.current.style.filter = "opacity(0)";
+      containerRef.current.style.transform =
+        "perspective(350px) rotateY(0deg) rotateX(0deg)";
+    }
+  };
+
+  const makeToast = (content: string) => {
+    // 개인 포인트 조회
+    // const token = localStorage.getItem("token");
+
+    // axios
+    // .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
+    //   headers: {
+    //     Authorization: token,
+    //   },
+    // })
+    // .then((res) => {
+    //   console.log("포인트조회", res.data.data.Point);
+    //   setMyPoint(res.data.data.Point);
+    // });
+
+    toast({
+      title: "아이템 구매",
+      description: content,
+    });
+  };
 
   return (
     <Card className="border-0">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
-            <div className={`${classes.itemElemContainer}`} ref={containerRef} onMouseMove={handleMouseMove} onMouseOut={handleMouseOut}>
-              <div className={`${classes.itemElemOverlay}`} ref={overlayRef}></div>
-              <div className={`${classes.itemElemCard}`} ref={cardRef}>
-                <h1 className={`${classes.itemElemContent}`}>확성기</h1>
+          <div
+            className={`${classes.itemElemContainer} bg-gradient-to-r from-rose-200  to-amber-800 rounded-[3%]`}
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseOut={handleMouseOut}
+          >
+            <div
+              className={`${classes.itemElemOverlay}`}
+              ref={overlayRef}
+            ></div>
+            <div className={`${classes.itemElemCard}`} ref={cardRef}>
+              <div>📢</div>
+
+              <h1 className={`${classes.itemElemContent}`}>확성기</h1>
             </div>
           </div>
         </DialogTrigger>
@@ -219,7 +229,6 @@ export default function Speaker({
                     type="submit"
                     variant="secondary"
                     className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
-                    
                   >
                     구입
                   </Button>

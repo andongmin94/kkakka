@@ -54,51 +54,49 @@ export default function ItemshopPage() {
 
   return (
     <>
-      <div className="text-3xl mb-10 flex">
+      <div className="text-lg mb-10 flex ml-10">
         {/* <img src="/image/itemShop.png" className="h-[50px] w-[50px]" /> */}
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
       </div>
       {itemList && itemList.length > 0 && (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center ml-36">
           <div className="grid grid-cols-4 row-auto w-[1000px] h-[900px]">
-            {itemList.map((item, index) => (
-              <div key={index} className="flex flex-col items-center">
-                {item.itemName === "칭호 지정권" && (
-                  <WriteAlias
-                    itemName={item.itemName}
-                    itemPrice={item.itemPrice}
-                    itemDesc={item.itemDesc}
-                    myPoint={point}
-                    friends={friendList}
-                  />
-                )}
-                {/* {item.itemName === "도감 삭제권" && (
-                  <DeleteCollection
-                    itemName={item.itemName}
-                    itemPrice={item.itemPrice}
-                    // itemDesc={item.itemDesc}
-                    myPoint={point}
-                  />
-                )} */}
-                {item.itemName === "강제 칭찬권" && (
-                  <Compliment
-                    itemName={item.itemName}
-                    itemPrice={item.itemPrice}
-                    // itemDesc={item.itemDesc}
-                    myPoint={point}
-                    friends={friendList}
-                  />
-                )}
-                {item.itemName === "확성기" && (
-                  <Speaker
-                    itemName={item.itemName}
-                    itemPrice={item.itemPrice}
-                    // itemDesc={item.itemDesc}
-                    myPoint={point}
-                  />
-                )}
-              </div>
-            ))}
+            {itemList.map(
+              (item, idx) =>
+                idx !== 1 && (
+                  <div
+                    key={item.itemName}
+                    className="flex flex-col items-center"
+                  >
+                    {item.itemName === "칭호 지정권" && (
+                      <WriteAlias
+                        itemName={item.itemName}
+                        itemPrice={item.itemPrice}
+                        itemDesc={item.itemDesc}
+                        myPoint={point}
+                        friends={friendList}
+                      />
+                    )}
+                    {item.itemName === "강제 칭찬권" && (
+                      <Compliment
+                        itemName={item.itemName}
+                        itemPrice={item.itemPrice}
+                        // itemDesc={item.itemDesc}
+                        myPoint={point}
+                        friends={friendList}
+                      />
+                    )}
+                    {item.itemName === "확성기" && (
+                      <Speaker
+                        itemName={item.itemName}
+                        itemPrice={item.itemPrice}
+                        // itemDesc={item.itemDesc}
+                        myPoint={point}
+                      />
+                    )}
+                  </div>
+                )
+            )}
           </div>
         </div>
       )}
@@ -106,3 +104,12 @@ export default function ItemshopPage() {
     </>
   );
 }
+
+//  {item.itemName === "도감 삭제권" && (
+//                   <DeleteCollection
+//                     itemName={item.itemName}
+//                     itemPrice={item.itemPrice}
+//                     // itemDesc={item.itemDesc}
+//                     myPoint={point}
+//                   />
+//                 )}
