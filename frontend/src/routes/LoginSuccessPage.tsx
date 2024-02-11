@@ -1,12 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 // const electron = window.electron;
+import { useEffect } from "react";
+import useAlarmStore from "@/store/alarm/alarmStore";
+import axios from "axios";
 
 export default function LoginSuccessPage() {
   const navigate = useNavigate();
   const gotoMainHandler = () => {
     navigate("/main");
   };
+
+  const { setAlarmList, setNumOfUncheckedAlarm } = useAlarmStore();
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/alarm`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setAlarmList(res.data.data.alarmList);
+        setNumOfUncheckedAlarm(res.data.data.numOfUncheckedAlarm);
+      });
+  }, []);
 
   return (
     <>
