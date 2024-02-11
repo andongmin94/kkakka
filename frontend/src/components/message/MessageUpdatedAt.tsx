@@ -1,5 +1,5 @@
 interface updatedAtProps {
-  updatedAt: number;
+  updatedAt: Date;
 }
 
 export default function MessageUpdatedAt({ updatedAt }: updatedAtProps) {
@@ -7,7 +7,7 @@ export default function MessageUpdatedAt({ updatedAt }: updatedAtProps) {
   // const timeDiff = "1일 전";
   return (
     <>
-      <div>{updatedAt}</div>
+      <div>{updatedAt && updatedAt.toString()}</div>
     </>
   );
 }

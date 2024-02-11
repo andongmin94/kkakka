@@ -14,15 +14,15 @@ export default function IndexPage() {
       <PC>
         <div>
           <div className="text-xl mb-0 flex">
-            <p className="grid ml-2 font-bold">라이브</p>
+            <p className="grid font-bold ml-10">라이브</p>
           </div>
           <div className="h-[100px] w-[1200px] flex flex-col items-center">
             <LiveContentCarousel />
           </div>
           <div className="text-xl mt-[350px] mb-10 flex ">
-            <p className="grid  ml-2 font-bold">새로 올라온 도감</p>
+            <p className="grid  ml-10 font-bold">새로 올라온 도감</p>
           </div>
-          <div className="grid grid-cols-2 gap-y-5 mb-5 w-[1050px]">
+          <div className="grid grid-cols-2 gap-y-5 mb-5 w-[1050px] ml-10">
             {/* 도감 리스트 */}
             <NewDogamList />
           </div>

@@ -72,9 +72,7 @@ export default function Comment({
           <p className="mx-1 font-bold text-lg">
             {dogamcomment.commentUserName}
           </p>
-          <div className="flex items-center ml-2">
-            {/* <CommentAlias alias={data.commentAlias} /> 댓글에는 따로 alias 안보내줌 */}
-          </div>
+          <div className="flex items-center ml-2"></div>
           {/* 자기일때만 삭제버튼 보이게 */}
           {dogamcomment.commentUserId === loginUserId ? (
             <div className="flex ml-2">
