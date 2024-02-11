@@ -273,11 +273,10 @@ function sendMessageToSocket(message) {
 function onMessageReceivedFromSocket (payload){
   
   var chat = JSON.parse(payload.body);
-  console.log("들어온 메세지:" + payload.body);
+  // console.log("들어온 payload:" + payload.body);
   console.log("들어온 메세지:" + chat.content);
-  // if (chat.userName !== userInfo.userName) {
-    showNotification(chat.userName, chat.content, chat.imgCode)
-  // }
+  // if (chat.userName !== userInfo.userName)
+    showNotification(chat.userName, chat.content, chat.imgCode);
   
   const messageDTO = {
     isUser: chat.userId === TESTUSER? true : false,
