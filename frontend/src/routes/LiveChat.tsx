@@ -255,7 +255,7 @@ export default function LiveChat() {
 
     return () => {
       stompClient.send(
-        "/pub/chat/enterUser",
+        "/pub/chat/exitChatRoom",
         clientHeader,
         JSON.stringify({
           messageType: "QUIT",

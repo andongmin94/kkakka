@@ -1,6 +1,7 @@
 package org.ssafy.ssafy_common2.chatting.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ import java.util.*;
 
 import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatRoomMySQLService {
@@ -155,7 +157,7 @@ public class ChatRoomMySQLService {
             System.out.println(temp.get(i).getChatJoinId().getChatRoomId());
 
             // 6-3) 채팅방 번호로 메세지 정보 얻기
-            Message lastMessage = messageRepository.getLastMessage(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
+            Message lastMessage = messageRepository.findTopByChatJoin_ChatRoom_IdOrderByCreatedAtDesc(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
             if(lastMessage != null) {
                 element.setLastMessage(lastMessage.getContent());
                 element.setLastWrittenMessageTime(lastMessage.getCreatedAt());
@@ -166,7 +168,7 @@ public class ChatRoomMySQLService {
             }
 
             // 6-4) 채팅방 안 읽은 메세지 수 구하기
-            int unReadMessageCnt = messageRepository.getUnreadMessageCnt(temp.get(i).getChatJoinId().getChatRoomId()).orElse(0);
+            int unReadMessageCnt = messageRepository.getUnreadMessageCnt(temp.get(i).getChatJoinId().getChatRoomId(), userId).orElse(0);
             element.setUnreadMessageCnt(unReadMessageCnt);
 
             // 6-5) 답속에 포함
@@ -295,6 +297,8 @@ public class ChatRoomMySQLService {
         ChatRoom myRoom = chatRoomRepository.findChatRoomByChatRoomTypeAndChatOwnerEmailAndDeletedAtIsNull(ChatRoom.ChatRoomType.MANY, user.getKakaoEmail()).orElse(null);
 
         if(myRoom != null){
+            Mine.setPlayerId(user.getId());
+            Mine.setPlayerAlias(user.getUserInfoId().getCurAlias());
             Mine.setPlayerEmail(user.getKakaoEmail());
             Mine.setPlayerName(user.getUserName());
             Mine.setRoomTitle(RandomPickRoomTitle());
