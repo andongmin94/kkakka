@@ -9,13 +9,16 @@ import UserCurrentAlias from "@/components/UserCurrentAlias";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserType } from "@/types/userTypes";
+import ProfileEdit from "@/components/profile/ProfileEdit";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const params = useParams();
   const userId = params.id;
   const token = localStorage.getItem("token");
   const [profileInfo, setProfileInfo] = useState<UserType>();
-
+  const myId = localStorage.getItem("userId");
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${userId}`, {
@@ -57,7 +60,9 @@ export default function ProfilePage() {
         }
       )
       .then((res: any) => {
-        console.log("채팅방 입장성공", res);
+        console.log("채팅방 입장성공", res.data.data);
+        const roomId = res.data.data;
+        navigate(`/main/message/${roomId}`);
       });
   };
 
@@ -122,38 +127,43 @@ export default function ProfilePage() {
                     {/* <Check check={check} /> */}
                   </div>
                   {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
-                  <div>
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                      onClick={() => {
-                        enterChatHandler();
-                      }}
-                    >
-                      메세지
-                    </Button>
-                    {(friendship === "FRIEND" && (
-                      <Button onClick={changeFriendStatusHandler}>
-                        친구끊기
+
+                  {userId === myId ? (
+                    <ProfileEdit />
+                  ) : (
+                    <div>
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                        onClick={() => {
+                          enterChatHandler();
+                        }}
+                      >
+                        메세지
                       </Button>
-                    )) ||
-                      (friendship === "RECEIVE" && (
+                      {(friendship === "FRIEND" && (
                         <Button onClick={changeFriendStatusHandler}>
-                          수락
+                          친구끊기
                         </Button>
                       )) ||
-                      (friendship === "SEND" && (
-                        <Button onClick={changeFriendStatusHandler}>
-                          요청취소
-                        </Button>
-                      )) ||
-                      (friendship === "NONE" && (
-                        <Button onClick={changeFriendStatusHandler}>
-                          친구신청
-                        </Button>
-                      ))}
-                  </div>
+                        (friendship === "RECEIVE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            수락
+                          </Button>
+                        )) ||
+                        (friendship === "SEND" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            요청취소
+                          </Button>
+                        )) ||
+                        (friendship === "NONE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            친구신청
+                          </Button>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
@@ -213,35 +223,42 @@ export default function ProfilePage() {
                     {/* <Check check={check} /> */}
                   </div>
                   {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
-                  <div>
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                    >
-                      메세지
-                    </Button>
-                    {(friendship === "FRIEND" && (
-                      <Button onClick={changeFriendStatusHandler}>
-                        친구끊기
+                  {userId === myId ? (
+                    <ProfileEdit />
+                  ) : (
+                    <div>
+                      <Button
+                        type="submit"
+                        variant="secondary"
+                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                        onClick={() => {
+                          enterChatHandler();
+                        }}
+                      >
+                        메세지
                       </Button>
-                    )) ||
-                      (friendship === "RECEIVE" && (
+                      {(friendship === "FRIEND" && (
                         <Button onClick={changeFriendStatusHandler}>
-                          수락
+                          친구끊기
                         </Button>
                       )) ||
-                      (friendship === "SEND" && (
-                        <Button onClick={changeFriendStatusHandler}>
-                          요청취소
-                        </Button>
-                      )) ||
-                      (friendship === "NONE" && (
-                        <Button onClick={changeFriendStatusHandler}>
-                          친구신청
-                        </Button>
-                      ))}
-                  </div>
+                        (friendship === "RECEIVE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            수락
+                          </Button>
+                        )) ||
+                        (friendship === "SEND" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            요청취소
+                          </Button>
+                        )) ||
+                        (friendship === "NONE" && (
+                          <Button onClick={changeFriendStatusHandler}>
+                            친구신청
+                          </Button>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[5px] justify-between">
