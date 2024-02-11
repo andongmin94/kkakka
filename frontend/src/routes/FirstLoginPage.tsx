@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 import { useUserDataPut } from "@/hooks/user/mutations/useUserDataPut";
 // const electron = window.electron;
 import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-import usePointStore from "@/store/user/pointStore";
-import { usePoint } from "@/hooks/user/queries/useUserPointQuery";
 import { Input } from "@/components/ui/input";
 
 export default function FirstLoginPage() {

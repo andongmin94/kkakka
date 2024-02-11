@@ -19,6 +19,8 @@ export default function AddCollection({ userId }: { userId: number }) {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [addedDogams, setAddedDogams] = useState<string[]>([]);
 
+  console.log(addedDogams);
+
   useEffect(() => {
     if (successMessage) {
       setAddedDogams((prevDogams) => [...prevDogams, dogamTitle]);
@@ -140,7 +142,7 @@ export default function AddCollection({ userId }: { userId: number }) {
               <div className="flex gap-x-5 justify-center">
                 {dogamImage ? (
                   <img
-                    src={dogamImage}
+                    src={URL.createObjectURL(dogamImage)}
                     className="rounded-lg bg-cover h-[200px] w-[320px] border-2"
                     alt="도감 이미지"
                   />
