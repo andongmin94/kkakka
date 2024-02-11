@@ -90,7 +90,7 @@ public class ChatRoomMySQLService {
         chatJoinRepository.save(ChatJoin.of(new ChatJoinId(), user, chatRoom, betPrice, isWin));
     }
 
-    // 6) 현재 유저가 참여한 채팅방 리스트 정보 반환 하기
+    // 6) 현재 유저가 참여한 1대1 채팅방 리스트 정보 반환 하기
     public List<ChatRoomInfoDto> getChatRoomInfo (long userId) {
 
         // 유저 아이디로 그 사람이 참여한 모든 채팅방 번호를 얻기 (chatJoin 객체 다 가져옴)
@@ -119,16 +119,23 @@ public class ChatRoomMySQLService {
             element.setFriendName(Optional.ofNullable(roomInfo.getChatOwnerName()).orElse("해당 채팅방 주인의 이름을 찾지 못했습니다."));
             element.setTenMinute(Optional.ofNullable(roomInfo.isTenMinute()).orElse(false));
 
-            // 참여한 사람들 List 얻기
+            // 6-2) 유저 아이디로 유저 정보 얻기
+            User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
-            // 참여 정보 얻기
+            if(friend !=null) {
+                element.setFriendId(friend.getId());
+            }
+
+            // 6-3) 참여한 사람들 List 얻기
+
+            // 6-3-a) 참여 정보 얻기
             List<ChatJoin> chatJoin = chatJoinRepository.findChatJoinByChatJoinId_ChatRoomId(roomInfo.getId());
 
 
-            // 빈 객체
+            // 6-3-b) 빈 객체
             ArrayList<CrowdDto> crowdList = new ArrayList<>();
 
-            // 값 넣기
+            // 6-3-c) 값 넣기
             for (int j = 0; j < chatJoin.size(); j++) {
                 CrowdDto one = new CrowdDto();
                 User crowdMember = userRepository.findByIdAndDeletedAtIsNull(chatJoin.get(j).getUser().getId()).orElse(null);
@@ -137,6 +144,15 @@ public class ChatRoomMySQLService {
                 one.setAttenderProfileImg(crowdMember.getKakaoProfileImg());
                 one.setAttenderName(crowdMember.getUserName());
 
+                if(userId != crowdMember.getId()){
+                    element.setFriendId(crowdMember.getId());
+                    element.setFriendEmail(crowdMember.getKakaoEmail());
+                    element.setFriendImgUrl(crowdMember.getKakaoProfileImg());
+                    element.setFriendAlias(crowdMember.getUserInfoId().getCurAlias());
+                    element.setLogin(crowdMember.getUserInfoId().isLogin());
+                    element.setFriendName(crowdMember.getUserName());
+                }
+
                 crowdList.add(one);
             }
 
@@ -144,17 +160,7 @@ public class ChatRoomMySQLService {
             element.setCrowdDtoList(crowdList);
 
 
-            // 6-2) 유저 아이디로 유저 정보 얻기
-            User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(roomInfo.getChatOwnerEmail()).orElse(null);
 
-            if(friend !=null) {
-                element.setFriendId(friend.getId());
-                element.setFriendImgUrl(friend.getKakaoProfileImg());
-                element.setFriendAlias(friend.getUserInfoId().getCurAlias());
-                element.setLogin(friend.getUserInfoId().isLogin());
-            }
-
-            System.out.println(temp.get(i).getChatJoinId().getChatRoomId());
 
             // 6-3) 채팅방 번호로 메세지 정보 얻기
             Message lastMessage = messageRepository.findTopByChatJoin_ChatRoom_IdOrderByCreatedAtDesc(temp.get(i).getChatJoinId().getChatRoomId()).orElse(null);
