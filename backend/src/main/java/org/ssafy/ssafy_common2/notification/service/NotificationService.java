@@ -91,7 +91,7 @@ public class NotificationService {
     public NotificationListResponseDto getNoficiationList(User user) {
 
         NotificationListResponseDto responseDto = NotificationListResponseDto.from(
-                notificationRepository.findAllByUserAndIsCheckedIsFalseAndDeletedAtIsNull(user).stream()
+                notificationRepository.findAllByUserAndIsCheckedIsFalseAndDeletedAtIsNullOrderByCreatedAtDesc(user).stream()
                 .map(NotificationResponseDto::of).toList()
         );
 
