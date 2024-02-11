@@ -106,9 +106,9 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
         <Popover>
           <PopoverTrigger asChild>
             {theme === "light" ? (
-              <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" />
+              <div className="text-2xl">💬</div>
             ) : (
-              <div className="bg-[url('/image/comment_dark.png')] h-10 w-10 bg-cover" />
+              <div className="h-10 w-10 ">💬</div>
             )}
           </PopoverTrigger>
           <PopoverContent className="w-[700px]">
@@ -192,7 +192,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
       <Mobile>
         <Popover>
           <PopoverTrigger asChild>
-            <div className="bg-[url('/image/comment.png')] h-10 w-10 bg-cover" />
+            <div className="h-10 w-10">🗨</div>
           </PopoverTrigger>
           <PopoverContent className="w-[500px]">
             <div className="grid gap-4 w-full">
