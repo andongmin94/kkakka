@@ -1,9 +1,16 @@
+FROM node:alpine as builder
+WORKDIR /frontend
+COPY package.json .
+RUN npm install
+COPY ./ ./
+RUN npm run build
+
 FROM nginx:alpine
 RUN rm -rf /etc/nginx/sites-available/nginx.conf
 COPY ./nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
 
 RUN rm -rf /var/www/html/*
-COPY /dist /var/www/html
+COPY --from=builder /frontend/dist /var/www/html
 
 EXPOSE 80
 EXPOSE 443
