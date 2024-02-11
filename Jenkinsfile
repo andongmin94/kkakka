@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'osy9536'
-        DOCKER_FE_IMAGE = 'ssafy-fe'
-        DOCKER_BE_IMAGE = 'ssafy-be'
+        BuildGradle     = credentials('build.gradle')
+        Mat_Endpoint    = credentials('CICD_mat_endpoint')
+        // AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
-
     stages {
-        stage('MM-Alarm') {
-            steps {
+        stage('MM-Alarm'){
+            steps{
                 script {
                     def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                     def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
@@ -20,37 +19,46 @@ pipeline {
                     )
                 }
             }
-        }
+        } 
+  
 
-        stage('Clone') {
+        stage('Clone') { 
             steps {
                 echo '클론을 시작!'
                 git branch: 'nginx', credentialsId: 'docker-hub', url: 'https://lab.ssafy.com/s10-webmobile2-sub2/S10P12D110.git'
                 echo '클론을 완료!'
             }
         }  
-
+      
         stage('BE-Build') {
             steps {
                 echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
                     sh "chmod +x ./gradlew"
+
+                    // sh "touch ./build.gradle" 
+ 
+                    // application properties 파일 복사
+                    // sh "echo $BuildGradle > ./build.gradle"
+            
                     sh "./gradlew clean build --exclude-task test"
+                
                 }
                 echo '백엔드 빌드 및 테스트 완료!' 
             }
         }
-
+  
         stage('Build Back Docker Image') {
             steps {
                 echo '백엔드 도커 이미지 빌드 시작!'
                 dir("./backend") {
-                    sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_BE_IMAGE}:latest ."
+                    // 빌드된 JAR 파일을 Docker 이미지로 빌드
+                    sh "docker build -t osy9536/ssafy-be:latest ."
                 }
                 echo '백엔드 도커 이미지 빌드 완료!'
             }
         }
-
+ 
         stage('Push to Docker Hub-BE') {
             steps {
                 echo '백엔드 도커 이미지를 Docker Hub에 푸시 시작!'
@@ -67,11 +75,12 @@ pipeline {
         stage('Deploy to EC2-BE') {
             steps {
                 echo '백엔드 EC2에 배포 시작!'
+                // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
                 sshagent(['aws-key']) { 
                     sh "docker rm -f backend"
                     sh "docker rmi osy9536/ssafy-be:latest"
                     sh "docker image prune -f"
-                    sh "docker-compose -f docker-compose.yml up -d"
+                    sh "docker pull osy9536/ssafy-be:latest && docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
                 }
                 echo '백엔드 EC2에 배포 완료!'
             } 
@@ -92,11 +101,12 @@ pipeline {
             steps {
                 echo '프론트 도커 이미지 빌드 시작!'
                 dir("./frontend") {
-                    sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_FE_IMAGE}:latest ."
+                    // 빌드된 파일을 Docker 이미지로 빌드
+                    sh "docker build -t osy9536/ssafy-fe:latest ."
                 }
                 echo '프론트 도커 이미지 빌드 완료!'
             }
-        }
+        } 
 
         stage('Push to Docker Hub-FE') {
             steps {
@@ -114,15 +124,17 @@ pipeline {
         stage('Deploy to EC2-FE') {
             steps {
                 echo '프론트 EC2에 배포 시작!'
+                // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
                 sshagent(['aws-key']) { 
                     sh "docker rm -f frontend"
                     sh "docker rmi osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
-                    sh "docker-compose -f docker-compose.yml up -d"
+                    sh "docker run -d -p 80:80 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
             } 
         }
+
     }
 
     post {
