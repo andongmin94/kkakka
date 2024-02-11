@@ -88,9 +88,6 @@ export default function ProfilePage() {
           window.alert("친구 관계를 끊었습니다.");
         }
       })
-      .then(() => {
-        window.location.reload();
-      })
       .catch((err) => {
         console.error("친구상태변경실패", err);
         window.alert("오류가 발생했습니다. 다시 시도해주세요.");
@@ -109,9 +106,9 @@ export default function ProfilePage() {
               <div className="flex justify-between m-1">
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
-                    {/* <ProfileImage
+                    <ProfileImage
                       userImg={profileInfo && profileInfo.userProfileImg}
-                    /> */}
+                    />
                   </div>
                 </div>
                 <div className="m-1 w-[550px] h-[200px] flex justify-end">
