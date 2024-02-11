@@ -149,7 +149,7 @@ export default function RootLayout() {
         <ToTheTop />
 
         <div
-          className="py-7 bg-no-repeat bg-fixed w-screen h-screen"
+          className="py-7 bg-no-repeat bg-fixed"
           style={{
             backgroundImage: `url(https://example.invalid/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
           }}
