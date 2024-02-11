@@ -75,7 +75,9 @@ export function Alarm() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-30 text-center">
           <DropdownMenuLabel>
-            {numOfUncheckedAlarm}개의 알림이 있습니다.
+            {numOfUncheckedAlarm !== 0
+              ? `${numOfUncheckedAlarm}개의 알림이 있어요.`
+              : "모든 알림을 확인했어요."}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
@@ -83,7 +85,7 @@ export function Alarm() {
             value={position}
             onValueChange={setPosition}
           >
-            {alarmList &&
+            {alarmList.length > 0 &&
               alarmList.map((alarm) => {
                 return (
                   <DropdownMenuRadioItem
