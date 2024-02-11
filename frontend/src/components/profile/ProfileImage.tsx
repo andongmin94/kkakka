@@ -5,7 +5,8 @@ interface data {
 export default function ({ userImg }: data) {
   return (
     <div
-      className={`bg-[url('${userImg}')] h-full w-full bg-cover rounded-full`}
-    />
+      className={` h-full w-full rounded-full`}
+      style={{ backgroundImage: `url(${userImg})`, backgroundSize: "cover" }}
+    ></div>
   );
 }
