@@ -2,7 +2,7 @@ import cn from "clsx";
 const electron = window.electron;
 import { useEffect, useState } from "react";
 import { Alarm } from "@/components/navbar/Alarm";
-import useUserStore from "@/store/user/userStore";
+// import useUserStore from "@/store/user/userStore";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
@@ -14,7 +14,7 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
+// import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
 // import { UserType } from "@/types/userTypes";
 import axios from "axios";
 
@@ -22,21 +22,21 @@ export default function RootLayout() {
   const { pathname } = useLocation();
   const { theme } = useTheme();
 
-  const { useUserDataQuery } = useUserData();
-  const { setUserInfo } = useUserStore();
-  const { data: userData, refetch } = useUserDataQuery();
+  // const { useUserDataQuery } = useUserData();
+  // const { setUserInfo } = useUserStore();
+  // const { data: userData, refetch } = useUserDataQuery();
 
-  useEffect(() => {
-    if (userData) {
-      setUserInfo(userData);
-    } else {
-      console.log("유저 정보 없음");
-    }
-  }, [userData]);
+  // useEffect(() => {
+  //   if (userData) {
+  //     setUserInfo(userData);
+  //   } else {
+  //     console.log("유저 정보 없음");
+  //   }
+  // }, [userData]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [refetch]);
 
   // const { setPoint } = usePointStore();
   // const { usePointQuery } = usePoint();
