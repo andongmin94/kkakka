@@ -215,11 +215,11 @@ export default function WriteAlias({
                               {friends.map((friend) => (
                                 <CommandItem
                                   value={friend.name}
-                                  key={friend.id}
+                                  key={friend.userId}
                                   onSelect={() => {
                                     // 콤보박스에 선택한 값이 들어가도록 하는 것
                                     form.setValue("name", friend.name);
-                                    form.setValue("userId", friend.id);
+                                    form.setValue("userId", friend.userId);
                                     setOpen(false);
                                   }}
                                 >

@@ -46,7 +46,7 @@ export default function FriendsBtn() {
           <div className={classes.scrollbar}>
             {/* 친구 카드 생성 */}
             {friendList.map((friend: FriendType) => {
-              return <FriendsCard key={friend.id} info={friend} />;
+              return <FriendsCard key={friend.userId} info={friend} />;
             })}
           </div>
         </SheetHeader>
