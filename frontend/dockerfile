@@ -3,7 +3,7 @@ RUN rm -rf /etc/nginx/sites-available/nginx.conf
 COPY ./nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
 
 RUN rm -rf /var/www/html/*
-COPY /build /var/www/html
+COPY /dist /var/www/html
 
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
