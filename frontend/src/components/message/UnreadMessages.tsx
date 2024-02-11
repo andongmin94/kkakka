@@ -9,7 +9,9 @@ export default function UnreadMessages({
   return (
     <>
       <div className={classes.circle}>
-        <div className={classes.circleText}>{unreadMessageNum}</div>
+        <div className={classes.circleText}>
+          {unreadMessageNum < 99 ? unreadMessageNum : 99}
+        </div>
       </div>
     </>
   );

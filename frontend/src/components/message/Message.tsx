@@ -39,7 +39,7 @@ export default function Message({ dm }: { dm: dmProps }) {
           <MessagePeek lastMessage={dm.lastMessage} />
         </div>
         <UnreadMessages unreadMessageNum={dm.unreadMessageCnt} />
-        <MessageUpdatedAt updatedAt={dm.unreadMessageCnt} />
+        <MessageUpdatedAt updatedAt={dm.lastWrittenMessageTime} />
       </div>
     </>
   );
