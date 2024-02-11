@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2.dogam.entity.Dogam;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.service.ItemDealService;
 import org.ssafy.ssafy_common2.notification.dto.NotificationDto;
@@ -19,6 +20,7 @@ import org.ssafy.ssafy_common2.user.repository.AliasRepository;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -74,7 +76,7 @@ public class AliasService {
     public List<AliasResponseDto> getAliasList(User user) {
 
         List<Alias> aliasList = aliasRepository.findByUserAndDeletedAtIsNull(user);
-
+        aliasList.sort(Comparator.comparing(Alias::getCreatedAt).reversed());
         return aliasList.stream().map((alias) ->
                 AliasResponseDto.of(alias.getAliasName(), alias.getCreatedAt(), alias.getItemDealList().getUser().getUserName())
         ).toList();
