@@ -30,7 +30,7 @@ public class EnforcementService {
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_RECEIVER));
 
         // 아이템 거래 내역 생성
-        ItemDealList itemDealList = itemDealService.buyItem(attacker, "강제칭찬권");
+        ItemDealList itemDealList = itemDealService.buyItem(attacker, "강제 칭찬권");
 
         // 칭찬권 생성
         Enforcement enforcement = Enforcement.of(attacker.getKakaoEmail(), defender.getKakaoEmail(), requestDto.getEnfScript());
