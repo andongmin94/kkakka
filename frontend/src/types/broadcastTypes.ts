@@ -6,7 +6,7 @@ export interface CrowdType {
 }
 
 export interface BroadcastItemType {
-  [x: string]: string;
+  // [x: string]: string;
   playerId: number;
   playerEmail: string;
   playerName: string;
@@ -15,7 +15,6 @@ export interface BroadcastItemType {
   roomId: number;
   roomTitle: string;
   crowdDtoList: CrowdType[];
-  playerProfilePic: string;
 }
 
 export interface BroadcastListResponse {
