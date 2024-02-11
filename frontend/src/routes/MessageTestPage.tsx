@@ -321,14 +321,16 @@ export default function MessageTestPage() {
               />
               <div className="flex flex-col items-center gap-3">
                 {/* 칭호 */}
-                <MessageAlias alias={friendsInfo.userAlias} />
+                <MessageAlias alias={friendsInfo && friendsInfo.userAlias} />
                 {/* 이름 */}
-                <p className="font-bold text-2xl">{friendsInfo.userName}</p>
+                <p className="font-bold text-2xl">
+                  {friendsInfo && friendsInfo.userName}
+                </p>
               </div>
             </div>
             {/* 프로필 보기 버튼 */}
             {/* 해당 사람의 프로필로 이동한다 */}
-            <Link to={`/main/profile/${friendsInfo.userId}`}>
+            <Link to={`/main/profile/${friendsInfo && friendsInfo.userId}`}>
               <Button
                 type="submit"
                 variant="secondary"
