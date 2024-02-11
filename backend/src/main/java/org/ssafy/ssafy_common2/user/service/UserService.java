@@ -91,7 +91,7 @@ public class UserService {
         //(3)
         if (user == null) {
 
-            DynamicUserInfo userInfo = DynamicUserInfo.of(100, false, 0, "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%ED%8B%B0%EB%AA%A8+%EB%B0%B0%EA%B2%BD.jpg");
+            DynamicUserInfo userInfo = DynamicUserInfo.of(100, false, 0, "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg");
             user = User.of(
                     profile.getId(),
                     profile.getKakao_account().getProfile().getProfile_image_url(),
