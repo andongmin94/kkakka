@@ -1,31 +1,39 @@
+/* 흰 배경 부분 */
+.whole {
+  width: 80%;
+  height: 100%;
+  background-color: white;
+  border-radius: 20px;
+  margin: auto;
+  margin-top: 20px;
+}
+
 /* 전체 화면 영역 */
 .page {
+  position: relative;
   display: flex;
+  overflow: hidden;
   width: 100%;
   height: 100%;
 }
 
 /* 사이드바 영역 */
 .section_left {
-  position: fixed;
-  width: 17%;
-  height: 90%;
+  /* position: fixed; */
   /* background-color: rgba(255, 255, 255, 0.9); */
   /* background-color: white; */
-  box-shadow: 1px 5px 5px 1px gainsboro;
-  border-radius: 20px;
+  /* border-radius: 20px; */
+  box-shadow: 2px 0px 5px -2px rgb(19, 18, 18);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
-  margin-left: 1%;
+  width: 22%;
 }
 
 /* 사이드바 메뉴 */
 .menu {
   display: flex;
   justify-content: center;
-  width: 95%;
   border-radius: 10px;
   text-decoration: none;
   /* color: black; */
@@ -88,12 +96,12 @@ menu:hover::before {
 
 /* 네브바와 메인 페이지를 포함하는 영역 */
 .section_right {
-  position: relative;
+  /* position: absolute; */
+  right: 0;
   /* background-color: white; */
-  width: 100%;
+  width: 78%;
   height: 100%;
-  margin-left: 22%;
-  margin-right: 5%;
+  /* margin-right: 5%; */
 }
 
 .section_right_M {
@@ -109,12 +117,13 @@ menu:hover::before {
 /* 네브바 */
 .nav {
   position: fixed;
-  width: 74%;
+  width: auto;
   height: 60px;
   background-color: rgba(255, 255, 255, 0.9);
-  margin-top: 10px;
+  margin: 10px;
+  right: 10%;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   border-radius: 20px;
   border: 4px solid rgb(255, 255, 255);
