@@ -122,11 +122,11 @@ export default function WriteAlias({
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (cardRef.current != null) {
-      cardRef.current.style.backgroundImage = `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfP6YEtvDE4IhCTv0534ffLaaVFlE8RB34Uw&usqp=CAU')`;
-    }
-  });
+  // useEffect(() => {
+  //   if (cardRef.current != null) {
+  //     // cardRef.current.style.backgroundImage = `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfP6YEtvDE4IhCTv0534ffLaaVFlE8RB34Uw&usqp=CAU')`;
+  //   }
+  // });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (containerRef.current && overlayRef.current) {
@@ -156,7 +156,7 @@ export default function WriteAlias({
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
           <div
-            className={`${classes.itemElemContainer}`}
+            className={`${classes.itemElemContainer} bg-gradient-to-r from-amber-300 to-amber-600 rounded-[3%]`}
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseOut={handleMouseOut}
@@ -166,6 +166,7 @@ export default function WriteAlias({
               ref={overlayRef}
             ></div>
             <div className={`${classes.itemElemCard}`} ref={cardRef}>
+              <div>👑</div>
               <h1 className={`${classes.itemElemContent}`}>칭호지정권</h1>
             </div>
           </div>
