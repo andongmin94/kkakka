@@ -71,8 +71,7 @@ public class MegaphoneService {
                     .reconnectTime(1000L)
                     .data(megaphone)
             );
-        }
-        catch (IOException exception) {
+        } catch (IllegalStateException | IOException exception){
             emitter.complete();
             emitterRepository.deleteById(emitterId);
         }

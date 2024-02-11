@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -230,7 +229,6 @@ export default function Speaker({
           </div>
         </DialogContent>
       </Dialog>
-      <Toaster />
     </Card>
   );
 }
