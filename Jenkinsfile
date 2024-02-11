@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     environment {
-        BuildGradle     = credentials('build.gradle')
-        Mat_Endpoint    = credentials('CICD_mat_endpoint')
-        // AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+        DOCKER_REGISTRY = 'osy9536'
+        DOCKER_FE_IMAGE = 'ssafy-fe'
+        DOCKER_BE_IMAGE = 'ssafy-be'
     }
+
     stages {
-        stage('MM-Alarm'){
-            steps{
+        stage('MM-Alarm') {
+            steps {
                 script {
                     def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                     def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
@@ -21,31 +22,53 @@ pipeline {
             }
         }
 
-
-        stage('Clone') { 
+        stage('Clone') {
             steps {
                 echo '클론을 시작!'
                 git branch: 'nginx', credentialsId: 'docker-hub', url: 'https://lab.ssafy.com/s10-webmobile2-sub2/S10P12D110.git'
                 echo '클론을 완료!'
             }
         }  
-      
+
         stage('BE-Build') {
             steps {
                 echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
-                    sh "chmod +x ./gradlew"
-
-                    // sh "touch ./build.gradle" 
- 
-                    // application properties 파일 복사
-                    // sh "echo $BuildGradle > ./build.gradle"
-            
                     sh "./gradlew clean build --exclude-task test"
-                
                 }
                 echo '백엔드 빌드 및 테스트 완료!' 
             }
+        }
+
+        stage('Build Back Docker Image') {
+            steps {
+                echo '백엔드 도커 이미지 빌드 시작!'
+                dir("./backend") {
+                    sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_BE_IMAGE}:latest ."
+                }
+                echo '백엔드 도커 이미지 빌드 완료!'
+            }
+        }
+
+        stage('Push to Docker Hub-BE') {
+            steps {
+                echo '백엔드 도커 이미지를 Docker Hub에 푸시 시작!'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                }
+                sh "docker push ${DOCKER_REGISTRY}/${DOCKER_BE_IMAGE}:latest"
+                echo '백엔드 도커 이미지를 Docker Hub에 푸시 완료!'
+            }
+        }
+
+        stage('Deploy to EC2-BE') {
+            steps {
+                echo '백엔드 EC2에 배포 시작!'
+                sshagent(['aws-key']) { 
+                    sh "docker-compose -f docker-compose.yml up -d"
+                }
+                echo '백엔드 EC2에 배포 완료!'
+            } 
         }
 
         stage('FE-Build') {
@@ -59,12 +82,36 @@ pipeline {
             }
         }
 
-        stage('deploy'){
-            steps{
-                sh 'docker-compose up -d --build'
+        stage('Build Front Docker Image') {
+            steps {
+                echo '프론트 도커 이미지 빌드 시작!'
+                dir("./frontend") {
+                    sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_FE_IMAGE}:latest ."
+                }
+                echo '프론트 도커 이미지 빌드 완료!'
             }
         }
 
+        stage('Push to Docker Hub-FE') {
+            steps {
+                echo '프론트 도커 이미지를 Docker Hub에 푸시 시작!'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                }
+                sh "docker push ${DOCKER_REGISTRY}/${DOCKER_FE_IMAGE}:latest"
+                echo '프론트 도커 이미지를 Docker Hub에 푸시 완료!'
+            }
+        }
+
+        stage('Deploy to EC2-FE') {
+            steps {
+                echo '프론트 EC2에 배포 시작!'
+                sshagent(['aws-key']) { 
+                    sh "docker-compose -f docker-compose.yml up -d"
+                }
+                echo '프론트 EC2에 배포 완료!'
+            } 
+        }
     }
 
     post {
