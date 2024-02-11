@@ -66,8 +66,11 @@ export default function RootLayout() {
         localStorage.setItem("userBackImg", res.data.data.userBackImg);
         localStorage.setItem("userAlias", res.data.data.userAlias);
         // setUserInfo(res.data.data);
-        {typeof electron !== "undefined" && electron.send("userInfo", res.data.data)
-          electron.send("token", token)}
+        {
+          typeof electron !== "undefined" &&
+            electron.send("userInfo", res.data.data);
+          electron.send("token", token);
+        }
       });
   }, []);
 
@@ -146,9 +149,9 @@ export default function RootLayout() {
         <ToTheTop />
 
         <div
-          className="py-7 bg-no-repeat bg-fixed"
+          className="py-7 bg-no-repeat bg-fixed w-screen h-screen"
           style={{
-            backgroundImage: `url(${localStorage.getItem("userBackImg")})`,
+            backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
           }}
         >
           <div className={classes.whole}>
@@ -167,25 +170,27 @@ export default function RootLayout() {
                     typeof electron !== "undefined",
                 })}
               >
-                {/* 로고 이미지 */}
-                <Link to="/main" className="mt-10 mb-20 w-3/5">
-                  <img alt="logo" src="/image/logo.png" />
-                </Link>
-                {/* 사이드바 메뉴 */}
-                <Link to="/main/item" className={`${classes.menu}`}>
-                  <h1>아이템샵</h1>
-                </Link>
-                <Link to="/main/messagelist" className={`${classes.menu}`}>
-                  <h1>메세지함</h1>
-                </Link>
-                {typeof electron !== "undefined" && (
-                  <Link to="/main/setting" className={`${classes.menu}`}>
-                    <h1>환경 설정</h1>
+                <div className={classes.menu_items}>
+                  {/* 로고 이미지 */}
+                  <Link to="/main" className="mt-10 mb-10 w-3/5">
+                    <img alt="logo" src="/image/logo.png" />
                   </Link>
-                )}
-                <Link to="/main/intro" className={classes.menu}>
-                  <h1>서비스 소개</h1>
-                </Link>
+                  {/* 사이드바 메뉴 */}
+                  <Link to="/main/item" className={`${classes.menu}`}>
+                    <h1>아이템샵</h1>
+                  </Link>
+                  <Link to="/main/messagelist" className={`${classes.menu}`}>
+                    <h1>메세지함</h1>
+                  </Link>
+                  {typeof electron !== "undefined" && (
+                    <Link to="/main/setting" className={`${classes.menu}`}>
+                      <h1>환경 설정</h1>
+                    </Link>
+                  )}
+                  <Link to="/main/intro" className={classes.menu}>
+                    <h1>서비스 소개</h1>
+                  </Link>
+                </div>
               </div>
 
               {/* 네브바와 메인 페이지를 포함하는 영역 */}
