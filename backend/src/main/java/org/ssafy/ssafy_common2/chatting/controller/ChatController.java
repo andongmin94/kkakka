@@ -22,8 +22,10 @@ import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
+import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
 import org.ssafy.ssafy_common2.chatting.repository.ChatJoinRepository;
+import org.ssafy.ssafy_common2.chatting.repository.ChatRoomRepository;
 import org.ssafy.ssafy_common2.chatting.repository.MessageRepository;
 import org.ssafy.ssafy_common2.chatting.service.ChatRoomMySQLService;
 import org.ssafy.ssafy_common2.chatting.service.ChatService;
@@ -41,6 +43,7 @@ public class ChatController {
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
     private final ChatJoinRepository chatJoinRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMySQLService chatRoomMySQLService;
     private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations template;
@@ -113,8 +116,11 @@ public class ChatController {
             // 3) 채팅방 유저 +1
             chatRoomMySQLService.updateUserCnt(msg.getChatRoomId(), "PLUS");
 
-            // 4) 프론트로 다시 보내기
-            template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
+            // 4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기
+            if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
+            }
+
         }catch (Exception e){
             log.error("Exception {}",e.getMessage());
         }
@@ -300,11 +306,16 @@ public class ChatController {
             }
 
             // 2-3) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기
-            chatJoinRepository.updateChatJoinModifiedAt(LocalDateTime.now(), 1, msg.getChatRoomId());
+            chatJoinRepository.updateChatJoinModifiedAt(LocalDateTime.now(), msg.getUserId(), msg.getChatRoomId());
 
 
             // 3) 채팅방 유저 -1
             chatRoomMySQLService.updateUserCnt(msg.getChatRoomId(), "MINUS");
+
+            // 4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기
+            if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
+            }
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
