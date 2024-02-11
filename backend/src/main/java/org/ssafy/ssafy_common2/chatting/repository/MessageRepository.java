@@ -18,29 +18,18 @@ import java.util.Optional;
 public interface MessageRepository extends JpaRepository<Message,Long> {
     
 
-    // 0) 메세지 넣는 함수
-    @Modifying
-    @Query(value = "insert into message(content, message_type, user_id, chat_room_id, img_code, created_at, updated_at ) " +
-            "values (:content, :message_type, :user_id, :chat_room_id, :img_code, :created_at, :updated_at )",nativeQuery = true)
-    void InsertMessage(@Param("content") String content, @Param("message_type") String message_type,
-                       @Param("user_id") long user_id, @Param("chat_room_id") long chat_room_id,
-                       @Param("img_code") String img_code,
-                       @Param("created_at")LocalDateTime created_at, @Param("updated_at") LocalDateTime updated_at);
-
     // 1) 방번호에 맞는 메세지 찾기
     Page<Message> findAllByChatJoin_ChatRoom_Id(long roomId, Pageable pageable);
 
     // 2) 내가 참여한 채팅방의 가장 최근 메세지
-    @Query(value = "SELECT * FROM message m WHERE m.deleted_at IS NULL AND m.chat_room_id = :roomId ORDER BY m.created_at DESC LIMIT 1 ", nativeQuery = true)
-    Optional<Message> getLastMessage(@Param("roomId") long roomId);
+    Optional<Message> findTopByChatJoin_ChatRoom_IdOrderByCreatedAtDesc(long roomId);
+
 
     // 3) 채팅방 수정 일자와 비교하여 안 읽은 메세지 수 뽑기
-    @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId AND cj.deleted_at is null limit 1) temp )", nativeQuery = true)
-    Optional<Integer> getUnreadMessageCnt (@Param("chatRoomId") long chatRoomId);
+    @Query(value ="SELECT COUNT(*) FROM message m WHERE m.created_at > (SELECT updated_at from (SELECT * from chat_join cj where cj.chat_room_id = :chatRoomId AND cj.user_id = :userId AND cj.deleted_at is null) temp)  AND  m.chat_join_chat_room_id = :chatRoomId", nativeQuery = true)
+    Optional<Integer> getUnreadMessageCnt (@Param("chatRoomId") long chatRoomId, @Param("userId") long userId);
 
     // 4) 챗봇 메세지만 뽑아내기
-
-
     List<Message> findAllByChatJoin_ChatJoinId_ChatRoomIdAndMessageType(
              long chatRoomId, Message.MessageType messageType
     );
