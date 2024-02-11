@@ -34,6 +34,7 @@ pipeline {
             steps {
                 echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
+                    sh "chmod +x ./gradlew"
                     sh "./gradlew clean build --exclude-task test"
                 }
                 echo '백엔드 빌드 및 테스트 완료!' 
@@ -56,7 +57,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                 }
-                sh "docker push ${DOCKER_REGISTRY}/${DOCKER_BE_IMAGE}:latest"
+                dir("./backend") {
+                    sh "docker push osy9536/ssafy-be:latest"
+                }
                 echo '백엔드 도커 이미지를 Docker Hub에 푸시 완료!'
             }
         }
@@ -65,6 +68,9 @@ pipeline {
             steps {
                 echo '백엔드 EC2에 배포 시작!'
                 sshagent(['aws-key']) { 
+                    sh "docker rm -f backend"
+                    sh "docker rmi osy9536/ssafy-be:latest"
+                    sh "docker image prune -f"
                     sh "docker-compose -f docker-compose.yml up -d"
                 }
                 echo '백엔드 EC2에 배포 완료!'
@@ -98,7 +104,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                 }
-                sh "docker push ${DOCKER_REGISTRY}/${DOCKER_FE_IMAGE}:latest"
+                dir("./frontend") {
+                    sh "docker push osy9536/ssafy-fe:latest"
+                }
                 echo '프론트 도커 이미지를 Docker Hub에 푸시 완료!'
             }
         }
@@ -107,6 +115,9 @@ pipeline {
             steps {
                 echo '프론트 EC2에 배포 시작!'
                 sshagent(['aws-key']) { 
+                    sh "docker rm -f frontend"
+                    sh "docker rmi osy9536/ssafy-fe:latest"
+                    sh "docker image prune -f"
                     sh "docker-compose -f docker-compose.yml up -d"
                 }
                 echo '프론트 EC2에 배포 완료!'
