@@ -1,0 +1,23 @@
+/* @keyframes로 색상을 변화시키는 애니메이션 정의 */
+@keyframes borderAnimation {
+  0% {
+    border-color: rgb(119, 24, 24);
+  }
+  25% {
+    border-color: rgb(255, 0, 0);
+  }
+  50% {
+    border-color: rgb(119, 24, 24);
+  }
+  75% {
+    border-color: rgb(255, 0, 0);
+  }
+  100% {
+    border-color: rgb(119, 24, 24);
+  }
+}
+
+/* 애니메이션을 적용할 클래스에 animation 속성 사용 */
+.animatedBorder {
+  animation: borderAnimation 5s infinite alternate; /* 5초 동안 반복되고, 번갈아가며 변하는 애니메이션 */
+}

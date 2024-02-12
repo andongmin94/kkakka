@@ -71,6 +71,7 @@ export default function RootLayout() {
         localStorage.setItem("userBackImg", res.data.data.userBackImg);
         localStorage.setItem("userAlias", res.data.data.userAlias);
         // setUserInfo(res.data.data);
+
         {
           typeof electron !== "undefined" &&
             electron.send("userInfo", res.data.data) &&
