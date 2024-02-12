@@ -30,7 +30,7 @@ const FormSchema = z.object({
   }),
 });
 import axios from "axios";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import classes from "./ItemShopCard.module.css";
 
 export default function Speaker({

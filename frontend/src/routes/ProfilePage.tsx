@@ -118,7 +118,7 @@ export default function ProfilePage() {
                 <div className="m-1 w-[550px] h-[220px]">
                   <div className="m-1 w-[200px] h-[200px] grid place-items-center">
                     <ProfileImage
-                      userImg={profileInfo && profileInfo.userProfileImg}
+                      userImg={profileInfo ? profileInfo.userProfileImg : ''}
                     />
                   </div>
                 </div>
@@ -173,10 +173,9 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div>
-                  <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
-                  />
-                </div>
+                <UserCurrentAlias
+                  alias={profileInfo ? profileInfo.userAlias : null}
+                />
               </div>
             </div>
             <div className=" m-1 w-100% h-[50px] w-[1000px] flex gap-10">
@@ -268,9 +267,9 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div className="mr-2">
-                  <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
-                  />
+                <UserCurrentAlias
+                  alias={profileInfo ? (profileInfo.userAlias || "") : ""}
+                />
                 </div>
               </div>
             </div>
