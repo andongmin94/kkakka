@@ -17,21 +17,14 @@ import useUserStore from "@/store/user/userStore";
 export default function ProfileEdit() {
   const { userInfo } = useUserStore();
   const userprofileImage = userInfo.userProfileImg;
-  const userbackImage = userInfo.userBackImg;
   const token = localStorage.getItem("token");
 
   const [profileImg, setProfileImg] = useState<string | ArrayBuffer | null>(
     userprofileImage
   );
-  const [backImg, setBackImg] = useState<string | ArrayBuffer | null>(
-    userbackImage
-  );
 
   const [profileFile, setProfileFile] = useState<string | ArrayBuffer | null>(
     userprofileImage
-  );
-  const [backFile, setBackFile] = useState<string | ArrayBuffer | null>(
-    userbackImage
   );
 
   // 미리보기 이미지 프로세싱
@@ -69,14 +62,6 @@ export default function ProfileEdit() {
           type: "image/jpeg",
         });
         setProfileFile(pFile);
-      } else {
-        // 이미지를 Blob으로 변환
-        setBackImg(res);
-        const blob = dataURItoBlob(res);
-        const bFile = new File([blob], "backImage.jpg", {
-          type: "image/jpeg",
-        });
-        setBackFile(bFile);
       }
     });
   };
@@ -101,15 +86,11 @@ export default function ProfileEdit() {
 
   console.log("라이엇", riotId);
   console.log("프로필", profileImg);
-  console.log("배경", backImg);
 
   const profileEditHandler = () => {
     const formData = new FormData();
     if (profileFile) {
       formData.append("profileImg", profileFile);
-    }
-    if (backFile) {
-      formData.append("backImg", backFile);
     }
     if (riotId !== null) {
       formData.append("riotId", riotId);
@@ -172,17 +153,6 @@ export default function ProfileEdit() {
                   onChange={(e) => imgUpload(e, 1)}
                 />
               </div>
-              {/* 프로필 배경 */}
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture2" className="font-bold mb-1">
-                  프로필 배경
-                </Label>
-                <Input
-                  id="picture2"
-                  type="file"
-                  onChange={(e) => imgUpload(e, 2)}
-                />
-              </div>
             </div>
 
             {/* 하단 부분 */}
@@ -199,19 +169,6 @@ export default function ProfileEdit() {
                 ) : (
                   <div className=" flex items-center border-2 h-20 w-20 rounded-lg text-xs p-2 mr-2">
                     선택한 프로필 이미지가 없습니다.
-                  </div>
-                )}
-                {backImg ? (
-                  <div
-                    style={{
-                      backgroundImage: `url("${backImg}")`,
-                      backgroundSize: "cover",
-                    }}
-                    className="h-20 w-20 rounded-lg border-2"
-                  />
-                ) : (
-                  <div className="flex items-center border-2 h-20 w-20 rounded-lg text-xs p-2">
-                    선택한 배경 이미지가 없습니다.
                   </div>
                 )}
               </div>
@@ -270,17 +227,6 @@ export default function ProfileEdit() {
                   onChange={(e) => imgUpload(e, 1)}
                 />
               </div>
-              {/* 프로필 배경 */}
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture2" className="font-bold">
-                  프로필 배경
-                </Label>
-                <Input
-                  id="picture2"
-                  type="file"
-                  onChange={(e) => imgUpload(e, 2)}
-                />
-              </div>
             </div>
 
             {/* 하단 부분 */}
@@ -297,19 +243,6 @@ export default function ProfileEdit() {
                 ) : (
                   <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
                     프사없음
-                  </div>
-                )}
-                {backImg ? (
-                  <div
-                    style={{
-                      backgroundImage: `url("${backImg}")`,
-                      backgroundSize: "cover",
-                    }}
-                    className="h-20 w-20 rounded-lg border-2"
-                  />
-                ) : (
-                  <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
-                    배경없음
                   </div>
                 )}
               </div>
