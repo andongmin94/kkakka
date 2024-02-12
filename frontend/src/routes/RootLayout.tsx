@@ -9,7 +9,7 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { useTheme } from "@/components/navbar/ThemeProvider";
-import { useLocation, Link, Outlet } from "react-router-dom";
+import { useLocation, Link, Outlet, useNavigate } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +18,13 @@ import ToTheTop from "@/components/app/ToTheTop";
 import axios from "axios";
 
 export default function RootLayout() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.alert("로그인이 필요한 서비스입니다.");
+    navigate("/");
+  }
+
   const { pathname } = useLocation();
   const { theme } = useTheme();
 
@@ -30,8 +37,6 @@ export default function RootLayout() {
   const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill;
-
-  const token = localStorage.getItem("token");
 
   if (!token) {
     throw new Error("Token not found");
@@ -69,7 +74,7 @@ export default function RootLayout() {
         {
           typeof electron !== "undefined" &&
             electron.send("userInfo", res.data.data) &&
-          electron.send("token", token);
+            electron.send("token", token);
         }
       });
   }, []);
