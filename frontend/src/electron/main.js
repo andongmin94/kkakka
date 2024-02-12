@@ -34,7 +34,14 @@ function createWindow() {
 
   ipcMain.on("minimize", (event) => {win.minimize()});
 
-  ipcMain.on("maximize", (event) => {if (win.isMaximized()) { win.setBounds({ width: 800, height: 600 }); console.log("restoring")} else {win.maximize(); console.log("maximizing")}});
+  ipcMain.on("maximize", (event) => {
+    if (win.isMaximized()) {
+        // win.setBounds({ width: 800, height: 600 });
+        win.restore();
+        console.log("restoring")}
+    else {
+      win.maximize(); console.log("maximizing")
+    }});
 
   ipcMain.on("hidden", (event) => {win.hide()});
 
@@ -113,7 +120,7 @@ app.whenReady().then(createWindow).then(async () => {
             if (event.EventName === "GameStart") {setTimeout(() => {sendMessageToSocket("게임이 ㄹㅇ로 시작되었습니다.")},7000)}
             if (event.EventName === "MinionsSpawning") {sendMessageToSocket("미니언이 생성되었습니다.")}
               
-            if (event.EventName === "ChampionKill") { sendMessageToSocket(event.KillerName + "님이 " + event.VictimName + "님을 처치했습니다!") }
+            if (event.EventName === "ChampionKill") { sendMessageToSocket(event.KillerName + "님이 " + event.VictimName + "님을 처치했습니다!"); if (userInfo.riotId == event.VictimName) { sendMessageToSocket ("얘 방금 죽었는데?")} }
             else if (event.EventName === "Multikill") { if (event.KillStreak === 2) { sendMessageToSocket(event.KillerName + "님이 " + "더블킬!") } else if (event.KillStreak === 3) { sendMessageToSocket(event.KillerName + "님이 " + "트리플킬!") } else if (event.KillStreak === 4) { sendMessageToSocket(event.KillerName + "님이 " + "쿼드라킬!") } else if (event.KillStreak === 5) { sendMessageToSocket(event.KillerName + "님이 " + "펜타킬!") }}
             else if (event.EventName === "TurretKilled") { sendMessageToSocket(event.KillerName + "님이 " + "포탑을 파괴했습니다.") }
 
@@ -275,7 +282,7 @@ function onMessageReceivedFromSocket (payload){
   var chat = JSON.parse(payload.body);
   // console.log("들어온 payload:" + payload.body);
   console.log("들어온 메세지:" + chat.content);
-  // if (chat.userName !== userInfo.userName)
+  if (chat.messageType !== "ENTER" && chat.messageType !== "CHAT_BOT")
     showNotification(chat.userName, chat.content, chat.imgCode);
   
   const messageDTO = {
