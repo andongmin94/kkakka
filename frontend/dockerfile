@@ -12,12 +12,12 @@ EXPOSE 3000
 CMD ["npm", "run", "dev"]
 
 
-FROM nginx:alpine
-RUN rm -rf /etc/nginx/sites-available/nginx.conf
-COPY ./nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
+# FROM nginx:alpine
+# RUN rm -rf /etc/nginx/sites-available/nginx.conf
+# COPY ./nginx/nginx.conf /etc/nginx/sites-available/nginx.conf
 
-RUN rm -rf /var/www/html/*
-COPY --from=builder /frontend/dist /var/www/html
+#RUN rm -rf /var/www/html/*
+#COPY --from=builder /frontend/dist /var/www/html
 
-EXPOSE 80
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+#EXPOSE 80
+#ENTRYPOINT ["nginx", "-g", "daemon off;"]
