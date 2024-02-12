@@ -50,8 +50,7 @@ public class ChatController {
     private final ChatService chatService;
 
 
-    // 1) 입장 메세지 용
-
+    // [1] 입장 메세지 용 ============================================================================
     @MessageMapping("/chat/enterUser")
     @Transactional // 영속성을 위해서
     public void enterUser(String publishMessage, SimpMessageHeaderAccessor headerAccessor) {
@@ -88,11 +87,8 @@ public class ChatController {
 
                 // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
+
                 // 2-3) Message Insert DTO에 맞게 만들어 넣기
-
-//                messageRepository.InsertMessage(msg.getContent(), msg.getMessageType()
-//                        ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
-
                 Message message = new Message();
 
                 message.setContent(msg.getContent());
@@ -100,12 +96,17 @@ public class ChatController {
                 message.setChatJoin(chatJoin);
                 message.setImgCode(msg.getImgCode());
 
-                messageRepository.save(message);
-
                 User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
 
                 if(sender != null) {
                     msg.setUserName(sender.getUserName());
+                }
+
+
+                // 2-4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기 + 저장
+                if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                    messageRepository.save(message);
+                    template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
                 }
 
             }
@@ -116,10 +117,7 @@ public class ChatController {
             // 3) 채팅방 유저 +1
             chatRoomMySQLService.updateUserCnt(msg.getChatRoomId(), "PLUS");
 
-            // 4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기
-            if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
-                template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
-            }
+
 
         }catch (Exception e){
             log.error("Exception {}",e.getMessage());
@@ -127,7 +125,7 @@ public class ChatController {
     }
 
 
-    // 2) TALK 타입 메세지가 WebSocket으로 발행되는 경우, 전처리기 STOMP Handler를 거친 후 실행된다.
+    // [2] TALK 타입 메세지가 WebSocket으로 발행되는 경우, 처리 ============================================
     @MessageMapping("/chat/sendMessage")
     @Transactional // 영속성을 위해서
     public void sendMessage (String publishMessage) {
@@ -136,7 +134,7 @@ public class ChatController {
         ChatMessageDto msg = null;
         try {
             msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("들어온 ENTER 메세지 {}",  "ChatMessageDto{" +
+            log.info("들어온 TALK 메세지 {}",  "ChatMessageDto{" +
                     "messageType='" + msg.getMessageType() + '\'' +
                     ", content='" + msg.getContent() + '\'' +
                     ", userId=" + msg.getUserId() +
@@ -160,9 +158,6 @@ public class ChatController {
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
                 if(msg.getImgCode() == null){
-                    // 2-3) Message Insert DTO에 맞게 만들어 넣기
-//                    messageRepository.InsertMessage(msg.getContent(), "TALK"
-//                            ,msg.getUserId(),msg.getChatRoomId(),msg.getImgCode(),msg.getCreatedAt(),msg.getUpdateAt());
 
                     Message message = new Message();
 
@@ -174,13 +169,7 @@ public class ChatController {
                     }
                     message.setChatJoin(chatJoin);
                     message.setImgCode(msg.getImgCode());
-                    log.info("들어가는 메세지는 " +
-                            "messageType='" + message.getMessageType() + '\'' +
-                            ", content='" + message.getContent() + '\'' +
-                            ", userId=" + message.getChatJoin().getChatJoinId().getUserId() +
-                            ", chatRoomId=" + message.getChatJoin().getChatJoinId().getChatRoomId()+
-                            ", imageCode=" + message.getImgCode() +
-                            '}' );
+
 
                     messageRepository.save(message);
 
@@ -193,8 +182,6 @@ public class ChatController {
                     }
 
                 }else {
-
-                    System.out.println("이미지 코드: "+msg.getImgCode().substring(0,4));
 
                     if(msg.getImgCode().substring(0,4).equals("http")){
                         msg.setContent(msg.getImgCode());
@@ -210,18 +197,6 @@ public class ChatController {
                         messageRepository.save(message);
                     }else{
                         ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
-
-                        log.info("들어가는 메세지는 {}","ChatMessageDto{" +
-                                "messageType='" + msg.getMessageType() + '\'' +
-                                ", content='" + msg.getContent() + '\'' +
-                                ", userId=" + msg.getUserId() +
-                                ", userName=" + msg.getUserName() +
-                                ", chatRoomId=" + msg.getChatRoomId() +
-                                ", createdAt=" + msg.getCreatedAt() +
-                                ", updateAt=" + msg.getUpdateAt() +
-                                ", imageCode=" + msg.getImgCode() +
-                                '}' );
-
                         Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK,msg.getImgCode());
 
 
@@ -255,7 +230,7 @@ public class ChatController {
         template.convertAndSend("/sub/chat/room/" + msg.getChatRoomId(), msg);
     }
 
-    // 채팅방 나가기 전 메세지 보내는 곳
+    // [3] 채팅방 나가기 전 메세지 보내는 곳 ===================================================================
     @MessageMapping("/chat/exitChatRoom")
     @Transactional // 영속성을 위해서
     public void exitChatRoom(String publishMessage){
@@ -265,7 +240,7 @@ public class ChatController {
         try {
             msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
 
-            log.info("들어온 ENTER 메세지 {}",  "ChatMessageDto{" +
+            log.info("들어온 QUIT 메세지 {}",  "ChatMessageDto{" +
                     "messageType='" + msg.getMessageType() + '\'' +
                     ", content='" + msg.getContent() + '\'' +
                     ", userId=" + msg.getUserId() +
@@ -303,26 +278,29 @@ public class ChatController {
                     msg.setUserName(sender.getUserName());
                 }
 
+                // 2-4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기
+                if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+
+                    // 퇴장 메세지는 안 보내는 듯 ======================================================================
+                    // messageRepository.save(message);
+                    template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
+                }
+
             }
 
-            // 2-3) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기
+            // 2-5) 메세지를 보내온 User의 Id와 roomId에 해당하는 방의 수정일자 바꾸기
             chatJoinRepository.updateChatJoinModifiedAt(LocalDateTime.now(), msg.getUserId(), msg.getChatRoomId());
 
 
             // 3) 채팅방 유저 -1
             chatRoomMySQLService.updateUserCnt(msg.getChatRoomId(), "MINUS");
 
-            // 4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기
-            if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
-                template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
-            }
-
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    // 사용자가 App을 끄거나, 방에서 나갔을 때 실행하는 함수
+    // [4] 사용자가 App을 끄거나, 방에서 나갔을 때 실행하는 함수 ==========================================================
     @EventListener
     @Transactional // 영속성을 위하여
     public void webSocketDisconnectListener(SessionDisconnectEvent event) {
@@ -330,15 +308,11 @@ public class ChatController {
 
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        //
-//        long userId = Long.parseLong((String) headerAccessor.getSessionAttributes().get("userId"));
-//        long chatRoomId = Long.parseLong((String) headerAccessor.getSessionAttributes().get("chatRoomId"));
-//
-//        System.out.println("DisConnectEvent로 알게된 UserId: "+userId);
-//        System.out.println("DISCONNECTEVENT로 알게된 ChatRoomId: "+chatRoomId);
-
         log.info("headAccessor {}", headerAccessor);
     }
+
+
+    // [5] 메세지 불러오기 =================================================================================
 
     @GetMapping("/api/friends/chat_bot/{room_id}")
     public ApiResponseDto<?> getChatBotMessage (
