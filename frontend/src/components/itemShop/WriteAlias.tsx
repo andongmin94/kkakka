@@ -156,7 +156,7 @@ export default function WriteAlias({
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
           <div
-            className={`${classes.itemElemContainer} bg-gradient-to-r from-amber-300 to-amber-600 rounded-[3%]`}
+            className={`${classes.itemElemContainer} bg-gradient-to-r from-amber-200 to-amber-600 rounded-[3%]`}
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseOut={handleMouseOut}
