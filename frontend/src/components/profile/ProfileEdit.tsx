@@ -95,6 +95,10 @@ export default function ProfileEdit() {
       )
       .then((res) => {
         console.log(res);
+        window.alert("수정되었습니다.");
+      })
+      .then(() => {
+        window.location.reload();
       });
   };
 
@@ -106,7 +110,7 @@ export default function ProfileEdit() {
             <Button
               type="submit"
               variant="secondary"
-              className="mr-1 border-solid border-2 border-inherit font-bold text-lg mt-2 h-[50px]"
+              className="mr-1 font-bold bg-white text-xs"
             >
               프로필 편집
             </Button>
@@ -115,9 +119,9 @@ export default function ProfileEdit() {
             <DialogHeader>
               <DialogTitle>프로필 편집</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col w-full mb-5 mt-5">
-              <div className="grid w-full max-w-sm items-center gap-1.5 mb-8 mt-4">
-                <Label htmlFor="text" className="font-bold">
+            <div className="flex flex-col w-full mb-5">
+              <div className="grid w-full max-w-sm items-center gap-1.5 mb-6 mt-4">
+                <Label htmlFor="text" className="font-bold mb-1">
                   롤 아이디
                 </Label>
                 <Input
@@ -128,7 +132,7 @@ export default function ProfileEdit() {
               </div>
               {/* 프로필 사진 */}
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8">
-                <Label htmlFor="picture" className="font-bold">
+                <Label htmlFor="picture" className="font-bold mb-1">
                   프로필 사진
                 </Label>
                 <Input
@@ -139,7 +143,7 @@ export default function ProfileEdit() {
               </div>
               {/* 프로필 배경 */}
               <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture2" className="font-bold">
+                <Label htmlFor="picture2" className="font-bold mb-1">
                   프로필 배경
                 </Label>
                 <Input
@@ -151,19 +155,19 @@ export default function ProfileEdit() {
             </div>
 
             {/* 하단 부분 */}
-            <div className="flex justify-between items-center">
-              <div className="flex gap-x-5">
+            <div className="flex justify-between">
+              <div className="flex ">
                 {profileImg ? (
                   <div
                     style={{
                       backgroundImage: `url("${profileImg}")`,
                       backgroundSize: "cover",
                     }}
-                    className="h-20 w-20 rounded-lg border-2 bg"
+                    className="h-20 w-20 rounded-lg border-2 mr-2"
                   />
                 ) : (
-                  <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
-                    프사없음
+                  <div className=" flex items-center border-2 h-20 w-20 rounded-lg text-xs p-2 mr-2">
+                    선택한 프로필 이미지가 없습니다.
                   </div>
                 )}
                 {backImg ? (
@@ -175,8 +179,8 @@ export default function ProfileEdit() {
                     className="h-20 w-20 rounded-lg border-2"
                   />
                 ) : (
-                  <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
-                    배경없음
+                  <div className="flex items-center border-2 h-20 w-20 rounded-lg text-xs p-2">
+                    선택한 배경 이미지가 없습니다.
                   </div>
                 )}
               </div>
@@ -184,11 +188,10 @@ export default function ProfileEdit() {
                 <DialogClose asChild>
                   <Button
                     type="submit"
-                    variant="secondary"
-                    className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                    className="mr-1 bg-blue-500 font-bold text-xs mt-2"
                     onClick={profileEditHandler}
                   >
-                    저장하기
+                    저장
                   </Button>
                 </DialogClose>
               </div>
