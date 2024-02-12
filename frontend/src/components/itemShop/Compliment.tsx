@@ -170,7 +170,7 @@ export default function Compliment({
               ref={overlayRef}
             ></div>
             <div
-              className={`${classes.itemElemCard}  bg-gradient-to-r from-zinc-300 to-zinc-600`}
+              className={`${classes.itemElemCard}  bg-gradient-to-r from-zinc-200 to-zinc-600`}
             >
               <div>👏</div>
               <h1 className={`${classes.itemElemContent}`}>강제칭찬권</h1>

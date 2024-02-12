@@ -5,9 +5,16 @@ interface updatedAtProps {
 export default function MessageUpdatedAt({ updatedAt }: updatedAtProps) {
   // const now = new Date();
   // const timeDiff = "1일 전";
+
   return (
     <>
-      <div>{updatedAt && updatedAt.toString()}</div>
+      <div className="text-xs text-zinc-500">
+        {updatedAt
+          ? `${updatedAt.toString().substring(5, 7)}월 ${updatedAt
+              .toString()
+              .substring(8, 10)}일`
+          : ""}
+      </div>
     </>
   );
 }

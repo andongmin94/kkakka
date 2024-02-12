@@ -13,9 +13,9 @@ export default function MessageProfile({
   friendImgUrl: string;
 }) {
   return (
-    <div className="flex items-center space-x-3">
+    <div className="mr-10">
       <Skeleton
-        className="w-[80px] h-[80px] rounded-full "
+        className="w-16 h-16 rounded-full border-2 border-zinc-200"
         style={{
           backgroundImage: `url(${friendImgUrl})`,
           backgroundSize: "cover",

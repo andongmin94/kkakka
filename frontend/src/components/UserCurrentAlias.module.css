@@ -1,15 +1,15 @@
 .innerText {
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 10px;
   color: #ffffff;
+  text-shadow: slategrey 1px 1px 2px;
   margin: auto 0;
+  font-weight: bold;
 }
 
 .aliasTag {
   z-index: 1;
-  width: 149px;
-  /* height: 25.43px; */
-  height: 30px;
+  width: 100px;
+  height: 25px;
   border-radius: 5px;
   background-image: linear-gradient(
     90deg,

@@ -59,7 +59,7 @@ export default function ItemshopPage() {
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
       </div>
       {itemList && itemList.length > 0 && (
-        <div className="flex flex-col items-center ml-36">
+        <div className="flex flex-col items-center ml-60">
           <div className="grid grid-cols-4 row-auto w-[1000px] h-[900px]">
             {itemList.map(
               (item, idx) =>
