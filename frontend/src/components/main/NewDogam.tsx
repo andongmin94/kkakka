@@ -10,44 +10,44 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
     <>
       <PC>
         {/* 전체 */}
-        <div className="w-[500px] flex">
+        <div className="w-[600px] flex border border-slate-300 border-collapse">
           {/* 왼쪽 구역 */}
           <Link
             to={`/main/profile/${data.friendId}`}
-            className="w-[200px] border-4 rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center bg-slate-100"
+            className="w-[200px] rounded-3xl rounded-r-none border-r-0 flex flex-col justify-center items-center "
           >
             {/* 프사 */}
             <img
               src={data.friendImgUrl}
-              className="w-[130px] h-[130px] mb-5 rounded-full"
+              className="w-[80px] h-[80px] mb-5 rounded-full"
             />
             {/* 이름 */}
-            <p className="font-bold text-2xl mb-5">{data.friendName}</p>
+            <p className="font-bold text-xl mb-5">{data.friendName}</p>
             {/* 칭호 */}
             <NewDogamAlias alias={data.friendAlias} />
           </Link>
 
           {/* 오른쪽 구역 */}
-          <div>
+          <div className="m-3">
+            {/* 제목 */}
+            <div className="w-full font-bold text-xl px-2 py-3">
+              {data.dogamTitle}
+            </div>
             {/* 이미지  */}
             <div
-              className={`h-[200px] w-[320px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 rounded-b-none border-b-0`}
+              className={`h-[300px] w-[400px] rounded-md border-l-0  border-b-0`}
               style={{
                 backgroundImage: `url(${data.dogamImgUrl})`,
                 backgroundSize: "cover",
               }}
             />
-            <div className="w-[320px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
-              {/* 제목 */}
-              <div className="w-full font-bold text-2xl px-2 py-3">
-                {data.dogamTitle}
-              </div>
+            <div className="w-[320px]  border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               <div className="flex gap-3 pb-3 font-bold items-center">
                 {/* 싫어요 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
                   <ThumbsDown tD={data.hated} dogamId={data.dogamId} />
                 </div>
-                <div className=" flex self-center mr-4 text-xl text-blue-600">
+                <div className=" flex self-center mr-4 text-sm ">
                   {data.dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
@@ -80,7 +80,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
               className="w-[130px] h-[130px] mb-5 rounded-full"
             />
             {/* 이름 */}
-            <p className="font-bold text-2xl mb-5">{data.friendName}</p>
+            <p className="font-bold text-xl mb-5">{data.friendName}</p>
             {/* 칭호 */}
             <NewDogamAlias alias={data.friendAlias} />
           </Link>
@@ -97,7 +97,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
             />
             <div className="w-[270px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               {/* 제목 */}
-              <div className="w-full font-bold text-2xl px-2 py-3">
+              <div className="w-full font-bold text-xl px-2 py-3">
                 {data.dogamTitle}
               </div>
               <div className="flex gap-3 pb-3 font-bold items-center">
@@ -105,7 +105,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
                   <ThumbsDown tD={data.hated} dogamId={data.dogamId} />
                 </div>
-                <div className=" flex self-center mr-4 text-xl text-blue-600">
+                <div className=" flex self-center mr-4 text-sm ">
                   {data.dogamDislikeNum}
                 </div>
                 {/* 댓글 */}

@@ -13,29 +13,14 @@ import {
 // import { useAlarmList } from "@/hooks/alarm/queries/useAlarmListQuery";
 import useAlarmStore from "@/store/alarm/alarmStore";
 import { useCheckAlarm } from "@/hooks/alarm/mutations/useCheckAlarmPut";
-import { AlarmType } from "@/types/alarmTypes";
 import axios from "axios";
+import { AlarmType } from "@/types/alarmTypes";
+import { useNavigate } from "react-router-dom";
 
 export function Alarm() {
   const { theme } = useTheme();
   const [position, setPosition] = useState("");
-
-  // const {
-  //   alarmList,
-  //   numOfUncheckedAlarm,
-  //   setAlarmList,
-  //   setNumOfUncheckedAlarm,
-  // } = useAlarmStore();
-
-  // const { useAlarmListQuery } = useAlarmList();
-  // const { data: alarmData } = useAlarmListQuery();
-
-  // useEffect(() => {
-  //   if (alarmData) {
-  //     setAlarmList(alarmData.alarmList);
-  //     setNumOfUncheckedAlarm(alarmData.numOfUncheckedAlarm);
-  //   }
-  // }, [alarmData, setAlarmList, setNumOfUncheckedAlarm]);
+  const navigate = useNavigate();
   const checkAlarmMutation = useCheckAlarm();
   const { mutate } = checkAlarmMutation;
 
@@ -49,6 +34,9 @@ export function Alarm() {
     setAlarmList,
     setNumOfUncheckedAlarm,
   } = useAlarmStore();
+
+  const userId = localStorage.getItem("userId");
+  const userEmail = localStorage.getItem("userEmail");
 
   useEffect(() => {
     axios
@@ -67,6 +55,14 @@ export function Alarm() {
       });
   }, []);
 
+  const moveToAlarmContentHandler = (alarm: AlarmType) => {
+    if (alarm.frqEmail === userEmail) {
+      navigate(`/main/profile/${userId}`);
+    } else {
+      navigate(`/main/profile/${alarm.relatedContentId}`);
+    }
+  };
+
   return (
     <div>
       <DropdownMenu>
@@ -79,7 +75,9 @@ export function Alarm() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-30 text-center">
           <DropdownMenuLabel>
-            {numOfUncheckedAlarm}개의 알림이 있습니다.
+            {numOfUncheckedAlarm !== 0
+              ? `${numOfUncheckedAlarm}개의 알림이 있어요.`
+              : "모든 알림을 확인했어요."}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
@@ -87,7 +85,7 @@ export function Alarm() {
             value={position}
             onValueChange={setPosition}
           >
-            {alarmList &&
+            {alarmList.length > 0 &&
               alarmList.map((alarm) => {
                 return (
                   <DropdownMenuRadioItem
@@ -95,12 +93,23 @@ export function Alarm() {
                     key={alarm.alarmId}
                     onClick={() => {
                       checkAlarmHandler(alarm.alarmId);
+                      moveToAlarmContentHandler(alarm);
                     }}
                   >
-                    {/*  이거 사진으로 어떻게 만드는지 모르겠음  */}
-                    {alarm.alarmPic}
-                    {alarm.alarmContent}
-                    {alarm.createdAt.toString()}
+                    <div className="flex justify-center items-center">
+                      <div>
+                        <img
+                          src={alarm.alarmPic}
+                          alt="alarm-pic"
+                          className="w-10 h-10 rounded-full"
+                        />
+                      </div>
+                      <div>{alarm.alarmContent}</div>
+                      <div>
+                        {alarm.createdAt.toString().substring(5, 7)}월{" "}
+                        {alarm.createdAt.toString().substring(8, 10)}일
+                      </div>
+                    </div>
                   </DropdownMenuRadioItem>
                 );
               })}
@@ -110,3 +119,20 @@ export function Alarm() {
     </div>
   );
 }
+
+// const {
+//   alarmList,
+//   numOfUncheckedAlarm,
+//   setAlarmList,
+//   setNumOfUncheckedAlarm,
+// } = useAlarmStore();
+
+// const { useAlarmListQuery } = useAlarmList();
+// const { data: alarmData } = useAlarmListQuery();
+
+// useEffect(() => {
+//   if (alarmData) {
+//     setAlarmList(alarmData.alarmList);
+//     setNumOfUncheckedAlarm(alarmData.numOfUncheckedAlarm);
+//   }
+// }, [alarmData, setAlarmList, setNumOfUncheckedAlarm]);

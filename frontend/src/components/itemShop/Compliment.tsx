@@ -78,11 +78,7 @@ export default function Compliment({
   function onSubmit(data: z.infer<typeof FormSchema>) {
     // 구입 버튼을 누르면 친구의 유저 아이디와 텍스트를 보내준다.
     // 유효성 검사
-    if (
-      data.textComp != undefined &&
-      data.userId &&
-      data.textComp.length > 1
-    ) {
+    if (data.textComp != undefined && data.userId && data.textComp.length > 1) {
       // 보낼 데이터 객체 userId, textComp
       const requestData = {
         receiverId: data.userId,
@@ -95,9 +91,7 @@ export default function Compliment({
       // 칭찬권 구매
       axios
         .post(
-          `${
-            import.meta.env.VITE_API_BASE_URL
-          }/api/friends/compliment`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/friends/compliment`,
           {
             enfScript: requestData.enfScript,
           },
@@ -126,15 +120,14 @@ export default function Compliment({
 
       setOpenDialog(false);
     }
-
   }
-  
+
   const makeToast = (content: string) => {
     toast({
       title: "아이템 구매",
       description: content,
-    })
-  }
+    });
+  };
 
   // Item Card CSS 세팅
   const containerRef = useRef<HTMLDivElement>(null);
@@ -176,7 +169,10 @@ export default function Compliment({
               className={`${classes.itemElemOverlay}`}
               ref={overlayRef}
             ></div>
-            <div className={`${classes.itemElemCard}`}>
+            <div
+              className={`${classes.itemElemCard}  bg-gradient-to-r from-zinc-200 to-zinc-600`}
+            >
+              <div>👏</div>
               <h1 className={`${classes.itemElemContent}`}>강제칭찬권</h1>
             </div>
           </div>

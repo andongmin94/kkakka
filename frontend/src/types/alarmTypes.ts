@@ -5,5 +5,5 @@ export interface AlarmType {
   isChecked: boolean;
   createdAt: Date;
   frqEmail: string | null;
-  dogamId: number | null;
+  relatedContentId: number | null;
 }
