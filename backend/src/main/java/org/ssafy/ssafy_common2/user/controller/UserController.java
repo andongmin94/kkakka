@@ -40,12 +40,12 @@ public class UserController {
 
     @GetMapping("/oauth/callback/kakao/token/d-t-d")
     public ApiResponseDto<Map<String, Boolean>> getAccessTokenDistToDist(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
-        return handleAccessTokenRequest(code, "http://i10d110.p.ssafy.io:3000/api/oauth/callback/kakao/token", response);
+        return handleAccessTokenRequest(code, "https://i10d110.p.ssafy.io/oauth/callback/kakao/token", response);
     }
 
     @GetMapping("/oauth/callback/kakao/token/d-t-l")
     public ApiResponseDto<Map<String, Boolean>> getAccessTokenDistToLocal(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
-        return handleAccessTokenRequest(code, "http://i10d110.p.ssafy.io:3000/api/oauth/callback/kakao/token", response);
+        return handleAccessTokenRequest(code, "https://i10d110.p.ssafy.io/oauth/callback/kakao/token", response);
     }
 
     private ApiResponseDto<Map<String, Boolean>> handleAccessTokenRequest(String code, String redirectUri, HttpServletResponse response) {
