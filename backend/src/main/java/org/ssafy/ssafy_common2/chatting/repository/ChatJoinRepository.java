@@ -28,9 +28,6 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
                                                         @Param("attenderId") Long attenderId,
                                                         @Param("chatRoomType") String chatRoomType );
 
-
-
-
     // 5) 사용자 ID와 RoomID로 해당 채팅참여가 진짜 있는지 확인
     @Query(value = "SELECT * FROM chat_join cj WHERE cj.user_id = :userId AND cj.chat_room_id = :chatRoomId AND cj.deleted_at IS NULL "
            , nativeQuery = true)
@@ -51,6 +48,22 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin,Long> {
 
     // 8) 특정 채팅방에 참여한 사람들 전부 찾기
     List<ChatJoin> findChatJoinByChatJoinId_ChatRoomId(long roomId);
+
+    // 9) 둘 사이에 1대1 채팅방이 있는지 확인
+    @Query(value = "SELECT  cj1.chat_room_id "
+            +"from chat_join cj1  "
+            +"JOIN chat_join cj2  "
+            +"ON cj1.chat_room_id = cj2.chat_room_id "
+            +"AND cj1.deleted_at is null "
+            +"AND cj2.deleted_at is null "
+            +"AND cj1.user_id = :user1 "
+            +"AND cj2.user_id = :user2 "
+            +"AND cj1.chat_room_id NOT IN (SELECT cr.id FROM chat_room cr WHERE cr.chat_room_type = 'MANY') "
+            +"GROUP BY cj1.chat_room_id "
+            +"order by cj1.chat_room_id ", nativeQuery = true)
+    Optional<Long> checkUserConnectedOneByOneRoom(long user1, long user2);
+
+
 
 
 }
