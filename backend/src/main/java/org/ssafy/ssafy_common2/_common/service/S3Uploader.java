@@ -35,20 +35,21 @@ public class S3Uploader {
     }
 
     private String upload(File uploadFile) {
-        String fileName = "static" + "/" + uploadFile.getName();
+        int a = (int) (Math.random() * 100000);
+        String fileName = "static" + "/" + a + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
 
-//    전환된 File을 S3에 public 읽기 권한으로 put
+    //    전환된 File을 S3에 public 읽기 권한으로 put
 //    외부에서 정적 파일을 읽을 수 있도록 하기 위함입니다.
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-//    로컬에 생성된 File 삭제
+    //    로컬에 생성된 File 삭제
 //    Multipartfile -> File로 전환되면서 로컬에 파일 생성된것을 삭제합니다.
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
