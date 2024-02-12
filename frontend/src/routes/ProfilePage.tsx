@@ -115,28 +115,29 @@ export default function ProfilePage() {
 
           {/* 유저 프로필 전체*/}
           <div className="bg-white bg-opacity-60 z-2 -mt-40 flex p-2 pl-4 justify-between h-[160px]">
-            <div className="flex justify-center items-center">
-              {/* 프로필 사진 */}
-              <div className="m-1 w-[100px] h-[100px] mr-6">
-                <ProfileImage
-                  userImg={profileInfo && profileInfo.userProfileImg}
+          <div className="flex justify-center items-center">
+            {/* 프로필 사진 */}
+            <div className="m-1 w-[100px] h-[100px] mr-6">
+              <ProfileImage
+                userImg={profileInfo && profileInfo.userProfileImg ? profileInfo.userProfileImg : ""}
+              />
+            </div>
+
+            {/* 이름이랑 칭호 */}
+            <div className="flex flex-col items-center">
+              {/* 이름 */}
+              <div className=" text-black font-bold text-xl mb-3 drop-shadow">
+                {profileInfo && profileInfo.userName ? profileInfo.userName : ""}
+              </div>
+              {/* 칭호 */}
+              <div className="">
+                <UserCurrentAlias
+                  alias={profileInfo && profileInfo.userAlias ? profileInfo.userAlias : null}
                 />
               </div>
-
-              {/* 이름이랑 칭호 */}
-              <div className="flex flex-col items-center">
-                {/* 이름 */}
-                <div className=" text-black font-bold text-xl mb-3 drop-shadow">
-                  {profileInfo && profileInfo.userName}
-                </div>
-                {/* 칭호 */}
-                <div className="">
-                  <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
-                  />
-                </div>
-              </div>
             </div>
+          </div>
+
 
             {/* 메시지랑 프로필편집or친구 */}
             <div className="m-1 flex">
