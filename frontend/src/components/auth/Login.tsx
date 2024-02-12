@@ -8,13 +8,19 @@ export default function Login() {
     window.location.href = link;
   };
   return (
-    <div className="h-screen w-full bg-[url('/image/loginBg.jpg')] bg-cover flex justify-center items-center">
-      <div className="bg-white h-[300px] w-[500px] rounded-xl flex flex-col items-center lg:hover:scale-105 transition-transform ease-in-out duration-500">
+    <div
+      className="h-screen w-full bg-[url('/image/loginBg.jpg')] flex justify-center items-center"
+      style={{
+        backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="bg-white h-[250px] w-[400px] rounded-xl flex flex-col items-center ">
         <div className="flex flex-col items-center mt-10">
-          <div className=" font-bold text-3xl mb-20">로그인</div>
+          <div className=" font-bold text-xl mb-20">로그인</div>
           <Button
             onClick={loginHandler}
-            className="bg-[url('/image/kakaoLogo.png')] bg-cover h-[70px] w-[300px] rounded-xl"
+            className="bg-[url('/image/kakaoLogo.png')] bg-cover w-[210px] h-[50px] rounded-xl shadow-md lg:hover:scale-105 transition-transform ease-in-out duration-500"
           />
         </div>
       </div>

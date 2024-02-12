@@ -11,6 +11,7 @@ import axios from "axios";
 import { UserType } from "@/types/userTypes";
 import ProfileEdit from "@/components/profile/ProfileEdit";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ export default function ProfilePage() {
         <div className=" w-[90%] m-10 mt-20">
           {/* 프로필 배경 */}
           <div
-            className="h-[380px] rounded-xl z-1"
+            className="h-[380px] rounded-xl z-1 rounded-b-none"
             style={{
               backgroundImage: `url(${profileInfo && profileInfo.userBackImg})`,
               backgroundSize: "cover",
@@ -113,7 +114,7 @@ export default function ProfilePage() {
           ></div>
 
           {/* 유저 프로필 전체*/}
-          <div className="bg-white bg-opacity-60 z-2 -mt-40 flex mb-4 p-2 pl-4 justify-between h-[160px]">
+          <div className="bg-white bg-opacity-60 z-2 -mt-40 flex p-2 pl-4 justify-between h-[160px]">
             <div className="flex justify-center items-center">
               {/* 프로필 사진 */}
               <div className="m-1 w-[100px] h-[100px] mr-6">
@@ -198,20 +199,25 @@ export default function ProfilePage() {
           </div>
 
           {/* 도감 불명예 부분 */}
-          <div className=" m-1 w-100% h-[50px] w-[1000px] flex gap-10">
+          <div className="rounded-b-xl bg-gray-100 relative">
             <div
-              className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl items-center gap-14 pl-8`}
+              className={`${classes.menu} ${classes.SMN_effect} font-bold text-md flex justify-center items-center py-4 shadow-md sticky top-0`}
             >
-              <Link to={`/main/profile/${params.id}`} className="h-[30px]">
-                도감
+              <Link to={`/main/profile/${params.id}`} className="mr-10">
+                📜도감
               </Link>
-              <Link to={`/main/profile/${params.id}/dishonor`}>
-                불명예의 전당
+              <Link
+                to={`/main/profile/${params.id}/dishonor`}
+                className="mr-10"
+              >
+                🔥명예의 전당
               </Link>
             </div>
+            <div className="flex justify-center">
+              <Separator className="bg-zinc-300 w-full " />
+            </div>
+            <Outlet />
           </div>
-
-          <Outlet />
         </div>
       </PC>
 
