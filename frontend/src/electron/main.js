@@ -163,6 +163,8 @@ app.whenReady().then(createWindow).then(async () => {
             });
             let players = allGameData.allPlayers.map((players) => {
               let player = {};
+              player.summonerName = players.summonerName;
+              player.championName = players.rawChampionName.split("game_character_displayname_")[1];
               player.level = players.level;
               player.kills = players.scores.kills;
               player.deaths = players.scores.deaths;
@@ -185,6 +187,8 @@ app.whenReady().then(createWindow).then(async () => {
             }
             
             sendNewEvents(events);
+            sendScore(players);
+            console.log("인게임 데이터", players);
 
             // will be axios post areas
           } catch (error) {};
@@ -274,6 +278,18 @@ function sendMessageToSocket(message) {
       "messageType": "CHAT_BOT"
     }
     stompClient.send("/pub/chat/sendMessage", {},JSON.stringify(chatMessage));
+}
+
+// 인게임 스코어 보드를 위한 배열 전송
+function sendScore(players) {
+
+  var chatMessage = {
+    "chatRoomId": roomId,
+    "userId": TESTUSER,
+    "content": players,
+    "messageType": "INGAME"
+  }
+  stompClient.send("/pub/chat/playersInfo", {},JSON.stringify(chatMessage));
 }
 
 // 메세지 받는 로직 -> subscribe의 두번째 로직으로 넣으면 해당 주소로 들어오는 메세지를 다 받는다. 
