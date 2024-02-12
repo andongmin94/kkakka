@@ -20,9 +20,9 @@ export default function IndexPage() {
             <LiveContentCarousel />
           </div>
           <div className="text-lg mt-[300px] mb-5 flex ">
-            <p className="grid  ml-10 font-bold">새로 올라온 도감</p>
+            <p className="grid ml-10 font-bold">새로 올라온 도감</p>
           </div>
-          <div className="grid grid-cols-2 gap-y-5 mb-5 w-[1050px] ml-10">
+          <div className="mb-5 ml-10">
             {/* 도감 리스트 */}
             <NewDogamList />
           </div>
