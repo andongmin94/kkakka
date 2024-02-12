@@ -40,10 +40,10 @@ export default function LiveContentCarousel() {
         {broadcastList.map((room) => (
           <CarouselItem
             key={room.roomId}
-            className="md:basis-1/1 lg:basis-1/3 mr-5"
+            className="md:basis-1/1 lg:basis-1/2 mr-5"
           >
             <div className="p-1">
-              <CardContent className="flex aspect-square items-center justify-center p-0">
+              <CardContent className="flex aspect-square items-center justify-center p-0 lg:hover:scale-105 transition-transform ease-in-out duration-500">
                 <LiveContent liveData={room} />
               </CardContent>
             </div>
