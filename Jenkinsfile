@@ -46,6 +46,7 @@ pipeline {
                 }
 
                 // 도커 컴포즈로 서비스 실행
+                sh "docker-compose -f docker-compose.yml down"
                 sh "docker-compose -f docker-compose.yml up -d"
                 echo '도커 컴포즈를 사용하여 서비스 빌드 및 배포 완료!'
             }
