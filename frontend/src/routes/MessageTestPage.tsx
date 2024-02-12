@@ -263,9 +263,7 @@ export default function MessageTestPage() {
 
         // { userId: userInfo.userId, chatRoomId: userInfo.roomId },
         // { userId: userInfo.userId, chatRoomId: userInfo.roomId }
-        (         function () {
-          alert("see you next Time!!");
-        });
+        ();
     };
   }, [roomId]);
 
