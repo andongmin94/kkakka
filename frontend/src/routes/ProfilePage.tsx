@@ -287,7 +287,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="mr-2">
                   <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
+                    alias={profileInfo ? profileInfo.userAlias || "" : ""}
                   />
                 </div>
               </div>
