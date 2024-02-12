@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-// const electron = window.electron;
 import { useEffect } from "react";
 import useAlarmStore from "@/store/alarm/alarmStore";
 import axios from "axios";

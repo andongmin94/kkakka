@@ -115,7 +115,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
             <div className="grid gap-4 w-full">
               {/* 헤더 */}
               <div className="space-y-2">
-                <h4 className="font-bold leading-none text-xl">댓글 목록</h4>
+                <h4 className="font-bold leading-none text-lg">댓글 목록</h4>
               </div>
               <div className="grid gap-2">
                 <div className="border-2 border-black w-full" />
