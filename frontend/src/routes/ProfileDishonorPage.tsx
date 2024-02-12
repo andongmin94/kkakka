@@ -24,7 +24,7 @@ export default function ProfileDishonorPage() {
   return (
     <>
       <PC>
-        <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
+        <div className="m-1 grid grid-cols-3 row-auto place-items-center">
           {aliases &&
             aliases.map((data, idx) => {
               return <Dishonor data={data} key={idx} />;
