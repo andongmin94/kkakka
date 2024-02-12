@@ -62,7 +62,7 @@ export default function ProfilePage() {
       .then((res: any) => {
         console.log("채팅방 입장성공", res.data.data);
         const roomId = res.data.data;
-        navigate(`/main/message/${roomId}`);
+        navigate(`/main/message/${roomId}`, { state: profileInfo });
       });
   };
 
@@ -102,98 +102,116 @@ export default function ProfilePage() {
   return (
     <>
       <PC>
-        <div className="w-full flex flex-col items-center">
+        <div className=" w-[90%] m-10 mt-20">
           {/* 프로필 배경 */}
-          <div className="border-8 rounded-2xl border-red-200">
-            <div
-              className={`border-4 w-[1000px] h-[350px] flex-col m-1 border-blue-200 rounded-2xl`}
-              style={{
-                backgroundImage: `url(${
-                  profileInfo && profileInfo.userBackImg
-                })`,
-                backgroundSize: "cover",
-              }}
-            >
-              <div className="flex justify-between m-1">
-                <div className="m-1 w-[550px] h-[220px]">
-                  <div className="m-1 w-[200px] h-[200px] grid place-items-center">
-                    <ProfileImage
-                      userImg={profileInfo && profileInfo.userProfileImg}
-                    />
-                  </div>
-                </div>
-                <div className="m-1 w-[550px] h-[200px] flex justify-end">
-                  <div className="pt-[12px] mr-2">
-                    {/* <Check check={check} /> */}
-                  </div>
-                  {profileInfo && profileInfo.bankruptcy ? <Poor /> : null}
+          <div
+            className="h-[380px] rounded-xl z-1"
+            style={{
+              backgroundImage: `url(${profileInfo && profileInfo.userBackImg})`,
+              backgroundSize: "cover",
+            }}
+          ></div>
 
-                  {userId === myId ? (
-                    <ProfileEdit />
-                  ) : (
-                    <div>
-                      <Button
-                        type="submit"
-                        variant="secondary"
-                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                        onClick={() => {
-                          enterChatHandler();
-                        }}
-                      >
-                        메세지
-                      </Button>
-                      {(friendship === "FRIEND" && (
-                        <Button onClick={changeFriendStatusHandler}>
-                          친구끊기
-                        </Button>
-                      )) ||
-                        (friendship === "RECEIVE" && (
-                          <Button onClick={changeFriendStatusHandler}>
-                            수락
-                          </Button>
-                        )) ||
-                        (friendship === "SEND" && (
-                          <Button onClick={changeFriendStatusHandler}>
-                            요청취소
-                          </Button>
-                        )) ||
-                        (friendship === "NONE" && (
-                          <Button onClick={changeFriendStatusHandler}>
-                            친구신청
-                          </Button>
-                        ))}
-                    </div>
-                  )}
-                </div>
+          {/* 유저 프로필 전체*/}
+          <div className="bg-white bg-opacity-60 z-2 -mt-40 flex mb-4 p-2 pl-4 justify-between h-[160px]">
+            <div className="flex justify-center items-center">
+              {/* 프로필 사진 */}
+              <div className="m-1 w-[100px] h-[100px] mr-6">
+                <ProfileImage
+                  userImg={profileInfo && profileInfo.userProfileImg}
+                />
               </div>
-              <div className="m-1 w-100% h-[100px] flex gap-[100px] items-center pl-[35px]">
-                <div className="font-bold text-4xl">
-                  <div className="bg-white text-black rounded-2xl border-4 border-red-300 w-[150px] h-[60px] grid grid-col place-items-center">
-                    {profileInfo && profileInfo.userName}
-                  </div>
+
+              {/* 이름이랑 칭호 */}
+              <div className="flex flex-col items-center">
+                {/* 이름 */}
+                <div className=" text-black font-bold text-xl mb-3 drop-shadow">
+                  {profileInfo && profileInfo.userName}
                 </div>
-                <div>
+                {/* 칭호 */}
+                <div className="">
                   <UserCurrentAlias
                     alias={profileInfo && profileInfo.userAlias}
                   />
                 </div>
               </div>
             </div>
-            <div className=" m-1 w-100% h-[50px] w-[1000px] flex gap-10">
-              <div
-                className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl items-center gap-14 pl-8`}
-              >
-                <Link to={`/main/profile/${params.id}`} className="h-[30px]">
-                  도감
-                </Link>
-                <Link to={`/main/profile/${params.id}/dishonor`}>
-                  불명예의 전당
-                </Link>
-              </div>
-            </div>
 
-            <Outlet />
+            {/* 메시지랑 프로필편집or친구 */}
+            <div className="m-1 flex">
+              {/* 메시지 */}
+              <Button
+                type="submit"
+                variant="secondary"
+                className="mr-1 bg-white font-bold text-xs"
+                onClick={() => {
+                  enterChatHandler();
+                }}
+              >
+                메시지
+              </Button>
+
+              {/* 프로필편집 또는 친구버튼 */}
+              {userId === myId ? (
+                <ProfileEdit />
+              ) : (
+                <div>
+                  {(friendship === "FRIEND" && (
+                    <Button
+                      onClick={changeFriendStatusHandler}
+                      variant="secondary"
+                      className="mr-1 bg-white font-bold text-xs"
+                    >
+                      친구끊기
+                    </Button>
+                  )) ||
+                    (friendship === "RECEIVE" && (
+                      <Button
+                        onClick={changeFriendStatusHandler}
+                        variant="secondary"
+                        className="mr-1 bg-white font-bold text-xs"
+                      >
+                        수락
+                      </Button>
+                    )) ||
+                    (friendship === "SEND" && (
+                      <Button
+                        onClick={changeFriendStatusHandler}
+                        variant="secondary"
+                        className="mr-1 bg-white font-bold text-xs"
+                      >
+                        요청취소
+                      </Button>
+                    )) ||
+                    (friendship === "NONE" && (
+                      <Button
+                        onClick={changeFriendStatusHandler}
+                        variant="secondary"
+                        className="mr-1 bg-white font-bold text-xs"
+                      >
+                        친구신청
+                      </Button>
+                    ))}
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* 도감 불명예 부분 */}
+          <div className=" m-1 w-100% h-[50px] w-[1000px] flex gap-10">
+            <div
+              className={`${classes.menu} ${classes.SMN_effect} font-bold flex text-2xl items-center gap-14 pl-8`}
+            >
+              <Link to={`/main/profile/${params.id}`} className="h-[30px]">
+                도감
+              </Link>
+              <Link to={`/main/profile/${params.id}/dishonor`}>
+                불명예의 전당
+              </Link>
+            </div>
+          </div>
+
+          <Outlet />
         </div>
       </PC>
 
@@ -269,7 +287,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="mr-2">
                   <UserCurrentAlias
-                    alias={profileInfo && profileInfo.userAlias}
+                    alias={profileInfo ? profileInfo.userAlias || "" : ""}
                   />
                 </div>
               </div>

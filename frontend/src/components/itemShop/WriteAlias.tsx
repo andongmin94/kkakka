@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
@@ -76,7 +76,8 @@ export default function WriteAlias({
 
   function onSubmit() {
     toast({
-      title: "친구의 칭호가 변경되었습니다.",
+      title: "아이템 구매",
+      description: "친구의 칭호가 변경되었습니다.",
       // description: (
       //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
       //     <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -121,11 +122,11 @@ export default function WriteAlias({
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (cardRef.current != null) {
-      cardRef.current.style.backgroundImage = `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfP6YEtvDE4IhCTv0534ffLaaVFlE8RB34Uw&usqp=CAU')`;
-    }
-  });
+  // useEffect(() => {
+  //   if (cardRef.current != null) {
+  //     // cardRef.current.style.backgroundImage = `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfP6YEtvDE4IhCTv0534ffLaaVFlE8RB34Uw&usqp=CAU')`;
+  //   }
+  // });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (containerRef.current && overlayRef.current) {
@@ -155,7 +156,7 @@ export default function WriteAlias({
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger asChild>
           <div
-            className={`${classes.itemElemContainer}`}
+            className={`${classes.itemElemContainer} bg-gradient-to-r from-amber-200 to-amber-600 rounded-[3%]`}
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseOut={handleMouseOut}
@@ -165,6 +166,7 @@ export default function WriteAlias({
               ref={overlayRef}
             ></div>
             <div className={`${classes.itemElemCard}`} ref={cardRef}>
+              <div>👑</div>
               <h1 className={`${classes.itemElemContent}`}>칭호지정권</h1>
             </div>
           </div>

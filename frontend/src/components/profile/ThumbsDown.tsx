@@ -55,11 +55,9 @@ export default function ThumbsDown({
       }}
     >
       {thumbs ? (
-        // <img src="/image/thumbsDownOn.png" />
-        <div>👎</div>
+        <img src="/image/thumbsDownOn.png" className="w-8 h-8" />
       ) : (
-        // <img src="/image/thumbsDown.png" />
-        <div>👍</div>
+        <img src="/image/thumbsDown.png" className="w-8 h-8" />
       )}
     </div>
   );

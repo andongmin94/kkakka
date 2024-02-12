@@ -13,6 +13,7 @@ import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ToTheTop from "@/components/app/ToTheTop";
 
 import axios from "axios";
 
@@ -65,8 +66,11 @@ export default function RootLayout() {
         localStorage.setItem("userBackImg", res.data.data.userBackImg);
         localStorage.setItem("userAlias", res.data.data.userAlias);
         // setUserInfo(res.data.data);
-        {typeof electron !== "undefined" && electron.send("userInfo", res.data.data)
-          electron.send("token", token)}
+        {
+          typeof electron !== "undefined" &&
+            electron.send("userInfo", res.data.data);
+          electron.send("token", token);
+        }
       });
   }, []);
 
@@ -125,12 +129,10 @@ export default function RootLayout() {
     let prevScrollPos = window.pageYOffset;
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
-
       // 예스크롤을 내릴 때 네브바를 숨김, 올리면 다시 보임
       setIsNavbarVisible(
         currentScrollPos <= 0 || currentScrollPos < prevScrollPos
       );
-
       // 현재 스크롤 위치를 업데이트
       prevScrollPos = currentScrollPos;
     };
@@ -144,120 +146,135 @@ export default function RootLayout() {
   return (
     <>
       <PC>
-        {/* 확성기 자리 */}
-        {showSpeakerToast && (
-          <SpeakerToast
-            setToast={setShowSpeakerToast}
-            text={speakerToastContent}
-          />
-        )}
-        <main className={classes.page}>
-          {/* 왼쪽 사이드바 영역*/}
-          <div
-            className={cn(classes.section_left, {
-              [classes.electron_section_left]: typeof electron !== "undefined",
-            })}
-          >
-            {/* 로고 이미지 */}
-            <Link to="/main" className="mt-5 mb-20 w-4/5">
-              <img alt="logo" src="/image/logo.png" />
-            </Link>
-            {/* 사이드바 메뉴 */}
-            <Link to="/main/item" className={`${classes.menu}`}>
-              <h1>아이템샵</h1>
-            </Link>
-            <Link to="/main/messagelist" className={`${classes.menu}`}>
-              <h1>메세지함</h1>
-            </Link>
-            {typeof electron !== "undefined" && (
-              <Link to="/main/setting" className={`${classes.menu}`}>
-                <h1>환경 설정</h1>
-              </Link>
+        <ToTheTop />
+
+        <div
+          className="py-7 bg-no-repeat bg-fixed"
+          style={{
+            backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+          }}
+        >
+          <div className={classes.whole}>
+            {/* 확성기 자리 */}
+            {showSpeakerToast && (
+              <SpeakerToast
+                setToast={setShowSpeakerToast}
+                text={speakerToastContent}
+              />
             )}
-            <Link to="/main/intro" className={classes.menu}>
-              <h1>서비스 소개</h1>
-            </Link>
-          </div>
-
-          {/* 네브바와 메인 페이지를 포함하는 영역 */}
-          <div
-            className={cn(classes.section_right, {
-              [classes.electron_section_right]: typeof electron !== "undefined",
-            })}
-          >
-            {/* 네브바 */}
-            {isNavbarVisible ? (
-              theme === "light" ? (
-                <nav className={classes.nav}>
-                  <div></div>
-
-                  {/* 로고 */}
-
-                  {/* 네브바 오른쪽 영역 */}
-                  <div className={classes.nav_right}>
-                    {/* 다크모드 버튼 (미완, 후순위) */}
-                    <ModeToggle />
-                    {/* 사용자 프로필 버튼 */}
-                    <Link
-                      to={`/main/profile/${userId}`}
-                      className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                    >
-                      <Avatar>
-                        <AvatarImage
-                          src={userProfileImg ?? "/default-image.png"}
-                          alt="프사"
-                          className="bg-cover"
-                        />
-                        <AvatarFallback>프사</AvatarFallback>
-                      </Avatar>
-                      {/* <div className={classes.user_image} /> */}
+            <main className={classes.page}>
+              {/* 왼쪽 사이드바 영역*/}
+              <div
+                className={cn(classes.section_left, {
+                  [classes.electron_section_left]:
+                    typeof electron !== "undefined",
+                })}
+              >
+                <div className={classes.menu_items}>
+                  {/* 로고 이미지 */}
+                  <Link to="/main" className="mt-10 mb-10 w-3/5">
+                    <img alt="logo" src="/image/logo.png" />
+                  </Link>
+                  {/* 사이드바 메뉴 */}
+                  <Link to="/main/item" className={`${classes.menu}`}>
+                    <h1>아이템샵</h1>
+                  </Link>
+                  <Link to="/main/messagelist" className={`${classes.menu}`}>
+                    <h1>메세지함</h1>
+                  </Link>
+                  {typeof electron !== "undefined" && (
+                    <Link to="/main/setting" className={`${classes.menu}`}>
+                      <h1>환경 설정</h1>
                     </Link>
-                    <Alarm />
-                    <FriendsBtn />
-                  </div>
-                </nav>
-              ) : (
-                <nav className={classes.nav_dark}>
-                  <div></div>
+                  )}
+                  <Link to="/main/intro" className={classes.menu}>
+                    <h1>서비스 소개</h1>
+                  </Link>
+                </div>
+              </div>
 
-                  {/* 로고 */}
+              {/* 네브바와 메인 페이지를 포함하는 영역 */}
+              <div
+                className={cn(classes.section_right, {
+                  [classes.electron_section_right]:
+                    typeof electron !== "undefined",
+                })}
+              >
+                {/* 네브바 */}
+                {isNavbarVisible ? (
+                  theme === "light" ? (
+                    <nav className={classes.nav}>
+                      <div></div>
 
-                  {/* 네브바 오른쪽 영역 */}
-                  <div className={classes.nav_right}>
-                    {/* 다크모드 버튼 (미완, 후순위) */}
-                    <ModeToggle />
-                    {/* 사용자 프로필 버튼 */}
-                    <Link
-                      to={`/main/profile/${userId}`}
-                      className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                    >
-                      <Avatar>
-                        <AvatarImage
-                          src={userProfileImg ?? "/default-image.png"}
-                          alt="프사"
-                          className="bg-cover"
-                        />
-                        <AvatarFallback className="text-xs">
-                          프사
-                        </AvatarFallback>
-                      </Avatar>
-                      {/* <div className={classes.user_image} /> */}
-                    </Link>
+                      {/* 로고 */}
 
-                    <Alarm />
-                    <FriendsBtn />
-                  </div>
-                </nav>
-              )
-            ) : undefined}
+                      {/* 네브바 오른쪽 영역 */}
+                      <div className={classes.nav_right}>
+                        {/* 다크모드 버튼 (미완, 후순위) */}
+                        <ModeToggle />
+                        {/* 사용자 프로필 버튼 */}
+                        <Link
+                          to={`/main/profile/${userId}`}
+                          className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                        >
+                          <Avatar>
+                            <AvatarImage
+                              src={userProfileImg ?? "/default-image.png"}
+                              alt="프사"
+                              className="bg-cover text-xs"
+                            />
+                            <AvatarFallback>😶</AvatarFallback>
+                          </Avatar>
+                          {/* <div className={classes.user_image} /> */}
+                        </Link>
+                        <Alarm />
+                        <FriendsBtn />
+                      </div>
+                    </nav>
+                  ) : (
+                    <nav className={classes.nav_dark}>
+                      <div></div>
 
-            {/* 메인 페이지 영역 */}
-            <div className={classes.body}>
-              <Outlet />
-            </div>
+                      {/* 로고 */}
+
+                      {/* 네브바 오른쪽 영역 */}
+                      <div className={classes.nav_right}>
+                        {/* 다크모드 버튼 (미완, 후순위) */}
+                        <ModeToggle />
+                        {/* 사용자 프로필 버튼 */}
+                        <Link
+                          to={`/main/profile/${userId}`}
+                          className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                        >
+                          <Avatar>
+                            <AvatarImage
+                              src={userProfileImg ?? "/default-image.png"}
+                              alt="프사"
+                              className="bg-cover"
+                            />
+                            <AvatarFallback className="text-xs">
+                              😶
+                            </AvatarFallback>
+                          </Avatar>
+                          {/* <div className={classes.user_image} /> */}
+                        </Link>
+
+                        <Alarm />
+                        <FriendsBtn />
+                      </div>
+                    </nav>
+                  )
+                ) : undefined}
+
+                {/* 메인 페이지 영역 */}
+                <div className={classes.body}>
+                  <Outlet />
+                </div>
+              </div>
+            </main>
+            <TailwindIndicator />
           </div>
-        </main>
-        <TailwindIndicator />
+        </div>
       </PC>
 
       <Mobile>
@@ -295,7 +312,7 @@ export default function RootLayout() {
                       alt="프사"
                       className="bg-cover"
                     />
-                    <AvatarFallback className="text-xs">프사</AvatarFallback>
+                    <AvatarFallback className="text-xs">😶</AvatarFallback>
                   </Avatar>
                   {/* <div className={classes.user_image} /> */}
                 </Link>
