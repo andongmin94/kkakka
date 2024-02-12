@@ -27,6 +27,13 @@ export default function ProfileEdit() {
     userbackImage
   );
 
+  const [profileFile, setProfileFile] = useState<string | ArrayBuffer | null>(
+    userprofileImage
+  );
+  const [backFile, setBackFile] = useState<string | ArrayBuffer | null>(
+    userbackImage
+  );
+
   // 미리보기 이미지 프로세싱
   const processFile = (
     currentFile: File
@@ -55,11 +62,36 @@ export default function ProfileEdit() {
 
     previewSrc.then((res) => {
       if (check === 1) {
+        // 이미지를 Blob으로 변환
         setProfileImg(res);
+        const blob = dataURItoBlob(res);
+        const pFile = new File([blob], "profileImage.jpg", {
+          type: "image/jpeg",
+        });
+        setProfileFile(pFile);
       } else {
+        // 이미지를 Blob으로 변환
         setBackImg(res);
+        const blob = dataURItoBlob(res);
+        const bFile = new File([blob], "backImage.jpg", {
+          type: "image/jpeg",
+        });
+        setBackFile(bFile);
       }
     });
+  };
+
+  // Data URI를 Blob으로 변환하는 함수
+  const dataURItoBlob = (dataURI: string) => {
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeString });
+    return blob;
   };
 
   const [riotId, setRiotId] = useState(null);
@@ -73,11 +105,11 @@ export default function ProfileEdit() {
 
   const profileEditHandler = () => {
     const formData = new FormData();
-    if (profileImg instanceof File) {
-      formData.append("profileImg", profileImg);
+    if (profileFile) {
+      formData.append("profileImg", profileFile);
     }
-    if (backImg instanceof File) {
-      formData.append("backImg", backImg);
+    if (backFile) {
+      formData.append("backImg", backFile);
     }
     if (riotId !== null) {
       formData.append("riotId", riotId);
@@ -89,7 +121,6 @@ export default function ProfileEdit() {
         {
           headers: {
             Authorization: token,
-            "Content-Type": "multipart/form-data",
           },
         }
       )
