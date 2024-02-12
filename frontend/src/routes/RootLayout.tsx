@@ -221,9 +221,9 @@ export default function RootLayout() {
                             <AvatarImage
                               src={userProfileImg ?? "/default-image.png"}
                               alt="프사"
-                              className="bg-cover"
+                              className="bg-cover text-xs"
                             />
-                            <AvatarFallback>프사</AvatarFallback>
+                            <AvatarFallback>😶</AvatarFallback>
                           </Avatar>
                           {/* <div className={classes.user_image} /> */}
                         </Link>
@@ -253,7 +253,7 @@ export default function RootLayout() {
                               className="bg-cover"
                             />
                             <AvatarFallback className="text-xs">
-                              프사
+                              😶
                             </AvatarFallback>
                           </Avatar>
                           {/* <div className={classes.user_image} /> */}
@@ -312,7 +312,7 @@ export default function RootLayout() {
                       alt="프사"
                       className="bg-cover"
                     />
-                    <AvatarFallback className="text-xs">프사</AvatarFallback>
+                    <AvatarFallback className="text-xs">😶</AvatarFallback>
                   </Avatar>
                   {/* <div className={classes.user_image} /> */}
                 </Link>

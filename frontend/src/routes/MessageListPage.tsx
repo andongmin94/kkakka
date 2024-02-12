@@ -64,8 +64,8 @@ export default function MessageListPage() {
   }, [friendsInfo, navigate]);
 
   return (
-    <div>
-      <div>메시지 목록</div>
+    <div className="ml-10">
+      <div className="mb-10 ml-2 font-bold text-lg">메시지 목록</div>
       {dmList &&
         dmList.map((dm) => {
           return (

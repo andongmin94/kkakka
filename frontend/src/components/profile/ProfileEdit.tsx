@@ -17,14 +17,14 @@ import useUserStore from "@/store/user/userStore";
 export default function ProfileEdit() {
   const { userInfo } = useUserStore();
   const userprofileImage = userInfo.userProfileImg;
-  const userbackImage = userInfo.userBackImg;
   const token = localStorage.getItem("token");
 
   const [profileImg, setProfileImg] = useState<string | ArrayBuffer | null>(
     userprofileImage
   );
-  const [backImg, setBackImg] = useState<string | ArrayBuffer | null>(
-    userbackImage
+
+  const [profileFile, setProfileFile] = useState<string | ArrayBuffer | null>(
+    userprofileImage
   );
 
   // 미리보기 이미지 프로세싱
@@ -55,11 +55,28 @@ export default function ProfileEdit() {
 
     previewSrc.then((res) => {
       if (check === 1) {
+        // 이미지를 Blob으로 변환
         setProfileImg(res);
-      } else {
-        setBackImg(res);
+        const blob = dataURItoBlob(res);
+        const pFile = new File([blob], "profileImage.jpg", {
+          type: "image/jpeg",
+        });
+        setProfileFile(pFile);
       }
     });
+  };
+
+  // Data URI를 Blob으로 변환하는 함수
+  const dataURItoBlob = (dataURI: string) => {
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeString });
+    return blob;
   };
 
   const [riotId, setRiotId] = useState(null);
@@ -69,15 +86,11 @@ export default function ProfileEdit() {
 
   console.log("라이엇", riotId);
   console.log("프로필", profileImg);
-  console.log("배경", backImg);
 
   const profileEditHandler = () => {
     const formData = new FormData();
-    if (profileImg instanceof File) {
-      formData.append("profileImg", profileImg);
-    }
-    if (backImg instanceof File) {
-      formData.append("backImg", backImg);
+    if (profileFile) {
+      formData.append("profileImg", profileFile);
     }
     if (riotId !== null) {
       formData.append("riotId", riotId);
@@ -89,12 +102,15 @@ export default function ProfileEdit() {
         {
           headers: {
             Authorization: token,
-            "Content-Type": "multipart/form-data",
           },
         }
       )
       .then((res) => {
         console.log(res);
+        window.alert("수정되었습니다.");
+      })
+      .then(() => {
+        window.location.reload();
       });
   };
 
@@ -106,7 +122,7 @@ export default function ProfileEdit() {
             <Button
               type="submit"
               variant="secondary"
-              className="mr-1 border-solid border-2 border-inherit font-bold text-lg mt-2 h-[50px]"
+              className="mr-1 font-bold bg-white text-xs"
             >
               프로필 편집
             </Button>
@@ -115,9 +131,9 @@ export default function ProfileEdit() {
             <DialogHeader>
               <DialogTitle>프로필 편집</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col w-full mb-5 mt-5">
-              <div className="grid w-full max-w-sm items-center gap-1.5 mb-8 mt-4">
-                <Label htmlFor="text" className="font-bold">
+            <div className="flex flex-col w-full mb-5">
+              <div className="grid w-full max-w-sm items-center gap-1.5 mb-6 mt-4">
+                <Label htmlFor="text" className="font-bold mb-1">
                   롤 아이디
                 </Label>
                 <Input
@@ -128,7 +144,7 @@ export default function ProfileEdit() {
               </div>
               {/* 프로필 사진 */}
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8">
-                <Label htmlFor="picture" className="font-bold">
+                <Label htmlFor="picture" className="font-bold mb-1">
                   프로필 사진
                 </Label>
                 <Input
@@ -137,46 +153,22 @@ export default function ProfileEdit() {
                   onChange={(e) => imgUpload(e, 1)}
                 />
               </div>
-              {/* 프로필 배경 */}
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture2" className="font-bold">
-                  프로필 배경
-                </Label>
-                <Input
-                  id="picture2"
-                  type="file"
-                  onChange={(e) => imgUpload(e, 2)}
-                />
-              </div>
             </div>
 
             {/* 하단 부분 */}
-            <div className="flex justify-between items-center">
-              <div className="flex gap-x-5">
+            <div className="flex justify-between">
+              <div className="flex ">
                 {profileImg ? (
                   <div
                     style={{
                       backgroundImage: `url("${profileImg}")`,
                       backgroundSize: "cover",
                     }}
-                    className="h-20 w-20 rounded-lg border-2 bg"
+                    className="h-20 w-20 rounded-lg border-2 mr-2"
                   />
                 ) : (
-                  <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
-                    프사없음
-                  </div>
-                )}
-                {backImg ? (
-                  <div
-                    style={{
-                      backgroundImage: `url("${backImg}")`,
-                      backgroundSize: "cover",
-                    }}
-                    className="h-20 w-20 rounded-lg border-2"
-                  />
-                ) : (
-                  <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
-                    배경없음
+                  <div className=" flex items-center border-2 h-20 w-20 rounded-lg text-xs p-2 mr-2">
+                    선택한 프로필 이미지가 없습니다.
                   </div>
                 )}
               </div>
@@ -184,11 +176,10 @@ export default function ProfileEdit() {
                 <DialogClose asChild>
                   <Button
                     type="submit"
-                    variant="secondary"
-                    className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                    className="mr-1 bg-blue-500 font-bold text-xs mt-2"
                     onClick={profileEditHandler}
                   >
-                    저장하기
+                    저장
                   </Button>
                 </DialogClose>
               </div>
@@ -236,17 +227,6 @@ export default function ProfileEdit() {
                   onChange={(e) => imgUpload(e, 1)}
                 />
               </div>
-              {/* 프로필 배경 */}
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture2" className="font-bold">
-                  프로필 배경
-                </Label>
-                <Input
-                  id="picture2"
-                  type="file"
-                  onChange={(e) => imgUpload(e, 2)}
-                />
-              </div>
             </div>
 
             {/* 하단 부분 */}
@@ -263,19 +243,6 @@ export default function ProfileEdit() {
                 ) : (
                   <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
                     프사없음
-                  </div>
-                )}
-                {backImg ? (
-                  <div
-                    style={{
-                      backgroundImage: `url("${backImg}")`,
-                      backgroundSize: "cover",
-                    }}
-                    className="h-20 w-20 rounded-lg border-2"
-                  />
-                ) : (
-                  <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
-                    배경없음
                   </div>
                 )}
               </div>
