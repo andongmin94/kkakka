@@ -48,6 +48,9 @@ export default function FriendsBtn() {
             {friendList.map((friend: FriendType) => {
               return <FriendsCard key={friend.userId} info={friend} />;
             })}
+            <div className="text-xs h-40 flex pt-6 justify-center ">
+              더이상 친구가 없어요 ... 😭
+            </div>
           </div>
         </SheetHeader>
       </SheetContent>
