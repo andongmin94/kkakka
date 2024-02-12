@@ -12,9 +12,7 @@ export default function KakaoCallbackPage() {
     if (code) {
       axios
         .get(
-          `${
-            import.meta.env.VITE_API_BASE_URL
-          }/api/oauth/callback/kakao/token/d-t-d?code=${code}`
+          `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_BASE_NEXT_URL}=${code}`
         )
         .then((res) => {
           localStorage.setItem("token", res.headers.authorization);

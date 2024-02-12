@@ -35,7 +35,6 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AliasRepository aliasRepository;
-    private static final String distUri = "i10d110.p.ssafy.io";
 
     @Value("${kakao.clientId}")
     String clientId;

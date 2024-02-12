@@ -30,12 +30,12 @@ public class UserController {
 // 인가 코드로 엑세스 토큰 발급 -> 사용자 정보 조회 -> DB 저장 -> jwt 토큰 발급 -> 프론트에 토큰 전달
     @GetMapping("/oauth/callback/kakao/token/l-t-d")
     public ApiResponseDto<Map<String, Boolean>> getAccessTokenLocalToDist(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
-        return handleAccessTokenRequest(code, "http://localhost:3000/api/oauth/callback/kakao/token", response);
+        return handleAccessTokenRequest(code, "http://localhost:3000/oauth/callback/kakao/token", response);
     }
 
     @GetMapping("/oauth/callback/kakao/token/l-t-l")
     public ApiResponseDto<Map<String, Boolean>> getAccessTokenLocalToLocal(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
-        return handleAccessTokenRequest(code, "http://localhost:3000/api/oauth/callback/kakao/token", response);
+        return handleAccessTokenRequest(code, "http://localhost:3000/oauth/callback/kakao/token", response);
     }
 
     @GetMapping("/oauth/callback/kakao/token/d-t-d")
