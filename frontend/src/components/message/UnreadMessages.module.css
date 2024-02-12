@@ -1,8 +1,9 @@
 .circle {
-  background-color: red;
+  background-color: rgb(236, 27, 27);
   width: 20px;
   height: 20px;
   border-radius: 50%;
+  margin-right: 40px;
 }
 
 .circleText {
