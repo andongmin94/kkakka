@@ -14,6 +14,7 @@ import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
+import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoComparator;
 import org.ssafy.ssafy_common2.chatting.dto.response.ChatRoomInfoDto;
 import org.ssafy.ssafy_common2.chatting.dto.response.CrowdDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
@@ -68,6 +69,7 @@ public class ChatRoomMySQLService {
     }
 
     // 3) 현 사용자와 인수로 주어진 Email 간의 1대1 채팅방이 있으면 방 번호 반환 없으면 -1 반환
+
     public long getUserConnectedRoomIdWithOwner(String ownerEmail, long attenderId, String chatRoomType) {
 
         long RoomIds = chatJoinRepository.getUserConnectedRoomIdsAndDeletedAtISNULL(ownerEmail, attenderId, chatRoomType).orElse(0L);
@@ -185,6 +187,16 @@ public class ChatRoomMySQLService {
             // 6-5) 답속에 포함
             ans.add(element);
         }
+
+        // 7) 날짜순 정렬
+        ans.sort(new ChatRoomInfoComparator());
+
+        // 시간 정렬 테스트 ==========================================================
+//        for(ChatRoomInfoDto dto : ans){
+//           if(dto.getLastWrittenMessageTime() != null){
+//               System.out.println(dto.getLastWrittenMessageTime().toLocalTime());
+//           }
+//        }
 
         return ans;
     }
@@ -366,7 +378,17 @@ public class ChatRoomMySQLService {
         if(roomType.equals("ONE")){
 
             // 1-3-a) 둘 사이의 1대1 채팅방이 있는지 확인
-            long roomId = getUserConnectedRoomIdWithOwner(owner.getKakaoEmail(), userDetails.getUser().getId(), "ONE");
+            long roomId = 0;
+            if(userId == userDetails.getUser().getId()) {
+                // 본인과의 채팅방이 있는지 확인해야하는 경우, 자기 이름으로 생성된 방이 있는지 확인
+                roomId = getUserConnectedRoomIdWithOwner(owner.getKakaoEmail(), userDetails.getUser().getId(), "ONE");
+            }else {
+                // 본인과 타인간의 채팅방이 있는지 확인하는 경우, 둘이 공통으로 참여한 1대1 채팅방이 있는지 확인
+                log.info("{}과 {}간의 채팅방 있는지 확인 중...", userId, userDetails.getUser().getId());
+                roomId = chatJoinRepository.checkUserConnectedOneByOneRoom(userId, userDetails.getUser().getId()).orElse((long)-1);
+                log.info("확인완료!! 둘 사이의 채팅방은... {}", roomId);
+            }
+
 
             // 1-3-b) 둘 사이의 채팅방이 없다면 -1이 반환 되고, 방 생성을 한다.
             if(roomId == -1) {
