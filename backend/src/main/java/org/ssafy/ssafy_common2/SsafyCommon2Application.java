@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAsync      //  같은 Thread 내의 여러 작업이 비동기적으로 실행되도록
 public class SsafyCommon2Application {
 
-	@RequestMapping("/hello")
+	@RequestMapping("/api/hello")
 	String hello() {
 		return "Hello World!";
 	}
