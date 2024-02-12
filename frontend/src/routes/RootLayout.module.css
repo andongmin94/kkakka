@@ -6,6 +6,7 @@
   border-radius: 20px;
   margin: auto;
   margin-top: 20px;
+  min-height: 800px;
 }
 
 /* 전체 화면 영역 */
@@ -31,6 +32,7 @@
   border-radius: 20px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
+  min-height: 800px;
 }
 
 .menu_items {

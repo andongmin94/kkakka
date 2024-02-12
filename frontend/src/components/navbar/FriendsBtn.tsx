@@ -38,10 +38,10 @@ export default function FriendsBtn() {
         <div className={classes.friends_image} />
       </SheetTrigger>
 
-      <SheetContent className="p-0">
+      <SheetContent className="">
         <SheetHeader>
-          <SheetTitle className="grid place-items-center text-2xl border-2 rounded-lg shadow-xl mt-[6px] mx-1 bg-red-200">
-            <p>친구목록</p>
+          <SheetTitle className="grid place-items-center p-3 text-sm font-black rounded-lg shadow-md shadow-slate-300 mt-4 mx-2 bg-gray-300">
+            <p>친구 목록</p>
           </SheetTitle>
           <div className={classes.scrollbar}>
             {/* 친구 카드 생성 */}
