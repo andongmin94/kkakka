@@ -68,7 +68,7 @@ export default function RootLayout() {
         // setUserInfo(res.data.data);
         {
           typeof electron !== "undefined" &&
-            electron.send("userInfo", res.data.data);
+            electron.send("userInfo", res.data.data) &&
           electron.send("token", token);
         }
       });
@@ -182,11 +182,11 @@ export default function RootLayout() {
                   <Link to="/main/messagelist" className={`${classes.menu}`}>
                     <h1>메세지함</h1>
                   </Link>
-                  {typeof electron !== "undefined" && (
+                  {/* {typeof electron !== "undefined" && (
                     <Link to="/main/setting" className={`${classes.menu}`}>
                       <h1>환경 설정</h1>
                     </Link>
-                  )}
+                  )} */}
                   <Link to="/main/intro" className={classes.menu}>
                     <h1>서비스 소개</h1>
                   </Link>
