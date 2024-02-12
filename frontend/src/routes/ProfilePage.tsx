@@ -176,6 +176,7 @@ export default function ProfilePage() {
                 <UserCurrentAlias
                   alias={profileInfo ? profileInfo.userAlias : null}
                 />
+                </div>
               </div>
             </div>
             <div className=" m-1 w-100% h-[50px] w-[1000px] flex gap-10">
