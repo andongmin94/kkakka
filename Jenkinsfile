@@ -35,6 +35,7 @@ pipeline {
                 echo '도커 컴포즈를 사용하여 서비스 빌드 및 배포 시작!'
                 // 백엔드 서비스 빌드
                 dir("./backend") {
+                    sh "chmod +x ./gradlew"
                     sh "./gradlew clean build --exclude-task test"
                 }
 
