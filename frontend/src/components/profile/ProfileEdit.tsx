@@ -15,16 +15,18 @@ import axios from "axios";
 import useUserStore from "@/store/user/userStore";
 
 export default function ProfileEdit() {
+  const userProfileImg = localStorage.getItem("userProfileImg");
+
   const { userInfo } = useUserStore();
-  const userprofileImage = userInfo.userProfileImg;
+
   const token = localStorage.getItem("token");
 
   const [profileImg, setProfileImg] = useState<string | ArrayBuffer | null>(
-    userprofileImage
+    userProfileImg
   );
 
   const [profileFile, setProfileFile] = useState<string | ArrayBuffer | null>(
-    userprofileImage
+    userProfileImg
   );
 
   // 미리보기 이미지 프로세싱
