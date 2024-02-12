@@ -54,10 +54,11 @@ export default function FirstLoginPage() {
   return (
     <>
       <div className="h-screen w-full bg-[url('/image/loginBg.jpg')] bg-cover flex justify-center items-center">
-        <div className="bg-white h-[300px] w-[500px] rounded-xl flex flex-col items-center lg:hover:scale-105 transition-transform ease-in-out duration-500">
-          <div className="flex flex-col items-center mt-10">
-            <div className=" font-bold text-3xl mb-20">
-              롤 아이디를 입력하세요
+        <div className="bg-white h-[250px] w-[400px] rounded-xl flex flex-col items-center ">
+          <div className="flex flex-col items-center mt-8">
+            <div className=" font-bold text-md mb-8 flex items-center flex-col">
+              <div className="mb-2">환영합니다🤩</div>
+              <div>시작하기 위해 롤 아이디를 입력해주세요.</div>
             </div>
             <form action="">
               <Input
@@ -66,8 +67,18 @@ export default function FirstLoginPage() {
                 onChange={(e) => setInputValue(e.target.value)}
               />
               <div className="mt-5 flex justify-center gap-3">
-                <Button onClick={setLolId}>저장 </Button>
-                <Button onClick={skipHandler}>건너뛰기</Button>
+                <Button
+                  onClick={setLolId}
+                  className="lg:hover:scale-105 transition-transform ease-in-out duration-500"
+                >
+                  저장하기
+                </Button>
+                <Button
+                  onClick={skipHandler}
+                  className="bg-white text-black border-[1px] lg:hover:scale-105 transition-transform ease-in-out duration-500"
+                >
+                  건너뛰기
+                </Button>
               </div>
             </form>
           </div>
