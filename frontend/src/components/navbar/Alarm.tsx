@@ -119,20 +119,3 @@ export function Alarm() {
     </div>
   );
 }
-
-// const {
-//   alarmList,
-//   numOfUncheckedAlarm,
-//   setAlarmList,
-//   setNumOfUncheckedAlarm,
-// } = useAlarmStore();
-
-// const { useAlarmListQuery } = useAlarmList();
-// const { data: alarmData } = useAlarmListQuery();
-
-// useEffect(() => {
-//   if (alarmData) {
-//     setAlarmList(alarmData.alarmList);
-//     setNumOfUncheckedAlarm(alarmData.numOfUncheckedAlarm);
-//   }
-// }, [alarmData, setAlarmList, setNumOfUncheckedAlarm]);
