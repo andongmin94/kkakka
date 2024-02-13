@@ -41,7 +41,6 @@ import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Bar, BarChart, ResponsiveContainer, Cell, XAxis } from "recharts";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import SysMsg from "@/components/message/SysMsg";
-import { DogamDetailType } from "@/types/dogamTypes";
 import { BettingPredictType } from "@/types/BettingTypes";
 import BotMsg from "@/components/message/BotMsg";
 import { useProfileDogamQuery } from "@/hooks/profile/queries/useProfileDogamQuery";
@@ -84,9 +83,6 @@ export default function LiveChat() {
   const [messages, setMessages] = useState<any[]>([]);
   // 현재 다른 사람이 타이핑하는 메세지를 추적
   const [currentTypingId, setCurrentTypingId] = useState(null);
-
-  // 도감 전체 목록
-  const [dogamList, setDogamList] = useState<DogamDetailType[]>([]);
 
   const [predictObject, setPredictObject] = useState<BettingPredictType>({
     predictWin: 100,
@@ -299,22 +295,6 @@ export default function LiveChat() {
           ...prevMessages,
           ...res.data.data.content.reverse(),
         ]);
-      });
-
-    axios
-      .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam${
-          friendsInfo.playerId
-        }?page=0&size=5`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res: any) => {
-        console.log(res.data.data);
-        setDogamList(res.data.data);
       });
 
     axios
