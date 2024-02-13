@@ -1,5 +1,4 @@
 import Poor from "@/components/profile/Poor";
-// import Check from "@/components/profile/Check";
 import classes from "./ProfilePage.module.css";
 import { Button } from "@/components/ui/button";
 import { Mobile, PC } from "@/components/MediaQuery";
@@ -115,29 +114,38 @@ export default function ProfilePage() {
 
           {/* 유저 프로필 전체*/}
           <div className="bg-white bg-opacity-60 z-2 -mt-40 flex p-2 pl-4 justify-between h-[160px]">
-          <div className="flex justify-center items-center">
-            {/* 프로필 사진 */}
-            <div className="m-1 w-[100px] h-[100px] mr-6">
-              <ProfileImage
-                userImg={profileInfo && profileInfo.userProfileImg ? profileInfo.userProfileImg : ""}
-              />
-            </div>
-
-            {/* 이름이랑 칭호 */}
-            <div className="flex flex-col items-center">
-              {/* 이름 */}
-              <div className=" text-black font-bold text-xl mb-3 drop-shadow">
-                {profileInfo && profileInfo.userName ? profileInfo.userName : ""}
-              </div>
-              {/* 칭호 */}
-              <div className="">
-                <UserCurrentAlias
-                  alias={profileInfo && profileInfo.userAlias ? profileInfo.userAlias : null}
+            <div className="flex justify-center items-center">
+              {/* 프로필 사진 */}
+              <div className="m-1 w-[100px] h-[100px] mr-6">
+                <ProfileImage
+                  userImg={
+                    profileInfo && profileInfo.userProfileImg
+                      ? profileInfo.userProfileImg
+                      : ""
+                  }
                 />
               </div>
-            </div>
-          </div>
 
+              {/* 이름이랑 칭호 */}
+              <div className="flex flex-col items-center">
+                {/* 이름 */}
+                <div className=" text-black font-bold text-xl mb-3 drop-shadow">
+                  {profileInfo && profileInfo.userName
+                    ? profileInfo.userName
+                    : ""}
+                </div>
+                {/* 칭호 */}
+                <div className="">
+                  <UserCurrentAlias
+                    alias={
+                      profileInfo && profileInfo.userAlias
+                        ? profileInfo.userAlias
+                        : null
+                    }
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* 메시지랑 프로필편집or친구 */}
             <div className="m-1 flex">
@@ -328,58 +336,3 @@ export default function ProfilePage() {
     </>
   );
 }
-
-// import useProfileStore from "@/store/profile/profileStore";
-// import useFriendshipStore from "@/store/profile/friendshipStore";
-// import { useProfile } from "@/hooks/profile/queries/useUserProfileQuery";
-// import { useFriendship } from "@/hooks/profile/queries/useFriendshipQuery";
-// import { useEnterDmPost } from "@/hooks/dm/mutations/useEnterDmPost";
-// import { useFriendshipChangePost } from "@/hooks/profile/mutations/useFriendshipChangePost";
-// const { profileInfo, setProfileInfo } = useProfileStore();
-// const { friendship, setFriendship } = useFriendshipStore();
-
-// const { useUserProfileQuery } = useProfile();
-// const { data: userProfileData, refetch: dataRefetch } = useUserProfileQuery(
-//   params.id!
-// );
-
-// const { useFriendshipQuery } = useFriendship();
-// const { data: friendshipData, refetch: friendshipRefetch } =
-//   useFriendshipQuery(params.id!);
-
-// useEffect(() => {
-//   if (userProfileData) {
-//     setProfileInfo(userProfileData);
-//     console.log("프로필 유저 정보", userProfileData);
-//   } else {
-//     console.log("프로필 유저 정보 없음");
-//   }
-// }, [userProfileData, setProfileInfo]);
-
-// useEffect(() => {
-//   friendshipRefetch();
-//   dataRefetch();
-// }, [friendshipRefetch, dataRefetch]);
-
-// const enterDmMutation = useEnterDmPost();
-// const { mutate: dmMutate } = enterDmMutation;
-
-// const enterChatHandler = () => {
-//   dmMutate(params.id!);
-// };
-
-// useEffect(() => {
-//   if (friendshipData) {
-//     setFriendship(friendshipData);
-//     console.log("프로필 유저와 친구관계", friendshipData);
-//   } else {
-//     console.log("프로필 유저와 친구관계 없음");
-//   }
-// }, [friendship, setFriendship]);
-
-// const friendshipChangeMutation = useFriendshipChangePost();
-// const { mutate: friendshipChangeMutate } = friendshipChangeMutation;
-
-// const changeFriendStatusHandler = () => {
-//   friendshipChangeMutate(params.id!);
-// };
