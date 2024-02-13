@@ -129,7 +129,7 @@ pipeline {
                     sh "docker rm -f frontend"
                     sh "docker rmi osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
-                    sh "docker docker pull osy9536/ssafy-fe:latest && run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
+                    sh "docker pull osy9536/ssafy-fe:latest && run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
             } 
