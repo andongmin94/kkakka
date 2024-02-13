@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { CardContent } from "@/components/ui/card";
 import LiveContent from "@/components/main/LiveContent";
@@ -7,8 +7,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import useBroadcastStore from "@/store/broadcast/broadcastStore";
-import { useBroadcastList } from "@/hooks/broadcast/queries/useBroadcastListQuery";
+import axios from "axios";
+import { BroadcastItemType } from "@/types/broadcastTypes";
 
 export default function LiveContentCarousel() {
   const plugin = useRef(
@@ -16,19 +16,22 @@ export default function LiveContentCarousel() {
     Autoplay({ delay: 3000, stopOnInteraction: false })
   );
 
-  const { broadcastList, setBroadcastList } = useBroadcastStore();
-  const { useBroadcastListQuery } = useBroadcastList();
-  const { data: broadcasts, refetch } = useBroadcastListQuery();
+  const [broadcasts, setBroadcasts] = useState<BroadcastItemType[]>([]);
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  useEffect(() => {
-    if (broadcasts) {
-      setBroadcastList(broadcasts);
-    }
-  }, [broadcasts]);
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setBroadcasts(res.data.data);
+      })
+      .catch((err) => {
+        console.log("방송에러", err);
+      });
+  }, []);
 
   return (
     <Carousel
@@ -37,13 +40,13 @@ export default function LiveContentCarousel() {
       className="h-full w-full"
     >
       <CarouselContent className="ml-1">
-        {broadcastList.map((room) => (
+        {broadcasts.map((room) => (
           <CarouselItem
             key={room.roomId}
             className="md:basis-1/1 lg:basis-1/2 mr-5"
           >
-            <div className="p-1">
-              <CardContent className="flex aspect-square items-center justify-center p-0 lg:hover:scale-105 transition-transform ease-in-out duration-500">
+            <div className="p-1 mt-3">
+              <CardContent className="flex items-center justify-center p-0 lg:hover:scale-105 transition-transform ease-in-out duration-500">
                 <LiveContent liveData={room} />
               </CardContent>
             </div>

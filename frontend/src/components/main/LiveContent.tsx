@@ -41,14 +41,14 @@ export default function LiveContent({
   return (
     <>
       <Card
+        onClick={() => {
+          enterLiveHandler(liveData);
+        }}
         className={` rounded-3xl border-none w-[375px] h-[350px] grid grid-rows-6   p-5 shadow-lg relative`}
         style={{
           backgroundImage: `url("${liveData.playerBackgroundPic}")`,
           backgroundSize: "cover",
           boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.8)",
-        }}
-        onClick={() => {
-          enterLiveHandler(liveData);
         }}
       >
         <CardHeader className="p-1 grid grid-cols-2 relative">
@@ -85,8 +85,8 @@ export default function LiveContent({
             playerProfilePic={liveData.playerProfilePic}
           />
         </CardFooter>
+        <Card className="bg-black bg-opacity-65 z-10  rounded-3xl border-none w-[375px] h-[350px] grid grid-rows-6  p-5 shadow-lg absolute"></Card>
       </Card>
-      <Card className="bg-black bg-opacity-65 z-10  rounded-3xl border-none w-[375px] h-[350px] grid grid-rows-6  p-5 shadow-lg absolute"></Card>
     </>
   );
 }

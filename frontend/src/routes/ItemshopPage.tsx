@@ -3,7 +3,7 @@ import WriteAlias from "@/components/itemShop/WriteAlias";
 import Compliment from "@/components/itemShop/Compliment";
 // import DeleteCollection from "@/components/itemShop/DeleteCollection";
 // import useItemshopStore from "@/store/itemshop/itemshopStore";
-import usePointStore from "@/store/user/pointStore";
+// import usePointStore from "@/store/user/pointStore";
 // import useFriendStore from "@/store/friend/friendStore";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -12,15 +12,10 @@ import { Toaster } from "@/components/ui/toaster";
 
 export default function ItemshopPage() {
   // const { itemList, setItemList } = useItemshopStore();
-  const { point } = usePointStore();
+  // const { point } = usePointStore();
   // const { friendList } = useFriendStore();
   const [itemList, setItemList] = useState<ItemType[]>([]);
   const [friendList, setFriendList] = useState([]);
-  const [successMessage, setSuccessMessage] = useState<string>("");
-
-  if (successMessage !== "") {
-    // window.location.reload();
-  }
 
   useEffect(() => {
     // 아이템샵 목록을 불러오는 API 호출
@@ -29,7 +24,6 @@ export default function ItemshopPage() {
       .then((res) => {
         // 아이템 목록을 상태에 설정
         setItemList(res.data.data.itemList);
-        setSuccessMessage("아이템 목록을 불러왔습니다.");
       })
       .catch((error) => {
         console.error("아이템 목록을 불러오는 중 에러 발생:", error);
@@ -52,12 +46,28 @@ export default function ItemshopPage() {
       });
   }, [setFriendList]);
 
+  const [point, setPoint] = useState<number>(0);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log("포인트", res.data.data.Point);
+        setPoint(res.data.data.Point);
+      });
+  }, []);
+
   return (
     <>
-      <div className="text-lg mb-10 flex ml-10">
+      <div className="text-lg mb-10 flex ml-10 ">
         {/* <img src="/image/itemShop.png" className="h-[50px] w-[50px]" /> */}
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
       </div>
+
       {itemList && itemList.length > 0 && (
         <div className="flex flex-col items-center ml-60">
           <div className="grid grid-cols-4 row-auto w-[1000px] h-[900px]">
