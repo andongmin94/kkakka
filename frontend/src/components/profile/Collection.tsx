@@ -1,12 +1,9 @@
+// Collection.tsx
+
 import ThumbsDown from "@/components/profile/ThumbsDown";
 import CommentModal from "@/components/profile/CommentModal";
-import { ProfileDogamType, DogamDetailType } from "@/types/dogamTypes";
+import { ProfileDogamWithDislikeNumType } from "@/types/dogamTypes";
 import React from "react";
-
-interface ProfileDogamWithDislikeNumType extends ProfileDogamType {
-  dogamDislikeNum: number;
-  setDogamDislikeNum: React.Dispatch<React.SetStateAction<number>>;
-}
 
 export default function Collection({
   profiledogam,
