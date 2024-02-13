@@ -1,26 +1,27 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 export default function ThumbsDown({
   tD,
   dogamId,
+  dogamDislikeNum,
+  setDogamDislikeNum,
 }: {
   tD: boolean;
   dogamId: number;
+  dogamDislikeNum: number;
+  setDogamDislikeNum: Function;
 }) {
   const token = localStorage.getItem("token");
   const [thumbs, setThumbs] = useState(tD);
 
   const hateClickHandler = async () => {
     try {
-      // setThumbs를 호출한 후 thumbs 상태가 변경되었을 때를 기다립니다.
       await setThumbs(!thumbs);
 
       const res = thumbs
         ? await axios.delete(
-            `${
-              import.meta.env.VITE_API_BASE_URL
-            }/api/friends/dogam/hate/${dogamId}`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
             {
               headers: {
                 Authorization: token,
@@ -28,9 +29,7 @@ export default function ThumbsDown({
             }
           )
         : await axios.post(
-            `${
-              import.meta.env.VITE_API_BASE_URL
-            }/api/friends/dogam/hate/${dogamId}`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
             {},
             {
               headers: {
@@ -40,6 +39,9 @@ export default function ThumbsDown({
           );
 
       console.log("hateClickHandler", res);
+
+      // API 호출 후 숫자 업데이트
+      setDogamDislikeNum(thumbs ? dogamDislikeNum - 1 : dogamDislikeNum + 1);
     } catch (error) {
       console.error("Error in hateClickHandler:", error);
     }
@@ -51,13 +53,12 @@ export default function ThumbsDown({
       onClick={() => {
         setThumbs(!thumbs);
         hateClickHandler();
-        // !tD;
       }}
     >
       {thumbs ? (
-        <img src="/image/thumbsDownOn.png" className="w-8 h-8" />
+        <img src="/image/thumbsDownOn.png" className="w-8 h-8" alt="싫어요 활성화" />
       ) : (
-        <img src="/image/thumbsDown.png" className="w-8 h-8" />
+        <img src="/image/thumbsDown.png" className="w-8 h-8" alt="싫어요 비활성화" />
       )}
     </div>
   );
