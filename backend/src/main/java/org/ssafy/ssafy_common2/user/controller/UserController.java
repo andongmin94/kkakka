@@ -40,7 +40,7 @@ public class UserController {
 
     @GetMapping("/oauth/callback/kakao/token/d-t-d")
     public ApiResponseDto<Map<String, Boolean>> getAccessTokenDistToDist(@RequestParam(value = "code", required = false) String code, HttpServletResponse response){
-        return handleAccessTokenRequest(code, "http://i10d110.p.ssafy.io:3000/oauth/callback/kakao/token", response);
+        return handleAccessTokenRequest(code, "https://i10d110.p.ssafy.io/oauth/callback/kakao/token", response);
     }
 
     @GetMapping("/oauth/callback/kakao/token/d-t-l")
