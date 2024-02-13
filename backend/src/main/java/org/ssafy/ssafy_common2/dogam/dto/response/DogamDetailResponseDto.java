@@ -18,19 +18,23 @@ public class DogamDetailResponseDto {
     private String dogamUserEmail;
     private LocalDateTime dogamCreatedAt;
     private List<DogamCommentResponseDto> dogamCommentResponseDtos;
+    private String curAlias;
 
     @Builder
-    private DogamDetailResponseDto(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+    private DogamDetailResponseDto(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail,
+                                   LocalDateTime dogamCreatedAt, String curAlias, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
         this.dogamUserId = dogamUserId;
         this.imgUrl = imgUrl;
         this.dogamTitle = dogamTitle;
         this.dogamUserName = dogamUserName;
         this.dogamUserEmail = dogamUserEmail;
         this.dogamCreatedAt = dogamCreatedAt;
+        this.curAlias = curAlias;
         this.dogamCommentResponseDtos = dogamCommentResponseDtos;
     }
 
-    public static DogamDetailResponseDto of(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+    public static DogamDetailResponseDto of(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail,
+                                            LocalDateTime dogamCreatedAt, String curAlias, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
         return builder()
                 .dogamUserId(dogamUserId)
                 .imgUrl(imgUrl)
@@ -38,6 +42,7 @@ public class DogamDetailResponseDto {
                 .dogamUserName(dogamUserName)
                 .dogamUserEmail(dogamUserEmail)
                 .dogamCreatedAt(dogamCreatedAt)
+                .curAlias(curAlias)
                 .dogamCommentResponseDtos(dogamCommentResponseDtos)
                 .build();
     }
