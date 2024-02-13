@@ -1,11 +1,17 @@
 import ThumbsDown from "@/components/profile/ThumbsDown";
 import CommentModal from "@/components/profile/CommentModal";
-import { ProfileDogamType } from "@/types/dogamTypes";
+import { ProfileDogamType, DogamDetailType } from "@/types/dogamTypes";
+import React from "react";
+
+interface ProfileDogamWithDislikeNumType extends ProfileDogamType {
+  dogamDislikeNum: number;
+  setDogamDislikeNum: React.Dispatch<React.SetStateAction<number>>;
+}
 
 export default function Collection({
   profiledogam,
 }: {
-  profiledogam: ProfileDogamType;
+  profiledogam: ProfileDogamWithDislikeNumType;
 }) {
   return (
     <div className="flex-initial md:w-auto mb-3 mr-3">
@@ -27,6 +33,8 @@ export default function Collection({
             <ThumbsDown
               tD={profiledogam.hated}
               dogamId={profiledogam.dogamId}
+              dogamDislikeNum={profiledogam.dogamDislikeNum}
+              setDogamDislikeNum={profiledogam.setDogamDislikeNum}
             />
           </div>
           <div className="flex self-center text-sm text-blue-600">
