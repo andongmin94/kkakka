@@ -7,7 +7,6 @@ export default function LoginPage() {
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {
-      window.alert("이미 로그인되어 있습니다");
       navigate("/main");
     }
   });
