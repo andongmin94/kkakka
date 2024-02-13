@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2._common.exception.ErrorResponse;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
@@ -237,6 +238,7 @@ public class ChatRoomMySQLService {
     };
 
     // 8) 특정 방의 최근 메세지 100개 주기
+    @Transactional
     public Page<ChatMessageDto> loadChatRoomMessage(long chatRoomId, int pageNo, String criteia){
 
         // 1) 최신 순, 받은 페이지부터 100개 꺼내도록 설정
