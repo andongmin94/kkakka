@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import axios from "axios";
 import { BroadcastItemType } from "@/types/broadcastTypes";
+import Loading from "@/components/app/Loading";
 
 export default function LiveContentCarousel() {
   const plugin = useRef(
@@ -17,6 +18,7 @@ export default function LiveContentCarousel() {
   );
 
   const [broadcasts, setBroadcasts] = useState<BroadcastItemType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -27,6 +29,7 @@ export default function LiveContentCarousel() {
       })
       .then((res) => {
         setBroadcasts(res.data.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log("방송에러", err);
@@ -34,25 +37,28 @@ export default function LiveContentCarousel() {
   }, []);
 
   return (
-    <Carousel
-      opts={{ align: "start" }}
-      plugins={[plugin.current]}
-      className="h-full w-full"
-    >
-      <CarouselContent className="ml-1">
-        {broadcasts.map((room) => (
-          <CarouselItem
-            key={room.roomId}
-            className="md:basis-1/1 lg:basis-1/2 mr-5"
-          >
-            <div className="p-1 mt-3">
-              <CardContent className="flex items-center justify-center p-0 lg:hover:scale-105 transition-transform ease-in-out duration-500">
-                <LiveContent liveData={room} />
-              </CardContent>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+    <>
+      {isLoading && <Loading />}
+      <Carousel
+        opts={{ align: "start" }}
+        plugins={[plugin.current]}
+        className="h-full w-full"
+      >
+        <CarouselContent className="ml-1">
+          {broadcasts.map((room) => (
+            <CarouselItem
+              key={room.roomId}
+              className="md:basis-1/1 lg:basis-1/2 mr-5"
+            >
+              <div className="p-1 mt-3">
+                <CardContent className="flex items-center justify-center p-0 lg:hover:scale-105 transition-transform ease-in-out duration-500">
+                  <LiveContent liveData={room} />
+                </CardContent>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </>
   );
 }

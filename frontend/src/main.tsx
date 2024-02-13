@@ -72,7 +72,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       {typeof electron !== "undefined" && <TitleBar />}
       <RouterProvider router={router} />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   </ThemeProvider>
   // </React.StrictMode>
