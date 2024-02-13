@@ -63,7 +63,7 @@ export default function ProfileCollection() {
   return (
     <>
       <PC>
-        <div className="w-[1000px] m-1 grid grid-cols-3 row-auto place-items-center">
+        <div className="ml-3 mt-3">
           <div>
             <InfiniteScroll
               loadMore={() => {
@@ -73,19 +73,21 @@ export default function ProfileCollection() {
               }}
               hasMore={hasNextPage}
             >
-              {data &&
-                data.pages.map((pageData) => {
-                  return pageData.results.map(
-                    (profiledogam: ProfileDogamType) => {
-                      return (
-                        <Collection
-                          key={profiledogam.dogamId}
-                          profiledogam={profiledogam}
-                        />
-                      );
-                    }
-                  );
-                })}
+              <div className="flex flex-row grid grid-cols-3">
+                {data &&
+                  data.pages.map((pageData) => {
+                    return pageData.results.map(
+                      (profiledogam: ProfileDogamType) => {
+                        return (
+                          <Collection
+                            key={profiledogam.dogamId}
+                            profiledogam={profiledogam}
+                          />
+                        );
+                      }
+                    );
+                  })}
+                </div>
             </InfiniteScroll>
           </div>
         </div>
