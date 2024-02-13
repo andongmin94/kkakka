@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PredictDto {
-    private int pridictWin;
-    private int pridictLose;
+    private int predictWin;
+    private int predictLose;
 }
