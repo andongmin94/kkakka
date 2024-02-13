@@ -68,7 +68,6 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
         }
       )
       .then((res) => {
-        console.log("도감댓글", res.data.data.dogamCommentResponseDtos);
         setDogamComments(res.data.data.dogamCommentResponseDtos);
       });
   };
@@ -192,7 +191,7 @@ export default function CommentModal({ dogamId }: { dogamId: number }) {
       <Mobile>
         <Popover>
           <PopoverTrigger asChild>
-            <div className="h-10 w-10">🗨</div>
+            <div className="h-10 w-10">💬</div>
           </PopoverTrigger>
           <PopoverContent className="w-[500px]">
             <div className="grid gap-4 w-full">
