@@ -31,8 +31,8 @@ export default function MyMsg({ data }: { data: dataProps }) {
         });
   return (
     <>
-      <div className=" self-end">{formattedTime}</div>
-      <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-blue-100 font-bold text-xl text-wrap">
+      <div className=" self-end text-xs flex mb-2">{formattedTime}</div>
+      <div className="max-w-[70%] m-2 mr-3 py-3 px-4 rounded-sm self-end shadow-md bg-orange-200 font-bold text-sm text-wrap">
         {/* 이미지인지 텍스트 채팅인지 판별 */}
         {data.imgCode !== null ? <img src={data.imgCode} /> : data.content}
       </div>
