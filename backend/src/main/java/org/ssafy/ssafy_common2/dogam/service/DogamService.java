@@ -224,6 +224,10 @@ public class DogamService {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
+        DynamicUserInfo dynamicUserInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(dogam.getUser().getId()).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_USER)
+        );
+
         List<CommentDogam> commentDogamList = commentDogamRepository.findAllByDogamIdAndDeletedAtIsNull(dogamId);
         List<DogamCommentResponseDto> dogamCommentResponseDtos = new ArrayList<>();
 
@@ -235,8 +239,10 @@ public class DogamService {
                     commentUser.getUserName(), commentUser.getKakaoEmail(), cd.getCreatedAt()));
         }
 
-        DogamDetailResponseDto dto = DogamDetailResponseDto.of(user.getId(), user.getKakaoProfileImg(), dogam.getDogamTitle(), user.getUserName(), user.getKakaoEmail()
-                , dogam.getCreatedAt(), dogamCommentResponseDtos);
+        DogamDetailResponseDto dto = DogamDetailResponseDto.of(dogam.getUser().getId(), dogam.getUser().getKakaoProfileImg(), dogam.getDogamTitle(),
+                dogam.getUser().getUserName(), dogam.getUser().getKakaoEmail()
+                , dogam.getCreatedAt(), dynamicUserInfo.getCurAlias() == null || dynamicUserInfo.getCurAlias().isEmpty() ? "칭호가 없습니다." : dynamicUserInfo.getCurAlias()
+                , dogamCommentResponseDtos);
         return dto;
     }
 
