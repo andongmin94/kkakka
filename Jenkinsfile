@@ -30,55 +30,109 @@ pipeline {
             }
         }  
       
-        stage('Build and Deploy') {
+        stage('BE-Build') {
             steps {
-                echo '도커 컴포즈를 사용하여 서비스 빌드 및 배포 시작!'
-                // 백엔드 서비스 빌드
+                echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
                     sh "chmod +x ./gradlew"
-                    sh "./gradlew clean build --exclude-task test"
-                }
 
-                // 프론트엔드 서비스 빌드
-                dir("./frontend") {
-                    sh "npm install"
-                    sh "npm run build"
+                    // sh "touch ./build.gradle" 
+ 
+                    // application properties 파일 복사
+                    // sh "echo $BuildGradle > ./build.gradle"
+            
+                    sh "./gradlew clean build --exclude-task test"
+                
                 }
+                echo '백엔드 빌드 및 테스트 완료!' 
+            }
+        }
+  
+        stage('Build Back Docker Image') {
+            steps {
+                echo '백엔드 도커 이미지 빌드 시작!'
+                dir("./backend") {
+                    // 빌드된 JAR 파일을 Docker 이미지로 빌드
+                    sh "docker build -t osy9536/ssafy-be:latest ."
+                }
+                echo '백엔드 도커 이미지 빌드 완료!'
+            }
+        }
+ 
+        stage('Push to Docker Hub-BE') {
+            steps {
+                echo '백엔드 도커 이미지를 Docker Hub에 푸시 시작!'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                }
+                dir("./backend") {
+                    sh "docker push osy9536/ssafy-be:latest"
+                }
+                echo '백엔드 도커 이미지를 Docker Hub에 푸시 완료!'
             }
         }
 
-        stage('Deploy BE') {
+        stage('Deploy to EC2-BE') {
             steps {
-                echo '백엔드 배포 시작!'
+                echo '백엔드 EC2에 배포 시작!'
+                // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
                 sshagent(['aws-key']) { 
                     sh "docker rm -f backend"
                     sh "docker rmi osy9536/ssafy-be:latest"
                     sh "docker image prune -f"
-                    dir("./backend") {
-                        // 빌드된 JAR 파일을 Docker 이미지로 빌드
-                        sh "docker build -t osy9536/ssafy-be:latest ."
-                    }
-                    sh "docker docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
+                    sh "docker pull osy9536/ssafy-be:latest && docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
                 }
-                echo '백엔드 배포 완료!'
+                echo '백엔드 EC2에 배포 완료!'
+            } 
+        }
+
+        stage('FE-Build') {
+            steps {
+                echo '프론트 빌드 및 테스트 시작!'
+                dir("./frontend") {
+                    sh "npm install"
+                    sh "npm run build"
+                }
+                echo '프론트 빌드 및 테스트 완료!' 
             }
         }
-        
-        stage('Deploy FE') {
+
+        stage('Build Front Docker Image') {
             steps {
-                echo '프론트 배포 시작!'
+                echo '프론트 도커 이미지 빌드 시작!'
+                dir("./frontend") {
+                    // 빌드된 파일을 Docker 이미지로 빌드
+                    sh "docker build -t osy9536/ssafy-fe:latest ."
+                }
+                echo '프론트 도커 이미지 빌드 완료!'
+            }
+        } 
+
+        stage('Push to Docker Hub-FE') {
+            steps {
+                echo '프론트 도커 이미지를 Docker Hub에 푸시 시작!'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                }
+                dir("./frontend") {
+                    sh "docker push osy9536/ssafy-fe:latest"
+                }
+                echo '프론트 도커 이미지를 Docker Hub에 푸시 완료!'
+            }
+        }
+
+        stage('Deploy to EC2-FE') {
+            steps {
+                echo '프론트 EC2에 배포 시작!'
+                // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
                 sshagent(['aws-key']) { 
                     sh "docker rm -f frontend"
                     sh "docker rmi osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
-                    dir("./frontend") {
-                        // 빌드된 파일을 Docker 이미지로 빌드
-                        sh "docker build -t osy9536/ssafy-fe:latest ."
-                    }
-                    sh "docker run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
+                    sh "docker docker pull osy9536/ssafy-fe:latest && run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
                 }
-                echo '프론트 배포 완료!'
-            }
+                echo '프론트 EC2에 배포 완료!'
+            } 
         }
 
     }
