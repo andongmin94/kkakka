@@ -53,7 +53,7 @@ pipeline {
                 echo '백엔드 도커 이미지 빌드 시작!'
                 dir("./backend") {
                     // 빌드된 JAR 파일을 Docker 이미지로 빌드
-                    sh "docker build --no-cache -t osy9536/ssafy-be:latest ."
+                    sh "docker build --pull --no-cache -t osy9536/ssafy-be:latest ."
                 }
                 echo '백엔드 도커 이미지 빌드 완료!'
             }
@@ -90,7 +90,7 @@ pipeline {
                 echo '프론트 도커 이미지 빌드 시작!'
                 dir("./frontend") {
                     // 빌드된 파일을 Docker 이미지로 빌드
-                    sh "docker build --no-cache -t osy9536/ssafy-fe:latest ."
+                    sh "docker build --pull --no-cache -t osy9536/ssafy-fe:latest ."
                 }
                 echo '프론트 도커 이미지 빌드 완료!'
             }
