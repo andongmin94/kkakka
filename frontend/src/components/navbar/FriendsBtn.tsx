@@ -2,7 +2,6 @@ import FriendsCard from "./friendsSidebar/FriendsCard";
 import classes from "@/components/navbar/FriendsBtn.module.css";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
