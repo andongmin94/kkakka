@@ -3,7 +3,6 @@
 import ThumbsDown from "@/components/profile/ThumbsDown";
 import CommentModal from "@/components/profile/CommentModal";
 import { ProfileDogamWithDislikeNumType } from "@/types/dogamTypes";
-import React from "react";
 
 export default function Collection({
   profiledogam,
