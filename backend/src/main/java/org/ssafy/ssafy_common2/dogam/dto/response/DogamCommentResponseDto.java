@@ -13,19 +13,19 @@ public class DogamCommentResponseDto {
     Long commentId;
     Long commentUserId;
     String commentUserImgUrl;
-    String Comment;
+    String comment;
     String commentUserName;
-    String commentUerEmail;
+    String commentUserEmail;
     private LocalDateTime createdAt;
 
     @Builder
-    private DogamCommentResponseDto(Long commentId, Long commentUserId, String commentUserImgUrl, String comment, String commentUserName, String commentUerEmail, LocalDateTime createdAt) {
+    private DogamCommentResponseDto(Long commentId, Long commentUserId, String commentUserImgUrl, String comment, String commentUserName, String commentUserEmail, LocalDateTime createdAt) {
         this.commentId = commentId;
         this.commentUserId = commentUserId;
         this.commentUserImgUrl = commentUserImgUrl;
-        Comment = comment;
+        this.comment = comment;
         this.commentUserName = commentUserName;
-        this.commentUerEmail = commentUerEmail;
+        this.commentUserEmail = commentUserEmail;
         this.createdAt = createdAt;
     }
 
@@ -35,7 +35,7 @@ public class DogamCommentResponseDto {
                 .commentUserId(commentUserId)
                 .commentUserImgUrl(commentUserImgUrl)
                 .comment(comment)
-                .commentUerEmail(commentUerEmail)
+                .commentUserEmail(commentUerEmail)
                 .commentUserName(commentUserName)
                 .createdAt(createdAt)
                 .build();
