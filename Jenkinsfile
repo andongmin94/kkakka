@@ -67,6 +67,7 @@ pipeline {
                     sh "docker rm -f backend"
                     sh "docker rmi -f osy9536/ssafy-be:latest"
                     sh "docker image prune -f"
+                    sh "docker builder prune"
                     sh "docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
                 }
                 echo '백엔드 EC2에 배포 완료!'
@@ -103,6 +104,7 @@ pipeline {
                     sh "docker rm -f frontend"
                     sh "docker rmi -f osy9536/ssafy-fe:latest"
                     sh "docker image prune -f"
+                    sh "docker builder prune"
                     sh "docker run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
