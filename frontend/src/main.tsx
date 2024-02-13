@@ -59,7 +59,7 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: "/main/profile/dogam/:id", element: <DogamDetailPage /> },
+      { path: "/main/dogam/:id", element: <DogamDetailPage /> },
     ],
   },
   {

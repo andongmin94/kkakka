@@ -1,6 +1,5 @@
 import { Button } from "../ui/button";
 import axios from "axios";
-import { useState } from "react";
 
 import { DogamCommentResponseType } from "@/types/dogamTypes";
 import { Link } from "react-router-dom";
@@ -12,9 +11,6 @@ export default function Comment({
 }) {
   const token = localStorage.getItem("token");
   const loginUserId = Number(localStorage.getItem("userId"));
-
-  const [dogamComment, setDogamComment] =
-    useState<DogamCommentResponseType | null>(null);
 
   const deleteCommentHandler = (commentId: number) => {
     axios
@@ -28,9 +24,7 @@ export default function Comment({
           },
         }
       )
-      .then((res) => {
-        console.log("핸들러");
-        console.log(res.data);
+      .then(() => {
         window.alert("댓글이 삭제되었습니다.");
       })
       .then(() => {
@@ -39,7 +33,7 @@ export default function Comment({
   };
 
   return (
-    <div className="py-2 px-4 border-b-2">
+    <div className="py-2 px-4 border-b-2 bg-gray-100">
       <div className="flex">
         <Link
           to={`/main/profile/${commentInfo.commentUserId}`}
