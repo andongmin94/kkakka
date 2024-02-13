@@ -51,5 +51,6 @@ export type ProfileDogamType = Omit<
 // 프로필에 있는 도감 (싫어요 수 포함)
 export interface ProfileDogamWithDislikeNumType extends ProfileDogamType {
   dogamDislikeNum: number;
+  createdAt: string;
   setDogamDislikeNum: React.Dispatch<React.SetStateAction<number>>;
 }
