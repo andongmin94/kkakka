@@ -106,7 +106,7 @@ export default function Speaker({
       const rotateX = (4 / 30) * y - 20;
 
       overlayRef.current.style.filter = "opacity(10)";
-      overlayRef.current.style.backgroundPosition = ` ${160 - x}% ${250 - y}%`;
+      overlayRef.current.style.backgroundPosition = `${260 - 2*x}% ${320 - 2*y}%`;
 
       containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
@@ -152,11 +152,11 @@ export default function Speaker({
             onMouseOut={handleMouseOut}
           >
             <div
-              className={`${classes.itemElemOverlay}`}
+              className={`${classes.itemElemOverlayBronze}`}
               ref={overlayRef}
             ></div>
             <div className={`${classes.itemElemCard}`} ref={cardRef}>
-              <div>📢</div>
+              <div className="text-lg">📢</div>
 
               <h1 className={`${classes.itemElemContent}`}>확성기</h1>
             </div>

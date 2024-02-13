@@ -137,7 +137,7 @@ export default function WriteAlias({
 
       <div className="opacity-50 absolute top-[-4px] right-[-4px] border-solid border-4 rounded-3xl bg-slate-400 h-[23rem] w-[23rem] group/edit invisible group-hover/item:visible" />;
       overlayRef.current.style.filter = "opacity(10)";
-      overlayRef.current.style.backgroundPosition = `${160 - x}% ${250 - y}%`;
+      overlayRef.current.style.backgroundPosition = `${260 - 2*x}% ${320 - 2*y}%`;
 
       containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
@@ -162,11 +162,11 @@ export default function WriteAlias({
             onMouseOut={handleMouseOut}
           >
             <div
-              className={`${classes.itemElemOverlay}`}
+              className={`${classes.itemElemOverlayBronze}`}
               ref={overlayRef}
             ></div>
             <div className={`${classes.itemElemCard}`} ref={cardRef}>
-              <div>👑</div>
+              <div className="text-lg">👑</div>
               <h1 className={`${classes.itemElemContent}`}>칭호지정권</h1>
             </div>
           </div>
