@@ -73,6 +73,7 @@ public class AliasService {
     }
 
     // 칭호 목록
+    @Transactional
     public List<AliasResponseDto> getAliasList(User user) {
 
         List<Alias> aliasList = aliasRepository.findByUserAndDeletedAtIsNull(user);

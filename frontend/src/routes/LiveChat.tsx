@@ -1,4 +1,4 @@
-// import { Mobile, PC } from "@/components/MediaQuery";
+import { Mobile, PC } from "@/components/MediaQuery";
 import MessageAlias from "@/components/message/MessageAlias";
 import MyMsg from "@/components/message/MyMsg";
 // import Picture from "@/components/message/Picture";
@@ -21,9 +21,30 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Progress } from "@/components/ui/progress";
+import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
+import { Bar, BarChart, ResponsiveContainer, Cell, XAxis } from "recharts";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import SysMsg from "@/components/message/SysMsg";
-import { DogamDetailType } from "@/types/dogamTypes";
+import { BettingPredictType } from "@/types/BettingTypes";
 import BotMsg from "@/components/message/BotMsg";
+import { useProfileDogamQuery } from "@/hooks/profile/queries/useProfileDogamQuery";
+import { ProfileDogamType } from "@/types/dogamTypes";
 
 let stompClient: any;
 
@@ -51,6 +72,8 @@ export default function LiveChat() {
   // 채팅 입력 받은것
   const [inputChat, setInputChat] = useState("");
 
+  const { data } = useProfileDogamQuery(friendsInfo.playerId);
+
   // 어떤 도감을 선택했는지 인덱스를 저장
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
@@ -60,31 +83,84 @@ export default function LiveChat() {
   const [messages, setMessages] = useState<any[]>([]);
   // 현재 다른 사람이 타이핑하는 메세지를 추적
   const [currentTypingId, setCurrentTypingId] = useState(null);
-  // 현재 사용자가 업로드한 이미지
-  // const [curImg, setImgFile] = useState("");
-  // const imgRef = useRef();
 
-  // 도감 전체 목록
-  const [dogamList, setDogamList] = useState<DogamDetailType[]>([]);
+  const [predictObject, setPredictObject] = useState<BettingPredictType>({
+    predictWin: 100,
+    predictLose: 100,
+  });
 
-  // const handleSendMessage = (message: any) => {
-  //   console.log(message);
-  //   // 소켓으로 메세지 보내기
-  //   sendMessageToSocket(message);
-  // };
+  // 배팅 모달에 관한 것들 =====================================================
+  const [balance, setBalance] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [goal, setGoal] = useState(0);
+  const [isWin, setIsWin] = useState(false);
 
-  // const handleEndTyping = (id: any) => {
-  //   setMessages((prevMessages) =>
-  //     // 이전 메세지들을 전부 순회하면서, 그 중 제일 최근 메세지의 ChatBot Animation 여부를 false로 바꾼다. (isTyping == 챗봇의 애니메이션 여부)
-  //     prevMessages.map((msg) =>
-  //       msg.id === id ? { ...msg, isTyping: false } : msg
-  //     )
-  //   );
+  // 배팅 함수==================================================
+  const onClickRadio = (value: boolean) => {
+    setIsWin(value);
+    console.log(value);
+  };
 
-  // 타이핑이 종료되면, 더 이상 타이핑 중인 메세지가 없으므로 currentTypingId의 상태를 null 로 바꾼다.
+  const { toast } = useToast();
 
-  //   setCurrentTypingId(null);
-  // };
+  // 배팅 제출 form
+  function onSubmitBetting(data: any) {
+    axios
+      .post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/betting/${roomId}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        },
+        {
+          params: {
+            user_id: data.userId,
+            cur_betting_point: data.cur_betting_point,
+            is_win: isWin,
+          },
+        }
+      )
+      .then((res) => {
+        setBalance(balance - res.data.data.myBettingPoint);
+
+        toast({
+          title: "배팅이 성공적으로 이루어졌습니다만?",
+          description: `이긴다에 걸린 총 금액: ${res.data.data.predictDto.predictWin}, 진다에 걸린 총 금액: ${res.data.data.predictDto.predictLose}
+        ,잔액: ${balance}
+        `,
+        });
+
+        const winOrLose = isWin ? "이긴다" : "진다.";
+
+        var chatMessage = {
+          chatRoomId: roomId2,
+          userId: userInfo.userId,
+          content: `${userInfo.userName}님이 현재 ${winOrLose}에 ${res.data.data.myBettingPoint} point 거셨습니다!`,
+          messageType: "CHAT_BOT",
+          imgCode: chatImage,
+        };
+        stompClient.send(
+          "/pub/chat/sendMessage",
+          {},
+          JSON.stringify(chatMessage)
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+
+        toast({
+          variant: "destructive",
+          title: "현재 10분이 지나서 배팅할 수 있는 시간이 아닙니다!",
+          description: "배팅 불가!!!",
+        });
+      });
+
+    setOpen(false);
+  }
+
+  // ================================================================
 
   //currentTypingId를 최신화 한다.
   useEffect(() => {
@@ -189,20 +265,6 @@ export default function LiveChat() {
       userProfileImg: chat.userProfileImg,
     };
 
-    /*
-         // 내가 쓴 메세지
-      { text: chat.content, isUser: true },
-
-      // ChatBot이 쓴 메세지 
-      {
-        text: `당신의 메세지는: "${chat.content}"`,
-        isUser: false,
-        // 타이핑 애니메이션을 내는 트리거 
-        isTyping: true,
-        id: Date.now()
-      }
-    */
-
     // 소켓에서 받은 메세지를 전체 배열에 넣는 걸로 바꿔야함.
     // 이전 메세지를 받아서 메세지 전체 배열에 저장
     setMessages((prevMessages) => [...prevMessages, messageDTO]);
@@ -233,15 +295,23 @@ export default function LiveChat() {
           ...prevMessages,
           ...res.data.data.content.reverse(),
         ]);
-        // console.log("ddd");
-        // console.log(res.data.data.content);
+      });
+
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/betting/room/${roomId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res: any) => {
+        setPredictObject(res.data.data);
       });
 
     axios
       .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam${
-          friendsInfo.playerId
-        }?page=0&size=5`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/betting/user/${
+          userInfo.userId
+        }`,
         {
           headers: {
             Authorization: token,
@@ -249,9 +319,20 @@ export default function LiveChat() {
         }
       )
       .then((res: any) => {
-        console.log(res.data.data);
-        setDogamList(res.data.data);
+        setBalance(res.data.data);
       });
+
+    const timer = setTimeout(
+      () =>
+        setProgress(
+          predictObject.predictLose + predictObject.predictWin === 0
+            ? 0
+            : (predictObject.predictWin /
+                (predictObject.predictLose + predictObject.predictWin)) *
+                100
+        ),
+      500
+    );
 
     return () => {
       stompClient.send(
@@ -264,14 +345,8 @@ export default function LiveChat() {
           chatRoomId: roomId,
         })
       );
-      stompClient
-        .disconnect
-        // function () {
-        //   alert("see you next Time!!");
-        // }
-        // { userId: userInfo.userId, chatRoomId: userInfo.roomId },
-        // { userId: userInfo.userId, chatRoomId: userInfo.roomId }
-        ();
+      stompClient.disconnect();
+      clearTimeout(timer);
     };
   }, [roomId]);
 
@@ -310,31 +385,91 @@ export default function LiveChat() {
     });
   };
 
+  const onClickDrawer = (adjustment: number) => {
+    setGoal(Math.max(200, Math.min(1000, goal + adjustment)));
+  };
+
+  const bettingData = [
+    {
+      color: "hsl(var(--foreground))",
+      goal: 400,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 300,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 200,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 300,
+    },
+    {
+      name: "친구들",
+      color: "hsl(var(--foreground))",
+      goal: 200,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 278,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 189,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 239,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 300,
+    },
+    {
+      color: "hsl(var(--foreground))",
+      goal: 200,
+    },
+    {
+      name: "당신",
+      color: "rgba(234,19,24,1)",
+      goal: goal,
+    },
+  ];
+
   return (
     <>
       {/* ------------------------------------------------------- */}
       {/* 피시 화면 */}
-      <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
-        <div className="w-[700px] h-full border-4 rounded-xl grid grid-rows-12">
-          {/* 채팅 화면 상단 사용자 정보 바 */}
-          <div className="w-full row-span-2 flex justify-between items-center rounded-3xl border-b-4">
-            {/* 왼쪽 사용자 정보 */}
-            <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-10">
-              {/* 사용자 프사 */}
+      <PC>
+        {/* 배팅 현황 화면 */}
+        <Alert className=" w-[700px] h-[100%] m-auto">
+          <div className="flex flex-row justify-between  h-full">
+            <div className="flex flex-row">
+              {/* 프사 */}
               <img
                 src={friendsInfo.playerProfilePic}
-                className=" rounded-full w-[80px] h-[80px]"
+                className=" rounded-full w-[80px] h-[80px] mb-3"
               />
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-3 ml-3">
                 {/* 칭호 */}
                 <MessageAlias alias={friendsInfo.playerAlias} />
                 {/* 이름 */}
-                <p className="font-bold text-2xl">{friendsInfo.playerName}</p>
+                <div className="flex flex-row">
+                  <p className="font-bold text-2xl">
+                    {friendsInfo.playerName}님이 이긴다!! :{" "}
+                    {predictObject.predictLose + predictObject.predictWin === 0
+                      ? 0
+                      : (predictObject.predictWin /
+                          (predictObject.predictLose +
+                            predictObject.predictWin)) *
+                        100}{" "}
+                    %{" "}
+                  </p>
+                </div>
               </div>
             </div>
-            {/* 프로필 보기 버튼 */}
-            {/* 해당 사람의 프로필로 이동한다 */}
-            {/* 임시 정적 데이터로 profileId를 넣었음 */}
             <Link to={`/main/profile/${friendsInfo.playerId}`}>
               <Button
                 type="submit"
@@ -345,95 +480,273 @@ export default function LiveChat() {
               </Button>
             </Link>
           </div>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-
-          {/* 채팅창 부분 */}
-          <div
-            ref={chatContainerRef}
-            className="w-full row-span-9  overflow-y-auto scrollbar-hide flex-row"
-          >
-            {/* 채팅 전체 내역을 출력 */}
-            {messages.map((data, idx) => {
-              return (
-                <div className="flex flex-col" key={idx}>
-                  <div
-                    className={`flex ${
-                      data.messageType === "ENTER" ||
-                      data.messageType === "CHAT_BOT"
-                        ? "justify-center"
-                        : data.userId === userInfo.userId
-                        ? "justify-end"
-                        : "justify-start"
-                    } mb-2`}
-                  >
-                    {data.messageType === "CHAT_BOT" ? (
-                      <BotMsg data={data} key={idx} />
-                    ) : data.messageType === "ENTER" ? (
-                      <SysMsg data={data} key={idx} />
-                    ) : data.userId === userInfo.userId ? (
-                      // 내 메세지 컴포넌트
-                      <MyMsg data={data} key={idx} />
-                    ) : (
-                      // 상대방 메세지 컴포넌트
-                      <YouMsg data={data} key={idx} />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          {/* -------------------------------------------------------------------------------------------------------------------- */}
-
-          {/* 채팅 하단 부분 */}
-          <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl">
-            {/* 사진 버튼 */}
-            <Dialog>
-              <DialogTrigger asChild>
-                {/*  사진 버튼 */}
-                <button>
-                  <img
-                    src="/image/messagePicture.png"
-                    className="h-[50px] w-[50px]"
-                  />
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>이미지 선택</DialogTitle>
-                </DialogHeader>
-                <div className="flex flex-col w-full mb-5 mt-5">
-                  {/* 이미지 선택 모달 */}
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="picture2" className="font-bold">
-                      이미지 파일을 선택하세요
-                    </Label>
-                    <Input
-                      id="picture2"
-                      type="file"
-                      // 이미지 파일만 선택되게
-                      accept="image/*"
-                      onChange={imageChange}
-                    />
-                  </div>
-                </div>
-
-                {/* 하단 부분 */}
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-x-5">
-                    {chatImage ? (
-                      <img
-                        src={chatImage}
-                        className="h-20 w-[100px] rounded-lg border-2"
-                      />
-                    ) : (
-                      <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
-                        이미지 없음
+          <AlertTitle>
+            <Progress
+              style={{ width: "100%", height: "50px", alignSelf: "center" }}
+              value={progress}
+            />
+          </AlertTitle>
+          <AlertDescription className="flex flex-row justify-between">
+            <Drawer open={open} onOpenChange={setOpen}>
+              <DrawerTrigger asChild>
+                <Button variant="outline">배팅하러 가기</Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="mx-auto w-full max-w-sm">
+                  <DrawerHeader>
+                    <DrawerTitle>얼마 걸 것이여?</DrawerTitle>
+                    <DrawerDescription>
+                      당신의 현재 잔액: {balance} point <br /> (기본 배팅 단위는
+                      200 point 입니다.)
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <div className="p-4 pb-0">
+                    <RadioGroup
+                      defaultValue="true"
+                      className="flex flex-row justify-around"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="true"
+                          id="r2"
+                          onClick={() => onClickRadio(true)}
+                        />
+                        <Label htmlFor="r2">이긴다</Label>
                       </div>
-                    )}
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="false"
+                          id="r3"
+                          onClick={() => onClickRadio(false)}
+                        />
+                        <Label htmlFor="r3">진다</Label>
+                      </div>
+                    </RadioGroup>
+
+                    <div className="flex items-center justify-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 shrink-0 rounded-full"
+                        onClick={() => onClickDrawer(-200)}
+                        disabled={goal <= 200}
+                      >
+                        <MinusIcon className="h-4 w-4" />
+                        <span className="sr-only">Decrease</span>
+                      </Button>
+                      <div className="flex-1 text-center">
+                        <div className="text-7xl font-bold tracking-tighter">
+                          {goal}
+                        </div>
+                        <div className="text-[0.70rem] uppercase text-muted-foreground">
+                          POINTS
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 shrink-0 rounded-full"
+                        onClick={() => onClickDrawer(200)}
+                        disabled={goal >= 1000}
+                      >
+                        <PlusIcon className="h-4 w-4" />
+                        <span className="sr-only">Increase</span>
+                      </Button>
+                    </div>
+                    <div className="mt-3 h-[120px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={bettingData}>
+                          <XAxis dataKey="name" />
+                          <Bar dataKey="goal">
+                            {bettingData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                  <div>
+                  <DrawerFooter>
+                    <Button
+                      onClick={() =>
+                        onSubmitBetting({
+                          userId: userInfo.userId,
+                          roomId: roomId,
+                          cur_betting_point: goal,
+                          is_win: isWin,
+                        })
+                      }
+                    >
+                      배팅!
+                    </Button>
+                    <DrawerClose asChild>
+                      <Button variant="outline">그..그만둘래</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </div>
+              </DrawerContent>
+            </Drawer>
+          </AlertDescription>
+        </Alert>
+        <Toaster />
+        <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
+          <div className="w-[700px] h-full border-4 rounded-xl grid grid-rows-12">
+            {/* 채팅 화면 상단 사용자 정보 바 */}
+            {/* -------------------------------------------------------------------------------------------------------------------- */}
+
+            {/* 채팅창 부분 */}
+            <div
+              ref={chatContainerRef}
+              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row"
+            >
+              {/* 채팅 전체 내역을 출력 */}
+              {messages.map((data, idx) => {
+                return (
+                  <div className="flex flex-col" key={idx}>
+                    <div
+                      className={`flex ${
+                        data.messageType === "ENTER" ||
+                        data.messageType === "CHAT_BOT"
+                          ? "justify-center"
+                          : data.userId === userInfo.userId
+                          ? "justify-end"
+                          : "justify-start"
+                      } mb-2`}
+                    >
+                      {data.messageType === "CHAT_BOT" ? (
+                        <BotMsg data={data} key={idx} />
+                      ) : data.messageType === "ENTER" ? (
+                        <SysMsg data={data} key={idx} />
+                      ) : data.userId === userInfo.userId ? (
+                        // 내 메세지 컴포넌트
+                        <MyMsg data={data} key={idx} />
+                      ) : (
+                        // 상대방 메세지 컴포넌트
+                        <YouMsg data={data} key={idx} />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* -------------------------------------------------------------------------------------------------------------------- */}
+
+            {/* 채팅 하단 부분 */}
+            <div className="flex  border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl ">
+              {/* 사진 버튼 */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  {/*  사진 버튼 */}
+                  <button>
+                    <img
+                      src="/image/messagePicture.png"
+                      className="h-[50px] w-[50px]"
+                    />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>이미지 선택</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col w-full mb-5 mt-5">
+                    {/* 이미지 선택 모달 */}
+                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                      <Label htmlFor="picture2" className="font-bold">
+                        이미지 파일을 선택하세요
+                      </Label>
+                      <Input
+                        id="picture2"
+                        type="file"
+                        // 이미지 파일만 선택되게
+                        accept="image/*"
+                        onChange={imageChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* 하단 부분 */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-x-5">
+                      {chatImage ? (
+                        <img
+                          src={chatImage}
+                          className="h-20 w-[100px] rounded-lg border-2"
+                        />
+                      ) : (
+                        <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
+                          이미지 없음
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <DialogClose asChild>
+                        {/* 이미지 보내기 버튼 */}
+                        <Button
+                          type="submit"
+                          variant="secondary"
+                          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                          onClick={(_) => {
+                            //   이미지는 url 형식임
+                            handleImageChange();
+                            // 초기화
+                            setChatImage(null);
+                          }}
+                        >
+                          보내기
+                        </Button>
+                      </DialogClose>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              {/* 도감 버튼 */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  {/* 도감버튼 */}
+                  <button>
+                    <img
+                      src="/image/messageDogam.png"
+                      className="h-[50px] w-[50px]"
+                    />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>도감 선택</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col w-full mb-5 mt-5 justify-center">
+                    {/* 도감 선택 모달 */}
+                    <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
+                      {data &&
+                        data.pages.map((pageData) => {
+                          return pageData.results.map(
+                            (profiledogam: ProfileDogamType, idx) => {
+                              return (
+                                <img
+                                  src={profiledogam.dogamImgUrl}
+                                  className={`h-20 w-[100px] rounded-lg border-4 ${
+                                    selectedImageIndex === idx
+                                      ? "border-red-500"
+                                      : "border-white"
+                                  }`}
+                                  key={idx}
+                                  onClick={() => {
+                                    console.log(profiledogam.dogamImgUrl);
+                                    setChatImage(profiledogam.dogamImgUrl);
+                                    setSelectedImageIndex(idx);
+                                  }}
+                                />
+                              );
+                            }
+                          );
+                        })}
+                    </div>
+                  </div>
+
+                  {/* 하단 부분 */}
+                  <div className="flex justify-center items-center">
                     <DialogClose asChild>
-                      {/* 이미지 보내기 버튼 */}
+                      {/* 도감 보내기 버튼 */}
                       <Button
                         type="submit"
                         variant="secondary"
@@ -449,100 +762,391 @@ export default function LiveChat() {
                       </Button>
                     </DialogClose>
                   </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-            {/* 도감 버튼 */}
-            <Dialog>
-              <DialogTrigger asChild>
-                {/* 도감버튼 */}
-                <button>
-                  <img
-                    src="/image/messageDogam.png"
-                    className="h-[50px] w-[50px]"
-                  />
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>도감 선택</DialogTitle>
-                </DialogHeader>
-                <div className="flex flex-col w-full mb-5 mt-5 justify-center">
-                  {/* 도감 선택 모달 */}
-                  <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
-                    {dogamList.map((dogam, idx) => (
-                      <img
-                        src={dogam.dogamImgUrl}
-                        className={`h-20 w-[100px] rounded-lg border-4 ${
-                          selectedImageIndex === idx
-                            ? "border-red-500"
-                            : "border-white"
-                        }`}
-                        key={idx}
-                        onClick={() => {
-                          console.log(dogam.dogamImgUrl);
-                          setChatImage(dogam.dogamImgUrl);
-                          setSelectedImageIndex(idx);
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
+                </DialogContent>
+              </Dialog>
 
-                {/* 하단 부분 */}
-                <div className="flex justify-center items-center">
-                  <DialogClose asChild>
-                    {/* 도감 보내기 버튼 */}
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
-                      onClick={(_) => {
-                        //   이미지는 url 형식임
-                        handleImageChange();
-                        // 초기화
-                        setChatImage(null);
-                      }}
-                    >
-                      보내기
-                    </Button>
-                  </DialogClose>
-                </div>
-              </DialogContent>
-            </Dialog>
+              {/* 채팅 입력칸 */}
+              <form
+                className="flex justify-center items-center gap-4 rounded-3xl w-[530px]"
+                // 채팅 전송을 눌렀을때 함수
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendMessageToSocket(inputChat);
 
-            {/* 채팅 입력칸 */}
-            <form
-              className="flex justify-center items-center gap-4 rounded-3xl w-[530px]"
-              // 채팅 전송을 눌렀을때 함수
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendMessageToSocket(inputChat);
-
-                // 채팅 입력창 초기화
-                setInputChat("");
-              }}
-            >
-              {/* 채팅 입력창 */}
-              <Input
-                type="text"
-                className="w-[450px] font-bold text-xl"
-                onChange={(e) => {
-                  // 입력받은 정보를 상태관리
-                  setInputChat(e.target.value);
+                  // 채팅 입력창 초기화
+                  setInputChat("");
                 }}
-                value={inputChat}
-              />
-              {/* 채팅 입력 버튼 */}
-              <button type="submit">
-                <img src="/image/chatBtn.png" className="h-[50px] w-[50px]" />
-              </button>
-            </form>
+              >
+                {/* 채팅 입력창 */}
+                <Input
+                  type="text"
+                  className="w-[450px] font-bold text-xl"
+                  onChange={(e) => {
+                    // 입력받은 정보를 상태관리
+                    setInputChat(e.target.value);
+                  }}
+                  value={inputChat}
+                />
+                {/* 채팅 입력 버튼 */}
+                <button type="submit">
+                  <img src="/image/chatBtn.png" className="h-[50px] w-[50px]" />
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      </PC>
+
+      {/* ------------------------------------------------------------------------- */}
+      {/* ------------------------------------------------------------------------- */}
 
       {/* 모바일 화면 */}
+      <Mobile>
+        <div className=" h-screen grid grid-rows-12">
+          <Alert className=" w-full m-auto row-span-2">
+            <div className="flex flex-row justify-between  h-full">
+              <div className="flex flex-row">
+                {/* 프사 */}
+                <img
+                  src={friendsInfo.playerProfilePic}
+                  className=" rounded-full w-[80px] h-[80px] mb-3"
+                />
+                <div className="flex flex-col items-center gap-3 ml-3">
+                  {/* 칭호 */}
+                  <MessageAlias alias={friendsInfo.playerAlias} />
+                  {/* 이름 */}
+                  <div className="flex flex-row">
+                    <p className="font-bold text-2xl">
+                      {friendsInfo.playerName}님이 이긴다!! :{" "}
+                      {predictObject.predictLose + predictObject.predictWin ===
+                      0
+                        ? 0
+                        : (predictObject.predictWin /
+                            (predictObject.predictLose +
+                              predictObject.predictWin)) *
+                          100}{" "}
+                      %{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <AlertTitle>
+              <Progress
+                style={{ width: "100%", height: "50px", alignSelf: "center" }}
+                value={progress}
+              />
+            </AlertTitle>
+            <AlertDescription className="flex flex-row justify-between">
+              <Drawer open={open} onOpenChange={setOpen}>
+                <DrawerTrigger asChild>
+                  <Button variant="outline">배팅하러 가기</Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="mx-auto w-full max-w-sm">
+                    <DrawerHeader>
+                      <DrawerTitle>얼마 걸 것이여?</DrawerTitle>
+                      <DrawerDescription>
+                        당신의 현재 잔액: {balance} point <br /> (기본 배팅
+                        단위는 200 point 입니다.)
+                      </DrawerDescription>
+                    </DrawerHeader>
+                    <div className="p-4 pb-0">
+                      <RadioGroup
+                        defaultValue="true"
+                        className="flex flex-row justify-around"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="true"
+                            id="r2"
+                            onClick={() => onClickRadio(true)}
+                          />
+                          <Label htmlFor="r2">이긴다</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="false"
+                            id="r3"
+                            onClick={() => onClickRadio(false)}
+                          />
+                          <Label htmlFor="r3">진다</Label>
+                        </div>
+                      </RadioGroup>
+
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 shrink-0 rounded-full"
+                          onClick={() => onClickDrawer(-200)}
+                          disabled={goal <= 200}
+                        >
+                          <MinusIcon className="h-4 w-4" />
+                          <span className="sr-only">Decrease</span>
+                        </Button>
+                        <div className="flex-1 text-center">
+                          <div className="text-7xl font-bold tracking-tighter">
+                            {goal}
+                          </div>
+                          <div className="text-[0.70rem] uppercase text-muted-foreground">
+                            POINTS
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 shrink-0 rounded-full"
+                          onClick={() => onClickDrawer(200)}
+                          disabled={goal >= 1000}
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                          <span className="sr-only">Increase</span>
+                        </Button>
+                      </div>
+                      <div className="mt-3 h-[120px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={bettingData}>
+                            <XAxis dataKey="name" />
+                            <Bar dataKey="goal">
+                              {bettingData.map((entry, index) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={entry.color}
+                                />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                    <DrawerFooter>
+                      <Button
+                        onClick={() =>
+                          onSubmitBetting({
+                            userId: userInfo.userId,
+                            roomId: roomId,
+                            cur_betting_point: goal,
+                            is_win: isWin,
+                          })
+                        }
+                      >
+                        배팅!
+                      </Button>
+                      <DrawerClose asChild>
+                        <Button variant="outline">그..그만둘래</Button>
+                      </DrawerClose>
+                    </DrawerFooter>
+                  </div>
+                </DrawerContent>
+              </Drawer>
+            </AlertDescription>
+          </Alert>
+          <Toaster />
+          <div className="w-full flex flex-col items-center mb-4 row-span-10">
+            <div className="w-full h-full border-4 rounded-xl grid grid-rows-10">
+              {/* 채팅 화면 상단 사용자 정보 바 */}
+              {/* -------------------------------------------------------------------------------------------------------------------- */}
+
+              {/* 채팅창 부분 */}
+              <div
+                ref={chatContainerRef}
+                className="w-full row-span-9 overflow-y-auto scrollbar-hide flex-row"
+              >
+                {/* 채팅 전체 내역을 출력 */}
+                {messages.map((data, idx) => {
+                  return (
+                    <div className="flex flex-col" key={idx}>
+                      <div
+                        className={`flex ${
+                          data.messageType === "ENTER" ||
+                          data.messageType === "CHAT_BOT"
+                            ? "justify-center"
+                            : data.userId === userInfo.userId
+                            ? "justify-end"
+                            : "justify-start"
+                        } mb-2`}
+                      >
+                        {data.messageType === "CHAT_BOT" ? (
+                          <BotMsg data={data} key={idx} />
+                        ) : data.messageType === "ENTER" ? (
+                          <SysMsg data={data} key={idx} />
+                        ) : data.userId === userInfo.userId ? (
+                          // 내 메세지 컴포넌트
+                          <MyMsg data={data} key={idx} />
+                        ) : (
+                          // 상대방 메세지 컴포넌트
+                          <YouMsg data={data} key={idx} />
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {/* -------------------------------------------------------------------------------------------------------------------- */}
+
+              {/* 채팅 하단 부분 */}
+              <div className="flex  border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl ">
+                {/* 사진 버튼 */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    {/*  사진 버튼 */}
+                    <button>
+                      <img
+                        src="/image/messagePicture.png"
+                        className="h-[40px] w-[40px]"
+                      />
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>이미지 선택</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col w-full mb-5 mt-5">
+                      {/* 이미지 선택 모달 */}
+                      <div className="grid w-full max-w-sm items-center gap-1.5">
+                        <Label htmlFor="picture2" className="font-bold">
+                          이미지 파일을 선택하세요
+                        </Label>
+                        <Input
+                          id="picture2"
+                          type="file"
+                          // 이미지 파일만 선택되게
+                          accept="image/*"
+                          onChange={imageChange}
+                        />
+                      </div>
+                    </div>
+
+                    {/* 하단 부분 */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-x-5">
+                        {chatImage ? (
+                          <img
+                            src={chatImage}
+                            className="h-20 w-[100px] rounded-lg border-2"
+                          />
+                        ) : (
+                          <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
+                            이미지 없음
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <DialogClose asChild>
+                          {/* 이미지 보내기 버튼 */}
+                          <Button
+                            type="submit"
+                            variant="secondary"
+                            className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                            onClick={(_) => {
+                              //   이미지는 url 형식임
+                              handleImageChange();
+                              // 초기화
+                              setChatImage(null);
+                            }}
+                          >
+                            보내기
+                          </Button>
+                        </DialogClose>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                {/* 도감 버튼 */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    {/* 도감버튼 */}
+                    <button>
+                      <img
+                        src="/image/messageDogam.png"
+                        className="h-[40px] w-[40px]"
+                      />
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>도감 선택</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col w-full mb-5 mt-5 justify-center">
+                      {/* 도감 선택 모달 */}
+                      <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
+                        {data &&
+                          data.pages.map((pageData) => {
+                            return pageData.results.map(
+                              (profiledogam: ProfileDogamType, idx) => {
+                                return (
+                                  <img
+                                    src={profiledogam.dogamImgUrl}
+                                    className={`h-20 w-[100px] rounded-lg border-4 ${
+                                      selectedImageIndex === idx
+                                        ? "border-red-500"
+                                        : "border-white"
+                                    }`}
+                                    key={idx}
+                                    onClick={() => {
+                                      console.log(profiledogam.dogamImgUrl);
+                                      setChatImage(profiledogam.dogamImgUrl);
+                                      setSelectedImageIndex(idx);
+                                    }}
+                                  />
+                                );
+                              }
+                            );
+                          })}
+                      </div>
+                    </div>
+
+                    {/* 하단 부분 */}
+                    <div className="flex justify-center items-center">
+                      <DialogClose asChild>
+                        {/* 도감 보내기 버튼 */}
+                        <Button
+                          type="submit"
+                          variant="secondary"
+                          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                          onClick={(_) => {
+                            //   이미지는 url 형식임
+                            handleImageChange();
+                            // 초기화
+                            setChatImage(null);
+                          }}
+                        >
+                          보내기
+                        </Button>
+                      </DialogClose>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* 채팅 입력칸 */}
+                <form
+                  className="flex justify-center items-center gap-4 rounded-3xl w-[250px] ml-5"
+                  // 채팅 전송을 눌렀을때 함수
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    sendMessageToSocket(inputChat);
+
+                    // 채팅 입력창 초기화
+                    setInputChat("");
+                  }}
+                >
+                  {/* 채팅 입력창 */}
+                  <Input
+                    type="text"
+                    className="w-[250px] font-bold text-xl"
+                    onChange={(e) => {
+                      // 입력받은 정보를 상태관리
+                      setInputChat(e.target.value);
+                    }}
+                    value={inputChat}
+                  />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Mobile>
     </>
   );
 }

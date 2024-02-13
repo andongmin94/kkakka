@@ -47,16 +47,16 @@ public class BettingService {
                 PredictDto pd = new PredictDto();
                 if(isWin){
                     chatRoomRepository.updateWinPoint(roomId, betPoint + chatRoom.getWinPoint());
-                    pd.setPridictWin(betPoint+ chatRoom.getWinPoint());
-                    pd.setPridictLose(chatRoom.getLosePoint());
+                    pd.setPredictWin(betPoint+ chatRoom.getWinPoint());
+                    pd.setPredictLose(chatRoom.getLosePoint());
 
                     // 2) 현 유저의 채팅 참여에도, 얼마나 걸었는지를 넣는다.
                     chatJoinRepository.updateIswinAndBetPrice(isWin, betPoint + chatRoom.getWinPoint(), userId, roomId);
 
                 }else{
                     chatRoomRepository.updateLosePoint(roomId, betPoint + chatRoom.getLosePoint());
-                    pd.setPridictWin(chatRoom.getWinPoint());
-                    pd.setPridictLose(betPoint + chatRoom.getLosePoint());
+                    pd.setPredictWin(chatRoom.getWinPoint());
+                    pd.setPredictLose(betPoint + chatRoom.getLosePoint());
 
                     // 2) 현 유저의 채팅 참여에도, 얼마나 걸었는지를 넣는다.
                     chatJoinRepository.updateIswinAndBetPrice(isWin, betPoint + chatRoom.getLosePoint(), userId, roomId);
