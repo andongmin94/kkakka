@@ -65,8 +65,7 @@ pipeline {
                 // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
                 sshagent(['aws-key']) { 
                     sh "docker rm -f backend"
-                    sh "docker rmi osy9536/ssafy-be:latest"
-                    sh "docker image prune -f"
+                    sh "docker rmi -f osy9536/ssafy-be:latest"
                     sh "docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
                 }
                 echo '백엔드 EC2에 배포 완료!'
@@ -101,8 +100,7 @@ pipeline {
                 // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
                 sshagent(['aws-key']) { 
                     sh "docker rm -f frontend"
-                    sh "docker rmi osy9536/ssafy-fe:latest"
-                    sh "docker image prune -f"
+                    sh "docker rmi -f osy9536/ssafy-fe:latest"
                     sh "docker run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
                 }
                 echo '프론트 EC2에 배포 완료!'
