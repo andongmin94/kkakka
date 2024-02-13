@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { useAlarmList } from "@/hooks/alarm/queries/useAlarmListQuery";
 import useAlarmStore from "@/store/alarm/alarmStore";
 import { useCheckAlarm } from "@/hooks/alarm/mutations/useCheckAlarmPut";
 import axios from "axios";
@@ -56,11 +55,12 @@ export function Alarm() {
   }, []);
 
   const moveToAlarmContentHandler = (alarm: AlarmType) => {
-    if (alarm.frqEmail === userEmail) {
+    if (alarm.frqEmail !== userEmail) {
       navigate(`/main/profile/${userId}`);
-    } else {
-      navigate(`/main/profile/${alarm.relatedContentId}`);
     }
+    // else {
+    //   navigate(`/main/profile/${alarm.relatedContentId}`);
+    // }
   };
 
   return (
@@ -91,21 +91,20 @@ export function Alarm() {
                   <DropdownMenuRadioItem
                     value="top"
                     key={alarm.alarmId}
+                    className="border-b-2 border-gray-200 hover:bg-gray-100 cursor-pointer"
                     onClick={() => {
                       checkAlarmHandler(alarm.alarmId);
                       moveToAlarmContentHandler(alarm);
                     }}
                   >
-                    <div className="flex justify-center items-center">
-                      <div>
-                        <img
-                          src={alarm.alarmPic}
-                          alt="alarm-pic"
-                          className="w-10 h-10 rounded-full"
-                        />
-                      </div>
-                      <div>{alarm.alarmContent}</div>
-                      <div>
+                    <div className="flex justify-center items-center py-2">
+                      <img
+                        src={alarm.alarmPic}
+                        alt="alarm-pic"
+                        className="w-10 h-10 rounded-full mr-4 shadow-md"
+                      />
+                      <div className="mr-2">{alarm.alarmContent}</div>
+                      <div className="mr-4">
                         {alarm.createdAt.toString().substring(5, 7)}월{" "}
                         {alarm.createdAt.toString().substring(8, 10)}일
                       </div>
@@ -113,6 +112,8 @@ export function Alarm() {
                   </DropdownMenuRadioItem>
                 );
               })}
+            <DropdownMenuSeparator />
+            <div className="text-xs p-2">더이상 알림이 없어요 😛</div>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
