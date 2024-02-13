@@ -213,7 +213,6 @@ public class DogamService {
     }
 
 
-
     public DogamDetailResponseDto dogamDetail(Long dogamId, User user) {
 
         Dogam dogam = dogamRepository.findByIdAndDeletedAtIsNull(dogamId).orElseThrow(
@@ -239,8 +238,19 @@ public class DogamService {
                     commentUser.getUserName(), commentUser.getKakaoEmail(), cd.getCreatedAt()));
         }
 
-        DogamDetailResponseDto dto = DogamDetailResponseDto.of(dogam.getUser().getId(), dogam.getUser().getKakaoProfileImg(), dogam.getDogamTitle(),
-                dogam.getUser().getUserName(), dogam.getUser().getKakaoEmail()
+        // 싫어요 숫자
+        int hatedNum = dislikeDogamRepository.countByDogamIdAndIsDislikeTrueAndDeletedAtIsNull(dogam.getId());
+
+        // 내가 싫어요 했는지 여부
+        boolean isHated = false;
+        DislikeDogam dislikeDogam = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(), dogamId).orElse(null);
+
+        if (dislikeDogam != null  && dislikeDogam.isDislike()) {
+            isHated = true;
+        }
+
+        DogamDetailResponseDto dto = DogamDetailResponseDto.of(dogam.getUser().getId(), dogam.getUser().getKakaoProfileImg(), dogam.getDogamImage()
+                , dogam.getDogamTitle(), hatedNum, isHated, dogam.getUser().getUserName(), dogam.getUser().getKakaoEmail()
                 , dogam.getCreatedAt(), dynamicUserInfo.getCurAlias() == null || dynamicUserInfo.getCurAlias().isEmpty() ? "칭호가 없습니다." : dynamicUserInfo.getCurAlias()
                 , dogamCommentResponseDtos);
         return dto;
