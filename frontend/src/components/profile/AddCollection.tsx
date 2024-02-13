@@ -69,8 +69,8 @@ export default function AddCollection({ userId }: { userId: number }) {
       <PC>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="font-bold text-2xl flex self-center w-[250px]">
-              도감 추가
+            <Button className="font-bold bg-slate-500 text-sm fixed w-12 h-12 rounded-full z-100 flex items-center justify-center bottom-5 right-48">
+              📝{" "}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
