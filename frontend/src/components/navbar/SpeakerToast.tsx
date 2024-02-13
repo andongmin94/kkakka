@@ -25,8 +25,8 @@ export default function SpeakerToast({
               <div className="flex-shrink-0">
                 <img
                   className="size-10"
-                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Loudspeaker.png"
-                  alt="Icon"
+                  src="/image/Loudspeaker.png"
+                  alt="Icon" 
                 />
               </div>
               <div className="ml-3 w-0 flex-1 pt-0.5">

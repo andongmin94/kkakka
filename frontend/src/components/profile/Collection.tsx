@@ -8,20 +8,20 @@ export default function Collection({
   profiledogam: ProfileDogamType;
 }) {
   return (
-    <div className="">
+    <div className="flex-initial md:w-auto mb-3 mr-3">
       <div
-        className="h-[200px] w-[320px] border-4 border-inherit mt-5 rounded-3xl  rounded-b-none border-b-0"
+        className="h-[170px] border-2 border-inherit mt-2 rounded-3xl  rounded-b-none border-b-0"
         style={{
           backgroundImage: `url(${profiledogam.dogamImgUrl})`,
           backgroundSize: "cover",
         }}
       />
-      <div className="w-[320px] border-4 border-inherit rounded-3xl bg-cover rounded-t-none border-t-0 mt-0 mb-5">
+      <div className="border-2 border-inherit rounded-3xl bg-cover rounded-t-none border-t-0 mt-0 ">
         {/* 제목 */}
-        <div className="w-full font-bold text-2xl px-2 py-3">
+        <div className="w-full font-bold text-xl px-4 py-3">
           {profiledogam.dogamTitle}
         </div>
-        <div className="flex gap-3 pb-3 font-bold items-center">
+        <div className="flex pb-3 font-bold items-center w-full">
           {/* 싫어요 */}
           <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
             <ThumbsDown
@@ -29,7 +29,7 @@ export default function Collection({
               dogamId={profiledogam.dogamId}
             />
           </div>
-          <div className=" flex self-center mr-4 text-sm text-blue-600">
+          <div className="flex self-center text-sm text-blue-600">
             {profiledogam.dogamDislikeNum}
           </div>
           {/* 댓글 */}
@@ -37,8 +37,8 @@ export default function Collection({
             <CommentModal dogamId={profiledogam.dogamId} />
           </div>
           {/* 등록일 */}
-          <div className="grid grid-col place-items-center font-bold">
-            <div className="text-center">{profiledogam.createdAt}</div>
+          <div className="font-bold w-1/2">
+            <div className="text-end">{profiledogam.createdAt.slice(0, 10)}</div>
           </div>
         </div>
       </div>
