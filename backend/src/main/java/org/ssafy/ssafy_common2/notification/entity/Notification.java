@@ -31,7 +31,7 @@ public class Notification extends BaseTime {
     @Column(name = "is_check", nullable = false)
     private Boolean isChecked;
 
-    @Column(name = "related_img", nullable = false, length = 100)
+    @Column(name = "related_img", nullable = false, length = 255)
     private String relatedImg;
 
     @Column(name = "related_email", length = 50)
