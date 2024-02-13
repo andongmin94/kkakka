@@ -27,12 +27,13 @@ export default function ProfilePage() {
         },
       })
       .then((res) => {
-        setProfileInfo(res.data.data);
+        const newProfileInfo = res.data.data;
+        setProfileInfo({ ...profileInfo, ...newProfileInfo });
       })
       .catch((err) => {
         console.error("프로필정보가져오기실패", err);
       });
-  }, []);
+  }, [profileInfo, setProfileInfo]);
 
   const [friendship, setFriendship] = useState("");
 

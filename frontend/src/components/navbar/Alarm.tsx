@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import classes from "@/components/navbar/Alarm.module.css";
-import { useTheme } from "@/components/navbar/ThemeProvider";
+// import { useTheme } from "@/components/navbar/ThemeProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import { AlarmType } from "@/types/alarmTypes";
 import { useNavigate } from "react-router-dom";
 
 export function Alarm() {
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
   const [position, setPosition] = useState("");
   const navigate = useNavigate();
   const checkAlarmMutation = useCheckAlarm();
@@ -67,11 +67,11 @@ export function Alarm() {
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          {theme === "light" ? (
-            <div className={classes.alarm_image} />
-          ) : (
+          {/* {theme === "light" ? ( */}
+          <div className={classes.alarm_image} />
+          {/* ) : (
             <div className={classes.alarm_image_dark} />
-          )}
+          )} */}
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-30 text-center">
           <DropdownMenuLabel>
