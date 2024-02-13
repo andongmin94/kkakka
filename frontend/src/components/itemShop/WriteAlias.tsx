@@ -43,7 +43,9 @@ import classes from "./ItemShopCard.module.css";
 import axios from "axios";
 const FormSchema = z.object({
   userId: z.number(),
-  textAlias: z.string().max(6, {
+  textAlias: z.string().min(1, {
+    message: "칭호를 입력해주세요!",
+  }).max(6, {
     message: "6글자 미만으로 입력해주세요!",
   }),
   name: z.string({
@@ -312,6 +314,7 @@ export default function WriteAlias({
                       if (
                         form.getValues().textAlias != undefined &&
                         form.getValues().userId &&
+                        form.getValues().textAlias.length > 1 &&
                         form.getValues().textAlias.length < 7
                       ) {
                         // 보낼 데이터 객체 userId, textAlias

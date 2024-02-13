@@ -27,6 +27,8 @@ import {
 const FormSchema = z.object({
   textSpeaker: z.string().min(2, {
     message: "2글자 이상으로 입력해주세요!",
+  }).max(100, {
+    message: "100글자 미만으로 작성해주세요!",
   }),
 });
 import axios from "axios";
@@ -36,10 +38,12 @@ import classes from "./ItemShopCard.module.css";
 export default function Speaker({
   itemName,
   itemPrice,
+  itemDesc,
   myPoint,
 }: {
   itemName: string;
   itemPrice: number;
+  itemDesc: string;
   myPoint: number;
 }) {
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
@@ -169,6 +173,7 @@ export default function Speaker({
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
               <div className="mb-3 text-4xl">{itemName}</div>
+              <div className="mb-3 text-base">{itemDesc}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
