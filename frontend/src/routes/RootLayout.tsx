@@ -14,16 +14,16 @@ import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ToTheTop from "@/components/app/ToTheTop";
+import MyPoint from "@/components/itemShop/MyPoint";
+import { UserType } from "@/types/userTypes";
+import useUserStore from "@/store/user/userStore";
 
 import axios from "axios";
 
 export default function RootLayout() {
   const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
-  if (!token) {
-    window.alert("로그인이 필요한 서비스입니다.");
-    navigate("/");
-  }
 
   const { pathname } = useLocation();
   const { theme } = useTheme();
@@ -57,28 +57,36 @@ export default function RootLayout() {
     source.close();
   };
 
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        localStorage.setItem("userId", res.data.data.userId);
-        localStorage.setItem("userName", res.data.data.userName);
-        localStorage.setItem("userProfileImg", res.data.data.userProfileImg);
-        localStorage.setItem("userBackImg", res.data.data.userBackImg);
-        localStorage.setItem("userAlias", res.data.data.userAlias);
-        // setUserInfo(res.data.data);
+  const [userData, setUserData] = useState<UserType>();
+  const { setUserInfo } = useUserStore();
 
-        {
-          typeof electron !== "undefined" &&
-            electron.send("userInfo", res.data.data) &&
-            electron.send("token", token);
-        }
-      });
-  }, []);
+  useEffect(() => {
+    if (!userData) {
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          localStorage.setItem("userId", res.data.data.userId);
+          localStorage.setItem("userName", res.data.data.userName);
+          localStorage.setItem("userProfileImg", res.data.data.userProfileImg);
+          localStorage.setItem("userBackImg", res.data.data.userBackImg);
+          localStorage.setItem("userAlias", res.data.data.userAlias);
+          setUserData(res.data.data);
+          setUserInfo(res.data.data);
+          console.log("check");
+          {
+            typeof electron !== "undefined" &&
+              electron.send("userInfo", res.data.data);
+          }
+          {
+            typeof electron !== "undefined" && electron.send("token", token);
+          }
+        });
+    }
+  }, [userData]);
 
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
@@ -155,7 +163,7 @@ export default function RootLayout() {
         <ToTheTop />
 
         <div
-          className="py-7 bg-no-repeat bg-fixed"
+          className={classes.backback}
           style={{
             backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
           }}
@@ -168,14 +176,13 @@ export default function RootLayout() {
                 text={speakerToastContent}
               />
             )}
-            <main className={classes.page}>
+            <main
+              className={cn(classes.page, {
+                [classes.electron_page]: typeof electron !== "undefined",
+              })}
+            >
               {/* 왼쪽 사이드바 영역*/}
-              <div
-                className={cn(classes.section_left, {
-                  [classes.electron_section_left]:
-                    typeof electron !== "undefined",
-                })}
-              >
+              <div className={classes.section_left}>
                 <div className={classes.menu_items}>
                   {/* 로고 이미지 */}
                   <Link to="/main" className="mt-10 mb-10 w-3/5">
@@ -196,16 +203,14 @@ export default function RootLayout() {
                   <Link to="/main/intro" className={classes.menu}>
                     <h1>서비스 소개</h1>
                   </Link>
+                  <div className="mt-72">
+                    <MyPoint />
+                  </div>
                 </div>
               </div>
 
               {/* 네브바와 메인 페이지를 포함하는 영역 */}
-              <div
-                className={cn(classes.section_right, {
-                  [classes.electron_section_right]:
-                    typeof electron !== "undefined",
-                })}
-              >
+              <div className={classes.section_right}>
                 {/* 네브바 */}
                 {isNavbarVisible ? (
                   theme === "light" ? (
@@ -216,8 +221,8 @@ export default function RootLayout() {
 
                       {/* 네브바 오른쪽 영역 */}
                       <div className={classes.nav_right}>
-                        {/* 다크모드 버튼 (미완, 후순위) */}
-                        <ModeToggle />
+                        {/* 다크모드 버튼 (미완, 후순위)
+                        <ModeToggle /> */}
                         {/* 사용자 프로필 버튼 */}
                         <Link
                           to={`/main/profile/${userId}`}
@@ -245,8 +250,8 @@ export default function RootLayout() {
 
                       {/* 네브바 오른쪽 영역 */}
                       <div className={classes.nav_right}>
-                        {/* 다크모드 버튼 (미완, 후순위) */}
-                        <ModeToggle />
+                        {/* 다크모드 버튼 (미완, 후순위)
+                        <ModeToggle /> */}
                         {/* 사용자 프로필 버튼 */}
                         <Link
                           to={`/main/profile/${userId}`}
@@ -264,7 +269,6 @@ export default function RootLayout() {
                           </Avatar>
                           {/* <div className={classes.user_image} /> */}
                         </Link>
-
                         <Alarm />
                         <FriendsBtn />
                       </div>
