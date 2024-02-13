@@ -61,7 +61,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/oauth/callback/kakao/token",
+    path: "/api/oauth/callback/kakao/token",
     element: <KakaoCallbackPage />,
   },
 ]);
