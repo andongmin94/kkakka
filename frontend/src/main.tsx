@@ -21,7 +21,7 @@ const electron = window.electron;
 import TitleBar from "@/electron/TitleBar.tsx";
 import SettingPage from "@/electron/SettingPage";
 /////////////////////////////////////////////////////
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MessageTestPage from "./routes/MessageTestPage";
 import LiveChat from "./routes/LiveChat";
 
