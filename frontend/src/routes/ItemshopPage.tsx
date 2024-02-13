@@ -1,19 +1,13 @@
 import Speaker from "@/components/itemShop/Speaker";
 import WriteAlias from "@/components/itemShop/WriteAlias";
 import Compliment from "@/components/itemShop/Compliment";
-// import DeleteCollection from "@/components/itemShop/DeleteCollection";
-// import useItemshopStore from "@/store/itemshop/itemshopStore";
-// import usePointStore from "@/store/user/pointStore";
-// import useFriendStore from "@/store/friend/friendStore";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ItemType } from "@/types/itemTypes";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function ItemshopPage() {
-  // const { itemList, setItemList } = useItemshopStore();
-  // const { point } = usePointStore();
-  // const { friendList } = useFriendStore();
   const [itemList, setItemList] = useState<ItemType[]>([]);
   const [friendList, setFriendList] = useState([]);
 
@@ -64,7 +58,6 @@ export default function ItemshopPage() {
   return (
     <>
       <div className="text-lg mb-10 flex ml-10 ">
-        {/* <img src="/image/itemShop.png" className="h-[50px] w-[50px]" /> */}
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
       </div>
 
@@ -114,12 +107,3 @@ export default function ItemshopPage() {
     </>
   );
 }
-
-//  {item.itemName === "도감 삭제권" && (
-//                   <DeleteCollection
-//                     itemName={item.itemName}
-//                     itemPrice={item.itemPrice}
-//                     // itemDesc={item.itemDesc}
-//                     myPoint={point}
-//                   />
-//                 )}
