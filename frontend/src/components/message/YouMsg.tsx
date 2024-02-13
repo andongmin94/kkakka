@@ -26,7 +26,7 @@ export default function YouMsg({ data }: { data: dataProps }) {
         {/* 상대방 프사 */}
         <img
           src={data.userProfileImg}
-          className="h-[50px] w-[50px] rounded-full mx-2"
+          className="h-[45px] w-[45px] mt-1 rounded-full mx-2 shadow-md"
         />
         <div>
           {/* 상대방 이름 */}
@@ -34,7 +34,7 @@ export default function YouMsg({ data }: { data: dataProps }) {
             {data.userCurAlias} {data.userName}
           </p>
           <div className="flex">
-            <div className="max-w-[80%] m-2 p-3 rounded-2xl self-end bg-slate-200 font-bold text-xl text-wrap">
+            <div className="max-w-[80%] m-2 py-3 px-4 rounded-sm self-end bg-gray-50 font-bold text-sm text-wrap shadow-md">
               {/* 이미지인지 텍스트 채팅인지 판별 */}
               {data.imgCode !== null ? (
                 <img src={data.imgCode} />
@@ -42,7 +42,7 @@ export default function YouMsg({ data }: { data: dataProps }) {
                 data.content
               )}
             </div>
-            <div className=" self-end">{formattedTime}</div>
+            <div className="text-xs mb-2 self-end">{formattedTime}</div>
           </div>
         </div>
       </div>
