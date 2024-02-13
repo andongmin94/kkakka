@@ -233,7 +233,7 @@ export default function MessageTestPage() {
       .get(
         `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/users/${
           friendsInfo.userId
-        }?page=0&size=5`,
+        }?page=0&size=10`,
         {
           headers: {
             Authorization: token,
@@ -241,8 +241,6 @@ export default function MessageTestPage() {
         }
       )
       .then((res: any) => {
-        console.log("도감리스트");
-        console.log(res.data.data.data);
         setDogamList(res.data.data.data);
       });
 
