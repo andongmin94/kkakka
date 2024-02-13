@@ -56,13 +56,13 @@ import classes from "./ItemShopCard.module.css";
 export default function Compliment({
   itemName,
   itemPrice,
-  // itemDesc,
+  itemDesc,
   myPoint,
   friends,
 }: {
   itemName: string;
   itemPrice: number;
-  // itemDesc: string;
+  itemDesc: string;
   myPoint: number;
   friends: FriendType[];
 }) {
@@ -184,6 +184,7 @@ export default function Compliment({
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
               <div className="mb-3 text-4xl">{itemName}</div>
+              <div className="mb-3 text-base">{itemDesc}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
                 <div className="flex flex-row justify-content-center gap-4">
                   <img src="/image/coins.png" className="h-10 w-10" />
