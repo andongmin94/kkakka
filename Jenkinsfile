@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Deploy BE and FE') {
+        stage('Deploy BE') {
             steps {
                 echo '백엔드 배포 시작!'
                 sshagent(['aws-key']) { 
@@ -58,7 +58,9 @@ pipeline {
                 }
                 echo '백엔드 배포 완료!'
             }
-
+        }
+        
+        stage('Deploy FE') {
             steps {
                 echo '프론트 배포 시작!'
                 sshagent(['aws-key']) { 
