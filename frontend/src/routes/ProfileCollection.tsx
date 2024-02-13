@@ -3,9 +3,16 @@ import { Mobile, PC } from "@/components/MediaQuery";
 import Collection from "@/components/profile/Collection";
 import AddCollection from "@/components/profile/AddCollection";
 import userStore from "@/store/user/userStore";
-import { useProfileDogamQuery } from "@/hooks/profile/queries/useProfileDogamQuery";
 import InfiniteScroll from "react-infinite-scroller";
 import { ProfileDogamType } from "@/types/dogamTypes";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+interface PageData {
+  results: ProfileDogamType[];
+  nextPageParam: number;
+  theLastPage: number;
+}
 
 export default function ProfileCollection() {
   const params = useParams();
@@ -13,8 +20,45 @@ export default function ProfileCollection() {
 
   const paramsId = Number(params.id);
 
-  const { data, fetchNextPage, hasNextPage, isFetching } =
-    useProfileDogamQuery(paramsId);
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["profileDogamFeed", paramsId],
+    queryFn: ({ queryKey, pageParam }) => {
+      const [, paramsId] = queryKey as [string, number];
+      return fetchProfileDogamList(paramsId, pageParam);
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: PageData) => {
+      if (lastPage.nextPageParam === lastPage.theLastPage) {
+        return undefined;
+      } else {
+        return lastPage.nextPageParam;
+      }
+    },
+  });
+
+  const fetchProfileDogamList = async (
+    paramsId: number,
+    pageParam: number
+  ): Promise<PageData> => {
+    const res = await axios.get(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/api/friends/dogam/users/${paramsId}?page=${pageParam}&size=5`,
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    const data = {
+      results: res.data.data.data,
+      nextPageParam: res.data.data.currentPage + 1,
+      theLastPage: res.data.data.totalPages,
+    };
+
+    return data;
+  };
 
   return (
     <>
