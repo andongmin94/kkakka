@@ -128,6 +128,12 @@ app.whenReady().then(createWindow).then(async () => {
             else if (event.EventName === "HeraldKill") { sendMessageToSocket(event.KillerName + "님이 " + "협곡의 전령을 처치했습니다!") }
             else if (event.EventName === "BaronKill") { sendMessageToSocket(event.KillerName + "님이 " + "바론 남작을 처치했습니다!") }
             else if (event.EventName === "DragonKill") { sendMessageToSocket(event.KillerName + "님이 " + "용을 처치했습니다!") }
+
+            if (event.EventName === "GameEnd")
+            {
+              if (event.Result === "Win") { sendMessageToSocket("이걸 이기네;"); sendWin("이걸 이기네;") }
+              else { sendMessageToSocket("이걸 지네 ㅋㅋㅋㅋ"); sendLose("이걸 지네 ㅋㅋㅋㅋ") }
+            }
             })}
           // newEvents를 전송하는 코드를 여기에 작성합니다.
           if (newEvents.length > 0) { lastSentEventId = newEvents[newEvents.length - 1].EventID }
@@ -188,7 +194,8 @@ app.whenReady().then(createWindow).then(async () => {
             
             sendNewEvents(events);
             sendScore(players);
-            console.log("인게임 데이터", players);
+            console.log("인게임 데이터 : ");
+            console.log(players);
 
             // will be axios post areas
           } catch (error) {};
@@ -290,6 +297,28 @@ function sendScore(players) {
     "messageType": "INGAME"
   }
   stompClient.send("/pub/chat/playersInfo", {},JSON.stringify(chatMessage));
+}
+
+function sendWin(something) {
+
+  var chatMessage = {
+    "chatRoomId": roomId,
+    "userId": TESTUSER,
+    "content": something,
+    "messageType": "WIN"
+  }
+  stompClient.send("/pub/chat/sendMessage", {},JSON.stringify(chatMessage));
+}
+
+function sendLose(something) {
+
+  var chatMessage = {
+    "chatRoomId": roomId,
+    "userId": TESTUSER,
+    "content": something,
+    "messageType": "LOSE"
+  }
+  stompClient.send("/pub/chat/sendMessage", {},JSON.stringify(chatMessage));
 }
 
 // 메세지 받는 로직 -> subscribe의 두번째 로직으로 넣으면 해당 주소로 들어오는 메세지를 다 받는다. 
