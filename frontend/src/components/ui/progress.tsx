@@ -8,7 +8,8 @@ const Progress = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => (
   <div
-    className="fixed inset-1/2 -translate-x-1/2 -translate-y-1/2 "
+
+    //className="fixed inset-1/2 -translate-x-1/2 -translate-y-1/2 "
     style={{ zIndex: 5 }}
   >
     <ProgressPrimitive.Root
