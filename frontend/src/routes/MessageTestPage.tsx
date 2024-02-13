@@ -133,17 +133,17 @@ export default function MessageTestPage() {
       onMessageReceivedFromSocket,
       { userId: userInfo.userId, chatRoomType: "ONE" }
     );
-     stompClient.send(
-       "/pub/chat/enterUser",
-       clientHeader,
-       JSON.stringify({
-         messageType: "ENTER",
-         content: userInfo.userName + "님 환영합니다!",
-         userId: userInfo.userId,
-         chatRoomId: roomId,
-         userName: userInfo.userName,
-       })
-     );
+    stompClient.send(
+      "/pub/chat/enterUser",
+      clientHeader,
+      JSON.stringify({
+        messageType: "ENTER",
+        content: userInfo.userName + "님 환영합니다!",
+        userId: userInfo.userId,
+        chatRoomId: roomId,
+        userName: userInfo.userName,
+      })
+    );
   }
 
   function onError(error: any) {
@@ -229,10 +229,9 @@ export default function MessageTestPage() {
         // console.log("ddd");
         // console.log(res.data.data.content);
       });
-
     axios
       .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam${
+        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/users/${
           friendsInfo.userId
         }?page=0&size=5`,
         {
@@ -243,21 +242,21 @@ export default function MessageTestPage() {
       )
       .then((res: any) => {
         console.log("도감리스트");
-        console.log(res.data.data);
-        setDogamList(res.data.data);
+        console.log(res.data.data.data);
+        setDogamList(res.data.data.data);
       });
 
     return () => {
-       stompClient.send(
-         "/pub/chat/exitChatRoom",
-         clientHeader,
-         JSON.stringify({
-           messageType: "QUIT",
-           content: userInfo.userName + "님이 퇴장했습니다.",
-           userId: userInfo.userId,
-           chatRoomId: roomId,
-         })
-       );
+      stompClient.send(
+        "/pub/chat/exitChatRoom",
+        clientHeader,
+        JSON.stringify({
+          messageType: "QUIT",
+          content: userInfo.userName + "님이 퇴장했습니다.",
+          userId: userInfo.userId,
+          chatRoomId: roomId,
+        })
+      );
       stompClient
         .disconnect
 
