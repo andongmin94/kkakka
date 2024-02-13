@@ -12,11 +12,11 @@ public class MegaphoneSSEConfig {
     public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilter() {
         FilterRegistrationBean<OpenEntityManagerInViewFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new OpenEntityManagerInViewFilter());
-        registrationBean.addUrlPatterns("/api/friends/megaphone"); // 해당 URL 패턴에 대해서만 필터를 적용
+        registrationBean.addUrlPatterns("/api/*"); // 해당 URL 패턴에 대해서만 필터를 적용
         registrationBean.setName("OpenEntityManagerInViewFilter");
         registrationBean.setOrder(1); // 필터 순서 지정
         registrationBean.addInitParameter("entityManagerFactoryBeanName", "entityManagerFactory");
-        registrationBean.addInitParameter("singleSession", "false"); // OSIV 비활성화
+        registrationBean.addInitParameter("singleSession", "true");
         return registrationBean;
     }
 }
