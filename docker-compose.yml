@@ -1,14 +1,31 @@
-version: '3.8'
+# version: '3.8'
+
+# services:
+#   backend:
+#     image: osy9536/ssafy-be:latest
+#     ports:
+#       - "8080:8080"
+#     restart: always
+
+#   frontend:
+#     image: osy9536/ssafy-fe:latest
+#     ports:
+#       - "3000:3000"
+#     restart: always
+
+version: '3'
 
 services:
   backend:
-    image: osy9536/ssafy-be:latest
+    build:
+      context: ./backend
+      dockerfile: dockerfile
     ports:
       - "8080:8080"
-    restart: always
 
   frontend:
-    image: osy9536/ssafy-fe:latest
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
     ports:
       - "3000:3000"
-    restart: always
