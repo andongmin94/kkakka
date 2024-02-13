@@ -1,3 +1,10 @@
+.backback {
+  padding-top: 1.75rem /* 28px */;
+  padding-bottom: 1.75rem /* 28px */;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 /* 흰 배경 부분 */
 .whole {
   width: 80%;
@@ -246,10 +253,7 @@ menu:hover::before {
 }
 
 /* 일렉트론 스타일 */
-.electron_section_left {
-  margin-top: 60px;
-}
 
-.electron_section_right {
-  margin-top: 50px;
+.electron_page {
+  margin-top: 60px;
 }
