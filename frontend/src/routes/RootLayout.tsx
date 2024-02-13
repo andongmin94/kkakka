@@ -247,70 +247,7 @@ export default function RootLayout() {
       </PC>
 
       <Mobile>
-        {/* 확성기 자리 */}
-        {showSpeakerToast && (
-          <SpeakerToast
-            setToast={setShowSpeakerToast}
-            text={speakerToastContent}
-          />
-        )}
-        <main className={classes.page}>
-          {/* 네브바와 메인 페이지를 포함하는 영역 */}
-          <div
-            className={cn(classes.section_right_M, {
-              [classes.electron_section_right]: typeof electron !== "undefined",
-            })}
-          >
-            {/* 네브바 */}
-            <nav className={classes.nav_M}>
-              {/* 로고 */}
-              <Link to="/main" className="ml-5">
-                <img alt="logo" src="/image/logo.png" />
-              </Link>
-
-              {/* 네브바 오른쪽 영역 */}
-              <div className={classes.nav_right_M}>
-                {/* 사용자 프로필 버튼 */}
-                <Link
-                  to={`/main/profile/${userId}`}
-                  className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                >
-                  <Avatar>
-                    <AvatarImage
-                      src={userProfileImg ?? "/default-image.png"}
-                      alt="프사"
-                      className="bg-cover"
-                    />
-                    <AvatarFallback className="text-xs">😶</AvatarFallback>
-                  </Avatar>
-                  {/* <div className={classes.user_image} /> */}
-                </Link>
-
-                <Alarm />
-                <FriendsBtn />
-              </div>
-            </nav>
-
-            {/* 메인 페이지 영역 */}
-            <div className={classes.body_M}>
-              {/* 사이드바 메뉴 */}
-              <div className="flex border-4 rounded-xl mx-3 border-orange-200 mb-20">
-                <Link to="/main/item" className={classes.menu_M}>
-                  <h1>아이템샵</h1>
-                </Link>
-                <Link to="/main/messagelist" className={classes.menu_M}>
-                  <h1>메세지함</h1>
-                </Link>
-                {typeof electron !== "undefined" && (
-                  <Link to="/main/setting" className={classes.menu_M}>
-                    <h1>환경 설정</h1>
-                  </Link>
-                )}
-              </div>
-              <Outlet />
-            </div>
-          </div>
-        </main>
+        <Outlet />
       </Mobile>
     </>
   );

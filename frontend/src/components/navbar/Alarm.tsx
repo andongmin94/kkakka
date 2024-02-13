@@ -85,34 +85,36 @@ export function Alarm() {
             value={position}
             onValueChange={setPosition}
           >
-            {alarmList.length > 0 &&
-              alarmList.map((alarm) => {
-                return (
-                  <DropdownMenuRadioItem
-                    value="top"
-                    key={alarm.alarmId}
-                    onClick={() => {
-                      checkAlarmHandler(alarm.alarmId);
-                      moveToAlarmContentHandler(alarm);
-                    }}
-                  >
-                    <div className="flex justify-center items-center">
-                      <div>
-                        <img
-                          src={alarm.alarmPic}
-                          alt="alarm-pic"
-                          className="w-10 h-10 rounded-full"
-                        />
+            <div className="overflow-scroll h-[200px] scrollbar-hide items-start">
+              {alarmList.length > 0 &&
+                alarmList.map((alarm) => {
+                  return (
+                    <DropdownMenuRadioItem
+                      value="top"
+                      key={alarm.alarmId}
+                      onClick={() => {
+                        checkAlarmHandler(alarm.alarmId);
+                        moveToAlarmContentHandler(alarm);
+                      }}
+                    >
+                      <div className="flex justify-center items-center">
+                        <div>
+                          <img
+                            src={alarm.alarmPic}
+                            alt="alarm-pic"
+                            className="w-10 h-10 rounded-full"
+                          />
+                        </div>
+                        <div>{alarm.alarmContent}</div>
+                        <div>
+                          {alarm.createdAt.toString().substring(5, 7)}월{" "}
+                          {alarm.createdAt.toString().substring(8, 10)}일
+                        </div>
                       </div>
-                      <div>{alarm.alarmContent}</div>
-                      <div>
-                        {alarm.createdAt.toString().substring(5, 7)}월{" "}
-                        {alarm.createdAt.toString().substring(8, 10)}일
-                      </div>
-                    </div>
-                  </DropdownMenuRadioItem>
-                );
-              })}
+                    </DropdownMenuRadioItem>
+                  );
+                })}
+            </div>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
