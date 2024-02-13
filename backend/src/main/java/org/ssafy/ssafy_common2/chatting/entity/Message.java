@@ -15,7 +15,7 @@ import org.ssafy.ssafy_common2._common.entity.BaseTime;
 public class Message extends BaseTime  {
 
     public enum MessageType {
-        ENTER, QUIT, TALK, CHAT_BOT
+        ENTER, QUIT, TALK, CHAT_BOT, WIN ,LOSE
     }
 
     // 1) 고유 번호

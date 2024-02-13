@@ -21,6 +21,7 @@ import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
 import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
+import org.ssafy.ssafy_common2.chatting.dto.request.PlayersInfoDto;
 import org.ssafy.ssafy_common2.chatting.entity.ChatJoin;
 import org.ssafy.ssafy_common2.chatting.entity.ChatRoom;
 import org.ssafy.ssafy_common2.chatting.entity.Message;
@@ -311,8 +312,52 @@ public class ChatController {
         log.info("headAccessor {}", headerAccessor);
     }
 
+    // [5] PlayersInfo 정제해서 다시 보내기
+    @MessageMapping("/chat/playersInfo")
+    public void getPlayersInfo(String publishMessage){
 
-    // [5] 메세지 불러오기 =================================================================================
+        PlayersInfoDto msg = null;
+        try {
+            msg = objectMapper.readValue(publishMessage, PlayersInfoDto.class);
+
+            LocalDateTime now = LocalDateTime.now();
+            // 1) 안 들어온 데이터 추가해주기
+            msg.setCreatedAt(now);
+            msg.setUpdateAt(now);
+            // 1-1) 출력...
+            log.info("들어온 플레이어 정보 메세지 {}",  "ChatMessageDto{" +
+                    "messageType='" + msg.getMessageType() + '\'' +
+                    ", content='" + msg.getContent() + '\'' +
+                    ", userId=" + msg.getUserId() +
+                    ", userName=" + msg.getUserName() +
+                    ", chatRoomId=" + msg.getChatRoomId() +
+                    ", createdAt=" + msg.getCreatedAt() +
+                    ", updateAt=" + msg.getUpdateAt() +
+                    '}');
+
+            // 2) 메세지 내용을 DB에 저장
+            // 2-1) ChatJoin 찾기
+
+            log.info("현재 채팅방에 들어온 사람의 UserId: {}, 방 번호 {}",msg.getUserId(), msg.getChatRoomId());
+            // 2-2) 채팅 참여가 존재한다면
+
+
+                    User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                    if(sender != null) {
+                        msg.setUserName(sender.getUserName());
+                        msg.setUserProfileImg(sender.getKakaoProfileImg());
+                        msg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
+                    }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        template.convertAndSend("/sub/playersInfo/room/" + msg.getChatRoomId(), msg);
+    }
+
+
+    // [6] 메세지 불러오기 =================================================================================
 
     @GetMapping("/api/friends/chat_bot/{room_id}")
     public ApiResponseDto<?> getChatBotMessage (

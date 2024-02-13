@@ -30,26 +30,81 @@ pipeline {
             }
         }  
       
-        stage('Build and Deploy') {
+        stage('BE-Build') {
             steps {
-                echo '도커 컴포즈를 사용하여 서비스 빌드 및 배포 시작!'
-                // 백엔드 서비스 빌드
+                echo '백엔드 빌드 및 테스트 시작!'
                 dir("./backend") {
                     sh "chmod +x ./gradlew"
-                    sh "./gradlew clean build --exclude-task test"
-                }
 
-                // 프론트엔드 서비스 빌드
+                    // sh "touch ./build.gradle" 
+ 
+                    // application properties 파일 복사
+                    // sh "echo $BuildGradle > ./build.gradle"
+            
+                    sh "./gradlew clean build --exclude-task test"
+                
+                }
+                echo '백엔드 빌드 및 테스트 완료!' 
+            }
+        }
+  
+        stage('Build Back Docker Image') {
+            steps {
+                echo '백엔드 도커 이미지 빌드 시작!'
+                dir("./backend") {
+                    // 빌드된 JAR 파일을 Docker 이미지로 빌드
+                    sh "docker build --no-cache -t osy9536/ssafy-be:latest ."
+                }
+                echo '백엔드 도커 이미지 빌드 완료!'
+            }
+        }
+
+        stage('Deploy to EC2-BE') {
+            steps {
+                echo '백엔드 EC2에 배포 시작!'
+                // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
+                sshagent(['aws-key']) { 
+                    sh "docker rm -f backend"
+                    sh "docker rmi -f osy9536/ssafy-be:latest"
+                    sh "docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
+                }
+                echo '백엔드 EC2에 배포 완료!'
+            } 
+        }
+
+        stage('FE-Build') {
+            steps {
+                echo '프론트 빌드 및 테스트 시작!'
                 dir("./frontend") {
                     sh "npm install"
                     sh "npm run build"
                 }
-
-                // 도커 컴포즈로 서비스 실행
-                sh "docker-compose -f docker-compose.yml down"
-                sh "docker-compose -f docker-compose.yml up -d"
-                echo '도커 컴포즈를 사용하여 서비스 빌드 및 배포 완료!'
+                echo '프론트 빌드 및 테스트 완료!' 
             }
+        }
+
+        stage('Build Front Docker Image') {
+            steps {
+                echo '프론트 도커 이미지 빌드 시작!'
+                dir("./frontend") {
+                    // 빌드된 파일을 Docker 이미지로 빌드
+                    sh "docker build --no-cache -t osy9536/ssafy-fe:latest ."
+                }
+                echo '프론트 도커 이미지 빌드 완료!'
+            }
+        } 
+
+        stage('Deploy to EC2-FE') {
+            steps {
+                echo '프론트 EC2에 배포 시작!'
+                // 여기에서는 SSH 플러그인이나 SSH 스크립트를 사용하여 EC2로 연결하고 Docker 컨테이너 실행
+                sshagent(['aws-key']) { 
+                    sh "docker rm -f frontend"
+                    sh "docker rmi -f osy9536/ssafy-fe:latest"
+                    sh "docker run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
+                }
+                echo '프론트 EC2에 배포 완료!'
+            } 
         }
 
     }
