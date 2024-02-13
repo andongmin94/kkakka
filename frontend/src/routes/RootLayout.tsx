@@ -7,7 +7,6 @@ import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
-import { useTheme } from "@/components/navbar/ThemeProvider";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
@@ -23,7 +22,7 @@ export default function RootLayout() {
   const token = localStorage.getItem("token");
 
   const { pathname } = useLocation();
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
   const { setLastEventId } = useAlarmSubscribeStore();
 
@@ -87,10 +86,6 @@ export default function RootLayout() {
 
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
-
-  // useEffect(()=>{
-  //   localStorage.setItem('userInfo',userInfo);
-  // },[userInfo])
 
   useEffect(() => {
     source.addEventListener("notification", (e: any) => {
@@ -210,67 +205,34 @@ export default function RootLayout() {
               <div className={classes.section_right}>
                 {/* 네브바 */}
                 {isNavbarVisible ? (
-                  theme === "light" ? (
-                    <nav className={classes.nav}>
-                      <div></div>
+                  <nav className={classes.nav}>
+                    <div></div>
 
-                      {/* 로고 */}
+                    {/* 로고 */}
 
-                      {/* 네브바 오른쪽 영역 */}
-                      <div className={classes.nav_right}>
-                        {/* 다크모드 버튼 (미완, 후순위)
+                    {/* 네브바 오른쪽 영역 */}
+                    <div className={classes.nav_right}>
+                      {/* 다크모드 버튼 (미완, 후순위)
                         <ModeToggle /> */}
-                        {/* 사용자 프로필 버튼 */}
-                        <Link
-                          to={`/main/profile/${userId}`}
-                          className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                        >
-                          <Avatar>
-                            <AvatarImage
-                              src={userProfileImg ?? "/default-image.png"}
-                              alt="프사"
-                              className="bg-cover text-xs"
-                            />
-                            <AvatarFallback>😶</AvatarFallback>
-                          </Avatar>
-                          {/* <div className={classes.user_image} /> */}
-                        </Link>
-                        <Alarm />
-                        <FriendsBtn />
-                      </div>
-                    </nav>
-                  ) : (
-                    <nav className={classes.nav_dark}>
-                      <div></div>
-
-                      {/* 로고 */}
-
-                      {/* 네브바 오른쪽 영역 */}
-                      <div className={classes.nav_right}>
-                        {/* 다크모드 버튼 (미완, 후순위)
-                        <ModeToggle /> */}
-                        {/* 사용자 프로필 버튼 */}
-                        <Link
-                          to={`/main/profile/${userId}`}
-                          className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
-                        >
-                          <Avatar>
-                            <AvatarImage
-                              src={userProfileImg ?? "/default-image.png"}
-                              alt="프사"
-                              className="bg-cover"
-                            />
-                            <AvatarFallback className="text-xs">
-                              😶
-                            </AvatarFallback>
-                          </Avatar>
-                          {/* <div className={classes.user_image} /> */}
-                        </Link>
-                        <Alarm />
-                        <FriendsBtn />
-                      </div>
-                    </nav>
-                  )
+                      {/* 사용자 프로필 버튼 */}
+                      <Link
+                        to={`/main/profile/${userId}`}
+                        className="mx-7 lg:hover:scale-125 transition-transform ease-in-out duration-500"
+                      >
+                        <Avatar>
+                          <AvatarImage
+                            src={userProfileImg ?? "/default-image.png"}
+                            alt="프사"
+                            className="bg-cover text-xs"
+                          />
+                          <AvatarFallback>😶</AvatarFallback>
+                        </Avatar>
+                        {/* <div className={classes.user_image} /> */}
+                      </Link>
+                      <Alarm />
+                      <FriendsBtn />
+                    </div>
+                  </nav>
                 ) : undefined}
 
                 {/* 메인 페이지 영역 */}
@@ -353,48 +315,3 @@ export default function RootLayout() {
     </>
   );
 }
-
-// import useUserStore from "@/store/user/userStore";
-
-// import { useUserData } from "@/hooks/user/queries/useUserDataQuery";
-// import { UserType } from "@/types/userTypes";
-
-// const { useUserDataQuery } = useUserData();
-// const { setUserInfo } = useUserStore();
-// const { data: userData, refetch } = useUserDataQuery();
-
-// useEffect(() => {
-//   if (userData) {
-//     setUserInfo(userData);
-//   } else {
-//     console.log("유저 정보 없음");
-//   }
-// }, [userData]);
-
-// useEffect(() => {
-//   refetch();
-// }, [refetch]);
-
-// const { setPoint } = usePointStore();
-// const { usePointQuery } = usePoint();
-// const { data: userPointData } = usePointQuery();
-
-// useEffect(() => {
-//   if (userPointData) {
-//     setPoint(userPointData);
-//   } else {
-//     console.log("포인트 정보 없음");
-//   }
-// }, [userPointData]);
-
-// const { setFriendList } = useFriendStore();
-// const { useFriendListQuery } = useFriendList();
-// const { data: friendListData } = useFriendListQuery();
-
-// useEffect(() => {
-//   if (friendListData) {
-//     setFriendList(friendListData);
-//   } else {
-//     console.log("친구 목록 없음");
-//   }
-// }, []);

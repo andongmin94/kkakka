@@ -15,7 +15,6 @@ export default function Loading() {
 
   return (
     <>
-      {/* 뒷 배경을 어둡게 하고 싶은데 커스텀할줄을 모르겠어요.. */}
       <div style={{ display }}>
         <Progress value={progress} />
       </div>
