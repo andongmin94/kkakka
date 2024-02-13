@@ -1,15 +1,17 @@
+// ProfileCollection.tsx
+
 import { useParams } from "react-router-dom";
 import { Mobile, PC } from "@/components/MediaQuery";
 import Collection from "@/components/profile/Collection";
 import AddCollection from "@/components/profile/AddCollection";
 import userStore from "@/store/user/userStore";
 import InfiniteScroll from "react-infinite-scroller";
-import { ProfileDogamType } from "@/types/dogamTypes";
+import { ProfileDogamWithDislikeNumType } from "@/types/dogamTypes";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface PageData {
-  results: ProfileDogamType[];
+  results: ProfileDogamWithDislikeNumType[];
   nextPageParam: number;
   theLastPage: number;
 }
@@ -77,7 +79,7 @@ export default function ProfileCollection() {
                 {data &&
                   data.pages.map((pageData) => {
                     return pageData.results.map(
-                      (profiledogam: ProfileDogamType) => {
+                      (profiledogam: ProfileDogamWithDislikeNumType) => {
                         return (
                           <Collection
                             key={profiledogam.dogamId}
@@ -114,7 +116,7 @@ export default function ProfileCollection() {
               {data &&
                 data.pages.map((pageData) => {
                   return pageData.results.map(
-                    (profiledogam: ProfileDogamType) => {
+                    (profiledogam: ProfileDogamWithDislikeNumType) => {
                       return (
                         <Collection
                           key={profiledogam.dogamId}

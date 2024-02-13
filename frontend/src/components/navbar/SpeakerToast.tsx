@@ -10,7 +10,7 @@ export default function SpeakerToast({
   useEffect(() => {
     const timer = setTimeout(() => {
       setToast(false);
-    }, 10000);
+    }, 3000);
     return () => {
       clearTimeout(timer);
     };
