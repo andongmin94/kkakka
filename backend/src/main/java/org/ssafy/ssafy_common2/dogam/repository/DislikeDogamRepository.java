@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DislikeDogamRepository extends JpaRepository<DislikeDogam,Long> {
-    int countByDogamIdAndDeletedAtIsNull(Long id);
+    int countByDogamIdAndIsDislikeTrueAndDeletedAtIsNull(Long id);
 
     Optional<DislikeDogam> findByUserEmailAndDogamIdAndDeletedAtIsNull(String kakaoEmail, Long id);
 
