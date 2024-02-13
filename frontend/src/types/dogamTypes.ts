@@ -1,3 +1,5 @@
+// @/types/dogamTypes
+
 // 도감에 달린 댓글
 export interface DogamCommentResponseType {
   commentUserImgUrl: string;
@@ -34,3 +36,9 @@ export type ProfileDogamType = Omit<
   NewDogamType,
   "friendName" | "friendAlias" | "friendImgUrl" | "dogamRecentComment"
 >;
+
+// 프로필에 있는 도감 (싫어요 수 포함)
+export interface ProfileDogamWithDislikeNumType extends ProfileDogamType {
+  dogamDislikeNum: number;
+  setDogamDislikeNum: React.Dispatch<React.SetStateAction<number>>;
+}

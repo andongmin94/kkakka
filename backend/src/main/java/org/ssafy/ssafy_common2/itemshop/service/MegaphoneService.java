@@ -73,7 +73,7 @@ public class MegaphoneService {
             try {
                 while(megaphoneEventRepository.hasPendingMegaphoneEvents()) {
                     sendMegaphone(megaphoneEventRepository.getNextMegaphoneEvent());
-                    Thread.sleep(10500); // 명시적으로 10초 뒤에 다음 요소 전송
+                    Thread.sleep(3500); // 명시적으로 10초 뒤에 다음 요소 전송
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

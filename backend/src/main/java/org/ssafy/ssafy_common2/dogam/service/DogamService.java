@@ -204,7 +204,7 @@ public class DogamService {
                     commentUser != null ? commentUser.getKakaoEmail() : null,
                     commentUser != null ? commentUser.getCreatedAt() : null);
 
-            int dislikeNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
+            int dislikeNum = dislikeDogamRepository.countByDogamIdAndIsDislikeTrueAndDeletedAtIsNull(d.getId());
             responseDtoList.add(DogamMainListResponseDto.of(d.getUser().getId(), d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias != null ? alias.getAliasName() : null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
                     dislikeNum, isHated, dogamCommentResponseDto));
         }
@@ -277,7 +277,7 @@ public class DogamService {
         // 데이터 가져오기
         for (int i = startIndex; i < endIndex; i++) {
             Dogam d = dogamList.get(i);
-            int dislikeDogamNum = dislikeDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
+            int dislikeDogamNum = dislikeDogamRepository.countByDogamIdAndIsDislikeTrueAndDeletedAtIsNull(d.getId());
             DislikeDogam userDislike = dislikeDogamRepository.findByUserEmailAndDogamIdAndDeletedAtIsNull(user.getKakaoEmail(), d.getId()).orElse(null);
             int commentNum = commentDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
 
