@@ -17,8 +17,8 @@ public class DogamDetailResponseDto {
     private String dogamUserName;
     private String dogamUserEmail;
     private LocalDateTime dogamCreatedAt;
-    private List<DogamCommentResponseDto> dogamCommentResponseDtos;
     private String curAlias;
+    private List<DogamCommentResponseDto> dogamCommentResponseDtos;
 
     @Builder
     private DogamDetailResponseDto(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail,
