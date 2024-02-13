@@ -34,9 +34,14 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           </Link>
 
           {/* 오른쪽 구역 */}
-          <div className="flex flex-col ml-6 mt-1">
+          <Link
+            to={`profile/dogam/${data.dogamId}`}
+            className="flex flex-col ml-6 mt-1"
+          >
             {/* 제목 */}
-            <div className="w-full font-bold text-md mb-3">{data.dogamTitle}</div>
+            <div className="w-full font-bold text-md mb-3">
+              {data.dogamTitle}
+            </div>
             {/* 이미지 */}
             <div
               className="h-[200px] w-[300px] rounded-md border-l-0 border-b-0 mb-3"
@@ -57,14 +62,16 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                     setDogamDislikeNum={setDogamDislikeNum}
                   />
                 </div>
-                <div className="flex self-center mr-4 text-sm">{dogamDislikeNum}</div>
-                {/* 댓글 */}
-                <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
-                  <CommentModal dogamId={data.dogamId} />
+                <div className="flex self-center mr-4 text-sm">
+                  {dogamDislikeNum}
                 </div>
+                {/* 댓글 */}
+                {/* <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
+                  <CommentModal dogamId={data.dogamId} />
+                </div> */}
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </PC>
 
@@ -91,7 +98,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           </Link>
 
           {/* 오른쪽 구역 */}
-          <div>
+          <Link to={`main/profile/dogam/${data.dogamId}`}>
             {/* 이미지 */}
             <div
               className="h-[200px] w-[270px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 rounded-b-none border-b-0"
@@ -102,7 +109,9 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
             />
             <div className="w-[270px] border-4 border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
               {/* 제목 */}
-              <div className="w-full font-bold text-xl px-2 py-3">{data.dogamTitle}</div>
+              <div className="w-full font-bold text-xl px-2 py-3">
+                {data.dogamTitle}
+              </div>
               <div className="flex gap-3 pb-3 font-bold items-center">
                 {/* 싫어요 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
@@ -113,7 +122,9 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                     setDogamDislikeNum={setDogamDislikeNum}
                   />
                 </div>
-                <div className="flex self-center mr-4 text-sm">{dogamDislikeNum}</div>
+                <div className="flex self-center mr-4 text-sm">
+                  {dogamDislikeNum}
+                </div>
                 {/* 댓글 */}
                 <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
                   <CommentModal dogamId={data.dogamId} />
@@ -124,7 +135,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                 </div> */}
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </Mobile>
     </>
