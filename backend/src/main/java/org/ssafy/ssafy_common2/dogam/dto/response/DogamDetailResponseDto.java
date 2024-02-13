@@ -12,32 +12,46 @@ import java.util.List;
 public class DogamDetailResponseDto {
 
     private Long dogamUserId;
-    private String imgUrl;
+    private String userImgUrl;
+    private String dogamImgUrl;
     private String dogamTitle;
+    private int dogamHatedNum;
+    private boolean hated;
     private String dogamUserName;
     private String dogamUserEmail;
     private LocalDateTime dogamCreatedAt;
+    private String curAlias;
     private List<DogamCommentResponseDto> dogamCommentResponseDtos;
 
     @Builder
-    private DogamDetailResponseDto(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+    private DogamDetailResponseDto(Long dogamUserId, String userImgUrl, String dogamImgUrl, String dogamTitle, int dogamHatedNum, boolean hated, String dogamUserName, String dogamUserEmail,
+                                   LocalDateTime dogamCreatedAt, String curAlias, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
         this.dogamUserId = dogamUserId;
-        this.imgUrl = imgUrl;
+        this.userImgUrl = userImgUrl;
+        this.dogamImgUrl = dogamImgUrl;
         this.dogamTitle = dogamTitle;
+        this.dogamHatedNum = dogamHatedNum;
+        this.hated = hated;
         this.dogamUserName = dogamUserName;
         this.dogamUserEmail = dogamUserEmail;
         this.dogamCreatedAt = dogamCreatedAt;
+        this.curAlias = curAlias;
         this.dogamCommentResponseDtos = dogamCommentResponseDtos;
     }
 
-    public static DogamDetailResponseDto of(Long dogamUserId, String imgUrl, String dogamTitle, String dogamUserName, String dogamUserEmail, LocalDateTime dogamCreatedAt, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
+    public static DogamDetailResponseDto of(Long dogamUserId, String userImgUrl, String dogamImgUrl, String dogamTitle, int dogamHatedNum, boolean hated, String dogamUserName, String dogamUserEmail,
+                                            LocalDateTime dogamCreatedAt, String curAlias, List<DogamCommentResponseDto> dogamCommentResponseDtos) {
         return builder()
                 .dogamUserId(dogamUserId)
-                .imgUrl(imgUrl)
+                .userImgUrl(userImgUrl)
+                .dogamImgUrl(dogamImgUrl)
                 .dogamTitle(dogamTitle)
+                .dogamHatedNum(dogamHatedNum)
+                .hated(hated)
                 .dogamUserName(dogamUserName)
                 .dogamUserEmail(dogamUserEmail)
                 .dogamCreatedAt(dogamCreatedAt)
+                .curAlias(curAlias)
                 .dogamCommentResponseDtos(dogamCommentResponseDtos)
                 .build();
     }
