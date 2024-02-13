@@ -75,7 +75,7 @@ export default function ProfileCollection() {
               }}
               hasMore={hasNextPage}
             >
-              <div className="flex flex-row grid grid-cols-3">
+              <div className="grid grid-cols-3">
                 {data &&
                   data.pages.map((pageData) => {
                     return pageData.results.map(
@@ -89,7 +89,7 @@ export default function ProfileCollection() {
                       }
                     );
                   })}
-                </div>
+              </div>
             </InfiniteScroll>
           </div>
         </div>
