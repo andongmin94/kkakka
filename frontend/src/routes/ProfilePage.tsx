@@ -2,14 +2,13 @@ import Poor from "@/components/profile/Poor";
 import classes from "./ProfilePage.module.css";
 import { Button } from "@/components/ui/button";
 import { Mobile, PC } from "@/components/MediaQuery";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useParams, useNavigate } from "react-router-dom";
 import ProfileImage from "@/components/profile/ProfileImage";
 import UserCurrentAlias from "@/components/UserCurrentAlias";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserType } from "@/types/userTypes";
 import ProfileEdit from "@/components/profile/ProfileEdit";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
 export default function ProfilePage() {
@@ -27,12 +26,13 @@ export default function ProfilePage() {
         },
       })
       .then((res) => {
-        setProfileInfo(res.data.data);
+        const newProfileInfo = res.data.data;
+        setProfileInfo({ ...profileInfo, ...newProfileInfo });
       })
       .catch((err) => {
         console.error("프로필정보가져오기실패", err);
       });
-  }, []);
+  }, [profileInfo, setProfileInfo]);
 
   const [friendship, setFriendship] = useState("");
 

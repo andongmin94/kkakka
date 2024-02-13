@@ -5,6 +5,7 @@ import LoginPage from "@/routes/LoginPage.tsx";
 import IntroPage from "@/routes/IntroPage.tsx";
 import RootLayout from "@/routes/RootLayout.tsx";
 import ProfilePage from "@/routes/ProfilePage.tsx";
+import DogamDetailPage from "@/routes/DogamDetailPage.tsx";
 import ItemshopPage from "@/routes/ItemshopPage.tsx";
 import MessageListPage from "@/routes/MessageListPage";
 // import MessageDetailPage from "@/routes/MessageDetailPage";
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+      { path: "/main/dogam/:id", element: <DogamDetailPage /> },
     ],
   },
   {

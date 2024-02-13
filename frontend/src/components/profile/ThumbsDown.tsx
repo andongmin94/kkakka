@@ -21,7 +21,9 @@ export default function ThumbsDown({
 
       const res = thumbs
         ? await axios.delete(
-            `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/dogam/hate/${dogamId}`,
             {
               headers: {
                 Authorization: token,
@@ -29,7 +31,9 @@ export default function ThumbsDown({
             }
           )
         : await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/hate/${dogamId}`,
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/friends/dogam/hate/${dogamId}`,
             {},
             {
               headers: {
@@ -49,16 +53,24 @@ export default function ThumbsDown({
 
   return (
     <div
-      className="h-[50px] w-[50px] ml-2 grid grid-col place-items-center"
+      className="h-[50px] w-[50px] grid grid-col place-items-center"
       onClick={() => {
         setThumbs(!thumbs);
         hateClickHandler();
       }}
     >
       {thumbs ? (
-        <img src="/image/thumbsDownOn.png" className="w-8 h-8" alt="싫어요 활성화" />
+        <img
+          src="/image/thumbsDownOn.png"
+          className="w-6 h-6"
+          alt="싫어요 활성화"
+        />
       ) : (
-        <img src="/image/thumbsDown.png" className="w-8 h-8" alt="싫어요 비활성화" />
+        <img
+          src="/image/thumbsDown.png"
+          className="w-6 h-6"
+          alt="싫어요 비활성화"
+        />
       )}
     </div>
   );

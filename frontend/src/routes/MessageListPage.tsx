@@ -5,6 +5,7 @@ import Message from "../components/message/Message";
 import axios from "axios";
 import "./Chat.css";
 import Loading from "@/components/app/Loading";
+import { UserType } from "@/types/userTypes";
 
 interface dmProps {
   chatRoomType: string;
@@ -24,7 +25,7 @@ interface dmProps {
 export default function MessageListPage() {
   // const [position, setPosition] = useState("");
   const navigate = useNavigate();
-  const [friendsInfo, setFriendsInfo] = useState(null);
+  const [friendsInfo, setFriendsInfo] = useState<UserType | null>(null);
   const [roomId, setRoomId] = useState(0);
 
   const [dmList, setDmList] = useState<dmProps[] | null>(null);
@@ -32,20 +33,22 @@ export default function MessageListPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        setDmList(res.data.data);
-      })
-      .then(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    if (!friendsInfo) {
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          setDmList(res.data.data);
+        })
+        .then(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [friendsInfo]);
 
   const enterChatHandler = (friendId: number) => {
     axios
