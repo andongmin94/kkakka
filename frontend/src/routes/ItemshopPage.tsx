@@ -84,7 +84,7 @@ export default function ItemshopPage() {
                       <Compliment
                         itemName={item.itemName}
                         itemPrice={item.itemPrice}
-                        // itemDesc={item.itemDesc}
+                        itemDesc={item.itemDesc}
                         myPoint={point}
                         friends={friendList}
                       />
@@ -93,7 +93,7 @@ export default function ItemshopPage() {
                       <Speaker
                         itemName={item.itemName}
                         itemPrice={item.itemPrice}
-                        // itemDesc={item.itemDesc}
+                        itemDesc={item.itemDesc}
                         myPoint={point}
                       />
                     )}
