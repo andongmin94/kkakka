@@ -44,11 +44,31 @@ pipeline {
                     sh "npm install"
                     sh "npm run build"
                 }
+            }
+        }
 
-                // 도커 컴포즈로 서비스 실행
-                sh "docker-compose -f docker-compose.yml down"
-                sh "docker-compose -f docker-compose.yml up -d"
-                echo '도커 컴포즈를 사용하여 서비스 빌드 및 배포 완료!'
+        stage('Deploy BE and FE') {
+            steps {
+                echo '백엔드 배포 시작!'
+                sshagent(['aws-key']) { 
+                    sh "docker rm -f backend"
+                    sh "docker rmi osy9536/ssafy-be:latest"
+                    sh "docker image prune -f"
+                    sh "docker docker run -d -p 8080:8080 --name backend osy9536/ssafy-be:latest"
+                }
+                echo '백엔드 배포 완료!'
+            }
+
+            steps {
+                echo '프론트 배포 시작!'
+                sshagent(['aws-key']) { 
+                    sh "docker rm -f frontend"
+                    sh "docker rmi osy9536/ssafy-fe:latest"
+                    sh "docker image prune -f"
+                    sh "docker build -t osy9536/ssafy-fe:latest ."
+                    sh "docker run -d -p 3000:3000 --name frontend osy9536/ssafy-fe:latest"
+                }
+                echo '프론트 배포 완료!'
             }
         }
 
