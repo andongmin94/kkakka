@@ -5,17 +5,19 @@ export default function MyPoint() {
   const [point, setPoint] = useState<number>(0);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        console.log("포인트", res.data.data.Point);
-        setPoint(res.data.data.Point);
-      });
-  }, []);
+    if (!point) {
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/point`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log("포인트", res.data.data.Point);
+          setPoint(res.data.data.Point);
+        });
+    }
+  }, [point]);
 
   return (
     <div className="flex justify-between mr-0 ">
