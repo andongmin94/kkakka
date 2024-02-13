@@ -139,6 +139,10 @@ export default function RootLayout() {
       setIsNavbarVisible(
         currentScrollPos <= 0 || currentScrollPos < prevScrollPos
       );
+
+      setIsArrowVisible(
+        currentScrollPos > 300 && currentScrollPos < document.body.scrollHeight
+      );
       // 현재 스크롤 위치를 업데이트
       prevScrollPos = currentScrollPos;
     };
@@ -149,10 +153,12 @@ export default function RootLayout() {
     };
   }, []);
 
+  const [isArrowVisible, setIsArrowVisible] = useState(false);
+
   return (
     <>
       <PC>
-        <ToTheTop />
+        {isArrowVisible && <ToTheTop />}
 
         <div
           className={classes.backback}
