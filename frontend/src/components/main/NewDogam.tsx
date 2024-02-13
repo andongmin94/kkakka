@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Mobile, PC } from "../MediaQuery";
 import NewDogamAlias from "./NewDogamAlias";
 import ThumbsDown from "../profile/ThumbsDown";
-import CommentModal from "../profile/CommentModal";
 import { NewDogamType } from "@/types/dogamTypes";
 
 export default function NewDogam({ data }: { data: NewDogamType }) {
@@ -34,14 +33,14 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           </Link>
 
           {/* 오른쪽 구역 */}
-          <Link
-            to={`profile/dogam/${data.dogamId}`}
-            className="flex flex-col ml-6 mt-1"
-          >
+          <div className="flex flex-col ml-6 mt-1">
             {/* 제목 */}
-            <div className="w-full font-bold text-md mb-3">
+            <Link
+              to={`/main/dogam/${data.dogamId}`}
+              className="w-full font-bold text-md mb-3"
+            >
               {data.dogamTitle}
-            </div>
+            </Link>
             {/* 이미지 */}
             <div
               className="h-[200px] w-[300px] rounded-md border-l-0 border-b-0 mb-3"
@@ -66,12 +65,12 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                   {dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
-                {/* <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
-                  <CommentModal dogamId={data.dogamId} />
-                </div> */}
+                <Link to={`/main/dogam/${data.dogamId}`} className="text-xl">
+                  💬
+                </Link>
               </div>
             </div>
-          </Link>
+          </div>
         </div>
       </PC>
 
@@ -98,7 +97,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
           </Link>
 
           {/* 오른쪽 구역 */}
-          <Link to={`main/profile/dogam/${data.dogamId}`}>
+          <Link to={`/main/dogam/${data.dogamId}`}>
             {/* 이미지 */}
             <div
               className="h-[200px] w-[270px] border-4 border-inherit rounded-3xl rounded-l-none border-l-0 rounded-b-none border-b-0"
@@ -126,9 +125,9 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
                   {dogamDislikeNum}
                 </div>
                 {/* 댓글 */}
-                <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-                  <CommentModal dogamId={data.dogamId} />
-                </div>
+                <Link to={`/main/dogam/${data.dogamId}`} className="text-xl">
+                  💬
+                </Link>
                 {/* 등록일*/}
                 {/* <div className="grid grid-col place-items-center font-bold text-[12px]">
                   <div className="text-center">{data.createdAt}</div>

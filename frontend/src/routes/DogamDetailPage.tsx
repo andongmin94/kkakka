@@ -138,7 +138,7 @@ export default function DogamDetailPage() {
             </div>
             {/* 오른쪽 중간 */}
             <div className="h-[30%] px-4 border-b-2">
-              <div className="font-bold text-lg h-[80%] flex flex-col ">
+              <div className="font-bold text-lg h-[80%] flex flex-col overflow-hidden">
                 {dogamInfo.dogamTitle}
               </div>
 

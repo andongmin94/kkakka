@@ -55,12 +55,11 @@ export function Alarm() {
   }, []);
 
   const moveToAlarmContentHandler = (alarm: AlarmType) => {
-    if (alarm.frqEmail !== userEmail) {
-      navigate(`/main/profile/${userId}`);
+    if (alarm.alarmContent.endsWith("님이 친구요청을 보냈습니다.")) {
+      navigate(`/main/profile/${alarm.relatedContentId}`);
+    } else {
+      navigate(`/main/dogam/${alarm.relatedContentId}`);
     }
-    // else {
-    //   navigate(`/main/profile/${alarm.relatedContentId}`);
-    // }
   };
 
   return (
@@ -81,7 +80,7 @@ export function Alarm() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
-            className="w-30"
+            className="w-30 overflow-scroll scrollbar-hide h-80"
             value={position}
             onValueChange={setPosition}
           >
