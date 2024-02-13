@@ -1,8 +1,8 @@
 // Collection.tsx
 
 import ThumbsDown from "@/components/profile/ThumbsDown";
-import CommentModal from "@/components/profile/CommentModal";
 import { ProfileDogamWithDislikeNumType } from "@/types/dogamTypes";
+import { Link } from "react-router-dom";
 
 export default function Collection({
   profiledogam,
@@ -37,12 +37,14 @@ export default function Collection({
             {profiledogam.dogamDislikeNum}
           </div>
           {/* 댓글 */}
-          <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">
-            <CommentModal dogamId={profiledogam.dogamId} />
-          </div>
+          <Link to={`/main/dogam/${profiledogam.dogamId}`} className="text-xl">
+            💬
+          </Link>
           {/* 등록일 */}
           <div className="font-bold w-1/2">
-            <div className="text-end">{profiledogam.createdAt.slice(0, 10)}</div>
+            <div className="text-end">
+              {profiledogam.createdAt.slice(0, 10)}
+            </div>
           </div>
         </div>
       </div>

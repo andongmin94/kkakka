@@ -1,50 +1,16 @@
 import { Button } from "../ui/button";
-// import CommentAlias from "./CommentAlias";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { UserType } from "@/types/userTypes";
+
 import { DogamCommentResponseType } from "@/types/dogamTypes";
+import { Link } from "react-router-dom";
 
 export default function Comment({
-  dogamcomment,
-  setDogamComments,
-  dogamId,
+  commentInfo,
 }: {
-  dogamcomment: DogamCommentResponseType;
-  setDogamComments: any;
-  dogamId: number;
+  commentInfo: DogamCommentResponseType;
 }) {
-  const [myData, setMyData] = useState<UserType | null>(null);
   const token = localStorage.getItem("token");
-  const loginUserId = myData?.userId;
-
-  const getDogamComment = () => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/${dogamId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log("도감댓글", res.data.data.dogamCommentResponseDtos);
-        setDogamComments(res.data.data.dogamCommentResponseDtos);
-      });
-  };
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setMyData(res.data.data);
-      });
-  }, []);
+  const loginUserId = Number(localStorage.getItem("userId"));
 
   const deleteCommentHandler = (commentId: number) => {
     axios
@@ -58,41 +24,50 @@ export default function Comment({
           },
         }
       )
-      .then((res) => {
-        console.log("핸들러");
-        console.log(res.data);
-        getDogamComment();
+      .then(() => {
+        window.alert("댓글이 삭제되었습니다.");
+      })
+      .then(() => {
+        window.location.reload();
       });
   };
 
   return (
-    <div className="my-2">
-      <div className="flex justify-between">
-        <div className="flex">
-          <p className="mx-1 font-bold text-lg">
-            {dogamcomment.commentUserName}
-          </p>
-          <div className="flex items-center ml-2"></div>
-          {/* 자기일때만 삭제버튼 보이게 */}
-          {dogamcomment.commentUserId === loginUserId ? (
-            <div className="flex ml-2">
-              <Button
-                variant="destructive"
-                className="w-5 h-5 self-center"
-                onClick={() => {
-                  console.log("삭제");
-                  console.log(dogamcomment.commentId);
-                  deleteCommentHandler(dogamcomment.commentId);
-                }}
-              >
-                삭제
-              </Button>
-            </div>
-          ) : null}
-        </div>
-        {/* <p className="mx-1">{data.update}</p> 이게 뭐지 */}
+    <div className="py-2 px-4 border-b-2 bg-gray-100">
+      <div className="flex">
+        <Link
+          to={`/main/profile/${commentInfo.commentUserId}`}
+          className="flex mx-1 my-1 items-center"
+        >
+          <img
+            src={commentInfo.commentUserImgUrl}
+            alt="프로필사진"
+            className="w-8 h-8 rounded-full mr-1 border-2"
+          />
+          <div className=" font-bold text-sm ">
+            {commentInfo.commentUserName}
+          </div>
+        </Link>
       </div>
-      <p className="border-2 w-full rounded-md px-1">{dogamcomment.comment}</p>
+      <div className="flex">
+        <p className="w-full rounded-md px-1">{commentInfo.comment}</p>
+        {/* 자기일때만 삭제버튼 보이게 */}
+        {commentInfo.commentUserId === loginUserId ? (
+          <div className="flex ml-2">
+            <Button
+              variant="destructive"
+              className="w-5 h-5 self-center text-xs shadow-sm"
+              onClick={() => {
+                console.log("삭제");
+                console.log(commentInfo.commentId);
+                deleteCommentHandler(commentInfo.commentId);
+              }}
+            >
+              삭제
+            </Button>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
