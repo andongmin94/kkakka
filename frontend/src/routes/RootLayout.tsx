@@ -7,9 +7,8 @@ import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
-import { ModeToggle } from "@/components/navbar/ModeToggle";
 import { useTheme } from "@/components/navbar/ThemeProvider";
-import { useLocation, Link, Outlet, useNavigate } from "react-router-dom";
+import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,8 +20,6 @@ import useUserStore from "@/store/user/userStore";
 import axios from "axios";
 
 export default function RootLayout() {
-  const navigate = useNavigate();
-
   const token = localStorage.getItem("token");
 
   const { pathname } = useLocation();
