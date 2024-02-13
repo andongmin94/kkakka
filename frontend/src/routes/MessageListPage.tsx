@@ -4,6 +4,7 @@ import Message from "../components/message/Message";
 // import { DmType } from "@/types/dmTypes";
 import axios from "axios";
 import "./Chat.css";
+import Loading from "@/components/app/Loading";
 
 interface dmProps {
   chatRoomType: string;
@@ -28,6 +29,7 @@ export default function MessageListPage() {
 
   const [dmList, setDmList] = useState<dmProps[] | null>(null);
   const token = localStorage.getItem("token");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -39,6 +41,9 @@ export default function MessageListPage() {
       .then((res) => {
         console.log(res.data.data);
         setDmList(res.data.data);
+      })
+      .then(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -64,22 +69,25 @@ export default function MessageListPage() {
   }, [friendsInfo, navigate]);
 
   return (
-    <div className="ml-10">
-      <div className="mb-10 ml-2 font-bold text-lg">메시지 목록</div>
-      {dmList &&
-        dmList.map((dm) => {
-          return (
-            <div
-              key={dm.roomId}
-              onClick={() => {
-                setRoomId(dm.roomId);
-                enterChatHandler(dm.friendId);
-              }}
-            >
-              <Message dm={dm} />
-            </div>
-          );
-        })}
-    </div>
+    <>
+      {isLoading && <Loading />}
+      <div className="ml-10">
+        <div className="mb-10 ml-2 font-bold text-lg">메시지 목록</div>
+        {dmList &&
+          dmList.map((dm) => {
+            return (
+              <div
+                key={dm.roomId}
+                onClick={() => {
+                  setRoomId(dm.roomId);
+                  enterChatHandler(dm.friendId);
+                }}
+              >
+                <Message dm={dm} />
+              </div>
+            );
+          })}
+      </div>
+    </>
   );
 }

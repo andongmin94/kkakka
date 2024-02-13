@@ -303,22 +303,22 @@ export default function MessageTestPage() {
     <>
       {/* ------------------------------------------------------- */}
       {/* 피시 화면 */}
-      <div className="w-full h-screen flex flex-col items-center mb-4 pt-10">
-        <div className="w-[700px] h-full border-8 rounded-3xl grid grid-rows-12 border-red-200">
+      <div className=" h-screen flex flex-col items-center mb-4 pt-10">
+        <div className="w-[70%] h-[99%] border-2 rounded-2xl grid grid-rows-12 ">
           {/* 채팅 화면 상단 사용자 정보 바 */}
-          <div className="w-full row-span-2 flex justify-between items-center rounded-3xl border-b-4">
+          <div className="w-full row-span-2 flex justify-between items-center border-b-2 bg-gray-50 rounded-t-2xl">
             {/* 왼쪽 사용자 정보 */}
-            <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-10">
+            <div className="h-full w-[300px] flex items-center justify-center gap-8 ml-3 ">
               {/* 사용자 프사 */}
               <img
                 src={friendsInfo.userProfileImg}
-                className=" rounded-full w-[80px] h-[80px]"
+                className=" rounded-full w-[70px] h-[70px] shadow-md"
               />
               <div className="flex flex-col items-center gap-3">
                 {/* 칭호 */}
                 <MessageAlias alias={friendsInfo && friendsInfo.userAlias} />
                 {/* 이름 */}
-                <p className="font-bold text-2xl">
+                <p className="font-bold text-md">
                   {friendsInfo && friendsInfo.userName}
                 </p>
               </div>
@@ -329,7 +329,7 @@ export default function MessageTestPage() {
               <Button
                 type="submit"
                 variant="secondary"
-                className="border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] mr-10 rounded-xl"
+                className=" bg-gray-100 font-bold text-sm mt-2 h-[50px] mr-10 rounded-2xl shadow-sm"
               >
                 프로필 보기
               </Button>
@@ -340,7 +340,7 @@ export default function MessageTestPage() {
           {/* 채팅창 부분 */}
           <div
             ref={chatContainerRef}
-            className="w-full row-span-9  overflow-y-auto scrollbar-hide flex-row"
+            className="w-full row-span-9 overflow-y-auto scrollbar-hide flex-row bg-gray-200 "
           >
             {/* 채팅 전체 내역을 출력 */}
             {messages.map((data, idx) => {
@@ -372,26 +372,26 @@ export default function MessageTestPage() {
           {/* -------------------------------------------------------------------------------------------------------------------- */}
 
           {/* 채팅 하단 부분 */}
-          <div className="flex border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl">
+
+          <div className="flex border-t-2 w-full row-span-1 justify-center items-center gap-1 pl-3">
             {/* 사진 버튼 */}
             <Dialog>
               <DialogTrigger asChild>
                 {/*  사진 버튼 */}
-                <button>
-                  <img
-                    src="/image/messagePicture.png"
-                    className="h-[50px] w-[50px]"
-                  />
-                </button>
+                <div className="h-10 w-12 shadow-inner rounded-lg bg-gray-50 flex items-center justify-center">
+                  <button className="text-xl">🖼️</button>
+                </div>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>이미지 선택</DialogTitle>
+                  <DialogTitle className="border-b-4 w-fit pb-2">
+                    이미지 선택
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col w-full mb-5 mt-5">
                   {/* 이미지 선택 모달 */}
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="picture2" className="font-bold">
+                  <div className="grid w-full h-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="picture2" className="font-bold mb-2 ml-1">
                       이미지 파일을 선택하세요
                     </Label>
                     <Input
@@ -410,11 +410,11 @@ export default function MessageTestPage() {
                     {chatImage ? (
                       <img
                         src={chatImage}
-                        className="h-20 w-[100px] rounded-lg border-2"
+                        className="h-24 w-24 rounded-lg border-2"
                       />
                     ) : (
-                      <div className="flex justify-center items-center border-2 h-20 w-[100px]  rounded-lg">
-                        이미지 없음
+                      <div className="flex justify-center items-center border-2 h-24 w-24 rounded-lg text-sm">
+                        이미지
                       </div>
                     )}
                   </div>
@@ -424,7 +424,7 @@ export default function MessageTestPage() {
                       <Button
                         type="submit"
                         variant="secondary"
-                        className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                        className=" bg-gray-100 font-bold text-sm mt-10 mr-2 h-[40px] shadow-md rounded-lg"
                         onClick={(_) => {
                           //   이미지는 url 형식임
                           handleImageChange();
@@ -443,26 +443,23 @@ export default function MessageTestPage() {
             <Dialog>
               <DialogTrigger asChild>
                 {/* 도감버튼 */}
-                <button>
-                  <img
-                    src="/image/messageDogam.png"
-                    className="h-[50px] w-[50px]"
-                  />
-                </button>
+                <div className="h-10 w-12 shadow-inner bg-gray-50 rounded-lg flex items-center justify-center">
+                  <button className="text-xl">📜</button>
+                </div>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
+                <DialogHeader className="border-b-4 w-fit pb-2">
                   <DialogTitle>도감 선택</DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col w-full mb-5 mt-5 justify-center">
                   {/* 도감 선택 모달 */}
-                  <div className="grid grid-cols-3 overflow-scroll h-[240px] scrollbar-hide place-items-center">
+                  <div className="grid grid-cols-3 overflow-scroll h-[150px] scrollbar-hide place-items-center">
                     {dogamList.map((dogam, idx) => (
                       <img
                         src={dogam.dogamImgUrl}
-                        className={`h-20 w-[100px] rounded-lg border-4 ${
+                        className={`h-24 w-24 rounded-lg border-2 ${
                           selectedImageIndex === idx
-                            ? "border-red-500"
+                            ? "border-red-300"
                             : "border-white"
                         }`}
                         key={idx}
@@ -483,7 +480,7 @@ export default function MessageTestPage() {
                     <Button
                       type="submit"
                       variant="secondary"
-                      className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                      className="  bg-gray-100 font-bold text-sm mb-3 h-[40px] shadow-md rounded-lg"
                       onClick={(_) => {
                         //   이미지는 url 형식임
                         handleImageChange();
@@ -500,7 +497,7 @@ export default function MessageTestPage() {
 
             {/* 채팅 입력칸 */}
             <form
-              className="flex justify-center items-center gap-4 rounded-3xl w-[530px]"
+              className="flex justify-center items-center gap-4 rounded-3xl w-[520px]"
               // 채팅 전송을 눌렀을때 함수
               onSubmit={(e) => {
                 e.preventDefault();
@@ -513,7 +510,7 @@ export default function MessageTestPage() {
               {/* 채팅 입력창 */}
               <Input
                 type="text"
-                className="w-[450px] font-bold text-xl"
+                className="w-[400px] font-bold text-sm shadow-inner"
                 onChange={(e) => {
                   // 입력받은 정보를 상태관리
                   setInputChat(e.target.value);
@@ -521,8 +518,11 @@ export default function MessageTestPage() {
                 value={inputChat}
               />
               {/* 채팅 입력 버튼 */}
-              <button type="submit">
-                <img src="/image/chatBtn.png" className="h-[50px] w-[50px]" />
+              <button
+                type="submit"
+                className=" bg-gray-200 w-16 h-10 font-bold text-sm rounded-lg shadow-sm"
+              >
+                send
               </button>
             </form>
           </div>
