@@ -21,8 +21,10 @@ import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.AliasRepository;
+import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AliasRepository aliasRepository;
+    private final DynamicUserInfoRepository dynamicUserInfoRepository;
 
     @Value("${kakao.clientId}")
     String clientId;
@@ -90,8 +93,8 @@ public class UserService {
         //(3)
         if (user == null) {
 
-            DynamicUserInfo userInfo = DynamicUserInfo.of(100, false, 0,
-                    "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg");
+            DynamicUserInfo userInfo = DynamicUserInfo.of(10000, false, 0,
+                    "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg", LocalDate.now());
             user = User.of(
                     profile.getId(),
                     profile.getKakao_account().getProfile().getProfile_image_url(),
@@ -102,6 +105,18 @@ public class UserService {
 
             userRepository.save(user);
             isUserNull = true;
+        }else{
+            // 사용자가 이미 존재하는 경우, 마지막 보상 지급 날짜를 확인하여 오늘 보상을 이미 받았는지 검사합니다.
+            DynamicUserInfo dynamicUserInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(user.getId()).orElseThrow(
+                    () -> new CustomException(ErrorType.NOT_FOUND_USER_INFO)
+            );
+
+            // 현재 날짜와 마지막 보상 지급 날짜가 다르면 보상을 지급하고 마지막 보상 지급 날짜를 업데이트합니다.
+            LocalDate today = LocalDate.now();
+            if (!today.equals(dynamicUserInfo.getLastRewardDate())) {
+                dynamicUserInfo.addPoint(5000);
+                dynamicUserInfo.setLastRewardDate(today);
+            }
         }
         String jwtToken = jwtUtil.createToken(user.getKakaoEmail());
         response.addHeader("Authorization", jwtToken);

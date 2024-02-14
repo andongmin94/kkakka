@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import classes from "./SpeakerToast.module.css";
 
 export default function SpeakerToast({
   setToast,
@@ -17,23 +18,24 @@ export default function SpeakerToast({
   }, [setToast]);
 
   return (
-    <div className="fixed inset-x-0 top-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-center z-50">
-      <div className="max-w-sm w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto">
-        <div className="rounded-lg shadow-xs overflow-hidden">
-          <div className="p-4">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <img
-                  className="size-10"
-                  src="/image/Loudspeaker.png"
-                  alt="Icon" 
-                />
-              </div>
-              <div className="ml-3 w-0 flex-1 pt-0.5">
-                <h3 className="text-2xl text-black dark:text-white">{text}</h3>
-              </div>
-            </div>
-          </div>
+    <div className=" fixed inset-x-0 top-0 flex items-end justify-center px-6 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-center z-50 ">
+      <div className="bg-opacity-20 max-w-xl  bg-gradient-to-br from-red-200 via-pink-200 to-purple-300 dark:bg-gray-800  pointer-events-auto py-5 px-2 rounded-full">
+        <div className="flex-shrink-0 flex justify-center items-center mx-3">
+          <img
+            className={`${classes.iconAnimation} `}
+            src="/image/Loudspeaker.png"
+            alt="Icon"
+          />
+          <h3
+            className={` text-gray-700 font-bold drop-shadow-md dark:text-white ${classes.fontAnimation} mx-5`}
+          >
+            {text}
+          </h3>
+          <img
+            className={`${classes.iconAnimation} transform scale-x-[-1]`}
+            src="/image/Loudspeaker.png"
+            alt="Icon"
+          />
         </div>
       </div>
     </div>

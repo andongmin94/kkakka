@@ -67,7 +67,9 @@ export function Alarm() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           {/* {theme === "light" ? ( */}
+
           <div className={classes.alarm_image} />
+
           {/* ) : (
             <div className={classes.alarm_image_dark} />
           )} */}

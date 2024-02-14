@@ -28,7 +28,7 @@ function createWindow() {
     webPreferences: {preload: join(dirname(fileURLToPath(import.meta.url)), "preload.js")},
   });
 
-  win.loadURL(isDev ? "http://localhost:3000" : "https://kkakka.vercel.app");
+  win.loadURL(isDev ? "http://localhost:3000" : "https://i10d110.p.ssafy.io");
 
   electronLocalshortcut.register(win, "F12", () => {console.log("F12 is pressed"); win.webContents.toggleDevTools()});
 
@@ -327,7 +327,7 @@ function onMessageReceivedFromSocket (payload){
   var chat = JSON.parse(payload.body);
   // console.log("들어온 payload:" + payload.body);
   console.log("들어온 메세지:" + chat.content);
-  if (chat.messageType !== "ENTER" && chat.messageType !== "CHAT_BOT")
+  if (chat.messageType !== "ENTER"&& chat.messageType !== "QUIT" && chat.messageType !== "CHAT_BOT")
     showNotification(chat.userName, chat.content, chat.imgCode);
   
   const messageDTO = {
