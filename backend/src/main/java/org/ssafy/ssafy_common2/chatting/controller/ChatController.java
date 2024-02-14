@@ -105,9 +105,9 @@ public class ChatController {
 
 
                 // 2-4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기 + 저장
-                if(chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
-                    messageRepository.save(message);
-                }
+//                if(chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+//                    messageRepository.save(message);
+//                }
 
             }
 
