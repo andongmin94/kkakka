@@ -28,7 +28,8 @@ function createWindow() {
     webPreferences: {preload: join(dirname(fileURLToPath(import.meta.url)), "preload.js")},
   });
 
-  win.loadURL(isDev ? "http://localhost:3000" : "https://i10d110.p.ssafy.io");
+  // win.loadURL(isDev ? "http://localhost:3000" : "https://i10d110.p.ssafy.io");
+  win.loadURL("https://i10d110.p.ssafy.io");
 
   electronLocalshortcut.register(win, "F12", () => {console.log("F12 is pressed"); win.webContents.toggleDevTools()});
 
