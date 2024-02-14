@@ -461,10 +461,12 @@ export default function LiveChat() {
                     {friendsInfo.playerName}님이 이긴다!! :{" "}
                     {predictObject.predictLose + predictObject.predictWin === 0
                       ? 0
-                      : (predictObject.predictWin /
-                          (predictObject.predictLose +
-                            predictObject.predictWin)) *
-                        100}{" "}
+                      : (
+                          (predictObject.predictWin /
+                            (predictObject.predictLose +
+                              predictObject.predictWin)) *
+                          100
+                        ).toFixed(3)}{" "}
                     %{" "}
                   </p>
                 </div>
@@ -805,26 +807,28 @@ export default function LiveChat() {
         <div className=" h-screen grid grid-rows-12">
           <Alert className=" w-full m-auto row-span-2">
             <div className="flex flex-row justify-between  h-full">
-              <div className="flex flex-row">
+              <div className="grid grid-cols-5">
                 {/* 프사 */}
                 <img
                   src={friendsInfo.playerProfilePic}
-                  className=" rounded-full w-[80px] h-[80px] mb-3"
+                  className=" rounded-full w-[70px] h-[70px] mb-3 col-span-1"
                 />
-                <div className="flex flex-col items-center gap-3 ml-3">
+                <div className="flex flex-col items-center gap-3 ml-3 col-span-4">
                   {/* 칭호 */}
                   <MessageAlias alias={friendsInfo.playerAlias} />
                   {/* 이름 */}
                   <div className="flex flex-row">
-                    <p className="font-bold text-2xl">
+                    <p className="font-bold text-md">
                       {friendsInfo.playerName}님이 이긴다!! :{" "}
                       {predictObject.predictLose + predictObject.predictWin ===
                       0
                         ? 0
-                        : (predictObject.predictWin /
-                            (predictObject.predictLose +
-                              predictObject.predictWin)) *
-                          100}{" "}
+                        : (
+                            (predictObject.predictWin /
+                              (predictObject.predictLose +
+                                predictObject.predictWin)) *
+                            100
+                          ).toFixed(3)}{" "}
                       %{" "}
                     </p>
                   </div>
@@ -986,7 +990,7 @@ export default function LiveChat() {
               {/* -------------------------------------------------------------------------------------------------------------------- */}
 
               {/* 채팅 하단 부분 */}
-              <div className="flex  border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl ">
+              <div className="flex  border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl pb-2 ">
                 {/* 사진 버튼 */}
                 <Dialog>
                   <DialogTrigger asChild>
@@ -1121,7 +1125,7 @@ export default function LiveChat() {
 
                 {/* 채팅 입력칸 */}
                 <form
-                  className="flex justify-center items-center gap-4 rounded-3xl w-[250px] ml-5"
+                  className="flex justify-center items-center gap-4 rounded-3xl w-[250px] ml-1"
                   // 채팅 전송을 눌렀을때 함수
                   onSubmit={(e) => {
                     e.preventDefault();
