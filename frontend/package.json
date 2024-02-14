@@ -22,7 +22,7 @@
     },
     "files": [
       "dist/**/*",
-      "electron/**/*"
+      "src/electron/**/*"
     ],
     "directories": {
       "buildResources": "assets",
