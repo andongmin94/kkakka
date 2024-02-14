@@ -51,6 +51,7 @@ export default function AddCollection({ userId }: { userId: number }) {
       .then((response) => {
         console.log(response.data);
         setSuccessMessage("도감이 성공적으로 추가되었습니다.");
+        window.alert("도감이 성공적으로 추가되었습니다.");
       })
       .catch((error) => {
         console.error(error);

@@ -141,8 +141,10 @@ export default function Compliment({
       const rotateX = (4 / 30) * y - 20;
 
       overlayRef.current.style.filter = "opacity(10)";
-      overlayRef.current.style.backgroundPosition = `${260 - 2*x}% ${320 - 2*y}%`;
-      
+      overlayRef.current.style.backgroundPosition = `${260 - 2 * x}% ${
+        320 - 2 * y
+      }%`;
+
       containerRef.current.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
   };
@@ -183,12 +185,14 @@ export default function Compliment({
           {/* 헤더 */}
           <DialogHeader>
             <DialogTitle className="flex flex-col items-center text-3xl">
-              <div className="mb-3 text-4xl">{itemName}</div>
-              <div className="mb-3 text-base">{itemDesc}</div>
+              <div className="mb-3 text-xl border-b-4 w-fit pb-2">
+                {itemName} 👏
+              </div>
+              <div className="mt-3 mb-6 w-[80%] text-sm ">{itemDesc}</div>
               <div className="rounded-xl h-[4rem] w-[15rem] grid place-items-center bg-white">
-                <div className="flex flex-row justify-content-center gap-4">
-                  <img src="/image/coins.png" className="h-10 w-10" />
-                  <span className="self-center text-2xl font-bold">
+                <div className="flex flex-row justify-content-center gap-4 bg-gray-200 p-3 rounded-lg">
+                  <div>💵</div>
+                  <span className="self-center text-2xl font-bold mr-1">
                     {itemPrice}
                   </span>
                 </div>
@@ -290,8 +294,9 @@ export default function Compliment({
                     </FormItem>
                   )}
                 />
-                <div className="font-bold text-center mb-3">
-                  구입 후 잔여 포인트 {myPoint - itemPrice} P
+                <div className="font-bold text-center mb-3 bg-gray-200 rounded-lg mx-3 py-3">
+                  <div>구입 후 잔여 포인트</div>{" "}
+                  <div>💰 {myPoint - itemPrice} </div>
                 </div>
 
                 <DialogFooter className="flex sm:justify-center">
@@ -299,8 +304,7 @@ export default function Compliment({
                   <DialogClose asChild>
                     <Button
                       type="button"
-                      variant="secondary"
-                      className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
+                      className=" bg-red-400 font-bold text-sm shadow-md text-white rounded-lg h-[80%] "
                     >
                       취소
                     </Button>
@@ -309,8 +313,7 @@ export default function Compliment({
                   {/* 구매 버튼 */}
                   <Button
                     type="submit"
-                    variant="secondary"
-                    className="mr-10 border-solid border-2 border-inherit bg-white font-bold h-8 text-lg"
+                    className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg h-[80%] "
                   >
                     구입
                   </Button>
