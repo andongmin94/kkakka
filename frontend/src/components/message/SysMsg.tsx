@@ -23,7 +23,7 @@ export default function SysMsg({ data }: { data: dataProps }) {
   //       });
   return (
     <>
-      <div className="max-w-[70%] m-2 pt-2 pb-1 px-2 self-end  text-gray-600 text-sm text-wrap border-b-2 border-b-slate-400">
+      <div className="max-w-[70%] m-2 pt-2 pb-1 px-2 self-end  text-gray-600 text-sm text-wrap border-b-2 border-b-slate-400 dark:text-white">
         {/* 이미지인지 텍스트 채팅인지 판별 */}
         <TypeIt
           options={{
