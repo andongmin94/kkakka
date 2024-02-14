@@ -28,6 +28,7 @@ public class ChatService {
     @Value("${cloud.aws.s3.bucket}")
     private String S3Bucket;
 
+    // Base64 이미지 코드를 순수 파일로 변환
     @Transactional
     public ChatMessageDto BinaryImageChange(ChatMessageDto chatMessageDto) {
         try {
@@ -85,7 +86,7 @@ public class ChatService {
             }
 
             chatMessageDto.setImgCode(awsS3ImageUrl);
-            chatMessageDto.setContent(awsS3ImageUrl);
+            chatMessageDto.setContent("사진을 보냈습니다.");
 
             return chatMessageDto;
 
@@ -93,6 +94,7 @@ public class ChatService {
            throw new RuntimeException(e);
         }
     }
+
 
 
 

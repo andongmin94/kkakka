@@ -19,8 +19,6 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     
 
     // 1) 방번호에 맞는 메세지 찾기
-
-
     Page<Message> findAllByChatJoin_ChatRoom_Id(long roomId, Pageable pageable);
 
     // 2) 내가 참여한 채팅방의 가장 최근 메세지
