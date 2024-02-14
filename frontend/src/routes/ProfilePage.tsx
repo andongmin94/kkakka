@@ -153,17 +153,18 @@ export default function ProfilePage() {
 
             {/* 메시지랑 프로필편집or친구 */}
             <div className="m-1 flex">
-              {/* 메시지 */}
-              <Button
-                type="submit"
-                variant="secondary"
-                className="mr-1 bg-white font-bold text-xs"
-                onClick={() => {
-                  enterChatHandler();
-                }}
-              >
-                메시지
-              </Button>
+              {userId === myId ? null : (
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="mr-1 bg-white font-bold text-xs"
+                  onClick={() => {
+                    enterChatHandler();
+                  }}
+                >
+                  메시지
+                </Button>
+              )}
 
               {/* 프로필편집 또는 친구버튼 */}
               {userId === myId ? (

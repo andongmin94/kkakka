@@ -55,6 +55,7 @@ export default function LiveContent({
           <div className="absolute left-0 z-20">
             <Live />
           </div>
+
           <div className=" w-[200px] absolute right-0">
             {/* 채팅방에 들어온 친구 수 만큼 친구 프사 표시 */}
             {liveData.crowdDtoList &&
