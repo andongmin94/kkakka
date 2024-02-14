@@ -181,7 +181,7 @@ export default function MessageTestPage() {
       userCurAlias: chat.userCurAlias,
       userProfileImg: chat.userProfileImg,
     };
-
+    console.log(messageDTO);
     /*
          // 내가 쓴 메세지
       { text: chat.content, isUser: true },

@@ -19,7 +19,9 @@ export default function ProfilePage() {
   const [profileInfo, setProfileInfo] = useState<UserType>();
   const myId = localStorage.getItem("userId");
   useEffect(() => {
-    axios
+    
+    if (profileInfo == undefined || profileInfo.userId.toString() != userId) {
+      axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${userId}`, {
         headers: {
           Authorization: token,
@@ -28,11 +30,13 @@ export default function ProfilePage() {
       .then((res) => {
         const newProfileInfo = res.data.data;
         setProfileInfo({ ...profileInfo, ...newProfileInfo });
+        
       })
       .catch((err) => {
         console.error("프로필정보가져오기실패", err);
       });
-  }, [profileInfo, setProfileInfo]);
+    }
+  }, [userId, profileInfo]);
 
   const [friendship, setFriendship] = useState("");
 
