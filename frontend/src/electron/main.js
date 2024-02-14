@@ -2,17 +2,42 @@ import axios from "axios";
 import https from "https";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-import { join, dirname } from "path";
+
 import electronLocalshortcut from "electron-localshortcut";
 import { createWebSocketConnection } from "league-connect";
 import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage, Notification } from "electron";
 
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { join, dirname } from "path";
+import fs from "fs";
+import { v4 as uuidv4 } from 'uuid';
+
+function downloadImage(imageUrl, callback) {
+  const uniqueFileName = `${uuidv4()}.png`; // UUID를 사용하여 고유한 파일 이름 생성
+  let imagePath;
+  
+  if (app.isPackaged) {
+    // 패키징된 애플리케이션에서는 process.resourcesPath를 사용
+    imagePath = join(process.resourcesPath, uniqueFileName);
+  } else {
+    // 개발 모드에서는 import.meta.url을 사용
+    imagePath = join(dirname(fileURLToPath(import.meta.url)), uniqueFileName);
+  }
+
+  const file = fs.createWriteStream(imagePath);
+
+  https.get(imageUrl, (response) => {
+    response.pipe(file);
+
+    file.on('finish', () => {
+      file.close(() => callback(imagePath));  // 이미지 다운로드가 완료되면 콜백 함수 호출
+    });
+  });
+}
 
 dotenv.config();
-const isDev = process.env.IS_DEV === "true";
-const BASE_URL = process.env.API_BASE_URL;
+const BASE_URL = 'https://i10d110.p.ssafy.io/';
 
 let win;
 let tray;
@@ -28,7 +53,7 @@ function createWindow() {
     webPreferences: {preload: join(dirname(fileURLToPath(import.meta.url)), "preload.js")},
   });
 
-  win.loadURL(isDev ? "http://localhost:3000" : "https://i10d110.p.ssafy.io");
+  win.loadURL("https://i10d110.p.ssafy.io");
 
   electronLocalshortcut.register(win, "F12", () => {console.log("F12 is pressed"); win.webContents.toggleDevTools()});
 
@@ -55,9 +80,16 @@ function startNotification (title = "까까 앱 가동", body = "copyright 2024 
   new Notification(notification).show()
 }
 
-function showNotification (title = "까까 앱 가동", body = "copyright 2024 김상훈") {
-  let notification = { title, body }
-  new Notification(notification).show()
+function showNotification(title = 'Notification Title', body = 'Notification Body', imageUrl) {
+  downloadImage(imageUrl, (imagePath) => {
+    const notification = {
+      title,
+      body,
+      icon: imagePath
+    };
+
+    new Notification(notification).show();
+  });
 }
 
 // 이 메소드는 Electron의 초기화가 완료되고
@@ -109,7 +141,6 @@ app.whenReady().then(createWindow).then(async () => {
           connect();
         })
 
-        // connect();
         // 마지막으로 전송한 이벤트의 ID를 저장하는 변수
         function sendNewEvents(events) {
           let newEvents = events.Events.filter(event => event.EventID > lastSentEventId);
@@ -194,8 +225,8 @@ app.whenReady().then(createWindow).then(async () => {
             
             sendNewEvents(events);
             sendScore(players);
-            console.log("인게임 데이터 : ");
-            console.log(players);
+            // console.log("인게임 데이터 : ");
+            // console.log(players);
 
             // will be axios post areas
           } catch (error) {};
