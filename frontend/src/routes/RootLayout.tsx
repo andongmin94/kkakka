@@ -26,32 +26,17 @@ export default function RootLayout() {
 
   const { setLastEventId } = useAlarmSubscribeStore();
 
-  // // 확성기 내용 state
-  // const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
-  // const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
-  // const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
-  // const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
+  // 확성기 내용 state
+  const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
+  const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
+  const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
+  const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
-  // const EventSource = EventSourcePolyfill;
+  const EventSource = EventSourcePolyfill;
 
-  // if (!token) {
-  //   throw new Error("Token not found");
-  // }
-
-  // const source = new EventSource(
-  //   `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
-  //   {
-  //     headers: {
-  //       Authorization: token,
-  //     },
-  //     heartbeatTimeout: 3600000,
-  //   }
-  // );
-
-  // source.onerror = (event) => {
-  //   console.log(event);
-  //   source.close();
-  // };
+  if (!token) {
+    throw new Error("Token not found");
+  }
 
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
@@ -87,43 +72,54 @@ export default function RootLayout() {
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
 
-  // useEffect(() => {
-  //   source.addEventListener("notification", (e: any) => {
-  //     console.log(e);
-  //     const data = JSON.parse(e.data);
-  //     console.log(data);
-  //     setLastEventId(data.id);
-  //   });
-  //   source.addEventListener("notification", (e: any) => {
-  //     console.log(e);
-  //     const data = JSON.parse(e.data);
-  //     console.log(data);
-  //     setLastEventId(data.id);
-  //   });
+  useEffect(() => {
+    const source = new EventSource(
+      `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
+      {
+        headers: {
+          Authorization: token,
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+        },
+        heartbeatTimeout: 3600000,
+      }
+    );
 
-  //   source.addEventListener("megaphone", (event: any) => {
-  //     const parseData = JSON.parse(event.data);
+    source.onerror = (event) => {
+      console.log(event);
+      source.close();
+    };
 
-  //     // 새로운 확성기가 있음을 표시
-  //     setNewSpeakerContent(parseData.content);
-  //     setSpeakerToastList((prev) => {
-  //       return prev.concat(parseData.content);
-  //     });
-  //   });
+    source.addEventListener("alarm", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
 
-  //   return () => {
-  //     source.close();
-  //   };
-  // });
+    source.addEventListener("megaphone", (event: any) => {
+      const parseData = JSON.parse(event.data);
 
-  // useEffect(() => {
-  //   if (!showSpeakerToast && speakerToastList.length != 0) {
-  //     // 확성기 리스트 중 첫번째 요소를 보여주기
-  //     setSpeakerToastContent(speakerToastList[0]);
-  //     setSpeakerToastList((prev) => prev.slice(1));
-  //     setShowSpeakerToast(true);
-  //   }
-  // }, [newSpeakerContent, showSpeakerToast]);
+      // 새로운 확성기가 있음을 표시
+      setNewSpeakerContent(parseData.content);
+      setSpeakerToastList((prev) => {
+        return prev.concat(parseData.content);
+      });
+    });
+
+    return () => {
+      source.close();
+    };
+  });
+
+  useEffect(() => {
+    if (!showSpeakerToast && speakerToastList.length != 0) {
+      // 확성기 리스트 중 첫번째 요소를 보여주기
+      setSpeakerToastContent(speakerToastList[0]);
+      setSpeakerToastList((prev) => prev.slice(1));
+      setShowSpeakerToast(true);
+    }
+  }, [newSpeakerContent, showSpeakerToast]);
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
@@ -167,13 +163,13 @@ export default function RootLayout() {
           }}
         >
           <div className={classes.whole}>
-            {/* 확성기 자리
+            {/* 확성기 자리 */}
             {showSpeakerToast && (
               <SpeakerToast
                 setToast={setShowSpeakerToast}
                 text={speakerToastContent}
               />
-            )} */}
+            )}
             <main
               className={cn(classes.page, {
                 [classes.electron_page]: typeof electron !== "undefined",
