@@ -198,6 +198,11 @@ export default function RootLayout() {
                   <Link to="/main/intro" className={classes.menu}>
                     <h1>서비스 소개</h1>
                   </Link>
+                  {typeof electron === "undefined" && (
+                    <Link to="https://drive.google.com/file/d/1Wy7iT7hWCpEZiUPFxnskq0x_VmsSahFx/view?usp=drive_link" className={`${classes.menu}`}>
+                      <h1>App Download</h1>
+                    </Link>
+                  )}
                   <div className="mt-72">
                     <MyPoint />
                   </div>
