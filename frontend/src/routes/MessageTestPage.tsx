@@ -423,8 +423,7 @@ export default function MessageTestPage() {
                       {/* 이미지 보내기 버튼 */}
                       <Button
                         type="submit"
-                        variant="secondary"
-                        className=" bg-gray-100 font-bold text-sm mt-10 mr-2 h-[40px] shadow-md rounded-lg"
+                        className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg mt-10"
                         onClick={(_) => {
                           //   이미지는 url 형식임
                           handleImageChange();
@@ -479,8 +478,7 @@ export default function MessageTestPage() {
                     {/* 도감 보내기 버튼 */}
                     <Button
                       type="submit"
-                      variant="secondary"
-                      className="  bg-gray-100 font-bold text-sm mb-3 h-[40px] shadow-md rounded-lg"
+                      className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg "
                       onClick={(_) => {
                         //   이미지는 url 형식임
                         handleImageChange();
@@ -520,9 +518,9 @@ export default function MessageTestPage() {
               {/* 채팅 입력 버튼 */}
               <button
                 type="submit"
-                className=" bg-gray-200 w-16 h-10 font-bold text-sm rounded-lg shadow-sm"
+                className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg py-2 px-3"
               >
-                send
+                보내기
               </button>
             </form>
           </div>
