@@ -17,6 +17,7 @@ import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
 
 import axios from "axios";
+import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
 
 export default function RootLayout() {
   const token = localStorage.getItem("token");
@@ -239,6 +240,7 @@ export default function RootLayout() {
                       </Link>
                       <Alarm />
                       <FriendsBtn />
+                      <SearchFriendBtn />
                     </div>
                   </nav>
                 ) : undefined}
