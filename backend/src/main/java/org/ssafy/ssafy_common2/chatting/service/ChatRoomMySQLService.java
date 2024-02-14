@@ -233,7 +233,10 @@ public class ChatRoomMySQLService {
                 message.getChatJoin().getChatRoom().getId(),
                 message.getCreatedAt(),
                 message.getUpdatedAt(),
-                message.getImgCode()
+                message.getImgCode(),
+                message.getChatJoin().getUser().getUserName(),
+                message.getChatJoin().getUser().getUserInfoId().getCurAlias(),
+                message.getChatJoin().getUser().getKakaoProfileImg()
         );
     };
 
