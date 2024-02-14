@@ -183,6 +183,8 @@ public class DogamService {
 
             // 최신 댓글 조회
             CommentDogam commentDogam = commentDogamRepository.findFirstByDogamIdAndDeletedAtIsNullOrderByCreatedAtDesc(d.getId());
+            int commentNum = commentDogamRepository.countByDogamIdAndDeletedAtIsNull(d.getId());
+
             User commentUser = null;
             if (commentDogam != null) {
                 commentUser = userRepository.findByKakaoEmailAndDeletedAtIsNull(commentDogam.getUserEmail()).orElseThrow(
@@ -206,7 +208,7 @@ public class DogamService {
 
             int dislikeNum = dislikeDogamRepository.countByDogamIdAndIsDislikeTrueAndDeletedAtIsNull(d.getId());
             responseDtoList.add(DogamMainListResponseDto.of(d.getUser().getId(), d.getDogamTitle(), d.getId(), d.getUser().getUserName(), d.getUser().getKakaoEmail(), alias != null ? alias.getAliasName() : null, d.getDogamImage(), d.getUser().getKakaoProfileImg(),
-                    dislikeNum, isHated, dogamCommentResponseDto));
+                    dislikeNum, isHated, commentNum, dogamCommentResponseDto));
         }
 
         return new PaginationResponse<>(responseDtoList, page, totalPages, totalItems);

@@ -1,5 +1,5 @@
 {
-  "name": "kkakka",
+  "name": "까까",
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
@@ -22,7 +22,7 @@
     },
     "files": [
       "dist/**/*",
-      "electron/**/*"
+      "src/electron/**/*"
     ],
     "directories": {
       "buildResources": "assets",
