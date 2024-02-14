@@ -20,9 +20,12 @@ export default function Collection({
       />
       <div className="border-2 border-inherit rounded-3xl bg-cover rounded-t-none border-t-0 mt-0 ">
         {/* 제목 */}
-        <div className="w-full font-bold text-xl px-4 py-3">
+        <Link
+          to={`/main/dogam/${profiledogam.dogamId}`}
+          className="w-full font-bold text-md px-4"
+        >
           {profiledogam.dogamTitle}
-        </div>
+        </Link>
         <div className="flex pb-3 font-bold items-center w-full">
           {/* 싫어요 */}
           <div className="lg:hover:scale-110 transition-transform ease-in-out duration-500">

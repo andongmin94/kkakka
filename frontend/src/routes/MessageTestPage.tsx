@@ -516,12 +516,12 @@ export default function MessageTestPage() {
                 value={inputChat}
               />
               {/* 채팅 입력 버튼 */}
-              <button
+              <Button
                 type="submit"
                 className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg py-2 px-3"
               >
                 보내기
-              </button>
+              </Button>
             </form>
           </div>
         </div>
