@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ssafy.ssafy_common2.chatting.dto.request.ChatMessageDto;
+import org.ssafy.ssafy_common2.itemshop.repository.EnforcementRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +24,7 @@ public class ChatService {
 
 
     private final AmazonS3Client amazonS3Client;
-    private final SimpMessageSendingOperations template;
+    private final EnforcementRepository enforcementRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String S3Bucket;
@@ -94,6 +95,11 @@ public class ChatService {
            throw new RuntimeException(e);
         }
     }
+
+    @Transactional
+    public String searchEnforcement(String chatOwnerEmail, String attenderEmail) {
+        return enforcementRepository.findTopByDefenderAndAttackerOrderByCreatedAtDesc(chatOwnerEmail, attenderEmail).orElse(null);
+    };
 
 
 
