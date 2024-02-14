@@ -34,7 +34,7 @@ export default function YouMsg({ data }: { data: dataProps }) {
             {data.userCurAlias} {data.userName}
           </p>
           <div className="flex">
-            <div className="max-w-[80%] m-2 py-3 px-4 rounded-sm self-end bg-gray-50 font-bold text-sm text-wrap shadow-md">
+            <div className="max-w-[80%] m-2 py-3 px-4 rounded-sm self-end bg-gray-50 font-bold text-sm text-wrap shadow-md dark:text-black">
               {/* 이미지인지 텍스트 채팅인지 판별 */}
               {data.imgCode !== null ? (
                 <img src={data.imgCode} />
