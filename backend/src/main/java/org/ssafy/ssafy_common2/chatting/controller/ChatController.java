@@ -35,6 +35,7 @@ import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -179,9 +180,30 @@ public class ChatController {
                     message.setImgCode(msg.getImgCode());
 
 
-                    messageRepository.save(message);
-
                     User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                    // 강제칭찬권 있나 없나 확인 =====================================
+                    String enforcementMent = chatService.searchEnforcement(chatRoom.getChatOwnerEmail(),sender.getKakaoEmail());
+
+
+                    if(enforcementMent != null && chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+
+                        // 난수 생성 -> 난수가 특정 수 이상 넘어가면 해당 말이 적히도록
+                        Random rd = new Random();
+
+                        double A = rd.nextDouble()*9+1;
+                        int B = 10;
+                        System.out.println(A/B);
+                        if(A /B > 0.63){
+
+                            int percent = (int) (((double)A/B) *100);
+
+                            message.setContent("("+percent+"%의 확률로 나온 강제 칭찬!) " +enforcementMent);
+                            msg.setContent("("+percent+"%의 확률로 나온 강제 칭찬!) " +enforcementMent);
+                        }
+                    }
+
+                    messageRepository.save(message);
 
                     if(sender != null) {
                         msg.setUserName(sender.getUserName());
