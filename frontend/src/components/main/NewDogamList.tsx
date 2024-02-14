@@ -55,12 +55,14 @@ export default function NewDogamList() {
         }}
         hasMore={hasNextPage}
       >
-        {data &&
-          data.pages.map((pageData) => {
-            return pageData.results.map((dogam: NewDogamType) => {
-              return <NewDogam key={dogam.dogamId} data={dogam} />;
-            });
-          })}
+        <div className="grid grid-cols-3 gap-4">
+          {data &&
+            data.pages.map((pageData) => {
+              return pageData.results.map((dogam: NewDogamType) => {
+                return <NewDogam key={dogam.dogamId} data={dogam} />;
+              });
+            })}
+        </div>
       </InfiniteScroll>
     </div>
   );
