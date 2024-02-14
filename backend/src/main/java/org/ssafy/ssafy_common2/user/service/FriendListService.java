@@ -11,8 +11,11 @@ import org.ssafy.ssafy_common2.notification.entity.NotificationType;
 import org.ssafy.ssafy_common2.notification.service.NotificationService;
 import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.dto.Response.FriendStateResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
+import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
 import org.ssafy.ssafy_common2.user.entity.User;
+import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
 import org.ssafy.ssafy_common2.user.repository.FriendListRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
@@ -30,19 +33,19 @@ public class FriendListService {
 
     private final FriendListRepository friendListRepository;
     private final UserRepository userRepository;
-
+    private final DynamicUserInfoRepository dynamicUserInfoRepository;
     private final NotificationService notificationService;
 
     // 친구 추가 요청
     @Transactional
-    public MsgType editFriendState(User sender, Long receiverId){
+    public MsgType editFriendState(User sender, Long receiverId) {
 
         User receiver = validateReceiverByUserId(receiverId);
 
         // 현재 친구 상태 확인
         FriendState state = getFriendState(sender, receiver);
 
-        switch (state){
+        switch (state) {
             case NONE: // 아무 관계 아님 -> 친구 요청 가능
                 return sendFriendRequest(sender, receiver);
             case RECEIVE: // sender가 친구 요청 받음 -> 친구 수락
@@ -57,7 +60,7 @@ public class FriendListService {
 
     // 친구 신청하기
     @Transactional
-    public MsgType sendFriendRequest(User sender, User receiver){
+    public MsgType sendFriendRequest(User sender, User receiver) {
 
         FriendList friendRequest = getOrCreateFriendRequest(sender, receiver);
         FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender);
@@ -75,7 +78,7 @@ public class FriendListService {
 
     // 친구 신청 받기 (이미 email유저가 나에게 친구 신청을 했던 경우)
     @Transactional
-    public MsgType acceptFriendRequest(User sender, User receiver){
+    public MsgType acceptFriendRequest(User sender, User receiver) {
 
         FriendList friendRequest = getFriendRequest(sender, receiver);
         friendRequest.updateIsCheck(true);
@@ -86,7 +89,7 @@ public class FriendListService {
 
     // 친구 신청 취소하기
     @Transactional
-    public MsgType cancelFriendRequest(User sender, User receiver){
+    public MsgType cancelFriendRequest(User sender, User receiver) {
 
         FriendList friendRequest = getFriendRequest(sender, receiver);
         friendRequest.updateIsCheck(false);
@@ -97,7 +100,7 @@ public class FriendListService {
 
     // 친구 끊기
     @Transactional
-    public MsgType breakOffFriendRelationship(User sender, User receiver){
+    public MsgType breakOffFriendRelationship(User sender, User receiver) {
 
         FriendList friendRequest = getOrCreateFriendRequest(sender, receiver);
         FriendList oppositeFriendRequest = getOrCreateFriendRequest(receiver, sender);
@@ -112,28 +115,25 @@ public class FriendListService {
     }
 
     // 두 유저의 현재 친구요청 상태를 리턴
-    public FriendStateResponseDto createFriendStateResponse(User sender, Long receiverId){
+    public FriendStateResponseDto createFriendStateResponse(User sender, Long receiverId) {
 
         User receiver = validateReceiverByUserId(receiverId);
         return FriendStateResponseDto.of(getFriendState(sender, receiver).toString());
     }
 
     // 두 사람의 현재 친구요청 상태를 확인
-    private FriendState getFriendState(User sender, User receiver){
+    private FriendState getFriendState(User sender, User receiver) {
 
         boolean sentRequestState = getRequestState(sender, receiver);
         boolean receivedRequestState = getRequestState(receiver, sender);
 
         if (sentRequestState && receivedRequestState) {
             return FriendState.FRIEND;
-        }
-        else if (receivedRequestState) {
+        } else if (receivedRequestState) {
             return FriendState.RECEIVE;
-        }
-        else if (sentRequestState) {
+        } else if (sentRequestState) {
             return FriendState.SEND;
-        }
-        else {
+        } else {
             return FriendState.NONE;
         }
     }
@@ -145,7 +145,7 @@ public class FriendListService {
     }
 
     // 현재 친구 요청 데이터 반환
-    public FriendList getFriendRequest(User sender, User receiver){
+    public FriendList getFriendRequest(User sender, User receiver) {
 
         return friendListRepository
                 .findBySenderAndReceiverAndDeletedAtIsNull(sender, receiver)
@@ -153,7 +153,7 @@ public class FriendListService {
     }
 
     // 현재 친구 요청 데이터가 존재하면 반환, 존재하지 않으면 객체를 생성하여 반환
-    public FriendList getOrCreateFriendRequest(User sender, User receiver){
+    public FriendList getOrCreateFriendRequest(User sender, User receiver) {
 
         return friendListRepository
                 .findBySenderAndReceiverAndDeletedAtIsNull(sender, receiver)
@@ -167,7 +167,7 @@ public class FriendListService {
     }
 
     // 친구(toUser)가 까까의 회원인지 확인
-    public User validateReceiverByUserId(Long receiverId){
+    public User validateReceiverByUserId(Long receiverId) {
 
         return userRepository.findByIdAndDeletedAtIsNull(receiverId)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_RECEIVER));
@@ -180,13 +180,11 @@ public class FriendListService {
                 NotificationDto.of(
                         receiver,
                         NotificationType.FRIEND_REQUEST,
-                        sender.getUserName()+"님이 친구요청을 보냈습니다.",
+                        sender.getUserName() + "님이 친구요청을 보냈습니다.",
                         sender.getKakaoProfileImg(),
                         sender.getKakaoEmail(),
                         sender.getId()
                 )
         );
     }
-
-
 }
