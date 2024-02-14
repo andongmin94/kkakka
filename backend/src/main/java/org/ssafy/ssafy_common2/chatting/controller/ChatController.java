@@ -158,6 +158,7 @@ public class ChatController {
             // 2) 메세지 내용을 DB에 저장
             // 2-1) ChatJoin 찾기
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
+            ChatRoom chatRoom = chatRoomRepository.getReferenceById(msg.getChatRoomId());
 
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
@@ -170,7 +171,8 @@ public class ChatController {
                     message.setContent(msg.getContent());
                     if(msg.getMessageType().equals("CHAT_BOT")){
                         message.setMessageType(Message.MessageType.CHAT_BOT);
-                    }else{
+                    }
+                    else{
                         message.setMessageType(Message.MessageType.TALK);
                     }
                     message.setChatJoin(chatJoin);
@@ -187,8 +189,10 @@ public class ChatController {
                         msg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
                     }
 
-                }else {
-
+                }
+                // 이미지 첨부 라면 ================================================================================
+                else {
+                    // 이미 S3로 처리된 코드라면 ====================================================================
                     if(msg.getImgCode().substring(0,4).equals("http")){
                         msg.setContent(msg.getImgCode());
 
@@ -201,11 +205,12 @@ public class ChatController {
                         message.setImgCode(msg.getImgCode());
 
                         messageRepository.save(message);
-                    }else{
+                    }
+
+                    // S3로 처리된 코드가 아니라면 =================================================================
+                    else{
                         ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
                         Message message = Message.of(msg.getContent(), chatJoin, Message.MessageType.TALK,msg.getImgCode());
-
-
 
                         messageRepository.save(message);
 
@@ -224,10 +229,35 @@ public class ChatController {
 
                 }
             }else{
-                throw new CustomException(ErrorType.THIS_USER_DIDNT_JOIN_IN_THIS_ROOM);
+
+                if(chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.ONE)){
+                    throw new CustomException(ErrorType.THIS_USER_DIDNT_JOIN_IN_THIS_ROOM);
+                }
+                else{
+
+                    // ID는 메세지 들어올 때 무조건 들어오니까, 이걸로 기본 정보 세팅
+                    User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                    if(sender != null) {
+                        msg.setUserName(sender.getUserName());
+                        msg.setUserProfileImg(sender.getKakaoProfileImg());
+                        msg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
+                    }
+
+                    msg.setMessageType("TALK");
+
+
+                    // 채팅 참여자가 아닌데, 메세지를 보냈고 해당 메세지가 파일이라면,
+                    if(msg.getImgCode() != null && !msg.getImgCode().substring(0,4).equals("http")) {
+
+                        ChatMessageDto msgWithImg = chatService.BinaryImageChange(msg);
+
+                        msg = msgWithImg;
+                    }
+                    
+                }
+
             }
-
-
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
