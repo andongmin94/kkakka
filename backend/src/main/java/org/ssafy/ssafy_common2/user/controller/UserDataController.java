@@ -14,6 +14,7 @@ import org.ssafy.ssafy_common2.user.dto.Response.UserProfileResponseDto;
 import org.ssafy.ssafy_common2.user.service.UserDataService;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -57,5 +58,16 @@ public class UserDataController {
 
         UserProfileEditResponseDto dto = userDataService.getProfileEdit(userDetails.getUser());
         return ResponseUtils.ok(dto, MsgType.SEARCH_USER_EDIT_DATA_SUCCESSFULLY);
+    }
+
+    @PostMapping("/users/friends/search")
+    public ApiResponseDto<Map<String, UserDataResponseDto>> searchFriends(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody Map<String,String> userEmail){
+
+        UserDataResponseDto friendInfo = userDataService.searchFriends(userDetails.getUser(), userEmail.get("userEmail"));
+
+        Map<String, UserDataResponseDto> responseMap = new HashMap<>();
+        responseMap.put("UserDataResponseDto", friendInfo);
+
+        return ResponseUtils.ok(responseMap, MsgType.SEARCH_SUCCESSFULLY);
     }
 }
