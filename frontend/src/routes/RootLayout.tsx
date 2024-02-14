@@ -127,8 +127,25 @@ export default function RootLayout() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
+  const [isVertical, setIsVertical] = useState(
+    window.innerHeight > window.innerWidth
+  ); //이거
   useEffect(() => {
+    //이거
+    const handleOrientationChange = () => {
+      setTimeout(() => {
+        currentOrientation();
+      }, 200);
+    };
+
+    const currentOrientation = () => {
+      setIsVertical(window.innerHeight > window.innerWidth);
+      console.log(isVertical);
+    };
+
+    window.addEventListener("orientationchange", handleOrientationChange);
+    //이거
+
     let prevScrollPos = window.pageYOffset;
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
@@ -146,7 +163,8 @@ export default function RootLayout() {
 
     window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll); //이거
+      window.removeEventListener("orientationchange", handleOrientationChange);
     };
   }, []);
 
