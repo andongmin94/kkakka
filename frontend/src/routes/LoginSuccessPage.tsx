@@ -28,10 +28,16 @@ export default function LoginSuccessPage() {
 
   return (
     <>
-      <div className="h-screen w-full bg-[url('/image/loginBg.jpg')] bg-cover flex justify-center items-center">
-        <div className=" bg-white h-[250px] w-[400px]  rounded-xl flex flex-col items-center ">
+      <div
+        className="h-screen w-full flex justify-center items-center"
+        style={{
+          backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+          backgroundSize: "cover",
+        }}
+      >
+        <div className=" bg-white h-[250px] w-[400px]  rounded-xl flex flex-col items-center dark:bg-black ">
           <div className="flex flex-col items-center mt-10">
-            <div className=" font-bold text-xl mb-20">
+            <div className=" font-bold text-xl mb-20 dark:text-white">
               반갑습니다, 또 와주셨군요!
             </div>
             <Button
