@@ -31,13 +31,7 @@ export default function RootLayout() {
   const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
   const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
   const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
-  // 확성기 내용 state
-  const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
-  const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
-  const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
-  const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
-  const EventSource = EventSourcePolyfill;
   const EventSource = EventSourcePolyfill;
 
   if (!token) {
@@ -105,15 +99,7 @@ export default function RootLayout() {
 
     source.addEventListener("megaphone", (event: any) => {
       const parseData = JSON.parse(event.data);
-    source.addEventListener("megaphone", (event: any) => {
-      const parseData = JSON.parse(event.data);
 
-      // 새로운 확성기가 있음을 표시
-      setNewSpeakerContent(parseData.content);
-      setSpeakerToastList((prev) => {
-        return prev.concat(parseData.content);
-      });
-    });
       // 새로운 확성기가 있음을 표시
       setNewSpeakerContent(parseData.content);
       setSpeakerToastList((prev) => {
@@ -125,19 +111,7 @@ export default function RootLayout() {
       source.close();
     };
   });
-    return () => {
-      source.close();
-    };
-  });
 
-  useEffect(() => {
-    if (!showSpeakerToast && speakerToastList.length != 0) {
-      // 확성기 리스트 중 첫번째 요소를 보여주기
-      setSpeakerToastContent(speakerToastList[0]);
-      setSpeakerToastList((prev) => prev.slice(1));
-      setShowSpeakerToast(true);
-    }
-  }, [newSpeakerContent, showSpeakerToast]);
   useEffect(() => {
     if (!showSpeakerToast && speakerToastList.length != 0) {
       // 확성기 리스트 중 첫번째 요소를 보여주기
@@ -190,13 +164,11 @@ export default function RootLayout() {
         >
           <div className={classes.whole}>
             {/* 확성기 자리 */}
-            {/* 확성기 자리 */}
             {showSpeakerToast && (
               <SpeakerToast
                 setToast={setShowSpeakerToast}
                 text={speakerToastContent}
               />
-            )}
             )}
             <main
               className={cn(classes.page, {

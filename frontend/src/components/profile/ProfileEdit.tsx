@@ -21,7 +21,9 @@ export default function ProfileEdit() {
 
   const [riotId, setRiotId] = useState(userInfo.riotId || "");
   const [profileImg, setProfileImg] = useState<File | null>(null);
-  const [previewProfileImg, setPreviewProfileImg] = useState<string | null>(userProfileImg);
+  const [previewProfileImg, setPreviewProfileImg] = useState<string | null>(
+    userProfileImg
+  );
 
   useEffect(() => {
     if (!profileImg && userProfileImg && !isImageUrl(userProfileImg)) {
@@ -49,12 +51,16 @@ export default function ProfileEdit() {
     formData.append("riotId", riotId);
 
     axios
-      .put(`${import.meta.env.VITE_API_BASE_URL}/api/users/profile-edit`, formData, {
-        headers: {
-          Authorization: token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/profile-edit`,
+        formData,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
         window.alert("수정되었습니다.");
@@ -72,20 +78,30 @@ export default function ProfileEdit() {
       <PC>
         <Dialog>
           <DialogTrigger asChild>
-            <Button type="submit" variant="secondary" className="mr-1 font-bold bg-white text-xs">
+            <Button
+              type="submit"
+              variant="secondary"
+              className="mr-1 font-bold bg-white text-xs"
+            >
               프로필 편집
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>프로필 편집</DialogTitle>
+              <DialogTitle className=" border-b-4 w-fit pb-2">
+                프로필 편집
+              </DialogTitle>
             </DialogHeader>
             <div className="flex flex-col w-full mb-5">
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-6 mt-4">
                 <Label htmlFor="text" className="font-bold mb-1">
                   롤 아이디
                 </Label>
-                <Input id="text" value={riotId} onChange={(e) => setRiotId(e.target.value)} />
+                <Input
+                  id="text"
+                  value={riotId}
+                  onChange={(e) => setRiotId(e.target.value)}
+                />
               </div>
               {/* 프로필 사진 */}
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8">
@@ -101,9 +117,19 @@ export default function ProfileEdit() {
               <div className="flex ">
                 {previewProfileImg ? (
                   isImageUrl(previewProfileImg) ? (
-                    <div className="h-20 w-20 rounded-lg border-2 mr-2" style={{ backgroundImage: `url(${previewProfileImg})`, backgroundSize: "cover" }} />
+                    <div
+                      className="h-20 w-20 rounded-lg border-2 mr-2"
+                      style={{
+                        backgroundImage: `url(${previewProfileImg})`,
+                        backgroundSize: "cover",
+                      }}
+                    />
                   ) : (
-                    <img src={previewProfileImg} alt="프로필 사진" className="h-20 w-20 rounded-lg border-2 mr-2" />
+                    <img
+                      src={previewProfileImg}
+                      alt="프로필 사진"
+                      className="h-20 w-20 rounded-lg border-2 mr-2"
+                    />
                   )
                 ) : (
                   <div className="flex items-center border-2 h-20 w-20 rounded-lg text-xs p-2 mr-2">
@@ -113,7 +139,11 @@ export default function ProfileEdit() {
               </div>
               <div>
                 <DialogClose asChild>
-                  <Button type="submit" className="mr-1 bg-blue-500 font-bold text-xs mt-2" onClick={profileEditHandler}>
+                  <Button
+                    type="submit"
+                    className="mr-1 bg-blue-500 font-bold text-xs mt-10"
+                    onClick={profileEditHandler}
+                  >
                     저장
                   </Button>
                 </DialogClose>
@@ -128,20 +158,30 @@ export default function ProfileEdit() {
       <Mobile>
         <Dialog>
           <DialogTrigger asChild>
-            <Button type="submit" variant="secondary" className="mr-1 border-solid border-2 border-inherit font-bold text-lg mt-2 h-[50px]">
+            <Button
+              type="submit"
+              variant="secondary"
+              className="mr-1 border-solid border-2 border-inherit font-bold text-lg mt-2 h-[50px] "
+            >
               프로필 편집
             </Button>
           </DialogTrigger>
           <DialogContent className="w-[425px] rounded-xl">
             <DialogHeader>
-              <DialogTitle>프로필 편집</DialogTitle>
+              <DialogTitle className=" border-b-4 w-fit pb-2">
+                프로필 편집
+              </DialogTitle>
             </DialogHeader>
             <div className="flex flex-col w-full mb-5 mt-5">
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8 mt-4">
                 <Label htmlFor="text" className="font-bold">
                   롤 아이디
                 </Label>
-                <Input id="text" value={riotId} onChange={(e) => setRiotId(e.target.value)} />
+                <Input
+                  id="text"
+                  value={riotId}
+                  onChange={(e) => setRiotId(e.target.value)}
+                />
               </div>
               {/* 프로필 사진 */}
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8">
@@ -157,9 +197,19 @@ export default function ProfileEdit() {
               <div className="flex gap-x-5">
                 {previewProfileImg ? (
                   isImageUrl(previewProfileImg) ? (
-                    <div className="h-20 w-20 rounded-lg border-2" style={{ backgroundImage: `url(${previewProfileImg})`, backgroundSize: "cover" }} />
+                    <div
+                      className="h-20 w-20 rounded-lg border-2"
+                      style={{
+                        backgroundImage: `url(${previewProfileImg})`,
+                        backgroundSize: "cover",
+                      }}
+                    />
                   ) : (
-                    <img src={previewProfileImg} alt="프로필 사진" className="h-20 w-20 rounded-lg border-2" />
+                    <img
+                      src={previewProfileImg}
+                      alt="프로필 사진"
+                      className="h-20 w-20 rounded-lg border-2"
+                    />
                   )
                 ) : (
                   <div className="flex justify-center items-center border-2 h-20 w-20 rounded-lg">
@@ -169,7 +219,12 @@ export default function ProfileEdit() {
               </div>
               <div>
                 <DialogClose asChild>
-                  <Button type="submit" variant="secondary" className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]" onClick={profileEditHandler}>
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                    onClick={profileEditHandler}
+                  >
                     저장하기
                   </Button>
                 </DialogClose>
