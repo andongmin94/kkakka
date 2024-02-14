@@ -44,7 +44,7 @@ export default function LiveContentCarousel() {
         plugins={[plugin.current]}
         className="h-full w-full"
       >
-        <CarouselContent className="  ">
+        <CarouselContent className="">
           {broadcasts.map((room) => (
             <CarouselItem
               key={room.roomId}
