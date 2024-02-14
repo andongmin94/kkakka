@@ -20,7 +20,7 @@ export default function MyPoint() {
   }, [point]);
 
   return (
-    <div className="flex justify-between mr-0 ">
+    <div className="flex justify-between mr-0 mb-2">
       <div></div>
       <div className="flex bg-slate-300 rounded-md  bg-opacity-50 px-6 py-2 mb-6 items-center">
         <div className="mr-3">💰</div>

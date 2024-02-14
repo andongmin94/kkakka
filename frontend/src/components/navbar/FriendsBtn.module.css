@@ -14,6 +14,21 @@
   animation-duration: 1s;
 }
 
+.search_image {
+  height: 35px;
+  width: 35px;
+  background-image: url("/image/search.png");
+  background-size: cover;
+  background-position: center;
+  margin-right: 30px;
+}
+
+.search_image:hover {
+  background-image: url("/image/search.png");
+  animation-name: shake;
+  animation-duration: 1s;
+}
+
 /* 친구 목록 스크롤바 */
 .scrollbar {
   margin-top: 0;

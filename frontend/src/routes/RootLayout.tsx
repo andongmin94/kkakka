@@ -17,6 +17,7 @@ import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
 
 import axios from "axios";
+import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
 
 export default function RootLayout() {
   const token = localStorage.getItem("token");
@@ -37,7 +38,6 @@ export default function RootLayout() {
   if (!token) {
     throw new Error("Token not found");
   }
-
 
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
@@ -72,15 +72,15 @@ export default function RootLayout() {
 
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
-    
-  useEffect(() => {  
+
+  useEffect(() => {
     const source = new EventSource(
       `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
       {
         headers: {
           Authorization: token,
-          "Cache-Control" : "no-cache",
-          "Connection": "keep-alive"
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
         },
         heartbeatTimeout: 3600000,
       }
@@ -90,7 +90,7 @@ export default function RootLayout() {
       console.log(event);
       source.close();
     };
-    
+
     source.addEventListener("alarm", (e: any) => {
       console.log(e);
       const data = JSON.parse(e.data);
@@ -198,6 +198,11 @@ export default function RootLayout() {
                   <Link to="/main/intro" className={classes.menu}>
                     <h1>서비스 소개</h1>
                   </Link>
+                  {typeof electron === "undefined" && (
+                    <Link to="https://drive.google.com/file/d/1Wy7iT7hWCpEZiUPFxnskq0x_VmsSahFx/view?usp=drive_link" className={`${classes.menu}`}>
+                      <h1>App Download</h1>
+                    </Link>
+                  )}
                   <div className="mt-72">
                     <MyPoint />
                   </div>
@@ -234,6 +239,7 @@ export default function RootLayout() {
                       </Link>
                       <Alarm />
                       <FriendsBtn />
+                      <SearchFriendBtn />
                     </div>
                   </nav>
                 ) : undefined}

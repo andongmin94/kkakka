@@ -12,65 +12,29 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
     <>
       <PC>
         {/* 전체 */}
-        <div className="flex flex-col w-[350px] shadow-sm mb-2 bg-gray-200 rounded-md">
-          {/* 왼쪽 구역 */}
-          <Link
-            to={`/main/profile/${data.friendId}`}
-            className="w-[350px] h-[80px] flex p-4 shadow-sm items-center mb-3"
-          >
-            {/* 프사 */}
-            <img
-              src={data.friendImgUrl}
-              className="w-[60px] h-[60px] rounded-full mr-3"
-              alt="프로필 이미지"
-            />
-            <div className="flex items-center">
-              {/* 이름 */}
-              <p className="font-bold text-md mr-3">{data.friendName}</p>
-              {/* 칭호 */}
-              <NewDogamAlias alias={data.friendAlias} />
-            </div>
-          </Link>
-
-          {/* 오른쪽 구역 */}
-          <div className="flex flex-col ml-6 mt-1">
-            {/* 제목 */}
-            <Link
-              to={`/main/dogam/${data.dogamId}`}
-              className="w-full font-bold text-md mb-3"
-            >
-              {data.dogamTitle}
-            </Link>
-            {/* 이미지 */}
-            <div
-              className="h-[200px] w-[300px] rounded-md border-l-0 border-b-0 mb-3"
-              style={{
-                backgroundImage: `url(${data.dogamImgUrl})`,
-                backgroundSize: "cover",
-                backgroundColor: "white",
-              }}
-            />
-            <div className="w-[320px] border-inherit rounded-3xl bg-cover rounded-l-none rounded-t-none border-l-0 border-t-0 mt-0">
-              <div className="flex gap-3 pb-3 font-bold items-center">
-                {/* 싫어요 */}
-                <div className="lg:hover:scale-105 transition-transform ease-in-out duration-500">
-                  <ThumbsDown
-                    tD={data.hated}
-                    dogamId={data.dogamId}
-                    dogamDislikeNum={dogamDislikeNum}
-                    setDogamDislikeNum={setDogamDislikeNum}
-                  />
+        <div className="flex flex-col justify-center items-center shadow-lg  bg-gray-300 rounded-md mr-8 mb-8 relative overflow-hidden">
+          <Link to={`/main/dogam/${data.dogamId}`}>
+            <img src={data.dogamImgUrl} />
+            {/* 오버레이 */}
+            <div className="absolute bg-black top-0 left-0 bg-opacity-50 opacity-0 hover:opacity-100 rounded-md w-[100%] h-[100%]">
+              <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col items-center mt-10 mb-5">
+                  {/* 칭호 */}
+                  <NewDogamAlias alias={data.friendAlias} />
+                  {/* 이름 */}
+                  <p className="font-bold text-md mt-2 text-white drop-shadow-md">
+                    {data.friendName}
+                  </p>
                 </div>
-                <div className="flex self-center mr-4 text-sm">
-                  {dogamDislikeNum}
+                {/* 타이틀 */}
+                <div className=" text-md mb-3 w-[50%] flex justify-center text-white drop-shadow-md">
+                  {data.dogamTitle.length > 30
+                    ? `${data.dogamTitle.substring(0, 30)}...`
+                    : data.dogamTitle}
                 </div>
-                {/* 댓글 */}
-                <Link to={`/main/dogam/${data.dogamId}`} className="text-xl">
-                  💬
-                </Link>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </PC>
 

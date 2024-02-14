@@ -15,6 +15,7 @@ import org.ssafy.ssafy_common2._common.response.ResponseUtils;
 import org.ssafy.ssafy_common2._common.security.UserDetailsImpl;
 import org.ssafy.ssafy_common2.user.dto.FriendInfoDto;
 import org.ssafy.ssafy_common2.user.dto.Response.FriendStateResponseDto;
+import org.ssafy.ssafy_common2.user.dto.Response.UserDataResponseDto;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.service.FriendListService;
 import org.ssafy.ssafy_common2.user.service.UserService;
