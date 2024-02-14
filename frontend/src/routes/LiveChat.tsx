@@ -94,7 +94,7 @@ export default function LiveChat() {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [goal, setGoal] = useState(0);
-  const [isWin, setIsWin] = useState(false);
+  const [isWin, setIsWin] = useState(true);
 
   // 배팅 함수==================================================
   const onClickRadio = (value: boolean) => {
@@ -599,7 +599,7 @@ export default function LiveChat() {
             {/* 채팅창 부분 */}
             <div
               ref={chatContainerRef}
-              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row"
+              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row bg-gray-200 rounded-t-xl"
             >
               {/* 채팅 전체 내역을 출력 */}
               {messages.map((data, idx) => {
@@ -608,6 +608,7 @@ export default function LiveChat() {
                     <div
                       className={`flex ${
                         data.messageType === "ENTER" ||
+                        data.messageType === "QUIT" ||
                         data.messageType === "CHAT_BOT"
                           ? "justify-center"
                           : data.userId === userInfo.userId
@@ -617,7 +618,8 @@ export default function LiveChat() {
                     >
                       {data.messageType === "CHAT_BOT" ? (
                         <BotMsg data={data} key={idx} />
-                      ) : data.messageType === "ENTER" ? (
+                      ) : data.messageType === "ENTER" ||
+                        data.messageType === "QUIT" ? (
                         <SysMsg data={data} key={idx} />
                       ) : data.userId === userInfo.userId ? (
                         // 내 메세지 컴포넌트
@@ -961,6 +963,7 @@ export default function LiveChat() {
                       <div
                         className={`flex ${
                           data.messageType === "ENTER" ||
+                          data.messageType === "QUIT" ||
                           data.messageType === "CHAT_BOT"
                             ? "justify-center"
                             : data.userId === userInfo.userId
@@ -970,7 +973,8 @@ export default function LiveChat() {
                       >
                         {data.messageType === "CHAT_BOT" ? (
                           <BotMsg data={data} key={idx} />
-                        ) : data.messageType === "ENTER" ? (
+                        ) : data.messageType === "ENTER" ||
+                          data.messageType === "QUIT" ? (
                           <SysMsg data={data} key={idx} />
                         ) : data.userId === userInfo.userId ? (
                           // 내 메세지 컴포넌트

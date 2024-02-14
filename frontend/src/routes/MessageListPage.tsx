@@ -75,7 +75,7 @@ export default function MessageListPage() {
     <>
       {isLoading && <Loading />}
       <div className="ml-10">
-        <div className="mb-10 ml-2 font-bold text-lg">메시지 목록</div>
+        <div className="mb-10 ml-2 font-bold text-lg ">메시지 목록</div>
         {dmList &&
           dmList.map((dm) => {
             return (
