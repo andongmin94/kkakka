@@ -461,7 +461,7 @@ export default function MessageTestPage() {
                             ? "border-red-300"
                             : "border-white"
                         }`}
-                        key={idx}
+                        key={dogam.dogamId}
                         onClick={() => {
                           console.log(dogam.dogamImgUrl);
                           setChatImage(dogam.dogamImgUrl);

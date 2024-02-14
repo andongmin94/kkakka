@@ -18,10 +18,13 @@ import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
 import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
+import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
+import org.ssafy.ssafy_common2.user.entity.FriendList;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.AliasRepository;
 import org.ssafy.ssafy_common2.user.repository.DynamicUserInfoRepository;
+import org.ssafy.ssafy_common2.user.repository.FriendListRepository;
 import org.ssafy.ssafy_common2.user.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -38,6 +41,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AliasRepository aliasRepository;
     private final DynamicUserInfoRepository dynamicUserInfoRepository;
+    private final FriendListRepository friendListRepository;
 
     @Value("${kakao.clientId}")
     String clientId;
@@ -103,8 +107,21 @@ public class UserService {
                     "ROLE_USER",
                     userInfo);
 
+            Alias alias = Alias.of(user, "응애 까까머거쪄");
             userRepository.save(user);
+            aliasRepository.save(alias);
             isUserNull = true;
+
+            // 김상훈 유저와 친구 추가 로직
+            User kimsanghun = userRepository.findByKakaoEmailAndDeletedAtIsNull("k1016h@naver.com").orElseThrow(
+                    () -> new CustomException(ErrorType.NOT_FOUND_SANG)
+            );
+
+            FriendList friendList = FriendList.of(user, kimsanghun, true);
+            FriendList friendList1 = FriendList.of(kimsanghun, user, true);
+            friendListRepository.save(friendList);
+            friendListRepository.save(friendList1);
+
         }else{
             // 사용자가 이미 존재하는 경우, 마지막 보상 지급 날짜를 확인하여 오늘 보상을 이미 받았는지 검사합니다.
             DynamicUserInfo dynamicUserInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(user.getId()).orElseThrow(

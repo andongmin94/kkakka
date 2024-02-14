@@ -95,7 +95,7 @@ export default function LiveContentCarousel() {
           {broadcasts.map((room) => (
             <CarouselItem
               key={room.roomId}
-              className="md:basis-1/1 lg:basis-1/2 mr-5 pl-0"
+              className="md:basis-1/1 lg:basis-1/2 pl-6"
             >
               <div className="p-1 mt-3">
                 <CardContent className="flex items-center justify-center p-0 lg:hover:scale-105 transition-transform ease-in-out duration-500">
