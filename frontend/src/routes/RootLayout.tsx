@@ -5,7 +5,8 @@ import { Alarm } from "@/components/navbar/Alarm";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
-import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
+import { EventSourcePolyfill } from "event-source-polyfill";
+import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
@@ -16,6 +17,7 @@ import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
 
 import axios from "axios";
+import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
 
 export default function RootLayout() {
   const token = localStorage.getItem("token");
@@ -23,32 +25,20 @@ export default function RootLayout() {
   const { pathname } = useLocation();
   // const { theme } = useTheme();
 
-  // // 확성기 내용 state
-  // const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
-  // const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
-  // const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
-  // const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
+  const { setLastEventId } = useAlarmSubscribeStore();
 
-  // const EventSource = EventSourcePolyfill;
+  // 확성기 내용 state
+  const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
+  const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
+  const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
+  const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
-  // if (!token) {
-  //   throw new Error("Token not found");
-  // }
+  const EventSource = EventSourcePolyfill;
 
-  // const source = new EventSource(
-  //   `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
-  //   {
-  //     headers: {
-  //       Authorization: token,
-  //     },
-  //     heartbeatTimeout: 3600000,
-  //   }
-  // );
+  if (!token) {
+    throw new Error("Token not found");
+  }
 
-  // source.onerror = (event) => {
-  //   console.log(event);
-  //   source.close();
-  // };
 
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
@@ -83,44 +73,55 @@ export default function RootLayout() {
 
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
+    
+  useEffect(() => {  
+    const source = new EventSource(
+      `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
+      {
+        headers: {
+          Authorization: token,
+          "Cache-Control" : "no-cache",
+          "Connection": "keep-alive"
+        },
+        heartbeatTimeout: 3600000,
+      }
+    );
 
-  // useEffect(() => {
-  //   source.addEventListener("notification", (e: any) => {
-  //     console.log(e);
-  //     const data = JSON.parse(e.data);
-  //     console.log(data);
-  //     setLastEventId(data.id);
-  //   });
-  //   source.addEventListener("notification", (e: any) => {
-  //     console.log(e);
-  //     const data = JSON.parse(e.data);
-  //     console.log(data);
-  //     setLastEventId(data.id);
-  //   });
+    source.onerror = (event) => {
+      console.log(event);
+      source.close();
+    };
+    
+    source.addEventListener("alarm", (e: any) => {
+      console.log(e);
+      const data = JSON.parse(e.data);
+      console.log(data);
+      setLastEventId(data.id);
+    });
 
-  //   source.addEventListener("megaphone", (event: any) => {
-  //     const parseData = JSON.parse(event.data);
+    source.addEventListener("megaphone", (event: any) => {
+      const parseData = JSON.parse(event.data);
 
-  //     // 새로운 확성기가 있음을 표시
-  //     setNewSpeakerContent(parseData.content);
-  //     setSpeakerToastList((prev) => {
-  //       return prev.concat(parseData.content);
-  //     });
-  //   });
+      // 새로운 확성기가 있음을 표시
+      setNewSpeakerContent(parseData.content);
+      setSpeakerToastList((prev) => {
+        return prev.concat(parseData.content);
+      });
+    });
 
-  //   return () => {
-  //     source.close();
-  //   };
-  // });
+    return () => {
+      source.close();
+    };
+  });
 
-  // useEffect(() => {
-  //   if (!showSpeakerToast && speakerToastList.length != 0) {
-  //     // 확성기 리스트 중 첫번째 요소를 보여주기
-  //     setSpeakerToastContent(speakerToastList[0]);
-  //     setSpeakerToastList((prev) => prev.slice(1));
-  //     setShowSpeakerToast(true);
-  //   }
-  // }, [newSpeakerContent, showSpeakerToast]);
+  useEffect(() => {
+    if (!showSpeakerToast && speakerToastList.length != 0) {
+      // 확성기 리스트 중 첫번째 요소를 보여주기
+      setSpeakerToastContent(speakerToastList[0]);
+      setSpeakerToastList((prev) => prev.slice(1));
+      setShowSpeakerToast(true);
+    }
+  }, [newSpeakerContent, showSpeakerToast]);
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
@@ -164,13 +165,13 @@ export default function RootLayout() {
           }}
         >
           <div className={classes.whole}>
-            {/* 확성기 자리
+            {/* 확성기 자리 */}
             {showSpeakerToast && (
               <SpeakerToast
                 setToast={setShowSpeakerToast}
                 text={speakerToastContent}
               />
-            )} */}
+            )}
             <main
               className={cn(classes.page, {
                 [classes.electron_page]: typeof electron !== "undefined",
