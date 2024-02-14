@@ -988,7 +988,6 @@ export default function LiveChat() {
                 })}
               </div>
               {/* -------------------------------------------------------------------------------------------------------------------- */}
-
               {/* 채팅 하단 부분 */}
               <div className="flex  border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl pb-2 ">
                 {/* 사진 버튼 */}
