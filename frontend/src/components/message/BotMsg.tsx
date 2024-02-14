@@ -13,7 +13,7 @@ interface dataProps {
 export default function BotMsg({ data }: { data: dataProps }) {
   return (
     <>
-      <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-orange-300 font-bold text-xl text-wrap">
+      <div className="max-w-[70%] m-2 p-3 rounded-2xl self-end bg-orange-300 font-bold text-xl text-wrap dark:text-black text-center">
         {/* 이미지인지 텍스트 채팅인지 판별 */}
         <TypeIt
           options={{

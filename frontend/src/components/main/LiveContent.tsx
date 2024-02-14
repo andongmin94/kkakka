@@ -44,7 +44,7 @@ export default function LiveContent({
         onClick={() => {
           enterLiveHandler(liveData);
         }}
-        className={` rounded-3xl border-none w-[375px] h-[350px] grid grid-rows-6   p-5 shadow-lg relative`}
+        className={` rounded-3xl border-none w-[470px] h-[350px] grid grid-rows-6 p-5 shadow-lg relative`}
         style={{
           backgroundImage: `url("${liveData.playerBackgroundPic}")`,
           backgroundSize: "cover",
@@ -55,11 +55,12 @@ export default function LiveContent({
           <div className="absolute left-0 z-20">
             <Live />
           </div>
+
           <div className=" w-[200px] absolute right-0">
             {/* 채팅방에 들어온 친구 수 만큼 친구 프사 표시 */}
             {liveData.crowdDtoList &&
               Array.isArray(liveData.crowdDtoList) &&
-              liveData.crowdDtoList.slice(0, 7).map((crowd, index) => {
+              liveData.crowdDtoList.slice(0, 6).map((crowd, index) => {
                 return (
                   <div
                     key={crowd.attenderName}
@@ -85,7 +86,8 @@ export default function LiveContent({
             playerProfilePic={liveData.playerProfilePic}
           />
         </CardFooter>
-        <Card className="bg-black bg-opacity-65 z-10  rounded-3xl border-none w-[375px] h-[350px] grid grid-rows-6  p-5 shadow-lg absolute"></Card>
+        {/* 오버레이 */}
+        <Card className="bg-black bg-opacity-65 z-10  rounded-3xl border-none w-full h-full grid grid-rows-6  p-5 shadow-lg absolute top-0 left-0"></Card>
       </Card>
     </>
   );

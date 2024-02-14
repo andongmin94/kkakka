@@ -988,7 +988,6 @@ export default function LiveChat() {
                 })}
               </div>
               {/* -------------------------------------------------------------------------------------------------------------------- */}
-
               {/* 채팅 하단 부분 */}
               <div className="flex  border-b-4 border-blue-300 w-full row-span-1 justify-center items-center gap-1 rounded-3xl pb-2 ">
                 {/* 사진 버튼 */}
@@ -996,10 +995,7 @@ export default function LiveChat() {
                   <DialogTrigger asChild>
                     {/*  사진 버튼 */}
                     <button>
-                      <img
-                        src="/image/messagePicture.png"
-                        className="h-[40px] w-[40px]"
-                      />
+                      <div className="h-[40px] w-[40px] bg-[url('/image/messagePicture.png')] bg-cover dark:bg-[url('/image/messagePictureDark.png')]" />
                     </button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
@@ -1042,7 +1038,7 @@ export default function LiveChat() {
                           <Button
                             type="submit"
                             variant="secondary"
-                            className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                            className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] text-black"
                             onClick={(_) => {
                               //   이미지는 url 형식임
                               handleImageChange();
@@ -1062,10 +1058,7 @@ export default function LiveChat() {
                   <DialogTrigger asChild>
                     {/* 도감버튼 */}
                     <button>
-                      <img
-                        src="/image/messageDogam.png"
-                        className="h-[40px] w-[40px]"
-                      />
+                      <div className="h-[40px] w-[40px] bg-[url('/image/messageDogam.png')] bg-cover dark:bg-[url('/image/messageDogamDark.png')]" />
                     </button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
@@ -1108,7 +1101,7 @@ export default function LiveChat() {
                         <Button
                           type="submit"
                           variant="secondary"
-                          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                          className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] text-black"
                           onClick={(_) => {
                             //   이미지는 url 형식임
                             handleImageChange();
@@ -1138,7 +1131,7 @@ export default function LiveChat() {
                   {/* 채팅 입력창 */}
                   <Input
                     type="text"
-                    className="w-[250px] font-bold text-xl"
+                    className="w-[250px] font-bold text-xl border-white"
                     onChange={(e) => {
                       // 입력받은 정보를 상태관리
                       setInputChat(e.target.value);

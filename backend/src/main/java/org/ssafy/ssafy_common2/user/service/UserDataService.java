@@ -128,4 +128,31 @@ public class UserDataService {
         UserProfileEditResponseDto dto = UserProfileEditResponseDto.of(user.getKakaoProfileImg(), user.getUserInfoId().getBackImg(), user.getRiotId());
         return dto;
     }
+
+    public UserDataResponseDto searchFriends(User user, String userEmail) {
+
+        System.out.println("유저 이메일 : " + userEmail);
+
+        if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+
+        User friend = userRepository.findByKakaoEmailAndDeletedAtIsNull(userEmail).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_USER)
+        );
+
+        DynamicUserInfo dynamicUserInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(friend.getId()).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_USER_INFO)
+        );
+
+        boolean isBankrupt = false;
+        if (dynamicUserInfo.getPoint() == 0 && dynamicUserInfo.getIsBetting() == 0) {
+            isBankrupt = true;
+        }
+
+        UserDataResponseDto dto = UserDataResponseDto.of(friend.getId(), friend.getUserName(), friend.getUserName(), friend.getKakaoProfileImg(), dynamicUserInfo.getBackImg(),
+                dynamicUserInfo.getCurAlias(), isBankrupt, friend.getRiotId());
+
+        return dto;
+    }
 }

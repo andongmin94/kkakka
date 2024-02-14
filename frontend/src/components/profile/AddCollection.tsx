@@ -51,6 +51,7 @@ export default function AddCollection({ userId }: { userId: number }) {
       .then((response) => {
         console.log(response.data);
         setSuccessMessage("도감이 성공적으로 추가되었습니다.");
+        window.alert("도감이 성공적으로 추가되었습니다.");
       })
       .catch((error) => {
         console.error(error);
@@ -73,9 +74,11 @@ export default function AddCollection({ userId }: { userId: number }) {
               📝{" "}
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] ">
             <DialogHeader>
-              <DialogTitle>도감 추가</DialogTitle>
+              <DialogTitle className=" border-b-4 w-fit pb-2">
+                도감 추가
+              </DialogTitle>
             </DialogHeader>
             <div className="flex flex-col w-full mt-5">
               <div className="flex gap-x-5 justify-center">
@@ -90,12 +93,12 @@ export default function AddCollection({ userId }: { userId: number }) {
                     className="flex justify-center items-center border-2 h-[200px] w-[320px] rounded-lg"
                     htmlFor="picture"
                   >
-                    프사없음
+                    선택된 파일 없음
                   </Label>
                 )}
               </div>
               <div className="grid w-full max-w-sm items-center gap-1.5 mb-8 mt-4">
-                <Label htmlFor="text" className="font-bold">
+                <Label htmlFor="text" className="font-bold my-2">
                   제목
                 </Label>
                 <Input
@@ -106,7 +109,7 @@ export default function AddCollection({ userId }: { userId: number }) {
                 />
               </div>
               <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label className="font-bold">프로필 사진</Label>
+                <Label className="font-bold mb-2">프로필 사진</Label>
                 <Input id="picture" type="file" onChange={imgUpload} />
               </div>
             </div>
@@ -115,11 +118,10 @@ export default function AddCollection({ userId }: { userId: number }) {
               <DialogClose asChild>
                 <Button
                   type="button"
-                  variant="secondary"
-                  className="mr-1 border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px]"
+                  className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg py-2 px-3 my-3"
                   onClick={addDogamHandler}
                 >
-                  저장하기
+                  업로드
                 </Button>
               </DialogClose>
             </div>
