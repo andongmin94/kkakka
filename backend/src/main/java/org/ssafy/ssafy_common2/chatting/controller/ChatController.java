@@ -82,7 +82,7 @@ public class ChatController {
 
                 // 2-1) ChatJoin 찾기
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
-
+            ChatRoom chatRoom = chatRoomRepository.findById(msg.getChatRoomId()).orElse(null);
 
             // log.info("chatJoin 내용: {} ", chatJoin.toString() );
 
@@ -105,13 +105,16 @@ public class ChatController {
 
 
                 // 2-4) 만약 중계방이면 환영합니다 메세지를 프론트로 다시 보내기 + 저장
-                if(chatRoomRepository.findById(msg.getChatRoomId()).orElse(null).getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                if(chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
                     messageRepository.save(message);
-                    template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
                 }
 
             }
 
+                // 2-5) 중계방에 환영합니다 메세지 넣기
+            if(chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                template.convertAndSend("/sub/chat/room/"+ msg.getChatRoomId(), msg);
+            }
 
 
 
@@ -155,9 +158,11 @@ public class ChatController {
             // 2) 메세지 내용을 DB에 저장
             // 2-1) ChatJoin 찾기
             ChatJoin chatJoin = chatJoinRepository.getChatJoinByUserIdANDByChatRoomIdDAndDeletedAtIsNull(msg.getUserId(), msg.getChatRoomId()).orElse(null);
-            log.info("현재 채팅방에 들어온 사람의 UserId: {}, 방 번호 {}",msg.getUserId(), msg.getChatRoomId());
+
             // 2-2) 채팅 참여가 존재한다면
             if(chatJoin != null){
+
+                // 2-2-a) 이미지 첨부 메세지가 아니라면,
                 if(msg.getImgCode() == null){
 
                     Message message = new Message();
@@ -358,22 +363,22 @@ public class ChatController {
 
 
     // [6] 메세지 불러오기 =================================================================================
-
-    @GetMapping("/api/friends/chat_bot/{room_id}")
-    public ApiResponseDto<?> getChatBotMessage (
-            @PathVariable(value = "room_id") long roomId
-    ) {
-        List<Message> msgList;
-        try {
-             msgList = messageRepository.findAllByChatJoin_ChatJoinId_ChatRoomIdAndMessageType(roomId, Message.MessageType.CHAT_BOT);
-        }catch (Exception e){
-            throw new CustomException(ErrorType.CANT_LOAD_MESSAGES);
-        }
-
-        List<ChatMessageDto> ans = msgList.stream().map(chatRoomMySQLService::messageDtoConverter).toList();
-
-        return ResponseUtils.ok(ans, MsgType.DATA_SUCCESSFULLY);
-    }
+    // 안 쓸 듯 ==========================================================================================
+//    @GetMapping("/api/friends/chat_bot/{room_id}")
+//    public ApiResponseDto<?> getChatBotMessage (
+//            @PathVariable(value = "room_id") long roomId
+//    ) {
+//        List<Message> msgList;
+//        try {
+//             msgList = messageRepository.findAllByChatJoin_ChatJoinId_ChatRoomIdAndMessageType(roomId, Message.MessageType.CHAT_BOT);
+//        }catch (Exception e){
+//            throw new CustomException(ErrorType.CANT_LOAD_MESSAGES);
+//        }
+//
+//        List<ChatMessageDto> ans = msgList.stream().map(chatRoomMySQLService::messageDtoConverter).toList();
+//
+//        return ResponseUtils.ok(ans, MsgType.DATA_SUCCESSFULLY);
+//    }
 
 
 
