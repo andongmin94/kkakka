@@ -15,9 +15,9 @@ export default function Login() {
         backgroundSize: "cover",
       }}
     >
-      <div className="bg-white h-[250px] w-[400px] rounded-xl flex flex-col items-center ">
+      <div className="bg-white h-[250px] w-[400px] rounded-xl flex flex-col items-center dark:bg-black ">
         <div className="flex flex-col items-center mt-10">
-          <div className=" font-bold text-xl mb-20">로그인</div>
+          <div className=" font-bold text-xl mb-20 dark:text-white">로그인</div>
           <Button
             onClick={loginHandler}
             className="bg-[url('/image/kakaoLogo.png')] bg-cover w-[210px] h-[50px] rounded-xl shadow-md lg:hover:scale-105 transition-transform ease-in-out duration-500"
