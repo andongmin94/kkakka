@@ -199,7 +199,10 @@ export default function RootLayout() {
                     <h1>서비스 소개</h1>
                   </Link>
                   {typeof electron === "undefined" && (
-                    <Link to="https://drive.google.com/file/d/1Wy7iT7hWCpEZiUPFxnskq0x_VmsSahFx/view?usp=drive_link" className={`${classes.menu}`}>
+                    <Link
+                      to="https://drive.google.com/file/d/1Wy7iT7hWCpEZiUPFxnskq0x_VmsSahFx/view?usp=drive_link"
+                      className={`${classes.menu}`}
+                    >
                       <h1>App Download</h1>
                     </Link>
                   )}
@@ -256,6 +259,13 @@ export default function RootLayout() {
       </PC>
 
       <Mobile>
+        {/* 확성기 자리 */}
+        {showSpeakerToast && (
+          <SpeakerToast
+            setToast={setShowSpeakerToast}
+            text={speakerToastContent}
+          />
+        )}
         <Outlet />
       </Mobile>
     </>
