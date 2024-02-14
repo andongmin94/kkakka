@@ -59,7 +59,7 @@ export default function LiveContent({
             {/* 채팅방에 들어온 친구 수 만큼 친구 프사 표시 */}
             {liveData.crowdDtoList &&
               Array.isArray(liveData.crowdDtoList) &&
-              liveData.crowdDtoList.map((crowd, index) => {
+              liveData.crowdDtoList.slice(0, 7).map((crowd, index) => {
                 return (
                   <div
                     key={crowd.attenderName}

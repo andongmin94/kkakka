@@ -45,7 +45,8 @@ public class ChatMessageDto {
 
     @Builder
     private ChatMessageDto(String messageType, String content, long userId, long chatRoomId,
-                           LocalDateTime createdAt, LocalDateTime updateAt, String imgCode){
+                           LocalDateTime createdAt, LocalDateTime updateAt, String imgCode,
+                           String userName, String userCurAlias, String userProfileImg){
         this.messageType = messageType;
         this.content = content;
         this.userId = userId;
@@ -53,10 +54,14 @@ public class ChatMessageDto {
         this.createdAt = createdAt;
         this.updateAt = updateAt;
         this.imgCode = imgCode;
+        this.userName = userName;
+        this.userCurAlias = userCurAlias;
+        this.userProfileImg = userProfileImg;
     }
 
     public static ChatMessageDto of (String messageType, String content, long userId,
-                                     long chatRoomId, LocalDateTime createdAt, LocalDateTime updateAt, String imgCode){
+                                     long chatRoomId, LocalDateTime createdAt, LocalDateTime updateAt, String imgCode,
+                                     String userName, String userCurAlias, String userProfileImg){
         return  builder().messageType(messageType)
                 .content(content)
                 .userId(userId)
@@ -64,6 +69,9 @@ public class ChatMessageDto {
                 .createdAt(createdAt)
                 .updateAt(updateAt)
                 .imgCode(imgCode)
+                .userName(userName)
+                .userCurAlias(userCurAlias)
+                .userProfileImg(userProfileImg)
                 .build();
     }
 
