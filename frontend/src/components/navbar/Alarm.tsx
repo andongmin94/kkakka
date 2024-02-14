@@ -34,8 +34,8 @@ export function Alarm() {
     setNumOfUncheckedAlarm,
   } = useAlarmStore();
 
-  const userId = localStorage.getItem("userId");
-  const userEmail = localStorage.getItem("userEmail");
+  // const userId = localStorage.getItem("userId");
+  // const userEmail = localStorage.getItem("userEmail");
 
   useEffect(() => {
     axios
