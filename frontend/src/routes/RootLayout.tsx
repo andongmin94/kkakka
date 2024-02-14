@@ -39,7 +39,6 @@ export default function RootLayout() {
     throw new Error("Token not found");
   }
 
-
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
 
@@ -73,15 +72,15 @@ export default function RootLayout() {
 
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
-    
-  useEffect(() => {  
+
+  useEffect(() => {
     const source = new EventSource(
       `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
       {
         headers: {
           Authorization: token,
-          "Cache-Control" : "no-cache",
-          "Connection": "keep-alive"
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
         },
         heartbeatTimeout: 3600000,
       }
@@ -91,7 +90,7 @@ export default function RootLayout() {
       console.log(event);
       source.close();
     };
-    
+
     source.addEventListener("alarm", (e: any) => {
       console.log(e);
       const data = JSON.parse(e.data);
