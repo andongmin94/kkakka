@@ -1,12 +1,11 @@
 package org.ssafy.ssafy_common2.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.ssafy.ssafy_common2._common.entity.BaseTime;
+
+import java.time.LocalDate;
 
 
 @Entity
@@ -38,21 +37,27 @@ public class DynamicUserInfo extends BaseTime {
     @Column(name = "back_img",nullable = true, length = 250)
     private String backImg;
 
+    @Setter
+    @Column(name = "last_reward_date", nullable = false)
+    private LocalDate lastRewardDate;
+
     @Builder
-    private DynamicUserInfo(int point, boolean isLogin, int isBetting, String backImg) {
+    private DynamicUserInfo(int point, boolean isLogin, int isBetting, String backImg, LocalDate lastRewardDate) {
         this.point = point;
         this.isLogin = isLogin;
         this.isBetting = isBetting;
         this.curAlias = "테스트용 칭호";
         this.backImg = backImg;
+        this.lastRewardDate = lastRewardDate;
     }
 
-    public static DynamicUserInfo of(int point, boolean isLogin, int isBetting, String backImg) {
+    public static DynamicUserInfo of(int point, boolean isLogin, int isBetting, String backImg, LocalDate lastRewardDate) {
         return builder()
                 .point(point)
                 .isLogin(isLogin)
                 .isBetting(isBetting)
                 .backImg(backImg)
+                .lastRewardDate(lastRewardDate)
                 .build();
     }
 
