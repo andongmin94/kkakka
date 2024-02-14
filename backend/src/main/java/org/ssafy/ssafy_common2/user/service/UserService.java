@@ -18,6 +18,7 @@ import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
 import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
+import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.User;
 import org.ssafy.ssafy_common2.user.repository.AliasRepository;
@@ -103,7 +104,9 @@ public class UserService {
                     "ROLE_USER",
                     userInfo);
 
+            Alias alias = Alias.of(user, "응애 까까머거쪄");
             userRepository.save(user);
+            aliasRepository.save(alias);
             isUserNull = true;
         }else{
             // 사용자가 이미 존재하는 경우, 마지막 보상 지급 날짜를 확인하여 오늘 보상을 이미 받았는지 검사합니다.
