@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 import { Stomp } from "@stomp/stompjs";
 import electronLocalshortcut from "electron-localshortcut";
 import { createWebSocketConnection } from "league-connect";
-import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage, Notification } from "electron";
+import { app, ipcMain, BrowserWindow, globalShortcut, Tray, Menu, nativeImage, Notification } from "electron";
 
 dotenv.config();
 const BASE_URL = 'https://i10d110.p.ssafy.io';
@@ -81,6 +81,15 @@ function showNotification(title = 'Notification Title', body = 'Notification Bod
 app.whenReady().then(createWindow).then(async () => {
     const iconPath = join(dirname(fileURLToPath(import.meta.url)), "icon.png");
     const icon = nativeImage.createFromPath(iconPath);
+
+    globalShortcut.register('F5', () => {
+      let win = BrowserWindow.getFocusedWindow();
+      if (win) {
+        win.reload();
+        connect();
+      }
+    });
+
     tray = new Tray(icon);
 
     const contextMenu = Menu.buildFromTemplate([
@@ -107,6 +116,11 @@ app.whenReady().then(createWindow).then(async () => {
         console.error("Error starting a new broadcast", error.message);
       }
     }
+
+    app.on('will-quit', () => {
+      // 애플리케이션이 종료되기 전에 모든 단축키를 해제합니다.
+      globalShortcut.unregisterAll();
+    });
 
     // 클라이언트랑 웹소켓으로 연결하는 부분
     const ws = await createWebSocketConnection({authenticationOptions: {awaitConnection: true}});
@@ -298,7 +312,7 @@ const connect =  (event) => {
 
 // 첫 연결 및 환영 메세지 보내기 
 function onConnected() {
-    console.log("채팅 앱 첫 연결 실행!")
+    console.log("채팅 앱 연결 실행")
     stompClient.subscribe("/sub/chat/room/"+ roomId,onMessageReceivedFromSocket ,{userId: userId, chatRoomType: "MANY" } )
     stompClient.send("/pub/chat/enterUser",clientHeader,JSON.stringify({messageType: "ENTER", content: userInfo.userName + "님 환영합니다!", userId: userId, chatRoomId: roomId }))
 }

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
+import org.ssafy.ssafy_common2._common.handler.TransactionHandler;
+import org.ssafy.ssafy_common2._common.redis.RedisLockRepository;
 import org.ssafy.ssafy_common2._common.service.S3Uploader;
 import org.ssafy.ssafy_common2.dogam.dto.reqeust.DogamCreateRequestDto;
 import org.ssafy.ssafy_common2.dogam.dto.response.*;
@@ -14,6 +16,8 @@ import org.ssafy.ssafy_common2.dogam.entity.Dogam;
 import org.ssafy.ssafy_common2.dogam.repository.CommentDogamRepository;
 import org.ssafy.ssafy_common2.dogam.repository.DislikeDogamRepository;
 import org.ssafy.ssafy_common2.dogam.repository.DogamRepository;
+import org.ssafy.ssafy_common2.itemshop.dto.request.EnforcementCreateRequestDto;
+import org.ssafy.ssafy_common2.itemshop.dto.response.EnforcementCreateResponseDto;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
 import org.ssafy.ssafy_common2.itemshop.entity.ItemShop;
 import org.ssafy.ssafy_common2.itemshop.repository.ItemShopRepository;
@@ -50,9 +54,36 @@ public class DogamService {
     private final CommentDogamRepository commentDogamRepository;
 
     private final NotificationService notificationService;
+    private final RedisLockRepository redisLockRepository;
+    private final TransactionHandler transactionHandler;
+
+    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, Long friendId, User sender) {
+
+        String key = dto.getDogamTitle() + " " + friendId+" "+sender.getUserName();
+
+        if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+        if (userRepository.findByIdAndDeletedAtIsNull(friendId).isEmpty()) {
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
+        }
+        if (dto.getDogamTitle().isEmpty()) {
+            throw new CustomException(ErrorType.CONTENT_IS_NULL);
+        }
+
+        return redisLockRepository.runOnLock(
+                key,
+                () -> transactionHandler.runOnWriteTransaction(() -> {
+                    try {
+                        return createDogamLogic(dto, friendId, sender);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
+    }
 
     // 도감 만들기
-    public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, Long friendId, User sender) throws IOException {
+    public DogamCreateResponseDto createDogamLogic(DogamCreateRequestDto dto, Long friendId, User sender) throws IOException {
 
         if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
