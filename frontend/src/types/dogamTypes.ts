@@ -24,6 +24,7 @@ export interface DogamDetailType {
   userImgUrl: string; // 도감주인 프사
   dogamHatedNum: number;
   dogamCommentResponseDtos: DogamCommentResponseType;
+  dogamCommentNum: number;
   hated: boolean; // 내가 도감 시러요 했는지
 }
 
