@@ -201,12 +201,12 @@ export default function RootLayout() {
                     <h1>서비스 소개</h1>
                   </Link>
                   {typeof electron === "undefined" && (
-                    <Link
-                      to="https://drive.google.com/file/d/1mjPrEzVRXLEoQRL-_uHMO-TavJMvgPwN/view?usp=drive_link"
+                    <a
+                      href="/kkakka.exe" download
                       className={`${classes.menu}`}
                     >
                       <h1>App Download</h1>
-                    </Link>
+                    </a>
                   )}
                   <div className="mt-60">
                     <MyPoint />
