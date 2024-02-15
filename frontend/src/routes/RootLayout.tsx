@@ -183,7 +183,7 @@ export default function RootLayout() {
               <div className={classes.section_left}>
                 <div className={classes.menu_items}>
                   {/* 로고 이미지 */}
-                  <Link to="/main" className="mt-10 mb-10 w-3/5">
+                  <Link to="/main" className="mt-10 mb-10">
                     <img alt="logo" src="/image/logo.png" />
                   </Link>
                   {/* 사이드바 메뉴 */}
