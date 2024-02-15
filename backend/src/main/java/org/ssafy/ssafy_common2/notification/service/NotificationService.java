@@ -50,14 +50,14 @@ public class NotificationService {
 
         // 더미 데이터 전송 (503 에러 방지)
         String eventId = createIdByUserEmailAndTime(userEmail);
-        sendNotification(emitter, eventId, emitterId, "EventStream 생성 [user: " + userEmail + "]");
+        sendNotification(emitter, eventId, emitterId, "EventStream 생성 [user: " + userEmail + "]", "connect");
 
         // 클라이언트 미수신 Event 목록이 있을 경우, 전송하여 Event 유실 예방
         if(hasLostData(lastEventId)){
             Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByUserEmail(String.valueOf(userEmail));
             long numOfNewAlarm = eventCaches.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0).count();
-            sendNotification(emitter, createIdByUserEmailAndTime(userEmail), emitterId, "미확인 알람이 "+ numOfNewAlarm +"개 있습니다.");
+            sendNotification(emitter, createIdByUserEmailAndTime(userEmail), emitterId, numOfNewAlarm +"개", "newAlarm");
         }
 
         return emitter;
@@ -81,18 +81,20 @@ public class NotificationService {
         // 사용자의 Emitter에 알림 전송
         emitters.forEach(
                 (key, emitter) -> {
-                    sendNotification(emitter, eventId, key, responseDto);
+                    sendNotification(emitter, eventId, key, responseDto, "alarm");
                 }
         );
 
     }
 
     // 알림 리스트 불러오기
+    @Transactional
     public NotificationListResponseDto getNoficiationList(User user) {
 
         NotificationListResponseDto responseDto = NotificationListResponseDto.from(
                 notificationRepository.findAllByUserAndIsCheckedIsFalseAndDeletedAtIsNullOrderByCreatedAtDesc(user).stream()
-                .map(NotificationResponseDto::of).toList()
+                .map(NotificationResponseDto::of).toList(),
+                user.getUserInfoId().getLastNotiEventId()
         );
 
         return responseDto;
@@ -132,12 +134,12 @@ public class NotificationService {
     }
 
     // emitter에게 알림 전송 요청
-    private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
+    private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data, String alarmName) {
         try {
 //            System.out.println("last event id : " + eventId);
             emitter.send(SseEmitter.event()
                     .id(eventId)
-                    .name("alarm")
+                    .name(alarmName)
 //                    .reconnectTime(1000L) // 재연결 시도
                     .data(data));
 
