@@ -1,46 +1,29 @@
+import fs from "fs";
 import axios from "axios";
 import https from "https";
 import dotenv from "dotenv";
+import SockJS from "sockjs-client";
+import { v4 as uuidv4 } from 'uuid';
+import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-
+import { Stomp } from "@stomp/stompjs";
 import electronLocalshortcut from "electron-localshortcut";
 import { createWebSocketConnection } from "league-connect";
 import { app, ipcMain, BrowserWindow, Tray, Menu, nativeImage, Notification } from "electron";
 
-import { Stomp } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
-import { join, dirname } from "path";
-import fs from "fs";
-import { v4 as uuidv4 } from 'uuid';
-
-function downloadImage(imageUrl, callback) {
-  const uniqueFileName = `${uuidv4()}.png`; // UUID를 사용하여 고유한 파일 이름 생성
-  let imagePath;
-  
-  if (app.isPackaged) {
-    // 패키징된 애플리케이션에서는 process.resourcesPath를 사용
-    imagePath = join(process.resourcesPath, uniqueFileName);
-  } else {
-    // 개발 모드에서는 import.meta.url을 사용
-    imagePath = join(dirname(fileURLToPath(import.meta.url)), uniqueFileName);
-  }
-
-  const file = fs.createWriteStream(imagePath);
-
-  https.get(imageUrl, (response) => {
-    response.pipe(file);
-
-    file.on('finish', () => {
-      file.close(() => callback(imagePath));  // 이미지 다운로드가 완료되면 콜백 함수 호출
-    });
-  });
-}
-
 dotenv.config();
-const BASE_URL = 'https://i10d110.p.ssafy.io/';
+const BASE_URL = 'https://i10d110.p.ssafy.io';
 
 let win;
 let tray;
+
+process.on('uncaughtException', (error) => {
+  console.log('An error occurred:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 
 function createWindow() {
   // 브라우저 창을 생성합니다.
@@ -61,7 +44,6 @@ function createWindow() {
 
   ipcMain.on("maximize", (event) => {
     if (win.isMaximized()) {
-        // win.setBounds({ width: 800, height: 600 });
         win.restore();
         console.log("restoring")}
     else {
@@ -75,11 +57,13 @@ function createWindow() {
   app.on("activate", () => {if (BrowserWindow.getAllWindows().length === 0) {createWindow()}});
 }
 
+// 까까 앱 시작할 때 주는 noti
 function startNotification (title = "까까 앱 가동", body = "copyright 2024 김상훈") {
   let notification = { title, body, icon:join(dirname(fileURLToPath(import.meta.url)), "icon.png") }
   new Notification(notification).show()
 }
 
+// default noti
 function showNotification(title = 'Notification Title', body = 'Notification Body', imageUrl) {
   downloadImage(imageUrl, (imagePath) => {
     const notification = {
@@ -162,13 +146,16 @@ app.whenReady().then(createWindow).then(async () => {
 
             if (event.EventName === "GameEnd")
             {
+              try {
               if (event.Result === "Win") { sendMessageToSocket("이걸 이기네;"); sendWin("이걸 이기네;") }
               else { sendMessageToSocket("이걸 지네 ㅋㅋㅋㅋ"); sendLose("이걸 지네 ㅋㅋㅋㅋ") }
+              }
+              catch (error) {}
             }
             })}
-          // newEvents를 전송하는 코드를 여기에 작성합니다.
-          if (newEvents.length > 0) { lastSentEventId = newEvents[newEvents.length - 1].EventID }
+
           // 마지막으로 전송한 이벤트의 ID를 업데이트합니다.
+          if (newEvents.length > 0) { lastSentEventId = newEvents[newEvents.length - 1].EventID }
         }
         async function fetchEventData() {
           try {
@@ -185,9 +172,8 @@ app.whenReady().then(createWindow).then(async () => {
             });
 
             const allGameData = response.data;
-
             const events = allGameData.events;
-            // variable areas
+            // ingame event areas
 
             let players_info = allGameData.allPlayers.map((players, index) => {
               let player = {};
@@ -231,9 +217,14 @@ app.whenReady().then(createWindow).then(async () => {
             // will be axios post areas
           } catch (error) {};
         }
-        function loopFunction() {
+        async function loopFunction() {
           if (!gameIsRunning) return;
-          fetchEventData();
+          
+          try {
+            await fetchEventData();
+          } catch (error) {
+            console.error('fetchEventData에서 에러가 발생했습니다:', error);
+          }
           
           // 1초 후에 loopFunction을 다시 호출합니다.
           setTimeout(loopFunction, 1000);
@@ -244,13 +235,18 @@ app.whenReady().then(createWindow).then(async () => {
       if (data.phase === 'WaitingForStats')
       { 
         console.log('게임이 종료되었습니다!')
+        try {
+        sendMessageToSocket("게임이 종료되었습니다.")
         gameIsRunning = false;
+        }
+        catch (error) {}
       }
     });
     ////////////////////////////////////////////////////////////
   });
 
 ////////////////////// 리액트 통신 //////////////////////////
+
 ipcMain.on("button-clicked", (event, message) => {
   console.log("메인 프로세스에서 받은 메시지 : ", message);
   win.webContents.send("channel-name", message);
@@ -292,9 +288,12 @@ let roomId;
 let clientHeader;
 
 const connect =  (event) => {
+  try {
   var sockJS = new SockJS(BASE_URL + "/ws-stomp");
   stompClient = Stomp.over(sockJS);
   stompClient.connect(clientHeader,onConnected, onError);
+  }
+  catch (error) {console.log(error)}
 }
 
 // 첫 연결 및 환영 메세지 보내기 
@@ -381,6 +380,29 @@ function onMessageReceivedFromSocket (payload){
       id: Date.now()
     }
   */  
+}
+
+function downloadImage(imageUrl, callback) {
+  const uniqueFileName = `${uuidv4()}.png`; // UUID를 사용하여 고유한 파일 이름 생성
+  let imagePath;
+  
+  if (app.isPackaged) {
+    // 패키징된 애플리케이션에서는 process.resourcesPath를 사용
+    imagePath = join(process.resourcesPath, uniqueFileName);
+  } else {
+    // 개발 모드에서는 import.meta.url을 사용
+    imagePath = join(dirname(fileURLToPath(import.meta.url)), uniqueFileName);
+  }
+
+  const file = fs.createWriteStream(imagePath);
+
+  https.get(imageUrl, (response) => {
+    response.pipe(file);
+
+    file.on('finish', () => {
+      file.close(() => callback(imagePath));  // 이미지 다운로드가 완료되면 콜백 함수 호출
+    });
+  });
 }
 
 ////////////////////////////////////////////////////////////
