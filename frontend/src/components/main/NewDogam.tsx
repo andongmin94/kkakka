@@ -12,7 +12,7 @@ export default function NewDogam({ data }: { data: NewDogamType }) {
     <>
       <PC>
         {/* 전체 */}
-        <div className="flex flex-col justify-center items-center shadow-lg  bg-gray-300 rounded-md mr-8 mb-8 relative overflow-hidden">
+        <div className="flex flex-col justify-center items-center shadow-lg  bg-gray-300 rounded-md mr-8 mb-8 relative overflow-hidden ">
           <Link to={`/main/dogam/${data.dogamId}`}>
             <img src={data.dogamImgUrl} />
             {/* 오버레이 */}
