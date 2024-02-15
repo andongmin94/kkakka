@@ -304,7 +304,9 @@ export default function LiveChat() {
     // 이전 메시지 불러오기
     axios
       .get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/friends/dm/load/${roomId}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/friends/dm/load/${roomId}?page=0`,
         {
           headers: {
             Authorization: token,
