@@ -13,6 +13,7 @@ import { app, ipcMain, BrowserWindow, globalShortcut, Tray, Menu, nativeImage, N
 
 dotenv.config();
 const BASE_URL = 'https://i10d110.p.ssafy.io';
+// const BASE_URL = 'http://localhost:3000';
 
 let win;
 let tray;
@@ -36,7 +37,7 @@ function createWindow() {
     webPreferences: {preload: join(dirname(fileURLToPath(import.meta.url)), "preload.js")},
   });
 
-  win.loadURL("https://i10d110.p.ssafy.io");
+  win.loadURL(BASE_URL);
 
   electronLocalshortcut.register(win, "F12", () => {console.log("F12 is pressed"); win.webContents.toggleDevTools()});
 
@@ -166,11 +167,8 @@ app.whenReady().then(createWindow).then(async () => {
 
             if (event.EventName === "GameEnd")
             {
-              try {
               if (event.Result === "Win") { sendMessageToSocket("이걸 이기네;"); sendWin("이걸 이기네;") }
               else { sendMessageToSocket("이걸 지네 ㅋㅋㅋㅋ"); sendLose("이걸 지네 ㅋㅋㅋㅋ") }
-              }
-              catch (error) {}
             }
             })}
 
@@ -255,11 +253,8 @@ app.whenReady().then(createWindow).then(async () => {
       if (data.phase === 'WaitingForStats')
       { 
         console.log('게임이 종료되었습니다!')
-        try {
         sendMessageToSocket("게임이 종료되었습니다.")
         gameIsRunning = false;
-        }
-        catch (error) {}
       }
     });
     ////////////////////////////////////////////////////////////
