@@ -197,9 +197,9 @@ public class ChatController {
                         double A = rd.nextDouble()*9+1;
                         int B = 10;
                         System.out.println(A/B);
-                        if(A /B > 0.63){
+                        if(A /B > 0.70){
 
-                            int percent = (int) (((double)A/B) *100);
+                            int percent = (int) ((A/B) *100);
 
                             message.setContent("("+percent+"%의 확률로 나온 강제 칭찬!) " +enforcementMent);
                             msg.setContent("("+percent+"%의 확률로 나온 강제 칭찬!) " +enforcementMent);

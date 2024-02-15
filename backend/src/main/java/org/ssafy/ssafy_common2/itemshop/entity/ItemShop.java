@@ -37,4 +37,11 @@ public class ItemShop extends BaseTime {
         this.itemDesc = itemDesc;
     }
 
+    static public ItemShop of(String itemName, int itemPrice, String itemDesc) {
+        return builder()
+                .itemName(itemName)
+                .itemPrice(itemPrice)
+                .itemDesc(itemDesc)
+                .build();
+    }
 }
