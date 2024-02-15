@@ -453,7 +453,7 @@ export default function LiveChat() {
       goal: 200,
     },
     {
-      name: "당신",
+      name: "나",
       color: "rgba(234,19,24,1)",
       goal: goal,
     },
@@ -527,8 +527,8 @@ export default function LiveChat() {
               </div>
             </p>
           </AlertTitle>
+          <Progress className="w-[100%] h-[30px]" value={progress} />
           <AlertDescription className="">
-            <Progress className="w-[100%] h-[30px]" value={progress} />
             <Drawer open={open} onOpenChange={setOpen}>
               <DrawerTrigger asChild>
                 <Button variant="outline" className="w-full">
@@ -537,33 +537,39 @@ export default function LiveChat() {
               </DrawerTrigger>
               <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
-                  <DrawerHeader>
-                    <DrawerTitle>얼마 걸 것이여?</DrawerTitle>
-                    <DrawerDescription>
-                      당신의 현재 잔액: {balance} point <br /> (기본 배팅 단위는
-                      200 point 입니다.)
+                  <DrawerHeader className=" flex flex-col items-center">
+                    <DrawerTitle className="text-lg mb-2">
+                      얼마 걸 것이여? 🤔
+                    </DrawerTitle>
+                    <DrawerDescription className="bg-gray-200 p-2 px-4 rounded-sm">
+                      <p>💰 보유 : {balance} P</p>
+                      <p>💵 배팅 단위 : 200 P</p>
                     </DrawerDescription>
                   </DrawerHeader>
                   <div className="p-4 pb-0">
                     <RadioGroup
                       defaultValue="true"
-                      className="flex flex-row justify-around"
+                      className="flex flex-row justify-around mb-2"
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center">
                         <RadioGroupItem
                           value="true"
                           id="r2"
                           onClick={() => onClickRadio(true)}
                         />
-                        <Label htmlFor="r2">이긴다</Label>
+                        <Label htmlFor="r2" className="text-lg ml-2">
+                          이긴다
+                        </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center">
                         <RadioGroupItem
                           value="false"
                           id="r3"
                           onClick={() => onClickRadio(false)}
                         />
-                        <Label htmlFor="r3">진다</Label>
+                        <Label htmlFor="r3" className="text-lg ml-2">
+                          진다
+                        </Label>
                       </div>
                     </RadioGroup>
 
@@ -579,7 +585,7 @@ export default function LiveChat() {
                         <span className="sr-only">Decrease</span>
                       </Button>
                       <div className="flex-1 text-center">
-                        <div className="text-7xl font-bold tracking-tighter">
+                        <div className="text-6xl font-bold tracking-tighter">
                           {goal}
                         </div>
                         <div className="text-[0.70rem] uppercase text-muted-foreground">
@@ -610,7 +616,7 @@ export default function LiveChat() {
                       </ResponsiveContainer>
                     </div>
                   </div>
-                  <DrawerFooter>
+                  <DrawerFooter className="mb-2">
                     <Button
                       onClick={() =>
                         onSubmitBetting({
