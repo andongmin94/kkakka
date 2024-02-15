@@ -228,7 +228,7 @@ app.whenReady().then(createWindow).then(async () => {
             }
             
             sendNewEvents(events);
-            sendScore(players);
+            // sendScore(players);
             // console.log("인게임 데이터 : ");
             // console.log(players);
 
