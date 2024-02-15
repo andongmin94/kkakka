@@ -389,6 +389,13 @@ export default function LiveChat() {
     setGoal(Math.max(200, Math.min(1000, goal + adjustment)));
   };
 
+  const goBottomChat = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
+
   const bettingData = [
     {
       color: "hsl(var(--foreground))",
@@ -633,6 +640,12 @@ export default function LiveChat() {
                 );
               })}
             </div>
+            <button
+              onClick={goBottomChat}
+              className="absolute w-10 h-10 bg-white bg-opacity-80 right-40 bottom-24 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100"
+            >
+              ↓
+            </button>
             {/* -------------------------------------------------------------------------------------------------------------------- */}
 
             {/* 채팅 하단 부분 */}

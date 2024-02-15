@@ -102,6 +102,13 @@ export default function MessageTestPage() {
     }
   }, [messages, currentTypingId]);
 
+  const goBottomChat = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
+
   //--------------------------웹 소켓 파트 입니다. ------------------------------
 
   // const roomId = userInfo.roomId;
@@ -340,7 +347,7 @@ export default function MessageTestPage() {
           {/* 채팅창 부분 */}
           <div
             ref={chatContainerRef}
-            className="w-full row-span-9 overflow-y-auto scrollbar-hide flex-row bg-gray-200 "
+            className="w-full row-span-9 overflow-y-auto scrollbar-hide flex-row bg-gray-200 relative"
           >
             {/* 채팅 전체 내역을 출력 */}
             {messages.map((data, idx) => {
@@ -369,6 +376,14 @@ export default function MessageTestPage() {
               );
             })}
           </div>
+
+          <button
+            onClick={goBottomChat}
+            className="absolute w-10 h-10 bg-white bg-opacity-80 right-40 bottom-24 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100"
+          >
+            ↓
+          </button>
+
           {/* -------------------------------------------------------------------------------------------------------------------- */}
 
           {/* 채팅 하단 부분 */}
