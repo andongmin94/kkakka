@@ -18,6 +18,7 @@ public enum ErrorType {
     NOT_MATCHING_INFO(401, "아이디 또는 비밀번호를 잘못 입력했습니다."),
     NOT_TOKEN(401, "토큰이 없습니다."),
     NOT_VALID_TOKEN(401, "토큰이 유효하지 않습니다."),
+    NOT_FOUND_SANG(401, "김상훈 유저가 없습니다"),
     //---------------------------------------------------------------------
     //--------------------------아이템 샵, 도감 관련 부분 ---------------------------
     NOT_FOUND_ITEM_DEAL_LIST(401,"아이템 거래 내역이 존재하지 않습니다." ),
@@ -54,7 +55,6 @@ public enum ErrorType {
     NOT_FOUND_BACK_IMG(401, "배경사진을 추가해 주세요"),
     NOT_FOUND_PROFILE_IMG(401, "프로필 사진을 추가해 주세요"),
     ALREADY_EXIST_NON_DISLIKE(401, "싫어요가 없습니다. 싫어요를 하고 취소해 주세요"),
-    NOT_FOUND_SANG(401, "김상훈 유저가 없습니다"),
     ;
 
     private int code;

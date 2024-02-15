@@ -7,7 +7,7 @@ import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
-import { useLocation, Link, Outlet } from "react-router-dom";
+import { useLocation, Link, Outlet, useNavigate } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,6 +15,7 @@ import ToTheTop from "@/components/app/ToTheTop";
 import MyPoint from "@/components/itemShop/MyPoint";
 import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
+import useAlarmStore from "@/store/alarm/alarmStore";
 
 import axios from "axios";
 import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
@@ -26,7 +27,7 @@ export default function RootLayout() {
   // const { theme } = useTheme();
 
   const { setLastEventId } = useAlarmSubscribeStore();
-
+  const { alarmList, setAlarmList } = useAlarmStore();
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
   const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
@@ -34,10 +35,6 @@ export default function RootLayout() {
   const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill;
-
-  if (!token) {
-    throw new Error("Token not found");
-  }
 
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
@@ -73,44 +70,51 @@ export default function RootLayout() {
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
 
+  const navigate = useNavigate();
   useEffect(() => {
-    const source = new EventSource(
-      `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
-      {
-        headers: {
-          Authorization: token,
-          "Cache-Control": "no-cache",
-          Connection: "keep-alive",
-        },
-        heartbeatTimeout: 3600000,
-      }
-    );
+    if (!token) {
+      window.alert("로그인이 필요한 서비스입니다.");
+      navigate("/");
+    } else {
+      const source = new EventSource(
+        `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
+        {
+          headers: {
+            Authorization: token,
+            "Cache-Control": "no-cache",
+            Connection: "keep-alive",
+          },
+          heartbeatTimeout: 3600000,
+        }
+      );
 
-    source.onerror = (event) => {
-      console.log(event);
-      source.close();
-    };
-
-    source.addEventListener("alarm", (e: any) => {
-      console.log(e);
-      const data = JSON.parse(e.data);
-      console.log(data);
-      setLastEventId(data.id);
-    });
-
-    source.addEventListener("megaphone", (event: any) => {
-      const parseData = JSON.parse(event.data);
-
-      // 새로운 확성기가 있음을 표시
-      setNewSpeakerContent(parseData.content);
-      setSpeakerToastList((prev) => {
-        return prev.concat(parseData.content);
+      source.onerror = (event) => {
+        console.log(event);
+        source.close();
+      };
+      
+      source.addEventListener("alarm", (e: any) => {
+        console.log(e);
+        const data = JSON.parse(e.data);
+        console.log(data);
+        setAlarmList([data, ...alarmList]);
+        setLastEventId(data.alarmId);
       });
-    });
 
-    return () => {
-      source.close();
-    };
+      source.addEventListener("megaphone", (event: any) => {
+        const parseData = JSON.parse(event.data);
+
+        // 새로운 확성기가 있음을 표시
+        setNewSpeakerContent(parseData.content);
+        setSpeakerToastList((prev) => {
+          return prev.concat(parseData.content);
+        });
+      });
+
+      return () => {
+        source.close();
+      };
+    }
   });
 
   useEffect(() => {
@@ -199,14 +203,14 @@ export default function RootLayout() {
                     <h1>서비스 소개</h1>
                   </Link>
                   {typeof electron === "undefined" && (
-                    <Link
-                      to="https://drive.google.com/file/d/1Wy7iT7hWCpEZiUPFxnskq0x_VmsSahFx/view?usp=drive_link"
+                    <a
+                      href="/kkakka.exe" download
                       className={`${classes.menu}`}
                     >
-                      <h1>App Download</h1>
-                    </Link>
+                      <h1>App Download (217MB)</h1>
+                    </a>
                   )}
-                  <div className="mt-72">
+                  <div className="mt-60">
                     <MyPoint />
                   </div>
                 </div>
