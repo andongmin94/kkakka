@@ -208,7 +208,7 @@ export default function RootLayout() {
                       <h1>App Download</h1>
                     </Link>
                   )}
-                  <div className="mt-72">
+                  <div className="mt-60">
                     <MyPoint />
                   </div>
                 </div>
