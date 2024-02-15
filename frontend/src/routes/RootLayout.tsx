@@ -208,7 +208,7 @@ export default function RootLayout() {
                       className={`${classes.menu}`}
                     >
                       <h1>
-                        App Download <span className="text-sm">(434MB)</span>
+                        App Download <span className="text-sm">(543MB)</span>
                       </h1>
                     </a>
                   )}
