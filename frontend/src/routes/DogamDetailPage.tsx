@@ -113,7 +113,7 @@ export default function DogamDetailPage() {
         {/* 전체 */}
         <div className="flex h-[600px] mx-20 my-32">
           {/* 왼쪽 */}
-          <div className="w-[50%] flex items-center justify-center h-full bg-black bg-opacity-80 rounded-l-lg">
+          <div className="w-[50%] flex items-center justify-center h-full bg-black bg-opacity-80 rounded-l-lg overflow-scroll scrollbar-hide">
             <img src={dogamInfo.dogamImgUrl} alt="도감사진" className="" />
           </div>
           {/* 오른쪽 */}
