@@ -65,16 +65,22 @@ function startNotification (title = "까까 앱 가동", body = "copyright 2024 
 
 // default noti
 function showNotification(title = 'Notification Title', body = 'Notification Body', imageUrl) {
+  if (imageUrl) {
   downloadImage(imageUrl, (imagePath) => {
     const notification = {
       title,
       body,
       icon: imagePath
     };
-
     new Notification(notification).show();
   });
-}
+} else {  
+    const notification = {
+      title,
+      body
+    };
+    new Notification(notification).show();
+}}
 
 // 이 메소드는 Electron의 초기화가 완료되고
 // 브라우저 윈도우가 생성될 준비가 되었을때 호출된다.
