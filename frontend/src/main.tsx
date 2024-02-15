@@ -25,6 +25,7 @@ import SettingPage from "@/electron/SettingPage";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MessageTestPage from "./routes/MessageTestPage";
 import LiveChat from "./routes/LiveChat";
+import NotFound from "./routes/NotFound";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
     path: "/oauth/callback/kakao/token",
     element: <KakaoCallbackPage />,
   },
+  { path: "/*", element: <NotFound /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
