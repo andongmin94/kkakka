@@ -202,7 +202,7 @@ export default function RootLayout() {
                   </Link>
                   {typeof electron === "undefined" && (
                     <Link
-                      to="https://drive.google.com/file/d/1Wy7iT7hWCpEZiUPFxnskq0x_VmsSahFx/view?usp=drive_link"
+                      to="https://drive.google.com/file/d/1mjPrEzVRXLEoQRL-_uHMO-TavJMvgPwN/view?usp=drive_link"
                       className={`${classes.menu}`}
                     >
                       <h1>App Download</h1>
