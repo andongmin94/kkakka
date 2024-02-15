@@ -18,6 +18,10 @@ import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.KakaoProfile;
 import org.ssafy.ssafy_common2._common.infra.oauth.entity.OauthToken;
 import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
+import org.ssafy.ssafy_common2.itemshop.entity.ItemDealList;
+import org.ssafy.ssafy_common2.itemshop.entity.ItemShop;
+import org.ssafy.ssafy_common2.itemshop.repository.ItemDealListRepository;
+import org.ssafy.ssafy_common2.itemshop.repository.ItemShopRepository;
 import org.ssafy.ssafy_common2.user.entity.Alias;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;
 import org.ssafy.ssafy_common2.user.entity.FriendList;
@@ -42,6 +46,8 @@ public class UserService {
     private final AliasRepository aliasRepository;
     private final DynamicUserInfoRepository dynamicUserInfoRepository;
     private final FriendListRepository friendListRepository;
+    private final ItemShopRepository itemShopRepository;
+    private final ItemDealListRepository itemDealListRepository;
 
     @Value("${kakao.clientId}")
     String clientId;
@@ -110,18 +116,20 @@ public class UserService {
             Alias alias = Alias.of(user, "까까머거쪄");
             userRepository.save(user);
             aliasRepository.save(alias);
+            ItemShop itemShop = itemShopRepository.findById(1L).get();
+            ItemDealList itemDealList = ItemDealList.of(user, itemShop);
+            itemDealListRepository.save(itemDealList);
             isUserNull = true;
 
             // 김상훈 유저와 친구 추가 로직
-//            User kimsanghun = userRepository.findByKakaoEmailAndDeletedAtIsNull("k1016h@naver.com").orElseThrow(
-//                    () -> new CustomException(ErrorType.NOT_FOUND_SANG)
-//            );
-//
-//            FriendList friendList = FriendList.of(user, kimsanghun, true);
-//            FriendList friendList1 = FriendList.of(kimsanghun, user, true);
-//            friendListRepository.save(friendList);
-//            friendListRepository.save(friendList1);
+            User kimsanghun = userRepository.findByKakaoEmailAndDeletedAtIsNull("k1016h@naver.com").orElseThrow(
+                    () -> new CustomException(ErrorType.NOT_FOUND_SANG)
+            );
 
+            FriendList friendList = FriendList.of(user, kimsanghun, true);
+            FriendList friendList1 = FriendList.of(kimsanghun, user, true);
+            friendListRepository.save(friendList);
+            friendListRepository.save(friendList1);
         }else{
             // 사용자가 이미 존재하는 경우, 마지막 보상 지급 날짜를 확인하여 오늘 보상을 이미 받았는지 검사합니다.
             DynamicUserInfo dynamicUserInfo = dynamicUserInfoRepository.findByIdAndDeletedAtIsNull(user.getId()).orElseThrow(
