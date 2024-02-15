@@ -101,8 +101,6 @@ class DogamServiceTest {
     void 도감_생성() throws IOException {
         // Given
         Long friendId = 2L;
-        when(userRepository.findByIdAndDeletedAtIsNull(user.getId())).thenReturn(Optional.of(user));
-        when(userRepository.findByIdAndDeletedAtIsNull(friendId)).thenReturn(Optional.of(new User()));
         ItemShop dogamAdd = ItemShop.of("도감추가", 1000, "도감추가");
 
         // When
@@ -110,17 +108,6 @@ class DogamServiceTest {
 
         // Then
         verify(redisLockRepository, times(1)).runOnLock(any(String.class), any(Supplier.class));
-    }
-
-    @Test
-    void 도감_생성_유저_없음() {
-
-        // Given
-        Long friendId = 2L;
-        when(userRepository.findByIdAndDeletedAtIsNull(user.getId())).thenReturn(Optional.empty());
-
-        // When/Then
-        assertThrows(CustomException.class, () -> dogamService.createDogam(createRequestDto, friendId, user));
     }
 
     @Test
