@@ -230,6 +230,14 @@ public class ChatController {
                         message.setImgCode(msg.getImgCode());
 
                         messageRepository.save(message);
+
+                        User sender = userRepository.findByIdAndDeletedAtIsNull(msg.getUserId()).orElse(null);
+
+                        if(sender != null) {
+                            msg.setUserName(sender.getUserName());
+                            msg.setUserProfileImg(sender.getKakaoProfileImg());
+                            msg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
+                        }
                     }
 
                     // S3로 처리된 코드가 아니라면 =================================================================
