@@ -66,7 +66,7 @@ export function Alarm() {
     <div className="relative">
       <div>
         {numOfUncheckedAlarm !== 0 ? (
-          <div className="bg-red-300 w-2 h-2 rounded-full absolute left-6"></div>
+          <div className="bg-red-500 w-2 h-2 rounded-full absolute left-6"></div>
         ) : null}
       </div>
       <DropdownMenu>
