@@ -465,54 +465,75 @@ export default function LiveChat() {
       {/* 피시 화면 */}
       <PC>
         {/* 배팅 현황 화면 */}
-        <Alert className=" w-[700px] h-[100%] m-auto">
-          <div className="flex flex-row justify-between  h-full">
-            <div className="flex flex-row">
+        <Alert className=" w-[70%] h-[100%] mx-auto rounded-none rounded-t-xl ">
+          {/* 윗부분의 윗부분 */}
+          <div className="flex justify-between w-full mb-4 ">
+            <div className="flex items-center ">
               {/* 프사 */}
               <img
                 src={friendsInfo.playerProfilePic}
-                className=" rounded-full w-[80px] h-[80px] mb-3"
+                className=" rounded-full w-[70px] h-[70px] shadow-md"
               />
-              <div className="flex flex-col items-center gap-3 ml-3">
+              <div className=" ml-3 flex flex-col items-center">
                 {/* 칭호 */}
                 <MessageAlias alias={friendsInfo.playerAlias} />
                 {/* 이름 */}
-                <div className="flex flex-row">
-                  <p className="font-bold text-2xl">
-                    {friendsInfo.playerName}님이 이긴다!! :{" "}
-                    {predictObject.predictLose + predictObject.predictWin === 0
-                      ? 0
-                      : (
-                          (predictObject.predictWin /
-                            (predictObject.predictLose +
-                              predictObject.predictWin)) *
-                          100
-                        ).toFixed(3)}{" "}
-                    %{" "}
-                  </p>
-                </div>
+                <p className="font-bold text-md mt-1">
+                  {friendsInfo && friendsInfo.playerName}
+                </p>
               </div>
             </div>
+            {/* 프로필 보기 버튼 */}
             <Link to={`/main/profile/${friendsInfo.playerId}`}>
               <Button
                 type="submit"
                 variant="secondary"
-                className="border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] mr-10 rounded-xl"
+                className=" bg-gray-100 font-bold text-sm mt-2 h-[50px]  rounded-2xl shadow-sm"
               >
                 프로필 보기
               </Button>
             </Link>
           </div>
-          <AlertTitle>
-            <Progress
-              style={{ width: "100%", height: "50px", alignSelf: "center" }}
-              value={progress}
-            />
+          <AlertTitle className="border-t-2 pt-3">
+            {/* 이름 */}
+            <p className="font-bold text-lg flex justify-between px-1">
+              <div className="flex flex-col">
+                <div>{friendsInfo.playerName}님이 이긴다 👊</div>{" "}
+                <div>
+                  {predictObject.predictLose + predictObject.predictWin === 0
+                    ? 0
+                    : (
+                        (predictObject.predictWin /
+                          (predictObject.predictLose +
+                            predictObject.predictWin)) *
+                        100
+                      ).toFixed(2)}
+                  %{" "}
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <div>{friendsInfo.playerName}님이 진다 😛</div>
+                <div>
+                  {predictObject.predictLose + predictObject.predictWin === 0
+                    ? 0
+                    : (
+                        (predictObject.predictLose /
+                          (predictObject.predictLose +
+                            predictObject.predictWin)) *
+                        100
+                      ).toFixed(2)}
+                  %
+                </div>
+              </div>
+            </p>
           </AlertTitle>
-          <AlertDescription className="flex flex-row justify-between">
+          <AlertDescription className="">
+            <Progress className="w-[100%] h-[30px]" value={progress} />
             <Drawer open={open} onOpenChange={setOpen}>
               <DrawerTrigger asChild>
-                <Button variant="outline">배팅하러 가기</Button>
+                <Button variant="outline" className="w-full">
+                  나도 배팅하기💸
+                </Button>
               </DrawerTrigger>
               <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
@@ -612,15 +633,15 @@ export default function LiveChat() {
           </AlertDescription>
         </Alert>
         <Toaster />
-        <div className=" h-screen flex flex-col items-center mb-4 pt-10">
-          <div className="w-[70%] h-[99%] border-2 rounded-2xl grid grid-rows-12 ">
+        <div className=" h-screen flex flex-col items-center mb-4">
+          <div className="w-[70%] h-[99%] border-2 rounded-b-2xl grid grid-rows-12 ">
             {/* 채팅 화면 상단 사용자 정보 바 */}
             {/* -------------------------------------------------------------------------------------------------------------------- */}
 
             {/* 채팅창 부분 */}
             <div
               ref={chatContainerRef}
-              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row bg-gray-200 rounded-t-xl"
+              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row bg-gray-200"
             >
               {/* 채팅 전체 내역을 출력 */}
               {messages.map((data, idx) => {
