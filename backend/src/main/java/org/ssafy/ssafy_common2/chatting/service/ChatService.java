@@ -51,14 +51,14 @@ public class ChatService {
             }
 
             // 1-3) Base64를 bytes 로 변환
-//            byte [] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
+            byte [] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
 
             // 1-4) create Temp File 을 통해 임시 파일을 생성해준다. (이 임시 파일은 지워줘야함.)
             File tempFile = File.createTempFile("image", "." + extension);
 
             try(OutputStream outputStream = new FileOutputStream(tempFile)){
                 // 1-5) tempFile 에 이미지 바이트 배열을 써준다.
-//                outputStream.write(imageBytes);
+               outputStream.write(imageBytes);
             }
 
             // 1-6) UUID를 통해 파일명이 겹치지 않게 해준다.
