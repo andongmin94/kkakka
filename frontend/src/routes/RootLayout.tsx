@@ -213,9 +213,6 @@ export default function RootLayout() {
                       </h1>
                     </a>
                   )}
-                  <div className="mt-60">
-                    <MyPoint />
-                  </div>
                 </div>
               </div>
 

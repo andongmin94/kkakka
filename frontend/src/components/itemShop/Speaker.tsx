@@ -43,11 +43,13 @@ export default function Speaker({
   itemPrice,
   itemDesc,
   myPoint,
+  setParentPoint,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
   myPoint: number;
+  setParentPoint: (point: number) => void;
 }) {
   // 구매 버튼 누를때 유효한 입력값일때만 꺼지게 하는 상태정보
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -79,6 +81,7 @@ export default function Speaker({
           // 확성기 구매 성공
           makeToast("확성기 구매 성공");
           console.log(res);
+          setParentPoint(myPoint - itemPrice);
         })
         .catch((error) => {
           // 확성기 구매 실패
