@@ -12,7 +12,9 @@ export default function KakaoCallbackPage() {
     if (code) {
       axios
         .get(
-          `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_BASE_NEXT_URL}=${code}`
+          `${import.meta.env.VITE_API_BASE_URL}${
+            import.meta.env.VITE_API_BASE_NEXT_URL
+          }=${code}`
         )
         .then((res) => {
           localStorage.setItem("token", res.headers.authorization);
@@ -29,5 +31,19 @@ export default function KakaoCallbackPage() {
     }
   });
 
-  return <div>로그인 중입니다...</div>;
+  return (
+    <div
+      className="h-screen w-full flex justify-center items-center"
+      style={{
+        backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div className=" bg-white h-[250px] w-[400px]  rounded-xl flex flex-col items-center justify-center dark:bg-black ">
+        <div className="font-bold text-xl">
+          <div>로그인 중입니다...</div>
+        </div>
+      </div>
+    </div>
+  );
 }
