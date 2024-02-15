@@ -157,6 +157,28 @@ export default function LiveChat() {
         });
       });
 
+    setTimeout(() => {
+      axios
+        .get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/betting/room/${roomId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res: any) => {
+          setPredictObject(res.data.data);
+          setProgress(
+            res.data.data.predictLose + res.data.data.predictWin === 0
+              ? 0
+              : (res.data.data.predictWin /
+                  (res.data.data.predictLose + res.data.data.predictWin)) *
+                  100
+          );
+        });
+    }, 100);
+    setIsWin(true);
     setOpen(false);
   }
 
@@ -305,6 +327,13 @@ export default function LiveChat() {
       })
       .then((res: any) => {
         setPredictObject(res.data.data);
+        setProgress(
+          res.data.data.predictLose + res.data.data.predictWin === 0
+            ? 0
+            : (res.data.data.predictWin /
+                (res.data.data.predictLose + res.data.data.predictWin)) *
+                100
+        );
       });
 
     axios
@@ -322,17 +351,17 @@ export default function LiveChat() {
         setBalance(res.data.data);
       });
 
-    const timer = setTimeout(
-      () =>
-        setProgress(
-          predictObject.predictLose + predictObject.predictWin === 0
-            ? 0
-            : (predictObject.predictWin /
-                (predictObject.predictLose + predictObject.predictWin)) *
-                100
-        ),
-      500
-    );
+    // const timer = setTimeout(
+    //   () =>
+    //     setProgress(
+    //       predictObject.predictLose + predictObject.predictWin === 0
+    //         ? 0
+    //         : (predictObject.predictWin /
+    //             (predictObject.predictLose + predictObject.predictWin)) *
+    //             100
+    //     ),
+    //   500
+    // );
 
     // setTimeout(() => {
     //   setProgress(
@@ -359,7 +388,7 @@ export default function LiveChat() {
         );
 
         stompClient.disconnect();
-        clearTimeout(timer);
+        // clearTimeout(timer);
       }, 0);
     };
   }, [roomId]);
@@ -498,16 +527,11 @@ export default function LiveChat() {
             {/* 이름 */}
             <p className="font-bold text-lg flex justify-between px-1">
               <div className="flex flex-col">
-                <div>{friendsInfo.playerName}님이 이긴다 👊</div>{" "}
+                <div>{friendsInfo.playerName}님이 이긴다! 👊</div>{" "}
                 <div>
                   {predictObject.predictLose + predictObject.predictWin === 0
                     ? 0
-                    : (
-                        (predictObject.predictWin /
-                          (predictObject.predictLose +
-                            predictObject.predictWin)) *
-                        100
-                      ).toFixed(2)}
+                    : progress.toFixed(2)}{" "}
                   %{" "}
                 </div>
               </div>
@@ -886,12 +910,7 @@ export default function LiveChat() {
                       {predictObject.predictLose + predictObject.predictWin ===
                       0
                         ? 0
-                        : (
-                            (predictObject.predictWin /
-                              (predictObject.predictLose +
-                                predictObject.predictWin)) *
-                            100
-                          ).toFixed(3)}{" "}
+                        : progress.toFixed(2)}{" "}
                       %{" "}
                     </p>
                   </div>
