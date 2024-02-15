@@ -9,7 +9,6 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { useLocation, Link, Outlet, useNavigate } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
-import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ToTheTop from "@/components/app/ToTheTop";
 import { UserType } from "@/types/userTypes";
@@ -18,6 +17,7 @@ import useAlarmStore from "@/store/alarm/alarmStore";
 
 import axios from "axios";
 import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
+// import { TailwindIndicator } from "@/components/TailwindIndicator";
 
 export default function RootLayout() {
   const token = localStorage.getItem("token");
@@ -256,7 +256,7 @@ export default function RootLayout() {
                 </div>
               </div>
             </main>
-            <TailwindIndicator />
+            {/* <TailwindIndicator /> */}
           </div>
         </div>
       </PC>
