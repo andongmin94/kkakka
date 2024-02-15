@@ -172,8 +172,11 @@ public class ChatController {
                     message.setContent(msg.getContent());
                     if(msg.getMessageType().equals("CHAT_BOT")){
                         message.setMessageType(Message.MessageType.CHAT_BOT);
-                    }
-                    else{
+                    } else if (msg.getMessageType().equals("WIN")) {
+                        message.setMessageType(Message.MessageType.WIN);
+                    } else if (msg.getMessageType().equals("LOSE")){
+                        message.setMessageType(Message.MessageType.LOSE);
+                    } else{
                         message.setMessageType(Message.MessageType.TALK);
                     }
                     message.setChatJoin(chatJoin);
