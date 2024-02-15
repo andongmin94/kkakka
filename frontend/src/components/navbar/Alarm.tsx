@@ -87,7 +87,7 @@ export function Alarm() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
-            className="w-30 overflow-scroll scrollbar-hide max-h-[80px]"
+            className="w-30 overflow-scroll scrollbar-hide max-h-[800px]"
             value={position}
             onValueChange={setPosition}
           >
