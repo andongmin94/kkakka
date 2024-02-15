@@ -57,7 +57,13 @@ export default function FirstLoginPage() {
 
   return (
     <>
-      <div className="h-screen w-full bg-[url('/image/loginBg.jpg')] bg-cover flex justify-center items-center">
+      <div
+        className="h-screen w-full flex flex-col justify-center items-center "
+        style={{
+          backgroundImage: `url(https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+          backgroundSize: "cover",
+        }}
+      >
         <div className="bg-white h-[250px] w-[400px] rounded-xl flex flex-col items-center ">
           <div className="flex flex-col items-center mt-8">
             <div className=" font-bold text-md mb-8 flex items-center flex-col">
