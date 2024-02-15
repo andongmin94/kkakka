@@ -9,19 +9,6 @@
     
   🌊 Naming : 서비스의 슬로건인 "까도 내가 까"의 어감을 살려서 만든 표현.
   
-   늘어나는 개발자 수요에 따라 증가하는 코딩 테스트에 대비하여, 
-  
-  알고리즘 실력 향상, 실전 연습, 학습 동기 부여 등 원활한 코딩 문제 학습을 지원하는 서비스.
-  
-![PT_3](./images/README/PT_3.png)
-  
-![PT_4](./images/README/PT_4.png)
-  
-![PT_5](./images/README/PT_5.png)
-  
-![PT_6](./images/README/PT_6.png)
-  
-![PT_7](./images/README/PT_7.png)
 
 ------------------------------------------------------
   
@@ -31,183 +18,56 @@
     
   ### **👨‍💻 Front-end**
     
-    - React
-    - Typescript
-    - Tailwind
-    - Shadcn
-    - Zustand
-    - React-query
-    - axios
-    - Electron
-    - Jest
+    - Visual Studio Code(IDE) `1.81.1`
+    - HTML5, CSS3, Javascript(ES6)
+    - React : `18.2.0`
+    - Electron `28.1.4`
+    - Stompjs `2.3.3`
+    - Vite `5.0.8`
+    - Typescript `5.2.2`
+    - Tailwind CSS `3.4.1`
+    - Zustand `4.4.7`
+    - Tanstack Query
 
   ### **👨‍💻 Back-end**
     
-    - Python 3.9
-      
-    - Pycharm, Google Colab
-
-    - Fast API
-
-    - MySQL
-
-    ※ [설치 파일](./back/pythonProject/requirements.txt/)
+    - Intellij : `2023.3.2`
+    - JVM OpenJDK : `17`
+    - JWT : `0.11.5`
+    - Spring Boot : `3.0.13`
+      - JAVA Spring Data JPA
+      - Spring Security
+      - SSEEmitter
+    - OAuth : `6.8.0`
+    - Lettuce : `6.2.7`
+    - spring-boot-WebSocket : `10.1.16`
+    - Gradle
+    - ORM : JPA
     
   ### **👩‍💻 CI/CD**  
     
     - AWS EC2
-      
-    - Jenkins
-      
-    - Docker 20.10.18
-      
-    - Docker-compose
+      - Nginx : `1.18.0`
+      - Ubuntu : `20.04 LTS`
+      - Docker : `25.0.2`
+      - Jenkins :`2.443`
+    - Docker Hub
       
   
 
 ## 2-2. 서비스 아키텍처
   
-![PT_35](./images/README/PT_35.png)
-  
-------------------------------------------------------
-  
+![image](/uploads/a2cc07d1bd5b6378e7d8aab52b771108/image.png)
 
-# 3. 📘 실행 방법
-  
-## docker를 활용한 실행 가이드
-  
-1. **git clone**
-  
-  ```bash
-  git clone https://lab.ssafy.com/s07-bigdata-recom-sub2/S07P22B205.git
-  ```
-    
-2. **[도커 설치](https://docs.docker.com/get-docker/) 및 도커 [컴포즈 설치](https://docs.docker.com/compose/install/)**
-  
-3. **Dockerfile 및 docker-compose.yml작성**
-  
-   - nginx Dockerfile
-     ~~~docker
-      FROM node:16.17.0 as builder
-      # 작업 폴더로 소스 파일 복사
-      COPY {git 폴더}/front/sharkshark /home/react
-      WORKDIR /home/react
-      # node 패키지 설치 후 빌드
-      RUN npm install
-      RUN npm run build
+## 2-3 ERD
+![D110_까까_ERD](/uploads/b1b3c273db18af3b04789738304da629/D110_까까_ERD.png)
 
-      FROM nginx
-      # nginx 설정 복사
-      COPY {nginx.conf 위치} /etc/nginx
-      # 빌드 파일 복사
-      COPY --from=builder /home/react/build /home/build
-      # 포트 개방
-      EXPOSE 80
-      CMD ["nginx", "-g", "daemon off;"]
-     ~~~
-
-   - fastapi dockerfile
-     ~~~docker
-      FROM python:3.9
-      # 작업 폴더로 실행 폴더 복사
-      WORKDIR /code
-      COPY {git 폴더}/back/pythonProject /code
-      # 파이썬 패키지 설치 후 실행
-      RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-      CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-     ~~~
-
-   - nginx.conf 파일
-     ~~~bash
-      user nginx;
-      worker_processes auto;
-      events {
-        worker_connections 1024;
-      }
-      http{
-        include mime.types;
-        access_log /var/log/nginx/access.log;
-        error_log /var/log/nginx/error.log;
-        
-        server {
-          // 포트 지정
-          listen 80;
-          listen [::]:80;
-          
-          // 프론트 빌드파일 경로설정
-          location / {
-            root	/home/build;
-            index	index.html index.htm;
-            try_files 	$uri $uri/ /index.html;
-          }
-          // 백엔드 api 요청 포워딩
-          location /api/{
-            proxy_pass http://172.17.0.1:8000/;
-          }
-        }
-      }
-     ~~~
-
-   - docker-compose.yml
-
-     ~~~yml
-      version: '3'
-      services:
-        nginx:
-          build:
-            context: .
-            dockerfile: {nginx dockerfile 이름}
-          ports:
-            - 80:80
-        api:
-          build:
-            context: .
-            dockerfile: {fastapi dockerfile 이름}
-          ports:
-            - 8000:8000
-          extra_hosts:
-            - "localhost:host-gateway"
-
-     ~~~
-
-4. **도커 컨테이너 실행**
-   - mysql 이미지 실행하기
-
-     ~~~bash
-      # mysql 이미지 가져오기
-      docker pull mysql
-
-      # 컨테이너 실행
-      docker run --name mysql -e MYSQL_ROOT_PASSWORD={password} -d -p 3306:3306 mysql
-     ~~~
-  
-   - 3306포트로 mySQL 접속하여 b205 스키마 생성
-
-   - docker-compose 실행
-
-     ~~~bash
-     docker compose up -d --build
-     # 혹은
-     docker-compose up -d --build
-     ~~~
-
-
-5. **작동 확인**
-
-  - 실행 중인 컨테이너 조회
-
-     ~~~bash
-     docker ps
-     ~~~
-    
-  - mySQL 접속하여 DB [덤프 파일](/exec/sharkshark_dp_dump.zip) 실행
-
---------------------------
+## 2-4 API 명세서
 
   
-  
+------------------------------------------------------  
 
-# 4. 🦈 주요 기능
+# 3. 🦈 주요 기능
 ------------------------------------------------------
   ![PT_8](./images/README/PT_8.png)
   ![PT_9](./images/README/PT_9.png)
@@ -282,69 +142,21 @@
 
 --------------------------
 
-
-
-# 5. 🔍 추천 알고리즘
-------------------------------------------------------
-  - 라이벌 추천
-    - KNN 알고리즘으로 라이벌 추천
-
-  ![라이벌_추천_알고리즘](./images/README/라이벌_추천_알고리즘.jpg)
-
-  - 문제 추천
-    - Matrix Factorization - ALS(Alternating Least Square) 알고리즘으로 라이벌 기반 문제 추천
-
-  ![문제추천_알고리즘](./images/README/문제추천_알고리즘.jpg)
---------------------------
-
-
-
-# 6. 🛡 배포
+# 4. 🛡 배포
 ------------------------------------------------------
   - https
-    - certbot 컨테이너를 함께 실행
-    - letsencrypt ssl 인증서 발급
-    - EC2 제공 도메인 'http://j7b205.p.ssafy.io/' 사용하여 인증
+    - certbot과 Nginx를 통한 SSL 인증
+    - EC2 제공 도메인 'http://i10D110.p.ssafy.io/' 사용하여 인증
   - 자동 배포
     - Gitlab에서 web hook 설정을 통해 jenkins 빌드 유발
-    - jenkins의 shell script 실행 기능을 이용하여 git pull, docker compose up 커맨드 실행
+    - jenkins의 shell script 실행 기능을 이용하여 git pull -> docker build -> run
+    - Nginx로 reverse proxy 설정
   
   
 --------------------------
-  
-  
-
-# 7. 📁 설계 문서
-------------------------------------------------------
-    
-  ## 6-1. ERD
-
-  ![ERD](./images/README/ERD.png)
 
 
-  ## 6-2. Design System
-
-  ![DesignSystem](./images/README/DesignSystem.png)
-
-  ![DESIGN_COMPONENT](./images/README/DESIGN_COMPONENT.png)
-
-
-  ## 6-3. Design
-
-  ![DesignConcept](./images/README/concept.png)
-
-    - 브랜딩 컨셉
-      - 전체적인 컨셉은 방대한 문제를 형상화한 바다, 그리고 그 속 주인공 상어
-      - 서비스 명인 'SharkShark🦈🦈'에 맞추어 상어의 모습를 연상 시킬 수 있는 지느러미와 백준 과의 연동을 상기 시키기 위한 코드 블럭 형상화
-
-    
-  
-
---------------------------
-
-
-
-# 8. 🖊 Cooperation&Promises
+# 5. 🖊 Cooperation
 ------------------------------------------------------
   
   ## 7-1. Tools
@@ -357,26 +169,101 @@
 
     - Mattermost
 
-    - Webex
-      
-      
-  ![PT_17](./images/README/PT_17.png)
-    
+    - Discord
+
+    - Gerrit
+
+    - Jenkins
+          
 --------------------------
 
+# 6. Ground rule
+--------------------------------------------
+
+  ## 6-1 Commit Convention
+  ```
+  # Feat : #이슈번호 기능
+
+##### 제목은 최대 50 글자까지만 입력 ############## -> |
 
 
-# 8. 👨‍👩‍👧‍👦 ![logo_dark](./images/README/logo_dark.png) 팀원 소개
+# 본문은 위에 작성
+######## 본문은 한 줄에 최대 72 글자까지만 입력 ########################### -> |
+- 본문 내용
+
+# issue close는 본문 최하단에 공백 하나 아래에 작성
+
+# --- COMMIT END ---
+# <타입> 리스트
+#   Feat    : 기능 (새로운 기능)
+#   Fix     : 버그 (버그 수정)
+#   Refactor: 리팩토링
+#   Test    : 테스트 (테스트 코드 추가, 수정, 삭제: 비즈니스 로직에 변경 없음)
+#   Chore   : 기타 변경사항 (빌드 스크립트 수정 등 자잘한 수정들)
+#   Style   : 세미콜론 추가, 변수명 변경, 주석 추가/제거
+#   Docs    : 파일, 문서(이미지 등) 추가, 삭제
+#   Build   : 빌드 관련 파일 수정
+#   CI      : CI 관련 설정 수정
+# ------------------
+#     모든 내용은 항상 한글로 작성 (타입은 위의 영어로)
+#     제목은 명령문으로
+#     제목 끝에 마침표(.) 금지
+#     제목과 본문을 한 줄 띄워 분리하기
+#     본문은 "어떻게" 보다 "무엇을", "왜"를 설명한다.
+#     본문에 여러줄의 메시지를 작성할 땐 "-"로 구분
+# ------------------
+
+ex1) Feat : S10P12D110-17 로그인 구현
+
+		내용 ...
+
+	  S10P12D110-53 #done #comment 닫기
+
+ex2) Feat/로그인 : 패스워드 암호화
+
+		내용 ...
+		
+		S10P12D110-53 #done #comment 닫기
+  ```
+
+  ## 6-2 PR Template
+  ```
+  ## 📕 제목
+
+## 📗 작업 내용
+
+### PR 타입
+- [ ] 기능 추가
+- [ ] 기능 삭제
+- [ ] 버그 수정
+- [x] 코드 리팩토링
+
+### 반영 브랜치
+feat/S10P12D110-17-signup -> develop
+
+### 변경 사항
+- 기존 username만 따로 가져가던 형태에서 관계를 매핑하여 User 객체를 통째로 참조하도록 변경
+- 게시글, 댓글 모두 수정/삭제 시 username과 일치하는게 아닌 userId와 일치하는 값을 조회
+
+### 테스트 결과
+[] Postman 테스트 결과 이상 없습니다.
+[] local ci 테스트 결과 이상 없습니다.
+```
+--------------------------------------------
+
+# 7. 👨‍👩‍👧‍👦 팀원 소개
 ------------------------------------------------------
-  
-  ![PT_37](./images/README/PT_37.png)
+# 팀원 역할 및 담당
 
-![Footer](./images/README/Footer.png)
+| 역할               | 이름   | 담당                                                                                                                                                  | 이메일               | 깃허브                              |
+|--------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------------|
+| 팀장, Backend Lead | 오세영 | - 유저 플로우 작성 <br> - 스프링 시큐리티 적용 <br> - JWT filter 적용 <br> - 공통 응답 API 작성 <br> - 공통 에러 응답 API 작성 <br> - 카카오 소셜 로그인 구현 <br> - 도감 관련 API 작성 <br> - 유저 데이터 관련 API 작성 <br> - 간단한 Front API 작성 <br> - Infra 구성 | osy9536@gmail.com   | [osy9536](https://github.com/osy9536) |
+| 팀원, Backend      | 전수민 | - WebSocket 채팅 서버 담당 <br> - 롤 API 담당하여 명세서 작성 <br> - 롤 LOCAL API 이용한 크롤링                                                        | wjsaos2081@gmail.com| [dalcheonroadhead](https://github.com/dalcheonroadhead) |
+| 팀원, Backend, PM  | 이수민 | - SSE 알림 담당 <br> - 칭호 생성 추가 삭제 로직 담당 <br> - 강제 칭찬 생성 삭제 로직 담당 <br> - 확성기 로직 담당                                       | oistmil@gmail.com   | [oistmil](https://github.com/oistmil) |
+| 팀원, Frontend Lead| 김상훈 | - 일렉트론 변환 & PWA 변환 담당                                                                                                                      | k1016h@naver.com    | [andongmin94](https://github.com/andongmin94) |
+| 팀원, Frontend, 서기| 김지연 | - Notion 관리 <br> - 회의록 작성 <br> - Figma 작성 <br> - 카카오 OAuth 로그인 클라이언트 <br> - API 연결                                               | jiyeon2536@naver.com| [jiyeon2536](https://github.com/jiyeon2536) |
+| 팀원, Frontend, 총무| 이해건 | - (작성 예정)                                                                                                                                   | lhgeer2617@gmail.com| [lhgeer2617](https://github.com/lhgeer2617) |
 
 
-## 1. ERD 작성
-| 날짜 별 업무               | 상세     |
-| -------------------------- | -------- |
-| 240115 백앤드 팀 공통 업무 | ERD 작성 |
-| 240127 프론트엔드 팀 공통 업무 | 코드 통합 |
+--------------------------------------------
  
