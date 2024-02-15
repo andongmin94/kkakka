@@ -92,7 +92,7 @@ export default function RootLayout() {
         console.log(event);
         source.close();
       };
-      
+
       source.addEventListener("alarm", (e: any) => {
         console.log(e);
         const data = JSON.parse(e.data);
@@ -204,10 +204,13 @@ export default function RootLayout() {
                   </Link>
                   {typeof electron === "undefined" && (
                     <a
-                      href="/kkakka.exe" download
+                      href="/kkakka.exe"
+                      download
                       className={`${classes.menu}`}
                     >
-                      <h1>App Download (217MB)</h1>
+                      <h1>
+                        App Download <span className="text-sm">(217MB)</span>
+                      </h1>
                     </a>
                   )}
                   <div className="mt-60">
