@@ -42,7 +42,7 @@ export default function LoginSuccessPage() {
             </div>
             <Button
               onClick={gotoMainHandler}
-              className="bg-yellow-300 text-black text-md shadow-md lg:hover:scale-105 transition-transform ease-in-out duration-500"
+              className="bg-blue-400 text-white text-md shadow-md lg:hover:scale-105 transition-transform ease-in-out duration-500"
             >
               친구 놀리러 가기 😜
             </Button>

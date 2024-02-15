@@ -66,7 +66,7 @@ export function Alarm() {
     <div className="relative">
       <div>
         {numOfUncheckedAlarm !== 0 ? (
-          <div className="bg-red-300 w-2 h-2 rounded-full absolute left-6"></div>
+          <div className="bg-red-500 w-2 h-2 rounded-full absolute left-6"></div>
         ) : null}
       </div>
       <DropdownMenu>
@@ -87,7 +87,7 @@ export function Alarm() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
-            className="w-30 overflow-scroll scrollbar-hide h-80"
+            className="w-30 overflow-scroll scrollbar-hide max-h-[800px]"
             value={position}
             onValueChange={setPosition}
           >
