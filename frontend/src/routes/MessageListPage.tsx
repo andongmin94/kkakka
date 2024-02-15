@@ -33,7 +33,7 @@ export default function MessageListPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!friendsInfo) {
+    if (!dmList) {
       axios
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`, {
           headers: {
@@ -48,7 +48,7 @@ export default function MessageListPage() {
           setIsLoading(false);
         });
     }
-  }, [friendsInfo]);
+  }, [dmList]);
 
   const enterChatHandler = (friendId: number) => {
     axios
