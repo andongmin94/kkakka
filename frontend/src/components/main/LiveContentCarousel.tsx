@@ -13,50 +13,50 @@ import Loading from "@/components/app/Loading";
 
 export default function LiveContentCarousel() {
   // 라이브 시연용 정적 데이터
-  const dumyData = {
-    crowdDtoList: [
-      {
-        attenderEmail: "osy9536@kakao.com",
-        attenderName: "seyoung",
-        attenderProfileImg:
-          "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/77203%EB%A1%A4%20%EB%B0%B0%EA%B2%BD3.jpg",
-      },
-      {
-        attenderEmail: "wjsaos2081@naver.com",
-        attenderName: "전수민",
-        attenderProfileImg:
-          "http://k.kakaocdn.net/dn/bLSiqo/btsDber5yMF/cfEfzDOI6o2uKf4tpyE0gk/img_640x640.jpg",
-      },
-      {
-        attenderEmail: "k1016h@naver.com",
-        attenderName: "김상훈",
-        attenderProfileImg:
-          "http://k.kakaocdn.net/dn/bRxAkP/btszbVDS8yt/yJ7vKkqIRaC5WTkCUX4c40/img_640x640.jpg",
-      },
-      {
-        attenderEmail: "soomin0608@naver.com",
-        attenderName: "이수민",
-        attenderProfileImg:
-          "http://k.kakaocdn.net/dn/xAsX2/btqTMb7ZixW/ig7lKVvDl5vo7f31CTIJe1/img_640x640.jpg",
-      },
-      {
-        attenderEmail: "lhg7485@naver.com",
-        attenderName: "이해건",
-        attenderProfileImg:
-          "http://k.kakaocdn.net/dn/JnpyP/btsBgIpRoVv/EztKyKYNFqZcyxVPde2B81/img_640x640.jpg",
-      },
-    ],
-    playerAlias: "천재개발자",
-    playerBackgroundPic:
-      "https://ssafys3.s3.ap-northeast-2.amazonaws.com/back_img/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg",
-    playerEmail: "k1016h@naver.com",
-    playerId: 5,
-    playerName: "김상훈",
-    playerProfilePic:
-      "http://k.kakaocdn.net/dn/bRxAkP/btszbVDS8yt/yJ7vKkqIRaC5WTkCUX4c40/img_640x640.jpg",
-    roomId: 5,
-    roomTitle: "30대 아재 리신 검거",
-  };
+  // const dumyData = {
+  //   crowdDtoList: [
+  //     {
+  //       attenderEmail: "osy9536@kakao.com",
+  //       attenderName: "seyoung",
+  //       attenderProfileImg:
+  //         "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/77203%EB%A1%A4%20%EB%B0%B0%EA%B2%BD3.jpg",
+  //     },
+  //     {
+  //       attenderEmail: "wjsaos2081@naver.com",
+  //       attenderName: "전수민",
+  //       attenderProfileImg:
+  //         "http://k.kakaocdn.net/dn/bLSiqo/btsDber5yMF/cfEfzDOI6o2uKf4tpyE0gk/img_640x640.jpg",
+  //     },
+  //     {
+  //       attenderEmail: "k1016h@naver.com",
+  //       attenderName: "김상훈",
+  //       attenderProfileImg:
+  //         "http://k.kakaocdn.net/dn/bRxAkP/btszbVDS8yt/yJ7vKkqIRaC5WTkCUX4c40/img_640x640.jpg",
+  //     },
+  //     {
+  //       attenderEmail: "soomin0608@naver.com",
+  //       attenderName: "이수민",
+  //       attenderProfileImg:
+  //         "http://k.kakaocdn.net/dn/xAsX2/btqTMb7ZixW/ig7lKVvDl5vo7f31CTIJe1/img_640x640.jpg",
+  //     },
+  //     {
+  //       attenderEmail: "lhg7485@naver.com",
+  //       attenderName: "이해건",
+  //       attenderProfileImg:
+  //         "http://k.kakaocdn.net/dn/JnpyP/btsBgIpRoVv/EztKyKYNFqZcyxVPde2B81/img_640x640.jpg",
+  //     },
+  //   ],
+  //   playerAlias: "천재개발자",
+  //   playerBackgroundPic:
+  //     "https://ssafys3.s3.ap-northeast-2.amazonaws.com/back_img/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg",
+  //   playerEmail: "k1016h@naver.com",
+  //   playerId: 5,
+  //   playerName: "김상훈",
+  //   playerProfilePic:
+  //     "http://k.kakaocdn.net/dn/bRxAkP/btszbVDS8yt/yJ7vKkqIRaC5WTkCUX4c40/img_640x640.jpg",
+  //   roomId: 5,
+  //   roomTitle: "30대 아재 리신 검거",
+  // };
 
   const plugin = useRef(
     // 딜레이 시간 조절
@@ -74,7 +74,7 @@ export default function LiveContentCarousel() {
         },
       })
       .then((res) => {
-        setBroadcasts([dumyData, ...res.data.data]);
+        setBroadcasts(res.data.data);
         console.log("뱅송목록", res.data.data);
         setIsLoading(false);
       })
