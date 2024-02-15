@@ -62,12 +62,14 @@ export default function WriteAlias({
   itemDesc,
   myPoint,
   friends,
+  setParentPoint,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
   myPoint: number;
   friends: FriendType[];
+  setParentPoint: (point: number) => void;
 }) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = useState(false);
@@ -116,6 +118,7 @@ export default function WriteAlias({
       )
       .then((res) => {
         console.log(res);
+        setParentPoint(myPoint - itemPrice);
       })
       .catch((error) => {
         console.log(error);
