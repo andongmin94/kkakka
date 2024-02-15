@@ -72,5 +72,5 @@ body::-webkit-scrollbar {
 
 @font-face {
   font-family: "pretendard";
-  src: url("./fonts/Pretendard-Regular.ttf") format("truetype");
+  src: url("./fonts/Pretendard.ttf") format("truetype");
 }

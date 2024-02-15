@@ -203,12 +203,12 @@ export default function RootLayout() {
                   </Link>
                   {typeof electron === "undefined" && (
                     <a
-                      href="/kkakka.exe"
+                      href="/까까 Setup 1.0.0.exe"
                       download
                       className={`${classes.menu}`}
                     >
                       <h1>
-                        App Download <span className="text-sm">(217MB)</span>
+                        App Download <span className="text-sm">(434MB)</span>
                       </h1>
                     </a>
                   )}
