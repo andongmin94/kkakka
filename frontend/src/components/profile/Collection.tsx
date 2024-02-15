@@ -9,7 +9,7 @@ export default function Collection({
   profiledogam: ProfileDogamWithDislikeNumType;
 }) {
   return (
-    <div className="flex flex-col justify-center items-center shadow-lg  bg-gray-400 rounded-md mr-8 mb-8 relative overflow-hidden mt-3">
+    <div className="flex flex-col justify-center items-center shadow-lg   bg-gray-400 rounded-md mr-8 mb-8 relative overflow-hidden mt-3 ">
       <Link to={`/main/dogam/${profiledogam.dogamId}`}>
         <img src={profiledogam.dogamImgUrl} />
         {/* 오버레이 */}
