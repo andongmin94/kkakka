@@ -7,7 +7,7 @@ import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
-import { useLocation, Link, Outlet } from "react-router-dom";
+import { useLocation, Link, Outlet, useNavigate } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,10 +34,6 @@ export default function RootLayout() {
   const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
 
   const EventSource = EventSourcePolyfill;
-
-  if (!token) {
-    throw new Error("Token not found");
-  }
 
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
@@ -73,44 +69,50 @@ export default function RootLayout() {
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
 
+  const navigate = useNavigate();
   useEffect(() => {
-    const source = new EventSource(
-      `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
-      {
-        headers: {
-          Authorization: token,
-          "Cache-Control": "no-cache",
-          Connection: "keep-alive",
-        },
-        heartbeatTimeout: 3600000,
-      }
-    );
+    if (!token) {
+      window.alert("로그인이 필요한 서비스입니다.");
+      navigate("/");
+    } else {
+      const source = new EventSource(
+        `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
+        {
+          headers: {
+            Authorization: token,
+            "Cache-Control": "no-cache",
+            Connection: "keep-alive",
+          },
+          heartbeatTimeout: 3600000,
+        }
+      );
 
-    source.onerror = (event) => {
-      console.log(event);
-      source.close();
-    };
+      source.onerror = (event) => {
+        console.log(event);
+        source.close();
+      };
 
-    source.addEventListener("alarm", (e: any) => {
-      console.log(e);
-      const data = JSON.parse(e.data);
-      console.log(data);
-      setLastEventId(data.id);
-    });
-
-    source.addEventListener("megaphone", (event: any) => {
-      const parseData = JSON.parse(event.data);
-
-      // 새로운 확성기가 있음을 표시
-      setNewSpeakerContent(parseData.content);
-      setSpeakerToastList((prev) => {
-        return prev.concat(parseData.content);
+      source.addEventListener("alarm", (e: any) => {
+        console.log(e);
+        const data = JSON.parse(e.data);
+        console.log(data);
+        setLastEventId(data.id);
       });
-    });
 
-    return () => {
-      source.close();
-    };
+      source.addEventListener("megaphone", (event: any) => {
+        const parseData = JSON.parse(event.data);
+
+        // 새로운 확성기가 있음을 표시
+        setNewSpeakerContent(parseData.content);
+        setSpeakerToastList((prev) => {
+          return prev.concat(parseData.content);
+        });
+      });
+
+      return () => {
+        source.close();
+      };
+    }
   });
 
   useEffect(() => {
