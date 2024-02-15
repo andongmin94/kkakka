@@ -12,7 +12,6 @@ import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ToTheTop from "@/components/app/ToTheTop";
-import MyPoint from "@/components/itemShop/MyPoint";
 import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
 import useAlarmStore from "@/store/alarm/alarmStore";
@@ -213,9 +212,6 @@ export default function RootLayout() {
                       </h1>
                     </a>
                   )}
-                  <div className="mt-60">
-                    <MyPoint />
-                  </div>
                 </div>
               </div>
 

@@ -59,12 +59,14 @@ export default function Compliment({
   itemDesc,
   myPoint,
   friends,
+  setParentPoint,
 }: {
   itemName: string;
   itemPrice: number;
   itemDesc: string;
   myPoint: number;
   friends: FriendType[];
+  setParentPoint: (point: number) => void;
 }) {
   // 콤보박스 누르면 꺼지게 하는 상태정보
   const [open, setOpen] = React.useState(false);
@@ -107,6 +109,7 @@ export default function Compliment({
         .then((res) => {
           // 칭찬권 구매 성공
           makeToast("강제 칭찬권 구매 성공");
+          setParentPoint(myPoint - itemPrice);
           console.log(res);
         })
         .catch((error) => {
