@@ -15,6 +15,7 @@ import ToTheTop from "@/components/app/ToTheTop";
 import MyPoint from "@/components/itemShop/MyPoint";
 import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
+import useAlarmStore from "@/store/alarm/alarmStore";
 
 import axios from "axios";
 import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
@@ -26,7 +27,7 @@ export default function RootLayout() {
   // const { theme } = useTheme();
 
   const { setLastEventId } = useAlarmSubscribeStore();
-
+  const { alarmList, setAlarmList } = useAlarmStore();
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
   const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
@@ -96,7 +97,8 @@ export default function RootLayout() {
         console.log(e);
         const data = JSON.parse(e.data);
         console.log(data);
-        setLastEventId(data.id);
+        setAlarmList([data, ...alarmList]);
+        setLastEventId(data.alarmId);
       });
 
       source.addEventListener("megaphone", (event: any) => {
@@ -202,10 +204,13 @@ export default function RootLayout() {
                   </Link>
                   {typeof electron === "undefined" && (
                     <a
-                      href="/kkakka.exe" download
+                      href="/kkakka.exe"
+                      download
                       className={`${classes.menu}`}
                     >
-                      <h1>App Download (217MB)</h1>
+                      <h1>
+                        App Download <span className="text-sm">(217MB)</span>
+                      </h1>
                     </a>
                   )}
                   <div className="mt-60">

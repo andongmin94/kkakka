@@ -157,6 +157,28 @@ export default function LiveChat() {
         });
       });
 
+    setTimeout(() => {
+      axios
+        .get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/betting/room/${roomId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res: any) => {
+          setPredictObject(res.data.data);
+          setProgress(
+            res.data.data.predictLose + res.data.data.predictWin === 0
+              ? 0
+              : (res.data.data.predictWin /
+                  (res.data.data.predictLose + res.data.data.predictWin)) *
+                  100
+          );
+        });
+    }, 100);
+    setIsWin(true);
     setOpen(false);
   }
 
@@ -305,6 +327,13 @@ export default function LiveChat() {
       })
       .then((res: any) => {
         setPredictObject(res.data.data);
+        setProgress(
+          res.data.data.predictLose + res.data.data.predictWin === 0
+            ? 0
+            : (res.data.data.predictWin /
+                (res.data.data.predictLose + res.data.data.predictWin)) *
+                100
+        );
       });
 
     axios
@@ -322,17 +351,17 @@ export default function LiveChat() {
         setBalance(res.data.data);
       });
 
-    const timer = setTimeout(
-      () =>
-        setProgress(
-          predictObject.predictLose + predictObject.predictWin === 0
-            ? 0
-            : (predictObject.predictWin /
-                (predictObject.predictLose + predictObject.predictWin)) *
-                100
-        ),
-      500
-    );
+    // const timer = setTimeout(
+    //   () =>
+    //     setProgress(
+    //       predictObject.predictLose + predictObject.predictWin === 0
+    //         ? 0
+    //         : (predictObject.predictWin /
+    //             (predictObject.predictLose + predictObject.predictWin)) *
+    //             100
+    //     ),
+    //   500
+    // );
 
     // setTimeout(() => {
     //   setProgress(
@@ -359,7 +388,7 @@ export default function LiveChat() {
         );
 
         stompClient.disconnect();
-        clearTimeout(timer);
+        // clearTimeout(timer);
       }, 0);
     };
   }, [roomId]);
@@ -453,7 +482,7 @@ export default function LiveChat() {
       goal: 200,
     },
     {
-      name: "당신",
+      name: "나",
       color: "rgba(234,19,24,1)",
       goal: goal,
     },
@@ -465,84 +494,106 @@ export default function LiveChat() {
       {/* 피시 화면 */}
       <PC>
         {/* 배팅 현황 화면 */}
-        <Alert className=" w-[700px] h-[100%] m-auto">
-          <div className="flex flex-row justify-between  h-full">
-            <div className="flex flex-row">
+        <Alert className=" w-[70%] h-[100%] mx-auto rounded-none rounded-t-xl ">
+          {/* 윗부분의 윗부분 */}
+          <div className="flex justify-between w-full mb-4 ">
+            <div className="flex items-center ">
               {/* 프사 */}
               <img
                 src={friendsInfo.playerProfilePic}
-                className=" rounded-full w-[80px] h-[80px] mb-3"
+                className=" rounded-full w-[70px] h-[70px] shadow-md"
               />
-              <div className="flex flex-col items-center gap-3 ml-3">
+              <div className=" ml-3 flex flex-col items-center">
                 {/* 칭호 */}
                 <MessageAlias alias={friendsInfo.playerAlias} />
                 {/* 이름 */}
-                <div className="flex flex-row">
-                  <p className="font-bold text-2xl">
-                    {friendsInfo.playerName}님이 이긴다!! :{" "}
-                    {predictObject.predictLose + predictObject.predictWin === 0
-                      ? 0
-                      : (
-                          (predictObject.predictWin /
-                            (predictObject.predictLose +
-                              predictObject.predictWin)) *
-                          100
-                        ).toFixed(3)}{" "}
-                    %{" "}
-                  </p>
-                </div>
+                <p className="font-bold text-md mt-1">
+                  {friendsInfo && friendsInfo.playerName}
+                </p>
               </div>
             </div>
+            {/* 프로필 보기 버튼 */}
             <Link to={`/main/profile/${friendsInfo.playerId}`}>
               <Button
                 type="submit"
                 variant="secondary"
-                className="border-solid border-2 border-inherit bg-white font-bold text-lg mt-2 h-[50px] mr-10 rounded-xl"
+                className=" bg-gray-100 font-bold text-sm mt-2 h-[50px]  rounded-2xl shadow-sm"
               >
                 프로필 보기
               </Button>
             </Link>
           </div>
-          <AlertTitle>
-            <Progress
-              style={{ width: "100%", height: "50px", alignSelf: "center" }}
-              value={progress}
-            />
+          <AlertTitle className="border-t-2 pt-3">
+            {/* 이름 */}
+            <p className="font-bold text-lg flex justify-between px-1">
+              <div className="flex flex-col">
+                <div>{friendsInfo.playerName}님이 이긴다! 👊</div>{" "}
+                <div>
+                  {predictObject.predictLose + predictObject.predictWin === 0
+                    ? 0
+                    : progress.toFixed(2)}{" "}
+                  %{" "}
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <div>{friendsInfo.playerName}님이 진다 😛</div>
+                <div>
+                  {predictObject.predictLose + predictObject.predictWin === 0
+                    ? 0
+                    : (
+                        (predictObject.predictLose /
+                          (predictObject.predictLose +
+                            predictObject.predictWin)) *
+                        100
+                      ).toFixed(2)}
+                  %
+                </div>
+              </div>
+            </p>
           </AlertTitle>
-          <AlertDescription className="flex flex-row justify-between">
+          <Progress className="w-[100%] h-[30px]" value={progress} />
+          <AlertDescription className="">
             <Drawer open={open} onOpenChange={setOpen}>
               <DrawerTrigger asChild>
-                <Button variant="outline">배팅하러 가기</Button>
+                <Button variant="outline" className="w-full">
+                  나도 배팅하기💸
+                </Button>
               </DrawerTrigger>
               <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
-                  <DrawerHeader>
-                    <DrawerTitle>얼마 걸 것이여?</DrawerTitle>
-                    <DrawerDescription>
-                      당신의 현재 잔액: {balance} point <br /> (기본 배팅 단위는
-                      200 point 입니다.)
+                  <DrawerHeader className=" flex flex-col items-center">
+                    <DrawerTitle className="text-lg mb-2">
+                      얼마 걸 것이여? 🤔
+                    </DrawerTitle>
+                    <DrawerDescription className="bg-gray-200 p-2 px-4 rounded-sm">
+                      <p>💰 보유 : {balance} P</p>
+                      <p>💵 배팅 단위 : 200 P</p>
                     </DrawerDescription>
                   </DrawerHeader>
                   <div className="p-4 pb-0">
                     <RadioGroup
                       defaultValue="true"
-                      className="flex flex-row justify-around"
+                      className="flex flex-row justify-around mb-2"
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center">
                         <RadioGroupItem
                           value="true"
                           id="r2"
                           onClick={() => onClickRadio(true)}
                         />
-                        <Label htmlFor="r2">이긴다</Label>
+                        <Label htmlFor="r2" className="text-lg ml-2">
+                          이긴다
+                        </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center">
                         <RadioGroupItem
                           value="false"
                           id="r3"
                           onClick={() => onClickRadio(false)}
                         />
-                        <Label htmlFor="r3">진다</Label>
+                        <Label htmlFor="r3" className="text-lg ml-2">
+                          진다
+                        </Label>
                       </div>
                     </RadioGroup>
 
@@ -558,7 +609,7 @@ export default function LiveChat() {
                         <span className="sr-only">Decrease</span>
                       </Button>
                       <div className="flex-1 text-center">
-                        <div className="text-7xl font-bold tracking-tighter">
+                        <div className="text-6xl font-bold tracking-tighter">
                           {goal}
                         </div>
                         <div className="text-[0.70rem] uppercase text-muted-foreground">
@@ -589,7 +640,7 @@ export default function LiveChat() {
                       </ResponsiveContainer>
                     </div>
                   </div>
-                  <DrawerFooter>
+                  <DrawerFooter className="mb-2">
                     <Button
                       onClick={() =>
                         onSubmitBetting({
@@ -603,7 +654,12 @@ export default function LiveChat() {
                       배팅!
                     </Button>
                     <DrawerClose asChild>
-                      <Button variant="outline">그..그만둘래</Button>
+                      <Button
+                        variant="outline"
+                        className="hover:bg-red-400 hover:text-white"
+                      >
+                        그..그만둘래
+                      </Button>
                     </DrawerClose>
                   </DrawerFooter>
                 </div>
@@ -612,15 +668,15 @@ export default function LiveChat() {
           </AlertDescription>
         </Alert>
         <Toaster />
-        <div className=" h-screen flex flex-col items-center mb-4 pt-10">
-          <div className="w-[70%] h-[99%] border-2 rounded-2xl grid grid-rows-12 ">
+        <div className=" h-screen flex flex-col items-center mb-4">
+          <div className="w-[70%] h-[99%] border-2 rounded-b-2xl grid grid-rows-12 ">
             {/* 채팅 화면 상단 사용자 정보 바 */}
             {/* -------------------------------------------------------------------------------------------------------------------- */}
 
             {/* 채팅창 부분 */}
             <div
               ref={chatContainerRef}
-              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row bg-gray-200 rounded-t-xl"
+              className="w-full row-span-11  overflow-y-auto scrollbar-hide flex-row bg-gray-200"
             >
               {/* 채팅 전체 내역을 출력 */}
               {messages.map((data, idx) => {
@@ -854,12 +910,7 @@ export default function LiveChat() {
                       {predictObject.predictLose + predictObject.predictWin ===
                       0
                         ? 0
-                        : (
-                            (predictObject.predictWin /
-                              (predictObject.predictLose +
-                                predictObject.predictWin)) *
-                            100
-                          ).toFixed(3)}{" "}
+                        : progress.toFixed(2)}{" "}
                       %{" "}
                     </p>
                   </div>

@@ -15,8 +15,8 @@ export default function Loading() {
 
   return (
     <>
-      <div style={{ display }}>
-        <Progress value={progress} className="relative" />
+      <div style={{ display }} className="relative">
+        <Progress value={progress} className="absolute top-32 left-80 " />
         {/* <div className="absolute top-[300px] right-[400px]">
           로딩 화면이 지속되면 새로고침을 눌러주세요 👻
         </div> */}
