@@ -47,6 +47,7 @@ export default function DogamDetailPage() {
       createdAt: "",
     },
     hated: false,
+    dogamCommentNum: 0,
   });
   const [commentList, setCommentList] = useState<DogamCommentResponseType[]>(
     []

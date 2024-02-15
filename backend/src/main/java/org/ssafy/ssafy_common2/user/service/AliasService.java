@@ -54,7 +54,7 @@ public class AliasService {
         setCurrentAlias(receiver.getUserInfoId(), aliasName);
 
         // 알림 발생
-        notifyAlias(sender, receiver, newAlias);
+        notifyAlias(sender, receiver);
         return AliasCreateResponseDto.from(newAlias);
     }
 
@@ -84,7 +84,7 @@ public class AliasService {
     }
 
     // 알림 만들기
-    public void notifyAlias(User sender, User receiver, Alias alias) {
+    public void notifyAlias(User sender, User receiver) {
 
         notificationService.send(
                 NotificationDto.of(
@@ -93,7 +93,7 @@ public class AliasService {
                     "새로운 칭호가 추가되었습니다.",
                     receiver.getKakaoProfileImg(),
                     sender.getKakaoEmail(),
-                    alias.getId()
+                    receiver.getId()
                 )
         );
     }

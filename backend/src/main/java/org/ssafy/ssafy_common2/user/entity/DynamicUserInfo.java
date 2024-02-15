@@ -46,7 +46,7 @@ public class DynamicUserInfo extends BaseTime {
         this.point = point;
         this.isLogin = isLogin;
         this.isBetting = isBetting;
-        this.curAlias = "응애 까까머거쪄";
+        this.curAlias = "까까머거쪄";
         this.backImg = backImg;
         this.lastRewardDate = lastRewardDate;
     }
