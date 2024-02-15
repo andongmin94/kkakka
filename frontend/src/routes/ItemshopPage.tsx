@@ -1,6 +1,7 @@
 import Speaker from "@/components/itemShop/Speaker";
 import WriteAlias from "@/components/itemShop/WriteAlias";
 import Compliment from "@/components/itemShop/Compliment";
+import MyPoint from "@/components/itemShop/MyPoint";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -57,8 +58,11 @@ export default function ItemshopPage() {
 
   return (
     <>
-      <div className="text-lg mb-10 flex ml-10 ">
+      <div className="text-lg mb-5 flex ml-10 ">
         <p className="grid place-items-center ml-2 font-bold">아이템샵</p>
+      </div>
+      <div className="mr-5">
+        <MyPoint point={point} />
       </div>
 
       {itemList && itemList.length > 0 && (
@@ -78,6 +82,7 @@ export default function ItemshopPage() {
                         itemDesc={item.itemDesc}
                         myPoint={point}
                         friends={friendList}
+                        setParentPoint={setPoint}
                       />
                     )}
                     {item.itemName === "강제 칭찬권" && (
@@ -87,6 +92,7 @@ export default function ItemshopPage() {
                         itemDesc={item.itemDesc}
                         myPoint={point}
                         friends={friendList}
+                        setParentPoint={setPoint}
                       />
                     )}
                     {item.itemName === "확성기" && (
@@ -95,6 +101,7 @@ export default function ItemshopPage() {
                         itemPrice={item.itemPrice}
                         itemDesc={item.itemDesc}
                         myPoint={point}
+                        setParentPoint={setPoint}
                       />
                     )}
                   </div>
