@@ -205,7 +205,7 @@ export default function RootLayout() {
                       href="/kkakka.exe" download
                       className={`${classes.menu}`}
                     >
-                      <h1>App Download</h1>
+                      <h1>App Download (217MB)</h1>
                     </a>
                   )}
                   <div className="mt-60">
