@@ -107,20 +107,20 @@ public class UserService {
                     "ROLE_USER",
                     userInfo);
 
-            Alias alias = Alias.of(user, "응애 까까머거쪄");
+            Alias alias = Alias.of(user, "까까머거쪄");
             userRepository.save(user);
             aliasRepository.save(alias);
             isUserNull = true;
 
             // 김상훈 유저와 친구 추가 로직
-            User kimsanghun = userRepository.findByKakaoEmailAndDeletedAtIsNull("k1016h@naver.com").orElseThrow(
-                    () -> new CustomException(ErrorType.NOT_FOUND_SANG)
-            );
-
-            FriendList friendList = FriendList.of(user, kimsanghun, true);
-            FriendList friendList1 = FriendList.of(kimsanghun, user, true);
-            friendListRepository.save(friendList);
-            friendListRepository.save(friendList1);
+//            User kimsanghun = userRepository.findByKakaoEmailAndDeletedAtIsNull("k1016h@naver.com").orElseThrow(
+//                    () -> new CustomException(ErrorType.NOT_FOUND_SANG)
+//            );
+//
+//            FriendList friendList = FriendList.of(user, kimsanghun, true);
+//            FriendList friendList1 = FriendList.of(kimsanghun, user, true);
+//            friendListRepository.save(friendList);
+//            friendListRepository.save(friendList1);
 
         }else{
             // 사용자가 이미 존재하는 경우, 마지막 보상 지급 날짜를 확인하여 오늘 보상을 이미 받았는지 검사합니다.
