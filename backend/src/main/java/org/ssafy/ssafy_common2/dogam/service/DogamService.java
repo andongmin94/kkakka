@@ -38,7 +38,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class DogamService {
 
     private static final int DOGAM_DELETE_POINT = 1000;
@@ -59,31 +58,16 @@ public class DogamService {
 
     public DogamCreateResponseDto createDogam(DogamCreateRequestDto dto, Long friendId, User sender) {
 
-        String key = dto.getDogamTitle() + " " + friendId+" "+sender.getUserName();
-
-        if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
-            throw new CustomException(ErrorType.NOT_FOUND_USER);
-        }
-        if (userRepository.findByIdAndDeletedAtIsNull(friendId).isEmpty()) {
-            throw new CustomException(ErrorType.NOT_FOUND_USER);
-        }
-        if (dto.getDogamTitle().isEmpty()) {
-            throw new CustomException(ErrorType.CONTENT_IS_NULL);
-        }
+        String key = friendId + " " + sender.getId();
 
         return redisLockRepository.runOnLock(
                 key,
-                () -> transactionHandler.runOnWriteTransaction(() -> {
-                    try {
-                        return createDogamLogic(dto, friendId, sender);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }));
+                () -> transactionHandler.runOnWriteTransaction(
+                        () -> createDogamLogic(dto, friendId, sender)));
     }
 
     // 도감 만들기
-    public DogamCreateResponseDto createDogamLogic(DogamCreateRequestDto dto, Long friendId, User sender) throws IOException {
+    public DogamCreateResponseDto createDogamLogic(DogamCreateRequestDto dto, Long friendId, User sender) {
 
         if (userRepository.findByIdAndDeletedAtIsNull(sender.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);
@@ -116,7 +100,11 @@ public class DogamService {
         if (dto.getImgUrl() == null) {
             imgUrl = "https://ssafys3.s3.ap-northeast-2.amazonaws.com/static/%EC%9D%B4%EC%A6%88%EB%A6%AC%EC%96%BC.jpg";
         } else {
-            imgUrl = s3Uploader.upload(dto.getImgUrl());
+            try {
+                imgUrl = s3Uploader.upload(dto.getImgUrl());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         // imgURL을 만들어서 S3에 저장 끝
 
@@ -135,6 +123,7 @@ public class DogamService {
         return responseDto;
     }
 
+    @Transactional
     public Map<String, Integer> deleteDogam(Long dogamId, User user) {
 
         Dogam dogam = dogamRepository.findByIdAndDeletedAtIsNull(dogamId).orElseThrow(
