@@ -54,6 +54,7 @@ public enum ErrorType {
     NOT_FOUND_BACK_IMG(401, "배경사진을 추가해 주세요"),
     NOT_FOUND_PROFILE_IMG(401, "프로필 사진을 추가해 주세요"),
     ALREADY_EXIST_NON_DISLIKE(401, "싫어요가 없습니다. 싫어요를 하고 취소해 주세요"),
+    NOT_FOUND_SANG(401, "김상훈 유저가 없습니다"),
     ;
 
     private int code;
