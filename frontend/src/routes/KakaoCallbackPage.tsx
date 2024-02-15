@@ -41,7 +41,7 @@ export default function KakaoCallbackPage() {
     >
       <div className=" bg-white h-[250px] w-[400px]  rounded-xl flex flex-col items-center justify-center dark:bg-black ">
         <div className="font-bold text-xl">
-          로그인 중입니다. 잠시만 기다려주세요.
+          <div>로그인 중입니다...</div>
         </div>
       </div>
     </div>

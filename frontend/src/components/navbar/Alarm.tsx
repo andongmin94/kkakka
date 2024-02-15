@@ -23,7 +23,7 @@ export function Alarm() {
   const navigate = useNavigate();
   const checkAlarmMutation = useCheckAlarm();
   const { mutate } = checkAlarmMutation;
-  
+
   const [openDropdownMenu, setOpenDropdownMenu] = useState(false);
 
   const checkAlarmHandler = (alarmId: number) => {
@@ -41,11 +41,10 @@ export function Alarm() {
   } = useAlarmStore();
   const { lastEventId, setLastEventId } = useAlarmSubscribeStore();
 
-  // const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
   // const userEmail = localStorage.getItem("userEmail");
 
-  useEffect(()=>{
-
+  useEffect(() => {
     setNumOfUncheckedAlarm(alarmList.length);
   }, [alarmList]);
 
@@ -75,53 +74,49 @@ export function Alarm() {
     if (alarm.alarmContent.endsWith("님이 친구요청을 보냈습니다.")) {
       navigate(`/main/profile/${alarm.relatedContentId}`);
     } else if (alarm.alarmContent.endsWith("새로운 칭호가 추가되었습니다.")) {
-      navigate(`/main/profile/${alarm.relatedContentId}/dishonor`);
+      navigate(`/main/profile/${userId}/dishonor`);
     } else {
       navigate(`/main/dogam/${alarm.relatedContentId}`);
     }
   };
 
   const setUserLastEventId = () => {
-
     if (openDropdownMenu == false) {
-      
       if (lastEventId != "" && lastEventId > lastNotiEventId) {
         axios
-        .put(`${import.meta.env.VITE_API_BASE_URL}/api/alarm`, 
-          {
-            lastEventId: lastEventId,
-          },
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
+          .put(
+            `${import.meta.env.VITE_API_BASE_URL}/api/alarm`,
+            {
+              lastEventId: lastEventId,
             },
-          }
-        )
-        .then(() => {
-          console.log("갱신 성공");
-          setLastNotiEventId(lastEventId);
-        })
-        .catch((err) => {
-          console.error("Last Event Id 갱신 실패", err);
-        });
+            {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            }
+          )
+          .then(() => {
+            console.log("갱신 성공");
+            setLastNotiEventId(lastEventId);
+          })
+          .catch((err) => {
+            console.error("Last Event Id 갱신 실패", err);
+          });
       }
 
       setOpenDropdownMenu(true);
-
-    }
-    else {
+    } else {
       setOpenDropdownMenu(false);
     }
-  }
+  };
 
   return (
     <div className="relative">
       <div>
-        {lastEventId != "" && (lastNotiEventId == "" || 
-          lastNotiEventId < lastEventId) ? (
-            <div className="bg-red-500 w-2 h-2 rounded-full absolute left-6"></div>
-          ) : null
-        }
+        {lastEventId != "" &&
+        (lastNotiEventId == "" || lastNotiEventId < lastEventId) ? (
+          <div className="bg-red-500 w-2 h-2 rounded-full absolute left-6"></div>
+        ) : null}
       </div>
       <DropdownMenu onOpenChange={setUserLastEventId}>
         <DropdownMenuTrigger asChild>
@@ -156,7 +151,6 @@ export function Alarm() {
                       checkAlarmHandler(alarm.alarmId);
                       moveToAlarmContentHandler(alarm);
                     }}
-                    
                   >
                     <div className="flex justify-center items-center py-2">
                       <img

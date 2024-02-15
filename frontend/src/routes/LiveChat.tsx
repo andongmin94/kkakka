@@ -630,7 +630,12 @@ export default function LiveChat() {
                       배팅!
                     </Button>
                     <DrawerClose asChild>
-                      <Button variant="outline">그..그만둘래</Button>
+                      <Button
+                        variant="outline"
+                        className="hover:bg-red-400 hover:text-white"
+                      >
+                        그..그만둘래
+                      </Button>
                     </DrawerClose>
                   </DrawerFooter>
                 </div>
