@@ -304,6 +304,7 @@ export default function Compliment({
                   <DialogClose asChild>
                     <Button
                       type="button"
+                      variant="destructive"
                       className=" bg-red-400 font-bold text-sm shadow-md text-white rounded-lg h-[80%] "
                     >
                       취소
