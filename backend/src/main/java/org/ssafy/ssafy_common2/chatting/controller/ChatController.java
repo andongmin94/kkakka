@@ -189,7 +189,7 @@ public class ChatController {
                     String enforcementMent = chatService.searchEnforcement(chatRoom.getChatOwnerEmail(),sender.getKakaoEmail());
 
 
-                    if(enforcementMent != null && chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY)){
+                    if(enforcementMent != null && chatRoom.getChatRoomType().equals(ChatRoom.ChatRoomType.MANY) && msg.getMessageType().equals("TALK")){
 
                         // 난수 생성 -> 난수가 특정 수 이상 넘어가면 해당 말이 적히도록
                         Random rd = new Random();
