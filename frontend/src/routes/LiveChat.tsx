@@ -639,13 +639,14 @@ export default function LiveChat() {
                   </div>
                 );
               })}
+              <button
+                onClick={goBottomChat}
+                className="absolute w-10 h-10  bg-white bg-opacity-80 bottom-24 right-40  rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100"
+              >
+                ↓
+              </button>
             </div>
-            <button
-              onClick={goBottomChat}
-              className="absolute w-10 h-10 bg-white bg-opacity-80 right-40 bottom-24 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100"
-            >
-              ↓
-            </button>
+
             {/* -------------------------------------------------------------------------------------------------------------------- */}
 
             {/* 채팅 하단 부분 */}

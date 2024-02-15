@@ -41,10 +41,14 @@ export default function FirstLoginPage() {
     e.preventDefault();
     try {
       console.log(inputValue);
-      mutate({ data: { riotId: inputValue } });
-      setUserInfo({ ...userInfo, riotId: inputValue });
-      window.alert("롤 아이디가 저장되었습니다.");
-      navigate("/main");
+      if (inputValue.length >= 2) {
+        mutate({ data: { riotId: inputValue } });
+        setUserInfo({ ...userInfo, riotId: inputValue });
+        window.alert("롤 아이디가 저장되었습니다.");
+        navigate("/main");
+      } else {
+        window.alert("두 글자 이상 입력해주세요.");
+      }
     } catch (error) {
       console.log(error);
       window.alert("롤 아이디 저장에 실패했습니다.");
@@ -69,13 +73,13 @@ export default function FirstLoginPage() {
               <div className="mt-5 flex justify-center gap-3">
                 <Button
                   onClick={setLolId}
-                  className="lg:hover:scale-105 transition-transform ease-in-out duration-500"
+                  className="lg:hover:scale-105 transition-transform ease-in-out duration-500 bg-blue-400"
                 >
                   저장하기
                 </Button>
                 <Button
                   onClick={skipHandler}
-                  className="bg-white text-black border-[1px] lg:hover:scale-105 transition-transform ease-in-out duration-500"
+                  className="bg-white text-black border-[1px] lg:hover:scale-105 hover:bg-gray-200 transition-transform ease-in-out duration-500"
                 >
                   건너뛰기
                 </Button>
