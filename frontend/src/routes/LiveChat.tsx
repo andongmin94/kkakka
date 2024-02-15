@@ -334,19 +334,33 @@ export default function LiveChat() {
       500
     );
 
+    // setTimeout(() => {
+    //   setProgress(
+    //     predictObject.predictLose + predictObject.predictWin === 0
+    //       ? 0
+    //       : (predictObject.predictWin /
+    //           (predictObject.predictLose + predictObject.predictWin)) *
+    //           100
+    //   );
+    // }, 500);
+
     return () => {
-      stompClient.send(
-        "/pub/chat/exitChatRoom",
-        clientHeader,
-        JSON.stringify({
-          messageType: "QUIT",
-          content: userInfo.userName + "님이 퇴장했습니다.",
-          userId: userInfo.userId,
-          chatRoomId: roomId,
-        })
-      );
-      stompClient.disconnect();
-      clearTimeout(timer);
+      // 여기서 STOMP 연결을 끊지 않도록 setTimeout을 활용
+      setTimeout(() => {
+        stompClient.send(
+          "/pub/chat/exitChatRoom",
+          clientHeader,
+          JSON.stringify({
+            messageType: "QUIT",
+            content: userInfo.userName + "님이 퇴장했습니다.",
+            userId: userInfo.userId,
+            chatRoomId: roomId,
+          })
+        );
+
+        stompClient.disconnect();
+        clearTimeout(timer);
+      }, 0);
     };
   }, [roomId]);
 
@@ -609,14 +623,18 @@ export default function LiveChat() {
                       className={`flex ${
                         data.messageType === "ENTER" ||
                         data.messageType === "QUIT" ||
-                        data.messageType === "CHAT_BOT"
+                        data.messageType === "CHAT_BOT" ||
+                        data.messageType === "WIN" ||
+                        data.messageType === "LOSE"
                           ? "justify-center"
                           : data.userId === userInfo.userId
                           ? "justify-end"
                           : "justify-start"
                       } mb-2`}
                     >
-                      {data.messageType === "CHAT_BOT" ? (
+                      {data.messageType === "CHAT_BOT" ||
+                      data.messageType === "WIN" ||
+                      data.messageType === "LOSE" ? (
                         <BotMsg data={data} key={idx} />
                       ) : data.messageType === "ENTER" ||
                         data.messageType === "QUIT" ? (
@@ -964,14 +982,18 @@ export default function LiveChat() {
                         className={`flex ${
                           data.messageType === "ENTER" ||
                           data.messageType === "QUIT" ||
-                          data.messageType === "CHAT_BOT"
+                          data.messageType === "CHAT_BOT" ||
+                          data.messageType === "WIN" ||
+                          data.messageType === "LOSE"
                             ? "justify-center"
                             : data.userId === userInfo.userId
                             ? "justify-end"
                             : "justify-start"
                         } mb-2`}
                       >
-                        {data.messageType === "CHAT_BOT" ? (
+                        {data.messageType === "CHAT_BOT" ||
+                        data.messageType === "WIN" ||
+                        data.messageType === "LOSE" ? (
                           <BotMsg data={data} key={idx} />
                         ) : data.messageType === "ENTER" ||
                           data.messageType === "QUIT" ? (
