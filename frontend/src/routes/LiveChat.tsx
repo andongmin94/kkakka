@@ -892,7 +892,7 @@ export default function LiveChat() {
       {/* 모바일 화면 */}
       <Mobile>
         <div className=" h-screen grid grid-rows-12">
-          <Alert className=" w-full m-auto row-span-2">
+          <Alert className=" w-full m-auto row-span-2 z-10">
             <div className="flex flex-row justify-between  h-full">
               <div className="grid grid-cols-5">
                 {/* 프사 */}
@@ -926,7 +926,9 @@ export default function LiveChat() {
             <AlertDescription className="flex flex-row justify-between">
               <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerTrigger asChild>
-                  <Button variant="outline">배팅하러 가기</Button>
+                  <Button variant="outline" className="w-full">
+                    나도 배팅하기💸
+                  </Button>
                 </DrawerTrigger>
                 <DrawerContent>
                   <div className="mx-auto w-full max-w-sm">
