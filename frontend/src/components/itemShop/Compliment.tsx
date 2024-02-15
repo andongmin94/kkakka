@@ -50,7 +50,7 @@ const FormSchema = z.object({
 
 import axios from "axios";
 import { FriendType } from "@/types/friendTypes";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import classes from "./ItemShopCard.module.css";
 
 export default function Compliment({
