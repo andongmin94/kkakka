@@ -15,6 +15,7 @@ import ToTheTop from "@/components/app/ToTheTop";
 import MyPoint from "@/components/itemShop/MyPoint";
 import { UserType } from "@/types/userTypes";
 import useUserStore from "@/store/user/userStore";
+import useAlarmStore from "@/store/alarm/alarmStore";
 
 import axios from "axios";
 import SearchFriendBtn from "@/components/navbar/SearchFriendBtn";
@@ -26,7 +27,7 @@ export default function RootLayout() {
   // const { theme } = useTheme();
 
   const { setLastEventId } = useAlarmSubscribeStore();
-
+  const { alarmList, setAlarmList } = useAlarmStore();
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
   const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
@@ -91,12 +92,13 @@ export default function RootLayout() {
         console.log(event);
         source.close();
       };
-
+      
       source.addEventListener("alarm", (e: any) => {
         console.log(e);
         const data = JSON.parse(e.data);
         console.log(data);
-        setLastEventId(data.id);
+        setAlarmList([data, ...alarmList]);
+        setLastEventId(data.alarmId);
       });
 
       source.addEventListener("megaphone", (event: any) => {
