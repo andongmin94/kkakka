@@ -41,7 +41,7 @@
     - Typescript `5.2.2`
     - Tailwind CSS `3.4.1`
     - Zustand `4.4.7`
-    - Tanstack Query
+    - Tanstack React Query v5
 
   ### **👨‍💻 Back-end**
     
@@ -257,12 +257,12 @@ feat/S10P12D110-17-signup -> develop
 
 | 역할               | 이름   | 담당                                                                                                                                                  | 이메일               | 깃허브                              |
 |--------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------------|
-| 팀장, Backend Lead | 오세영 | - 유저 플로우 작성 <br> - 스프링 시큐리티 적용 <br> - JWT filter 적용 <br> - 공통 응답 API 작성 <br> - 공통 에러 응답 API 작성 <br> - 카카오 소셜 로그인 구현 <br> - 도감 관련 API 작성 <br> - 유저 데이터 관련 API 작성 <br> - 간단한 Front API 작성 <br> - Infra 구성 | osy9536@gmail.com   | [osy9536](https://github.com/osy9536) |
-| 팀원, Backend      | 전수민 | - WebSocket 채팅 서버 담당 <br> - 롤 API 담당하여 명세서 작성 <br> - 롤 LOCAL API 이용한 크롤링                                                        | wjsaos2081@gmail.com| [dalcheonroadhead](https://github.com/dalcheonroadhead) |
-| 팀원, Backend, PM  | 이수민 | - SSE 알림 담당 <br> - 칭호 생성 추가 삭제 로직 담당 <br> - 강제 칭찬 생성 삭제 로직 담당 <br> - 확성기 로직 담당                                       | oistmil@gmail.com   | [oistmil](https://github.com/oistmil) |
-| 팀원, Frontend Lead| 김상훈 | - 일렉트론 변환 & PWA 변환 담당                                                                                                                      | k1016h@naver.com    | [andongmin94](https://github.com/andongmin94) |
+| 팀장, Backend Lead | 오세영 | - 유저 플로우 작성 <br> - 스프링 시큐리티 적용 <br> - JWT filter 적용 <br> - 공통 응답 API 작성 <br> - 공통 에러 응답 API 작성 <br> - 카카오 소셜 로그인 구현 <br> - 도감 관련 API 작성 <br> - 유저 데이터 관련 API 작성 <br> - 간단한 Front API 작성 <br> - Infra 구성 ( AWS RDS, EC2, Nginx Reverse Proxy, Jenkins Pipeline, Dockerfile) | osy9536@gmail.com   | [osy9536](https://github.com/osy9536) |
+| 팀원, Backend      | 전수민 | - WebSocket 채팅 서버 <br> - 롤 API 담당하여 명세서 작성 <br> - 롤 LOCAL API 이용한 크롤링 <br> - socket s3를 이용한 이미지 업로드                                                        | wjsaos2081@gmail.com| [dalcheonroadhead](https://github.com/dalcheonroadhead) |
+| 팀원, Backend, PM  | 이수민 | - SSE 알림 담당 <br> - 칭호 생성 추가 삭제 로직 담당 <br> - 강제 칭찬 생성 삭제 로직 담당 <br> - 확성기 로직                                       | oistmil@gmail.com   | [oistmil](https://github.com/oistmil) |
+| 팀원, Frontend Lead| 김상훈 | - 일렉트론 포팅 및 개발 & PWA 포팅 <br> - 클라이언트 & 라이브 채팅창 연동 <br> - 선행기술 연구 <br> - UCC 제작                                                                                                                      | k1016h@naver.com    | [andongmin94](https://github.com/andongmin94) |
 | 팀원, Frontend, 서기| 김지연 | - Notion 관리 <br> - 회의록 작성 <br> - Figma 작성 <br> - 카카오 OAuth 로그인 클라이언트 <br> - API 연결                                               | jiyeon2536@naver.com| [jiyeon2536](https://github.com/jiyeon2536) |
-| 팀원, Frontend, 총무| 이해건 | - (작성 예정)                                                                                                                                   | lhgeer2617@gmail.com| [lhgeer2617](https://github.com/lhgeer2617) |
+| 팀원, Frontend, 총무| 이해건 | - WebSocket 채팅 프론트 <br> - 웹 UI/UX <br> - PWA 반응형 모바일 UI                                                                                                                                   | lhgeer2617@gmail.com| [lhgeer2617](https://github.com/lhgeer2617) |
 
 
 --------------------------------------------
