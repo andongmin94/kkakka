@@ -1,0 +1,109 @@
+.itemElemContainer {
+  width: 220px;
+  height: 310px;
+  transition: all 0.1s;
+}
+
+.itemElemCard {
+  width: 220px;
+  height: 310px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 3%;
+  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemElemOverlayBronze {
+  position: absolute;
+  width: 220px;
+  height: 310px;
+  background: radial-gradient(
+    rgba(238, 193, 193, 0.9),
+    transparent 70%,
+    rgba(255, 255, 255, 0.9),
+    transparent 70%
+  );
+
+  filter: brightness(100%) opacity(100%);
+  mix-blend-mode: hard-light;
+  background-size: 120% 120%;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  transition: all 0.1s;
+  border-radius: 3%;
+}
+
+.itemElemOverlaySilver {
+  position: absolute;
+  width: 220px;
+  height: 310px;
+  background: radial-gradient(
+    rgba(194, 188, 212, 0.9),
+    transparent 70%,
+    rgba(255, 255, 255, 0.9),
+    transparent 70%
+  );
+  filter: brightness(100%) opacity(100%);
+  mix-blend-mode: hard-light;
+  background-size: 120% 120%;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  transition: all 0.1s;
+  border-radius: 3%;
+}
+
+.itemElemOverlayGold {
+  position: absolute;
+  width: 220px;
+  height: 310px;
+  background: radial-gradient(
+    rgba(255, 215, 166, 0.9),
+    transparent 70%,
+    rgba(255, 255, 255, 0.9),
+    transparent 70%
+  );
+  filter: brightness(100%) opacity(100%);
+  mix-blend-mode: hard-light;
+  background-size: 120% 120%;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  transition: all 0.1s;
+  border-radius: 3%;
+}
+
+.itemElemOverlay {
+  position: absolute;
+  width: 220px;
+  height: 310px;
+  background: radial-gradient(
+    rgba(255, 255, 255, 0.8),
+    transparent 70%,
+    rgba(255, 255, 255, 0.8),
+    transparent 70%
+  );
+  /* background: radial-gradient(circle, rgba(255,0,0, 1), transparent 10%, rgba(255, 0, 0, 1), transparent 10%); */
+  /* background: linear-gradient(105deg, 
+    transparent 40%,
+    rgba(255,219, 112, 0.8) 45%,
+    rgba(132, 50, 255, 0.6) 50%,
+    transparent 54%); */
+
+  filter: brightness(100%) opacity(100%);
+  mix-blend-mode: hard-light;
+  background-size: 120% 120%;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  transition: all 0.1s;
+  border-radius: 3%;
+}
+
+.itemElemContent {
+  padding: 15%;
+  color: white;
+  font-size: 21px;
+  text-shadow: 2px 2px 5px rgb(50, 49, 49);
+}

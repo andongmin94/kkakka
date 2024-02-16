@@ -1,14 +1,29 @@
 /* 알람 버튼 */
 .alarm_image {
-  height: 40px;
-  width: 40px;
+  height: 25px;
+  width: 25px;
   background-image: url("/image/alarmOff.png");
   background-size: cover;
   background-position: center;
   margin-right: 30px;
 }
 
+.alarm_image_dark {
+  height: 25px;
+  width: 25px;
+  background-image: url("/image/alarmOff_dark.png");
+  background-size: cover;
+  background-position: center;
+  margin-right: 30px;
+}
+
 .alarm_image:hover {
+  background-image: url("/image/alarmOn.png");
+  animation-name: shake;
+  animation-duration: 1s;
+}
+
+.alarm_image_dark:hover {
   background-image: url("/image/alarmOn.png");
   animation-name: shake;
   animation-duration: 1s;

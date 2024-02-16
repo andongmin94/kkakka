@@ -1,0 +1,48 @@
+.innerText {
+  font-size: 13px;
+  /* font-weight: bold; */
+  color: #ffffff;
+  margin: auto 0;
+}
+
+.aliasTag {
+  z-index: 1;
+  width: 150px;
+  /* height: 25.43px; */
+  height: 30px;
+  border-radius: 5px;
+  background-image: linear-gradient(
+    90deg,
+    rgba(181, 148, 125, 1) 0%,
+    rgba(182, 147, 125, 1) 7%,
+    rgba(255, 235, 224, 1) 8%,
+    rgba(240, 202, 178, 1) 31%,
+    rgba(164, 124, 108, 1) 34%,
+    rgba(127, 91, 74, 1) 66%,
+    rgba(172, 131, 109, 1) 74%,
+    rgba(171, 131, 110, 1) 91%,
+    rgba(142, 105, 88, 1) 100%
+  );
+  background-position: center center;
+}
+
+.aliasTagSide {
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-image: linear-gradient(
+    90deg,
+    rgba(181, 148, 125, 1) 0%,
+    rgba(182, 147, 125, 1) 7%,
+    rgb(164, 137, 122) 8%,
+    rgb(217, 182, 160) 31%,
+    rgba(164, 124, 108, 1) 34%,
+    rgba(127, 91, 74, 1) 66%,
+    rgba(172, 131, 109, 1) 74%,
+    rgba(171, 131, 110, 1) 91%,
+    rgba(142, 105, 88, 1) 100%
+  );
+  background-position: center center;
+  margin: auto 0;
+}

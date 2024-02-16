@@ -1,25 +1,23 @@
-import classes from "./FriendsCard.module.css";
-import FriendsProfile from "./FriendsProfile";
-import UserCurrentAlias from "./UserCurrentAlias";
 import UserName from "./UserName";
-import UserStatus from "./UserStatus";
-
-interface info {
-  name: string;
-  alias: string;
-  status: string;
-  image: string;
-}
-
-export default function FriendsCard({ info }: { info: info }) {
+// import UserStatus from "./UserStatus";
+import FriendsProfile from "./FriendsProfile";
+import classes from "./FriendsCard.module.css";
+import UserCurrentAlias from "../../UserCurrentAlias";
+import { FriendType } from "@/types/friendTypes";
+import { Link } from "react-router-dom";
+export default function FriendsCard({ info }: { info: FriendType }) {
   return (
-    <div className={classes.card}>
-      <FriendsProfile image={info.image} />
-      <div className={classes.textWrapper}>
-        <UserCurrentAlias alias={info.alias} />
-        <UserName name={info.name} />
-        <UserStatus status={info.status} />
+    <Link to={`/main/profile/${info.userId}`}>
+      <div className={classes.card}>
+        <div className="">
+          <FriendsProfile image={info.profileImg} />
+        </div>
+        <div className={classes.textWrapper}>
+          <UserCurrentAlias alias={info.curAlias} />
+          <UserName name={info.name} />
+          {/* <UserStatus status={info.state} /> */}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
