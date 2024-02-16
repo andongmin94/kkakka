@@ -15,7 +15,11 @@ export default function FriendsProfile({ image }: info) {
   return (
     <div className="flex items-center space-x-3">
       <Skeleton
-        className={`w-[80px] h-[80px] rounded-full border-4  border-red-500 bg-[url('${image}')] bg-cover`}
+        className={`w-[80px] h-[80px] rounded-full border-2 bg-cover`}
+        style={{
+          backgroundImage: `url("${image}")`,
+          backgroundSize: "cover",
+        }}
       />
     </div>
   );

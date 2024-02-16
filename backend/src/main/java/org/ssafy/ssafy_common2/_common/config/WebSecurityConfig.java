@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,10 +50,14 @@ public class WebSecurityConfig {
 
         // 기본 설정인 Session 방식 사용하지 않고 JWT 방식 사용
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        //SockJS는 기본적으로 HTML iframe 요소를 통한 전송을 허용하지 않도록 설정되는데 해당 설정을 해제
+        http.headers((header) -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         http.authorizeRequests()
                 .requestMatchers("/api/oauth/callback/kakao/token").permitAll()
                 .requestMatchers("/oauth/authorize").permitAll()
+                .requestMatchers("/hello").permitAll()
+//                .requestMatchers("/api/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/booking/**").permitAll()
 //                .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())

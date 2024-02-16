@@ -1,8 +1,8 @@
 // Alternatively:
 // import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 // npm install --save react-lottie-player
-import Lottie from "react-lottie-player";
 import lottieJson from "@/live.json";
+import Lottie from "react-lottie-player/dist/LottiePlayerLight";
 
 export default function Live() {
   return (
@@ -10,7 +10,7 @@ export default function Live() {
       loop
       animationData={lottieJson}
       play
-      style={{ width: 120, height: 60 }}
+      style={{ width: 80, height: 40 }}
     />
   );
 }

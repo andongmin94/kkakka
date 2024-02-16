@@ -1,38 +1,43 @@
 import MessagePeek from "./MessagePeek";
-import UnreadMessages from "../UnreadMessages";
+import UnreadMessages from "./UnreadMessages";
 import UserName from "../navbar/friendsSidebar/UserName";
-import UserStatus from "../navbar/friendsSidebar/UserStatus";
-import UserCurrentAlias from "../navbar/friendsSidebar/UserCurrentAlias";
+import UserCurrentAlias from "../UserCurrentAlias";
 import MessageProfile from "./MessageProfile";
 import classes from "./Message.module.css";
 import MessageUpdatedAt from "./MessageUpdatedAt";
 
-interface messageProps {
-  name: string;
-  alias: string;
-  status: string;
+interface dmProps {
+  chatRoomType: string;
+  friendAlias: string;
+  friendEmail: string;
+  friendId: number;
+  friendImgUrl: string;
+  friendName: string;
   lastMessage: string;
-  unreadMessages: number;
-  updatedAt: string;
+  lastWrittenMessageTime: Date;
+  state: string;
+  roomId: number;
+  tenMinute: boolean;
+  unreadMessageCnt: number;
 }
 
-export default function Message({
-  messageInfo,
-}: {
-  messageInfo: messageProps;
-}) {
+export default function Message({ dm }: { dm: dmProps }) {
   return (
     <>
       <div className={classes.wrapper}>
-        <MessageProfile />
-        <div>
-          <UserCurrentAlias alias={messageInfo.alias} />
-          <UserName name={messageInfo.name} />
-          <UserStatus status={messageInfo.status} />
+        <MessageProfile friendImgUrl={dm.friendImgUrl} />
+        <div className="flex flex-col mr-10">
+          <UserCurrentAlias alias={dm.friendAlias} />
+          <div className="flex justify-center items-center">
+            <UserName name={dm.friendName} />
+            {/* <UserStatus login={dm.login} status={""} /> */}
+          </div>
         </div>
-        <MessagePeek lastMessage={messageInfo.lastMessage} />
-        <UnreadMessages />
-        <MessageUpdatedAt updatedAt={messageInfo.updatedAt} />
+        <div className=" col-span-3">
+          <MessagePeek lastMessage={dm.lastMessage} />
+        </div>
+        <UnreadMessages unreadMessageNum={dm.unreadMessageCnt} />
+        <MessageUpdatedAt updatedAt={dm.lastWrittenMessageTime} />
       </div>
     </>
   );

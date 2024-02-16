@@ -1,0 +1,44 @@
+{
+  "data": {
+    "alarmList": [
+      {
+        "alarmID": 1,
+        "alarmContent": "배성규님이 친구 요청을 보냈습니다.",
+        "alarmPic": "배성규프사",
+        "isChecked": false,
+        "createdAt": "2018-01-01 00:00:00",
+        "frqEmail": "요청보낸사람@naver.com",
+        "dogamId": null
+      },
+      {
+        "alarmID": 2,
+        "alarmContent": "새로운 도감이 추가되었습니다.",
+        "alarmPic": "내프사",
+        "isChecked": false,
+        "createdAt": "2018-01-01 00:00:00",
+        "frqEmail": null,
+        "dogamId": 123123
+      },
+      {
+        "alarmID": 3,
+        "alarmContent": "내 도감에 새로운 댓글이 달렸습니다.",
+        "alarmPic": "내프사",
+        "isChecked": false,
+        "createdAt": "2018-01-01 00:00:00",
+        "frqEmail": null,
+        "dogamId": 393939
+      },
+      {
+        "alarmID": 4,
+        "alarmContent": "내 칭호가 변경되었습니다.",
+        "alarmPic": "내프사",
+        "isChecked": false,
+        "createdAt": "2018-01-01 00:00:00",
+        "frqEmail": null,
+        "dogamId": null
+      }
+    ],
+    "uncheckedAlarms": 10
+  },
+  "msg": "방 목록 생성 성공"
+}
