@@ -41,7 +41,8 @@
     - Typescript `5.2.2`
     - Tailwind CSS `3.4.1`
     - Zustand `4.4.7`
-    - Tanstack React Query v5
+    - Tanstack React Query `5.17.15`
+    - Nodejs `20`
 
   ### **👨‍💻 Back-end**
     
