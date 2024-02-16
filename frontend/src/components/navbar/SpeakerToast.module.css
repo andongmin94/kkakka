@@ -1,0 +1,27 @@
+.iconAnimation {
+  animation: sizeChange 1.5s infinite alternate;
+}
+
+@keyframes sizeChange {
+  from {
+    width: 10px;
+    height: 10px;
+  }
+  to {
+    width: 42px; /* 최종 크기 설정 */
+    height: 42px;
+  }
+}
+
+.fontAnimation {
+  animation: fontChange 1.5s infinite alternate;
+}
+
+@keyframes fontChange {
+  from {
+    font-size: 0.5rem;
+  }
+  to {
+    font-size: 2rem;
+  }
+}

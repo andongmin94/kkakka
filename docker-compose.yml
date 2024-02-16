@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    image: backend
+    restart: 'always'
+    ports:
+      - "8080:8080"
+    container_name: backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    image: frontend
+    restart: 'always'
+    ports:
+      - "3000:3000"
+    container_name: frontend

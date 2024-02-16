@@ -1,7 +1,7 @@
 /* 친구 버튼 */
 .friends_image {
-  height: 55px;
-  width: 55px;
+  height: 35px;
+  width: 35px;
   background-image: url("/image/friendsOff.png");
   background-size: cover;
   background-position: center;
@@ -10,6 +10,21 @@
 
 .friends_image:hover {
   background-image: url("/image/friendsOn.png");
+  animation-name: shake;
+  animation-duration: 1s;
+}
+
+.search_image {
+  height: 35px;
+  width: 35px;
+  background-image: url("/image/search.png");
+  background-size: cover;
+  background-position: center;
+  margin-right: 30px;
+}
+
+.search_image:hover {
+  background-image: url("/image/search.png");
   animation-name: shake;
   animation-duration: 1s;
 }

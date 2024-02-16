@@ -2,7 +2,6 @@ package org.ssafy.ssafy_common2.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -39,18 +38,22 @@ public class User extends BaseTime {
     @Column(name = "user_role",nullable = false, length = 30)
     private String userRole;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "riot_id",nullable = true, length = 50)
+    private String riotId;
+
+    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
     private DynamicUserInfo userInfoId;
 
     @Builder
-    private User(Long kakaoId, String kakaoProfileImg, String userName, String kakaoEmail, String userRole, DynamicUserInfo userInfo) {
+    private User(Long kakaoId, String kakaoProfileImg, String userName, String kakaoEmail, String userRole, String riotId, DynamicUserInfo userInfo) {
 
         this.kakaoId = kakaoId;
         this.kakaoProfileImg = kakaoProfileImg;
         this.userName = userName;
         this.kakaoEmail = kakaoEmail;
         this.userRole = userRole;
+        this.riotId = riotId;
         this.userInfoId = userInfo;
     }
 
@@ -63,5 +66,25 @@ public class User extends BaseTime {
                 .userRole(userRole)
                 .userInfo(userInfo)
                 .build();
+    }
+
+    public static User of(Long kakaoId, String kakaoProfileImg, String userName, String kakaoEmail, String userRole, String riotId, DynamicUserInfo userInfo) {
+        return builder()
+                .kakaoId(kakaoId)
+                .kakaoProfileImg(kakaoProfileImg)
+                .userName(userName)
+                .kakaoEmail(kakaoEmail)
+                .userRole(userRole)
+                .riotId(riotId)
+                .userInfo(userInfo)
+                .build();
+    }
+
+    public void updateProfileImg(String profileImgUrl) {
+        this.kakaoProfileImg = profileImgUrl;
+    }
+
+    public void updateRiotId(String riotId) {
+        this.riotId = riotId;
     }
 }
