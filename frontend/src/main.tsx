@@ -26,6 +26,10 @@ import SettingPage from "@/electron/SettingPage";
 import MessageTestPage from "./routes/MessageTestPage";
 import LiveChat from "./routes/LiveChat";
 import NotFound from "./routes/NotFound";
+import ReactGA from "react-ga4";
+
+ReactGA.initialize(import.meta.env.VITE_GA_KEY);
+ReactGA.send("pageview");
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
