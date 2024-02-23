@@ -70,10 +70,10 @@
 
 ## 2-2. 서비스 아키텍처
   
-![image](/uploads/a2cc07d1bd5b6378e7d8aab52b771108/image.png)
+![image](/frontend/public/readme-image/아키텍처-image.png)
 
 ## 2-3 ERD
-![D110_까까_ERD](/uploads/b1b3c273db18af3b04789738304da629/D110_까까_ERD.png)
+![D110_까까_ERD](/frontend/public/readme-image/ERD-image.png)
 
 ------------------------------------------------------  
 
@@ -81,7 +81,7 @@
 ------------------------------------------------------
 
   ## 3-1. 메인 페이지
-![메인_페이지](/uploads/705a3fcb65bfc6513942c55a8cb35e19/메인_페이지.gif)
+![메인_페이지](/frontend/public/readme-image/main-image.gif)
   - 현재 게임중인 친구의 라이브 채팅방 입장
   - 친구들의 새로 올라온 도감 확인
   - 프로필 페이지, 아이템샵, 메세지함, 알림 확인
@@ -89,50 +89,50 @@
   - 친구 찾기
 
   ## 3-2. 라이브 방 입장  
-![라이브_채팅방](/uploads/55bbb9efdf9c2ef39975876720289da3/라이브_채팅방.gif)
+![라이브_채팅방](/frontend/public/readme-image/live-image.gif)
   - 일반 채팅
   - 사진 채팅
   - 친구 도감 채팅
   - 채팅시 친구한테 window 알림 기능
 
   ## 3-3. 프로필 페이지
-![프로필_페이지](/uploads/0600b0cb982b11a379af2d9d299cbc09/프로필_페이지.gif)
+![프로필_페이지](/frontend/public/readme-image/profile-image.gif)
   - 프로필 주인 도감 확인
   - 프로필 주인 명예의 전당(칭호) 확인
   - 프로필 편집
 
   ## 3-4. 알림
-![알림](/uploads/478b1aadab14e5a548b8cb7d9a5f16b0/알림.gif)
+![알림](/frontend/public/readme-image/noti-image.gif)
   - 새 도감 알림시 도감으로 이동
   - 새 칭호 알림시 프로필로 이동
   - 새 댓글 알림시 도감으로 이동
   - 친구 요청시 친구 프로필로 이동
 
   ## 3-5. 친구 목록
-![친구_목록](/uploads/e46b0bfcda226671061b3b2bda3914b7/친구_목록.gif)
+![친구_목록](/frontend/public/readme-image/friend-image.gif)
   - 친구들의 프로필 확인
 
   ## 3-6. 친구 검색
-![친구_검색](/uploads/c78d0b4d0f6e6164d3f92fc252906a74/친구_검색.gif)
+![친구_검색](/frontend/public/readme-image/search-image.gif)
   - 친구 카카오 이메일로 검색
 
   ## 3-7. 아이템 샵
-![아이템_샵](/uploads/c20a6e1c6ee543d61c1bd38aa700ddc4/아이템_샵.gif)
+![아이템_샵](/frontend/public/readme-image/shop-image.gif)
   - 칭호 지정권 사용
   - 강제 칭찬권 사용
   - 확성기 사용
 
   ## 3-8. 메세지함
-![메세지함](/uploads/8f9b8ffd1e3904d94c7cd6f138ab1b1c/메세지함.gif)
+![메세지함](/frontend/public/readme-image/message-image.gif)
   - 1:1 채팅
 
   ## 3-9. 배팅
-![배팅하기](/uploads/2c8b0d9dc8792a7a5bb418c48b1a471d/배팅하기.gif)
+![배팅하기](/frontend/public/readme-image/betting-image.gif)
   - 이긴다, 진다로 배팅 가능
   - 승패에 따라 정산
   
   ## 3-10. 댓글 달기, 싫어요
-![배팅하기](/uploads/d6485650f4702809079c242d800a96db/배팅하기.gif)
+![배팅하기](/frontend/public/readme-image/reaction-image.gif)
   - 친구의 웃긴 도감을 싫어요
   - 친구의 도감에 댓글 갈기
 
