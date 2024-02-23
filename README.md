@@ -75,15 +75,12 @@
 ## 2-3 ERD
 ![D110_까까_ERD](/uploads/b1b3c273db18af3b04789738304da629/D110_까까_ERD.png)
 
-## 2-4 API 명세서
-
-  
 ------------------------------------------------------  
 
 # 3. 🦈 주요 기능
 ------------------------------------------------------
 
-  ## 1. 메인 페이지
+  ## 3-1. 메인 페이지
 ![메인_페이지](/uploads/705a3fcb65bfc6513942c55a8cb35e19/메인_페이지.gif)
   - 현재 게임중인 친구의 라이브 채팅방 입장
   - 친구들의 새로 올라온 도감 확인
@@ -91,50 +88,50 @@
   - 앱 다운로드 및 서비스 약관 확인
   - 친구 찾기
 
-  ## 2. 라이브 방 입장  
+  ## 3-2. 라이브 방 입장  
 ![라이브_채팅방](/uploads/55bbb9efdf9c2ef39975876720289da3/라이브_채팅방.gif)
   - 일반 채팅
   - 사진 채팅
   - 친구 도감 채팅
   - 채팅시 친구한테 window 알림 기능
 
-  ## 3. 프로필 페이지
+  ## 3-3. 프로필 페이지
 ![프로필_페이지](/uploads/0600b0cb982b11a379af2d9d299cbc09/프로필_페이지.gif)
   - 프로필 주인 도감 확인
   - 프로필 주인 명예의 전당(칭호) 확인
   - 프로필 편집
 
-  ## 4. 알림
+  ## 3-4. 알림
 ![알림](/uploads/478b1aadab14e5a548b8cb7d9a5f16b0/알림.gif)
   - 새 도감 알림시 도감으로 이동
   - 새 칭호 알림시 프로필로 이동
   - 새 댓글 알림시 도감으로 이동
   - 친구 요청시 친구 프로필로 이동
 
-  ## 5. 친구 목록
+  ## 3-5. 친구 목록
 ![친구_목록](/uploads/e46b0bfcda226671061b3b2bda3914b7/친구_목록.gif)
   - 친구들의 프로필 확인
 
-  ## 6. 친구 검색
+  ## 3-6. 친구 검색
 ![친구_검색](/uploads/c78d0b4d0f6e6164d3f92fc252906a74/친구_검색.gif)
   - 친구 카카오 이메일로 검색
 
-  ## 7. 아이템 샵
+  ## 3-7. 아이템 샵
 ![아이템_샵](/uploads/c20a6e1c6ee543d61c1bd38aa700ddc4/아이템_샵.gif)
   - 칭호 지정권 사용
   - 강제 칭찬권 사용
   - 확성기 사용
 
-  ## 8. 메세지함
+  ## 3-8. 메세지함
 ![메세지함](/uploads/8f9b8ffd1e3904d94c7cd6f138ab1b1c/메세지함.gif)
   - 1:1 채팅
 
-  ## 9. 배팅
+  ## 3-9. 배팅
 ![배팅하기](/uploads/2c8b0d9dc8792a7a5bb418c48b1a471d/배팅하기.gif)
   - 이긴다, 진다로 배팅 가능
   - 승패에 따라 정산
   
-  ## 댓글 달기, 싫어요
+  ## 3-10. 댓글 달기, 싫어요
 ![배팅하기](/uploads/d6485650f4702809079c242d800a96db/배팅하기.gif)
   - 친구의 웃긴 도감을 싫어요
   - 친구의 도감에 댓글 갈기
@@ -158,7 +155,7 @@
 # 5. 🖊 Cooperation
 ------------------------------------------------------
   
-  ## 7-1. Tools
+  ## Tools
 
     - Git
 
@@ -254,15 +251,15 @@ feat/S10P12D110-17-signup -> develop
 ------------------------------------------------------
 # 팀원 역할 및 담당
 
-| 역할               | 이름   | 담당                                                                                                                                                  | 이메일               | 깃허브                              |
-|--------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------------|
-| 팀장, Backend Lead | 오세영 | - 유저 플로우 작성 <br> - 스프링 시큐리티 적용 <br> - JWT filter 적용 <br> - 공통 응답 API 작성 <br> - 공통 에러 응답 API 작성 <br> - 카카오 소셜 로그인 구현 <br> - 도감 관련 API 작성 <br> - 유저 데이터 관련 API 작성 <br> - 간단한 Front API 작성 <br> - Infra 구성 ( AWS RDS, EC2, Nginx Reverse Proxy, Jenkins Pipeline, Dockerfile) | osy9536@gmail.com   | [osy9536](https://github.com/osy9536) |
-| 팀원, Backend      | 전수민 | - WebSocket 채팅 서버 <br> - 롤 API 담당하여 명세서 작성 <br> - 롤 LOCAL API 이용한 크롤링 <br> - socket s3를 이용한 이미지 업로드                                                        | wjsaos2081@gmail.com| [dalcheonroadhead](https://github.com/dalcheonroadhead) |
-| 팀원, Backend, PM  | 이수민 | - SSE 이용한 실시간 알림, 확성기 기능 구현(Backend SseEmitter 적용, Frontend EventSourcePolyfill 적용) <br> - 아이템샵 구입(칭호, 강제칭찬권, 확성기) 관련 API 작성 <br> - 칭호 관련 API 작성 <br> - 친구 관련 API 작성 <br> - JUnit 서비스단 단위 테스트 작성                                       | oistmil@gmail.com   | [oistmil](https://github.com/oistmil) |
-| 팀원, Frontend Lead| 김상훈 | - 일렉트론 포팅 및 개발 & PWA 포팅 <br> - 클라이언트 & 라이브 채팅창 연동 <br> - 선행기술 연구 <br> - UCC 제작                                                                                                                      | k1016h@naver.com    | [andongmin94](https://github.com/andongmin94) |
-| 팀원, Frontend, 서기| 김지연 | - Notion 을 통해 협업 문서 관리 및 회의록 작성<br> - Figma 활용하여 디자인 및 와이어프레임 작성<br> - 카카오 로그인 API 활용하여 회원가입 및 로그인 구현<br> - 최초 로그인 구분 및 미 로그인 사용자 redirection 로직 개발<br> - 도감, 댓글 CRUD 개발<br> - json-server 를 활용해 mock api 테스트 진행<br> - React-Query 사용하여 비동기 호출 성능 개선 <br> - 도감 게시글 무한 스크롤 구현<br> - Zustand 를 이용하여 전역 상태관리<br> - CSS Key frame 사용하여 확성기 애니메이션 개발<br> - 404 Not Found 페이지 개발<br> - radix ui의 progress bar 사용하여 로딩중 화면 개발<br> - Tailwind css 활용하여 컴포넌트마다 필요한 ui사항 적용<br> - react-ga4 활용하여 google analytics 적용                                               | jiyeon2536@naver.com| [jiyeon2536](https://github.com/jiyeon2536) |
-| 팀원, Frontend, 총무| 이해건 | - WebSocket 채팅 프론트 <br> - 웹 UI/UX <br> - PWA 반응형 모바일 UI                                                                                                                                   | lhgeer2617@gmail.com| [lhgeer2617](https://github.com/lhgeer2617) |
+| 오세영 | 전수민 | 이수민 | 김상훈 | 김지연 | 이해건 |
+| ----- | ------ | ----- | ------ | ----- | ------ |
+| <a href="https://github.com/osy9536"><img src="https://avatars.githubusercontent.com/u/76714304?v=4" alt="osy9536" width="100" height="100"></a> | <a href="https://github.com/dalcheonroadhead"><img src="https://avatars.githubusercontent.com/u/102154788?v=4" alt="dalcheonroadhead" width="100" height="100"></a> | <a href="https://github.com/oistmil"><img src="https://avatars.githubusercontent.com/u/75559067?v=4" alt="oistmil" width="100" height="100"></a> | <a href="https://github.com/andongmin94"><img src="https://avatars.githubusercontent.com/u/110483588?v=4" alt="andongmin94" width="100" height="100"></a> | <a href="https://github.com/jiyeon2536"><img src="https://avatars.githubusercontent.com/u/125720796?v=4" alt="jiyeon2536" width="100" height="100"></a> |<a href="https://github.com/lhgeer2617"><img src="https://avatars.githubusercontent.com/u/139435456?v=4" alt="lhgeer2617" width="100" height="100"></a> | 
 
-
---------------------------------------------
- 
+| Contributors | Role | Position |
+| ------------ | ---- | -------- |
+| 　오세영 | 팀장, <br /> Backend Lead | - 유저 플로우 작성 <br> - 스프링 시큐리티 적용 <br> - JWT filter 적용 <br> - 공통 응답 API 작성 <br> - 공통 에러 응답 API 작성 <br> - 카카오 소셜 로그인 구현 <br> - 도감 관련 API 작성 <br> - 유저 데이터 관련 API 작성 <br> - 간단한 Front API 작성 <br> - Infra 구성 ( AWS RDS, EC2, Nginx Reverse Proxy, Jenkins Pipeline, Dockerfile) |
+| 　전수민 | 팀원, <br /> Backend | - WebSocket 채팅 서버 <br> - 롤 API 담당하여 명세서 작성 <br> - 롤 LOCAL API 이용한 크롤링 <br> - socket s3를 이용한 이미지 업로드 |
+| 　이수민 | 팀원, <br /> Backend, <br /> PM  | - SSE 이용한 실시간 알림, 확성기 기능 구현(Backend SseEmitter 적용, Frontend EventSourcePolyfill 적용) <br> - 아이템샵 구입(칭호, 강제칭찬권, 확성기) 관련 API 작성 <br> - 칭호 관련 API 작성 <br> - 친구 관련 API 작성 <br> - JUnit 서비스단 단위 테스트 작성 |
+| 　김상훈 | 팀원, <br /> Frontend Lead| - 일렉트론 포팅 및 개발 & PWA 포팅 <br> - 클라이언트 & 라이브 채팅창 연동 <br> - 선행기술 연구 <br> - UCC 제작 |
+| 　김지연 | 팀원, <br /> Frontend, <br /> 서기| - Notion 을 통해 협업 문서 관리 및 회의록 작성<br> - Figma 활용하여 디자인 및 와이어프레임 작성<br> - 카카오 로그인 API 활용하여 회원가입 및 로그인 구현<br> - 최초 로그인 구분 및 미 로그인 사용자 redirection 로직 개발<br> - 도감, 댓글 CRUD 개발<br> - json-server 를 활용해 mock api 테스트 진행<br> - React-Query 사용하여 비동기 호출 성능 개선 <br> - 도감 게시글 무한 스크롤 구현<br> - Zustand 를 이용하여 전역 상태관리<br> - CSS Key frame 사용하여 확성기 애니메이션 개발<br> - 404 Not Found 페이지 개발<br> - radix ui의 progress bar 사용하여 로딩중 화면 개발<br> - Tailwind css 활용하여 컴포넌트마다 필요한 ui사항 적용<br> - react-ga4 활용하여 google analytics 적용  |
+| 　이해건 | 팀원, <br /> Frontend, <br /> 총무| - WebSocket 채팅 프론트 <br> - 웹 UI/UX <br> - PWA 반응형 모바일 UI |
