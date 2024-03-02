@@ -79,8 +79,23 @@
 
 # 3. 🦈 주요 기능
 ------------------------------------------------------
+  ## 3-1. 일렉트론 Core 기능 1
+![일렉트론_코어1](/frontend/public/readme-image/core-image1.gif)
 
-  ## 3-1. 메인 페이지
+  (앱에서의 채팅이 OS레이어를 통해 게임 레이어 상단으로 노출됩니다.)
+
+  - [라이브중계방 - 게임플레이어] 채팅 내용이 게임 레이어 상단으로 전달됩니다.
+
+  ## 3-2. 일렉트론 Core 기능 2
+![일렉트론_코어2](/frontend/public/readme-image/core-image2.gif)
+  
+  (포탑이 안동민님을 처치했습니다.)
+
+  (얘 죽었는데?)
+  
+  - [게임플레이어 - 라이브중계방] 인게임 이벤트가 봇 메시지로 채팅방에 중계됩니다.
+
+  ## 3-3. 메인 페이지
 ![메인_페이지](/frontend/public/readme-image/main-image.gif)
   - 현재 게임중인 친구의 라이브 채팅방 입장
   - 친구들의 새로 올라온 도감 확인
@@ -88,50 +103,50 @@
   - 앱 다운로드 및 서비스 약관 확인
   - 친구 찾기
 
-  ## 3-2. 라이브 방 입장  
+  ## 3-4. 라이브 방 입장  
 ![라이브_채팅방](/frontend/public/readme-image/live-image.gif)
   - 일반 채팅
   - 사진 채팅
   - 친구 도감 채팅
   - 채팅시 친구한테 window 알림 기능
 
-  ## 3-3. 프로필 페이지
+  ## 3-5. 프로필 페이지
 ![프로필_페이지](/frontend/public/readme-image/profile-image.gif)
   - 프로필 주인 도감 확인
   - 프로필 주인 명예의 전당(칭호) 확인
   - 프로필 편집
 
-  ## 3-4. 알림
+  ## 3-6. 알림
 ![알림](/frontend/public/readme-image/noti-image.gif)
   - 새 도감 알림시 도감으로 이동
   - 새 칭호 알림시 프로필로 이동
   - 새 댓글 알림시 도감으로 이동
   - 친구 요청시 친구 프로필로 이동
 
-  ## 3-5. 친구 목록
+  ## 3-7. 친구 목록
 ![친구_목록](/frontend/public/readme-image/friend-image.gif)
   - 친구들의 프로필 확인
 
-  ## 3-6. 친구 검색
+  ## 3-8. 친구 검색
 ![친구_검색](/frontend/public/readme-image/search-image.gif)
   - 친구 카카오 이메일로 검색
 
-  ## 3-7. 아이템 샵
+  ## 3-9. 아이템 샵
 ![아이템_샵](/frontend/public/readme-image/shop-image.gif)
   - 칭호 지정권 사용
   - 강제 칭찬권 사용
   - 확성기 사용
 
-  ## 3-8. 메세지함
+  ## 3-10. 메세지함
 ![메세지함](/frontend/public/readme-image/message-image.gif)
   - 1:1 채팅
 
-  ## 3-9. 배팅
+  ## 3-11. 배팅
 ![배팅하기](/frontend/public/readme-image/betting-image.gif)
   - 이긴다, 진다로 배팅 가능
   - 승패에 따라 정산
   
-  ## 3-10. 댓글 달기, 싫어요
+  ## 3-12. 댓글 달기, 싫어요
 ![배팅하기](/frontend/public/readme-image/reaction-image.gif)
   - 친구의 웃긴 도감을 싫어요
   - 친구의 도감에 댓글 달기
