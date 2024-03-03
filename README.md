@@ -22,7 +22,7 @@
 </aside>
   
 ## 📃 문서
-[💻 Notion](https://pleasant-harrier-183.notion.site/SSAFY-D110-ba366d7979844b7e95ddcd83ee6e4734?pvs=74)
+[💻 Notion](https://andongmin.notion.site/SSAFY-D110-c1510acfedea430c9db2aad48e882ba6?pvs=4)
 
 ------------------------------------------------------
   
