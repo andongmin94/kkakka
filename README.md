@@ -11,15 +11,15 @@
   - 트랙: 웹디자인
 
   ### 주요 기능
-  <aside>
-🍪 **친구 놀리기 SNS 🤪**
+  
+**친구 놀리기 SNS 🤪**
 
 - 롤 챗봇 라이브 중계
 - 실시간 채팅
 - 승패 예측 통한 포인트 적립
 - 놀리기 아이템 구매와 사용
 - 못한 도감 업로드
-</aside>
+
   
 ## 📃 문서
 [💻 Notion](https://andongmin.notion.site/SSAFY-D110-c1510acfedea430c9db2aad48e882ba6?pvs=4)
@@ -278,5 +278,5 @@ feat/S10P12D110-17-signup -> develop
 | 　전수민 | 팀원, <br /> Backend | - WebSocket 채팅 서버 <br> - 롤 API 담당하여 명세서 작성 <br> - 롤 LOCAL API 이용한 크롤링 <br> - socket s3를 이용한 이미지 업로드 |
 | 　이수민 | 팀원, <br /> Backend, <br /> PM  | - SSE 이용한 실시간 알림, 확성기 기능 구현(Backend SseEmitter 적용, Frontend EventSourcePolyfill 적용) <br> - 아이템샵 구입(칭호, 강제칭찬권, 확성기) 관련 API 작성 <br> - 칭호 관련 API 작성 <br> - 친구 관련 API 작성 <br> - JUnit 서비스단 단위 테스트 작성 |
 | 　김상훈 | 팀원, <br /> Frontend Lead| - 일렉트론 포팅 및 개발 & PWA 포팅 <br> - 클라이언트 & 라이브 채팅창 연동 <br> - 선행기술 연구 <br> - UCC 제작 |
-| 　김지연 | 팀원, <br /> Frontend, <br /> 서기| - Notion 을 통해 협업 문서 관리 및 회의록 작성<br> - Figma 활용하여 디자인 및 와이어프레임 작성<br> - 카카오 로그인 API 활용하여 회원가입 및 로그인 구현<br> - 최초 로그인 구분 및 미 로그인 사용자 redirection 로직 개발<br> - 도감, 댓글 CRUD 개발<br> - json-server 를 활용해 mock api 테스트 진행<br> - React-Query 사용하여 비동기 호출 성능 개선 <br> - 도감 게시글 무한 스크롤 구현<br> - Zustand 를 이용하여 전역 상태관리<br> - CSS Key frame 사용하여 확성기 애니메이션 개발<br> - 404 Not Found 페이지 개발<br> - radix ui의 progress bar 사용하여 로딩중 화면 개발<br> - Tailwind css 활용하여 컴포넌트마다 필요한 ui사항 적용<br> - react-ga4 활용하여 google analytics 적용  |
+| 　김지연 | 팀원, <br /> Frontend, <br /> 서기| - Notion 을 통해 협업 문서 관리 및 회의록 작성<br> - Figma 활용하여 디자인 및 와이어프레임 작성<br> - react-ga4 활용하여 google analytics 적용 <br> - 카카오 로그인 API 활용하여 회원가입 및 로그인 구현<br> - 도감, 댓글 CRUD 개발<br> - React-Query 사용하여 무한 스크롤 구현 <br> - UI, UX 개선  |
 | 　이해건 | 팀원, <br /> Frontend, <br /> 총무| - WebSocket 채팅 프론트 <br> - 웹 UI/UX <br> - PWA 반응형 모바일 UI |
