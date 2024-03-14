@@ -24,6 +24,10 @@
 ## 📃 문서
 [💻 Notion](https://andongmin.notion.site/SSAFY-D110-c1510acfedea430c9db2aad48e882ba6?pvs=4)
 
+## 🦿 성과
+- 삼성청년SW아카데미 2학기 공통 프로젝트 우수상 (24.02.16)
+<img src="/frontend/public/readme-image/award.png" width=430px />
+
 ------------------------------------------------------
   
 # 2. 🔍 개발 환경
