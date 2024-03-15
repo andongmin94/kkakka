@@ -4,18 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.ssafy.ssafy_common2._common.exception.CustomException;
-import org.ssafy.ssafy_common2._common.exception.ErrorResponse;
 import org.ssafy.ssafy_common2._common.exception.ErrorType;
 import org.ssafy.ssafy_common2._common.response.ApiResponseDto;
 import org.ssafy.ssafy_common2._common.response.MsgType;
@@ -55,22 +50,9 @@ public class ChatController {
     // [1] 입장 메세지 용 ============================================================================
     @MessageMapping("/chat/enterUser")
     @Transactional // 영속성을 위해서
-    public void enterUser(String publishMessage, SimpMessageHeaderAccessor headerAccessor) {
-        System.out.println("++++++ Chat Controller 입장 메세지 받음 ++++++");
-        log.info("What Accessor Header got {}", headerAccessor);
-
+    public void enterUser(String publishMessage) {
         try{
             ChatMessageDto msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("들어온 ENTER 메세지 {}",  "ChatMessageDto{" +
-                    "messageType='" + msg.getMessageType() + '\'' +
-                    ", content='" + msg.getContent() + '\'' +
-                    ", userId=" + msg.getUserId() +
-                    ", userName=" + msg.getUserName() +
-                    ", chatRoomId=" + msg.getChatRoomId() +
-                    ", createdAt=" + msg.getCreatedAt() +
-                    ", updateAt=" + msg.getUpdateAt() +
-                    ", imageCode=" + msg.getImgCode() +
-                    '}');
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -125,7 +107,7 @@ public class ChatController {
 
 
         }catch (Exception e){
-            log.error("Exception {}",e.getMessage());
+            log.warn("Unable to process chat enter payload");
         }
     }
 
@@ -134,21 +116,9 @@ public class ChatController {
     @MessageMapping("/chat/sendMessage")
     @Transactional // 영속성을 위해서
     public void sendMessage (String publishMessage) {
-        log.info("MESSAGE {}", publishMessage);
-
         ChatMessageDto msg = null;
         try {
             msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-            log.info("들어온 TALK 메세지 {}",  "ChatMessageDto{" +
-                    "messageType='" + msg.getMessageType() + '\'' +
-                    ", content='" + msg.getContent() + '\'' +
-                    ", userId=" + msg.getUserId() +
-                    ", userName=" + msg.getUserName() +
-                    ", chatRoomId=" + msg.getChatRoomId() +
-                    ", createdAt=" + msg.getCreatedAt() +
-                    ", updateAt=" + msg.getUpdateAt() +
-                    ", imageCode=" + msg.getImgCode() +
-                    '}');
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -196,7 +166,6 @@ public class ChatController {
 
                         double A = rd.nextDouble()*9+1;
                         int B = 10;
-                        System.out.println(A/B);
                         if(A /B > 0.70){
 
                             int percent = (int) ((A/B) *100);
@@ -293,7 +262,7 @@ public class ChatController {
             }
 
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Invalid chat payload");
         }
 
         template.convertAndSend("/sub/chat/room/" + msg.getChatRoomId(), msg);
@@ -303,22 +272,9 @@ public class ChatController {
     @MessageMapping("/chat/exitChatRoom")
     @Transactional // 영속성을 위해서
     public void exitChatRoom(String publishMessage){
-        log.info("EXIT_MESSAGE {}", publishMessage);
-
         ChatMessageDto msg = null;
         try {
             msg = objectMapper.readValue(publishMessage, ChatMessageDto.class);
-
-            log.info("들어온 QUIT 메세지 {}",  "ChatMessageDto{" +
-                    "messageType='" + msg.getMessageType() + '\'' +
-                    ", content='" + msg.getContent() + '\'' +
-                    ", userId=" + msg.getUserId() +
-                    ", userName=" + msg.getUserName() +
-                    ", chatRoomId=" + msg.getChatRoomId() +
-                    ", createdAt=" + msg.getCreatedAt() +
-                    ", updateAt=" + msg.getUpdateAt() +
-                    ", imageCode=" + msg.getImgCode() +
-                    '}');
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -365,19 +321,8 @@ public class ChatController {
             chatRoomMySQLService.updateUserCnt(msg.getChatRoomId(), "MINUS");
 
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Invalid chat payload");
         }
-    }
-
-    // [4] 사용자가 App을 끄거나, 방에서 나갔을 때 실행하는 함수 ==========================================================
-    @EventListener
-    @Transactional // 영속성을 위하여
-    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
-        log.info("DisConnEvent {}", event);
-
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-
-        log.info("headAccessor {}", headerAccessor);
     }
 
     // [5] PlayersInfo 정제해서 다시 보내기
@@ -392,21 +337,9 @@ public class ChatController {
             // 1) 안 들어온 데이터 추가해주기
             msg.setCreatedAt(now);
             msg.setUpdateAt(now);
-            // 1-1) 출력...
-            log.info("들어온 플레이어 정보 메세지 {}",  "ChatMessageDto{" +
-                    "messageType='" + msg.getMessageType() + '\'' +
-                    ", content='" + msg.getContent() + '\'' +
-                    ", userId=" + msg.getUserId() +
-                    ", userName=" + msg.getUserName() +
-                    ", chatRoomId=" + msg.getChatRoomId() +
-                    ", createdAt=" + msg.getCreatedAt() +
-                    ", updateAt=" + msg.getUpdateAt() +
-                    '}');
-
             // 2) 메세지 내용을 DB에 저장
             // 2-1) ChatJoin 찾기
 
-            log.info("현재 채팅방에 들어온 사람의 UserId: {}, 방 번호 {}",msg.getUserId(), msg.getChatRoomId());
             // 2-2) 채팅 참여가 존재한다면
 
 
@@ -418,7 +351,7 @@ public class ChatController {
                         msg.setUserCurAlias(sender.getUserInfoId().getCurAlias());
                     }
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Invalid player payload");
         }
 
         template.convertAndSend("/sub/playersInfo/room/" + msg.getChatRoomId(), msg);

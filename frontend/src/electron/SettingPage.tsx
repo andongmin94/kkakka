@@ -1,68 +1,62 @@
-import axios from "axios";
-const electron = window.electron;
-// import { Slider } from "@/components/ui/slider";
+import { useEffect, useState } from "react";
+
+type RuntimeInfo = {
+  appMode: "mock" | "real";
+  isPackaged: boolean;
+};
+
+type DesktopGameEvent = {
+  eventName: string;
+  message: string;
+  source: "sample" | "league";
+  occurredAt: string;
+};
 
 export default function SettingPage() {
-  /// 환경 체크
-  if (typeof electron !== "undefined") {
-    // 일렉트론 환경
-    console.log("일렉트론 애플리케이션에서 실행 중입니다.");
-  } else {
-    // 브라우저 환경
-    console.log("웹 브라우저에서 실행 중입니다.");
-  }
+  const electron = window.electron;
+  const [runtime, setRuntime] = useState<RuntimeInfo | null>(null);
+  const [message, setMessage] = useState("데스크톱 앱에서 샘플 경기 중계를 재생할 수 있습니다.");
 
-  const handleClick = () => {
-    electron.send("button-clicked", "리액트에서 보냄");
-  };
-  const summonerName = async () => {
-    let sname = "***";
-    const response = await axios({
-      method: "get",
-      url: `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${sname}?api_key=${
-        import.meta.env.VITE_Riot_API_KEY
-      }`,
-    });
-    console.log(response.data);
+  useEffect(() => {
+    if (!electron) return;
+    electron.getRuntimeInfo().then(setRuntime);
+    return electron.onGameEvent((event: DesktopGameEvent) => setMessage(event.message));
+  }, [electron]);
+
+  const startEvents = async () => {
+    if (!electron) return;
+    const result = await electron.startGameEvents();
+    if (!result.started && result.message) setMessage(result.message);
   };
 
-  function notifyMe() {
-    // Let's check if the browser supports notifications
-    if (!("Notification" in window)) {
-      alert("This browser does not support desktop notification");
-    }
+  const resetDemo = () => {
+    localStorage.removeItem("kkakka:demo:v1");
+    window.location.reload();
+  };
 
-    // Let's check whether notification permissions have already been granted
-    else if (Notification.permission === "granted") {
-      // If it's okay let's create a notification
-      // var notification = new Notification("Hi there!");
-    }
-
-    // Otherwise, we need to ask the user for permission
-    else if (Notification.permission !== "denied") {
-      Notification.requestPermission(function (permission) {
-        // If the user accepts, let's create a notification
-        if (permission === "granted") {
-          // var notification = new Notification("Hi there!");
-        }
-      });
-    }
-
-    // At last, if the user has denied notifications, and you
-    // want to be respectful there is no need to bother them any more.
+  if (!electron) {
+    return (
+      <main className="mx-auto max-w-2xl p-8">
+        <h1 className="text-2xl font-semibold">데모 설정</h1>
+        <p className="mt-3 text-neutral-600">브라우저에서는 가상 데이터 초기화 기능을 사용할 수 있습니다.</p>
+        <button className="mt-6 rounded bg-neutral-900 px-4 py-2 text-white" onClick={resetDemo}>가상 데이터 초기화</button>
+      </main>
+    );
   }
+
   return (
-    <div>
-      <br />
-      <br />
-      <button onClick={handleClick}>Click Me</button>
-      <br />
-      <br />
-      <button onClick={summonerName}>Click Me</button>
-      <br />
-      <br />
-      <button onClick={notifyMe}>Notify me!</button>
-      <br />
-    </div>
+    <main className="mx-auto max-w-2xl p-8">
+      <h1 className="text-2xl font-semibold">데스크톱 설정</h1>
+      <p className="mt-3 text-neutral-600">
+        {runtime?.appMode === "real" ? "League Client 연동 모드" : "샘플 경기 이벤트 모드"}
+        {runtime?.isPackaged ? " · 설치 앱" : " · 개발 실행"}
+      </p>
+      <p className="mt-6 rounded bg-neutral-100 p-4" aria-live="polite">{message}</p>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <button className="rounded bg-neutral-900 px-4 py-2 text-white" onClick={startEvents}>경기 이벤트 시작</button>
+        <button className="rounded border px-4 py-2" onClick={() => electron.stopGameEvents()}>이벤트 중지</button>
+        <button className="rounded border px-4 py-2" onClick={resetDemo}>가상 데이터 초기화</button>
+      </div>
+    </main>
   );
 }

@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class )
     public ResponseEntity<ApiResponseDto<Void>> methodValidException(MethodArgumentNotValidException e) {
         ErrorResponse responseDto = ErrorResponse.of(e.getBindingResult());
-        log.error("methodValidException throw Exception : {}", e.getBindingResult());
+        log.warn("Request validation failed: {} field error(s)", e.getBindingResult().getFieldErrorCount());
 
         return ResponseEntity.badRequest().body(ResponseUtils.error(responseDto));
     }
@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = CustomException.class)
     protected ResponseEntity<ApiResponseDto<Void>> handleCustomException(CustomException e) {
         ErrorResponse responseDto = ErrorResponse.of(e.getErrorType());
-        log.error("handleDataException throw Exception : {}", e.getErrorType());
+        log.warn("Request rejected with application error code {}", e.getErrorType().getCode());
 
         return ResponseEntity
                 .status(e.getErrorType().getCode())

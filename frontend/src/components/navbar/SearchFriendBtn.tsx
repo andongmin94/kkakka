@@ -1,14 +1,15 @@
 import { useState } from "react";
 import classes from "@/components/navbar/FriendsBtn.module.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SearchFriendBtn = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResult, setSearchResult] = useState(null);
+  const [searchResult, setSearchResult] = useState<number | null>(null);
   const [showSearchField, setShowSearchField] = useState(false); // 검색 필드 표시 여부 상태
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -30,7 +31,7 @@ const SearchFriendBtn = () => {
         const confirmed = window.confirm("친구 페이지로 이동!");
         if (confirmed) {
           // 확인을 누르면 해당 친구의 프로필 페이지로 이동
-          window.location.href = `/main/profile/${response.data.data.UserDataResponseDto.userId}`;
+          navigate(`/main/profile/${response.data.data.UserDataResponseDto.userId}`);
         }
       } else {
         // 아이디가 존재하지 않는다는 창 띄우기

@@ -1,6 +1,7 @@
 package org.ssafy.ssafy_common2.chatting.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -10,18 +11,27 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
+import java.util.Arrays;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class SpringConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Value("${app.cors.allowed-origins:http://localhost:3000}")
+    private String allowedOrigins;
 
+    @Value("${app.websocket.max-message-size:10485760}")
+    private int maxMessageSize;
 
     // 1) 웹 소켓 주소
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
+                        .map(String::trim)
+                        .filter(origin -> !origin.isEmpty() && !origin.equals("*"))
+                        .toArray(String[]::new))
                 .withSockJS();
     }
 
@@ -40,7 +50,7 @@ public class SpringConfig implements WebSocketMessageBrokerConfigurer {
     // 3) 웹소켓으로 보내는 메세지의 최대 크기 설정
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-        registration.setMessageSizeLimit(1024*1024*1024);
+        registration.setMessageSizeLimit(maxMessageSize);
     }
 
     // 3) 웹소켓으로 보내는 메세지의 최대 크기 설정
@@ -48,8 +58,8 @@ public class SpringConfig implements WebSocketMessageBrokerConfigurer {
     public ServletServerContainerFactoryBean createServletContainerFactoryBean() {
 
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxTextMessageBufferSize(Integer.MAX_VALUE);
-        container.setMaxBinaryMessageBufferSize(Integer.MAX_VALUE);
+        container.setMaxTextMessageBufferSize(maxMessageSize);
+        container.setMaxBinaryMessageBufferSize(maxMessageSize);
 
         return container;
     }

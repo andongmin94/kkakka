@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">바론친구 가상 사용자</title>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7E57C2"/><stop offset="1" stop-color="#3949AB"/></linearGradient></defs>
+  <rect width="256" height="256" rx="64" fill="url(#bg)"/>
+  <circle cx="128" cy="124" r="78" fill="#fff" opacity=".12"/>
+  <path d="M45 116c30-30 58-30 83 0s53 30 83 0v54c-30 30-58 30-83 0s-53-30-83 0z" fill="#7CE7F5" stroke="#DDFBFF" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="102" cy="91" r="13" fill="#FFF3B0"/><circle cx="151" cy="76" r="8" fill="#FFF3B0"/>
+</svg>

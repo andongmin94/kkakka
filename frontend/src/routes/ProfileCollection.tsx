@@ -113,19 +113,21 @@ export default function ProfileCollection() {
               }}
               hasMore={hasNextPage}
             >
-              {data &&
-                data.pages.map((pageData) => {
-                  return pageData.results.map(
-                    (profiledogam: ProfileDogamWithDislikeNumType) => {
-                      return (
-                        <Collection
-                          key={profiledogam.dogamId}
-                          profiledogam={profiledogam}
-                        />
-                      );
-                    }
-                  );
-                })}
+              <div>
+                {data &&
+                  data.pages.map((pageData) => {
+                    return pageData.results.map(
+                      (profiledogam: ProfileDogamWithDislikeNumType) => {
+                        return (
+                          <Collection
+                            key={profiledogam.dogamId}
+                            profiledogam={profiledogam}
+                          />
+                        );
+                      }
+                    );
+                  })}
+              </div>
             </InfiniteScroll>
           </div>
         </div>

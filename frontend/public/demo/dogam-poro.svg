@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title">
+  <title id="title">포로 간식을 지키는 가상 경기 장면</title>
+  <rect width="640" height="400" rx="24" fill="#DDF8F6"/>
+  <circle cx="118" cy="94" r="58" fill="#B8E5FF"/><circle cx="530" cy="78" r="74" fill="#FFF0C2"/>
+  <path d="M0 300c112-64 212-61 320 0s208 64 320 0v100H0z" fill="#64C2A6"/>
+  <ellipse cx="320" cy="245" rx="92" ry="76" fill="#fff" stroke="#8CCBD7" stroke-width="10"/>
+  <path d="m250 198-28-56 67 31M390 198l28-56-67 31" fill="#fff" stroke="#8CCBD7" stroke-width="10" stroke-linejoin="round"/>
+  <circle cx="288" cy="232" r="9" fill="#315064"/><circle cx="352" cy="232" r="9" fill="#315064"/>
+  <path d="m310 260 20 0-10 12z" fill="#F08AA3"/>
+  <circle cx="320" cy="337" r="23" fill="#F5D06F" stroke="#fff" stroke-width="7"/>
+</svg>

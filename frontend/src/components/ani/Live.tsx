@@ -1,16 +1,8 @@
-// Alternatively:
-// import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
-// npm install --save react-lottie-player
-import lottieJson from "@/live.json";
-import Lottie from "react-lottie-player/dist/LottiePlayerLight";
-
 export default function Live() {
   return (
-    <Lottie
-      loop
-      animationData={lottieJson}
-      play
-      style={{ width: 80, height: 40 }}
-    />
+    <div className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-3 py-1 text-xs font-bold text-white shadow-md">
+      <span className="h-2 w-2 animate-pulse rounded-full bg-white" />
+      LIVE
+    </div>
   );
 }

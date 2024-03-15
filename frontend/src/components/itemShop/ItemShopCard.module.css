@@ -19,6 +19,7 @@
 
 .itemElemOverlayBronze {
   position: absolute;
+  pointer-events: none;
   width: 220px;
   height: 310px;
   background: radial-gradient(
@@ -39,6 +40,7 @@
 
 .itemElemOverlaySilver {
   position: absolute;
+  pointer-events: none;
   width: 220px;
   height: 310px;
   background: radial-gradient(
@@ -58,6 +60,7 @@
 
 .itemElemOverlayGold {
   position: absolute;
+  pointer-events: none;
   width: 220px;
   height: 310px;
   background: radial-gradient(
@@ -77,6 +80,7 @@
 
 .itemElemOverlay {
   position: absolute;
+  pointer-events: none;
   width: 220px;
   height: 310px;
   background: radial-gradient(

@@ -12,52 +12,6 @@ import { BroadcastItemType } from "@/types/broadcastTypes";
 import Loading from "@/components/app/Loading";
 
 export default function LiveContentCarousel() {
-  // 라이브 시연용 정적 데이터
-  // const dumyData = {
-  //   crowdDtoList: [
-  //     {
-  //       attenderEmail: "demo.user@example.com",
-  //       attenderName: "***",
-  //       attenderProfileImg:
-  //         "https://example.invalid/static/77203%EB%A1%A4%20%EB%B0%B0%EA%B2%BD3.jpg",
-  //     },
-  //     {
-  //       attenderEmail: "demo.user@example.com",
-  //       attenderName: "***",
-  //       attenderProfileImg:
-  //         "http://k.kakaocdn.net/dn/bLSiqo/btsDber5yMF/cfEfzDOI6o2uKf4tpyE0gk/img_640x640.jpg",
-  //     },
-  //     {
-  //       attenderEmail: "demo.user@example.com",
-  //       attenderName: "***",
-  //       attenderProfileImg:
-  //         "http://k.kakaocdn.net/dn/bRxAkP/btszbVDS8yt/yJ7vKkqIRaC5WTkCUX4c40/img_640x640.jpg",
-  //     },
-  //     {
-  //       attenderEmail: "demo.user@example.com",
-  //       attenderName: "***",
-  //       attenderProfileImg:
-  //         "http://k.kakaocdn.net/dn/xAsX2/btqTMb7ZixW/ig7lKVvDl5vo7f31CTIJe1/img_640x640.jpg",
-  //     },
-  //     {
-  //       attenderEmail: "demo.user@example.com",
-  //       attenderName: "***",
-  //       attenderProfileImg:
-  //         "http://k.kakaocdn.net/dn/JnpyP/btsBgIpRoVv/EztKyKYNFqZcyxVPde2B81/img_640x640.jpg",
-  //     },
-  //   ],
-  //   playerAlias: "천재개발자",
-  //   playerBackgroundPic:
-  //     "https://example.invalid/back_img/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg",
-  //   playerEmail: "demo.user@example.com",
-  //   playerId: 5,
-  //   playerName: "***",
-  //   playerProfilePic:
-  //     "http://k.kakaocdn.net/dn/bRxAkP/btszbVDS8yt/yJ7vKkqIRaC5WTkCUX4c40/img_640x640.jpg",
-  //   roomId: 5,
-  //   roomTitle: "30대 아재 리신 검거",
-  // };
-
   const plugin = useRef(
     // 딜레이 시간 조절
     Autoplay({ delay: 3000, stopOnInteraction: false })

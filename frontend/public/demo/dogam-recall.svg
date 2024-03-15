@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title">
+  <title id="title">기적의 귀환 타이밍 가상 경기 장면</title>
+  <defs><radialGradient id="portal"><stop stop-color="#EAFBFF"/><stop offset=".45" stop-color="#7AE7FF"/><stop offset="1" stop-color="#536DFE" stop-opacity="0"/></radialGradient></defs>
+  <rect width="640" height="400" rx="24" fill="#202843"/>
+  <path d="M0 315 105 228l96 55 119-145 108 125 91-71 121 110v98H0z" fill="#35456D"/>
+  <ellipse cx="320" cy="284" rx="145" ry="82" fill="url(#portal)"/>
+  <circle cx="320" cy="218" r="42" fill="#FFF3B0"/>
+  <path d="M279 260c20-43 62-43 82 0l18 71H261z" fill="#F0A35E"/>
+  <path d="M98 86h152M390 86h152" stroke="#6F86C6" stroke-width="9" stroke-linecap="round"/>
+</svg>

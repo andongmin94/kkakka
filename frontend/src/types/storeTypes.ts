@@ -97,7 +97,7 @@ export interface profileStoreType {
 import { ProfileDogamType, DogamCommentResponseType } from "@/types/dogamTypes";
 export interface profileDogamStoreType {
   profileDogams: ProfileDogamType[];
-  dogamDetail: {};
+  dogamDetail: Record<string, unknown>;
   addDogamStatus: string;
   deleteDogamStatus: string;
   errorMessage: string | null;

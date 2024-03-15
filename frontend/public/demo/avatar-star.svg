@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">별사탕 가상 사용자</title>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5B8DEF"/><stop offset="1" stop-color="#9B6EF3"/></linearGradient></defs>
+  <rect width="256" height="256" rx="64" fill="url(#bg)"/>
+  <circle cx="128" cy="128" r="78" fill="#fff" opacity=".16"/>
+  <path d="m128 62 18 38 42 5-31 29 8 42-37-20-37 20 8-42-31-29 42-5z" fill="#FFF3B0" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+</svg>

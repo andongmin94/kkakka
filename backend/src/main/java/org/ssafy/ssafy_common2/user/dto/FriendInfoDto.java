@@ -1,6 +1,5 @@
 package org.ssafy.ssafy_common2.user.dto;
 
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import lombok.Builder;
 import lombok.Getter;
 import org.ssafy.ssafy_common2.user.entity.DynamicUserInfo;

@@ -1,11 +1,10 @@
 import cn from "clsx";
-const electron = window.electron;
 import { useEffect, useState } from "react";
 import { Alarm } from "@/components/navbar/Alarm";
 import { Mobile, PC } from "@/components/MediaQuery";
 import classes from "@/routes/RootLayout.module.css";
 import FriendsBtn from "@/components/navbar/FriendsBtn";
-import { EventSourcePolyfill } from "event-source-polyfill";
+import { createNotificationStream } from "@/realtime/notificationGateway";
 import SpeakerToast from "@/components/navbar/SpeakerToast";
 import { useLocation, Link, Outlet, useNavigate } from "react-router-dom";
 import useAlarmSubscribeStore from "@/store/alarm/subscribeStore";
@@ -26,14 +25,12 @@ export default function RootLayout() {
   // const { theme } = useTheme();
 
   const { setLastEventId } = useAlarmSubscribeStore();
-  const { alarmList, setAlarmList } = useAlarmStore();
+  const { setAlarmList } = useAlarmStore();
   // 확성기 내용 state
   const [speakerToastContent, setSpeakerToastContent] = useState<string>(""); // 보여줄 확성기
   const [newSpeakerContent, setNewSpeakerContent] = useState<string>(""); // 서버에게서 받은 새로운 확성기
   const [speakerToastList, setSpeakerToastList] = useState<string[]>([]);
   const [showSpeakerToast, setShowSpeakerToast] = useState<boolean>(false);
-
-  const EventSource = EventSourcePolyfill;
 
   const [userData, setUserData] = useState<UserType>();
   const { setUserInfo } = useUserStore();
@@ -54,17 +51,9 @@ export default function RootLayout() {
           localStorage.setItem("userAlias", res.data.data.userAlias);
           setUserData(res.data.data);
           setUserInfo(res.data.data);
-          console.log("check");
-          {
-            typeof electron !== "undefined" &&
-              electron.send("userInfo", res.data.data);
-          }
-          {
-            typeof electron !== "undefined" && electron.send("token", token);
-          }
         });
     }
-  }, [userData]);
+  }, [setUserInfo, token, userData]);
 
   const userId = localStorage.getItem("userId");
   const userProfileImg = localStorage.getItem("userProfileImg");
@@ -75,7 +64,7 @@ export default function RootLayout() {
       window.alert("로그인이 필요한 서비스입니다.");
       navigate("/");
     } else {
-      const source = new EventSource(
+      const source = createNotificationStream(
         `${import.meta.env.VITE_API_BASE_URL}/api/alarm/subscribe`,
         {
           headers: {
@@ -87,17 +76,14 @@ export default function RootLayout() {
         }
       );
 
-      source.onerror = (event) => {
-        console.log(event);
+      source.onerror = () => {
         source.close();
       };
 
       source.addEventListener("alarm", (e: any) => {
-        console.log(e);
         const data = JSON.parse(e.data);
-        console.log(data);
-        setAlarmList([data, ...alarmList]);
-        setLastEventId(data.alarmId);
+        setAlarmList([data, ...useAlarmStore.getState().alarmList]);
+        setLastEventId(String(data.alarmId));
       });
 
       source.addEventListener("megaphone", (event: any) => {
@@ -114,7 +100,7 @@ export default function RootLayout() {
         source.close();
       };
     }
-  });
+  }, [navigate, setAlarmList, setLastEventId, token]);
 
   useEffect(() => {
     if (!showSpeakerToast && speakerToastList.length != 0) {
@@ -163,7 +149,7 @@ export default function RootLayout() {
         <div
           className={classes.backback}
           style={{
-            backgroundImage: `url(https://example.invalid/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+            backgroundImage: "url(/image/loginBg.jpg)",
           }}
         >
           <div className={classes.whole}>
@@ -176,7 +162,7 @@ export default function RootLayout() {
             )}
             <main
               className={cn(classes.page, {
-                [classes.electron_page]: typeof electron !== "undefined",
+                [classes.electron_page]: typeof window.electron !== "undefined",
               })}
             >
               {/* 왼쪽 사이드바 영역*/}
@@ -201,17 +187,6 @@ export default function RootLayout() {
                   <Link to="/main/intro" className={classes.menu}>
                     <h1>서비스 소개</h1>
                   </Link>
-                  {typeof electron === "undefined" && (
-                    <a
-                      href="/까까 Setup 1.0.0.exe"
-                      download
-                      className={`${classes.menu}`}
-                    >
-                      <h1>
-                        App Download <span className="text-sm">(543MB)</span>
-                      </h1>
-                    </a>
-                  )}
                 </div>
               </div>
 
@@ -235,7 +210,7 @@ export default function RootLayout() {
                       >
                         <Avatar>
                           <AvatarImage
-                            src={userProfileImg ?? "/default-image.png"}
+                            src={userProfileImg ?? "/demo/avatar-star.svg"}
                             alt="프사"
                             className="bg-cover text-xs"
                           />

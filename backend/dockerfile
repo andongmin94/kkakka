@@ -1,6 +1,12 @@
-FROM openjdk:17-jdk
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
 EXPOSE 8080
+
 ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
+COPY ${JAR_FILE} /app/app.jar
 ENV TZ=Asia/Seoul
+
+USER 10001
+
 ENTRYPOINT ["java","-jar","/app.jar"]

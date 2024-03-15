@@ -5,7 +5,7 @@ export default function SpeakerToast({
   setToast,
   text,
 }: {
-  setToast: Function;
+  setToast: (visible: boolean) => void;
   text: string;
 }) {
   useEffect(() => {

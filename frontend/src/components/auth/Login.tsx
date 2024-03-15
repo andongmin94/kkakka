@@ -1,27 +1,40 @@
 import { Button } from "@/components/ui/button";
+import { startLogin } from "@/auth/authClient";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${
-    import.meta.env.VITE_KAKAO_REST_API_KEY
-  }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&response_type=code`;
-  const loginHandler = () => {
-    window.location.href = link;
+  const navigate = useNavigate();
+  const loginHandler = async () => {
+    try {
+      const nextPath = await startLogin();
+      if (nextPath) navigate(nextPath);
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "로그인을 시작할 수 없습니다.");
+    }
   };
   return (
     <div
       className="h-screen w-full bg-[url('/image/loginBg.jpg')] flex justify-center items-center"
       style={{
-        backgroundImage: `url(https://example.invalid/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+        backgroundImage: "url(/image/loginBg.jpg)",
         backgroundSize: "cover",
       }}
     >
-      <div className="bg-white h-[250px] w-[400px] rounded-xl flex flex-col items-center dark:bg-black ">
-        <div className="flex flex-col items-center mt-10">
-          <div className=" font-bold text-xl mb-20 dark:text-white">로그인</div>
+      <div className="bg-white/95 min-h-[280px] w-[400px] rounded-xl flex flex-col items-center justify-center px-10 shadow-2xl dark:bg-black/95">
+        <div className="flex flex-col items-center w-full">
+          <img src="/image/logo.png" alt="까까" className="h-16 object-contain mb-5" />
+          <div className="font-bold text-lg mb-3 dark:text-white">
+            친구의 게임을 함께 보고 이야기해보세요
+          </div>
+          <p className="text-sm text-slate-500 mb-8 text-center">
+            라이브 채팅부터 도감, 승패 예측과 아이템까지 한 흐름으로 이어집니다.
+          </p>
           <Button
             onClick={loginHandler}
-            className="bg-[url('/image/kakaoLogo.png')] bg-cover w-[210px] h-[50px] rounded-xl shadow-md lg:hover:scale-105 transition-transform ease-in-out duration-500"
-          />
+            className="bg-yellow-300 text-slate-900 hover:bg-yellow-400 w-[210px] h-[50px] rounded-xl shadow-md lg:hover:scale-105 transition-transform ease-in-out duration-500"
+          >
+            까까 시작하기
+          </Button>
         </div>
       </div>
     </div>

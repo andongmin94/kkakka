@@ -96,7 +96,6 @@ public class DogamService {
 
         // imgURL을 만들어서 S3에 저장 시작
         String imgUrl = "";
-        System.out.println(dto.getImgUrl());
         if (dto.getImgUrl() == null) {
             imgUrl = "https://example.invalid/static/%EC%9D%B4%EC%A6%88%EB%A6%AC%EC%96%BC.jpg";
         } else {

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -23,12 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src",
-    "src/electron/SettingPage.tsx",
-    "src/mockdata",
-    "src/electron"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }],
-  // "exclude": ["*"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

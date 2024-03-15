@@ -71,8 +71,6 @@ public class UserDataService {
             if (!dto.getBackImg().isEmpty()) {
                 backImgUrl = s3Uploader.upload(dto.getBackImg());
                 dynamicUserInfo.updateBackImg(backImgUrl);
-            } else {
-                System.out.println("배경 화면이 비었다");
             }
         }
 
@@ -90,9 +88,6 @@ public class UserDataService {
                 user.updateRiotId(dto.getRiotId());
             }
         }
-        System.out.println("배경 이미지 이름 : " + dto.getBackImg());
-        System.out.println("프로필 이미지 dto : " + dto.getProfileImg());
-        System.out.println("라이엇 아이디 : " + dto.getRiotId());
         userRepository.saveAndFlush(user);
         UserProfileResponseDto ans = UserProfileResponseDto.of(profileImgUrl, backImgUrl, dto.getRiotId());
         return ans;
@@ -130,8 +125,6 @@ public class UserDataService {
     }
 
     public UserDataResponseDto searchFriends(User user, String userEmail) {
-
-        System.out.println("유저 이메일 : " + userEmail);
 
         if (userRepository.findByIdAndDeletedAtIsNull(user.getId()).isEmpty()) {
             throw new CustomException(ErrorType.NOT_FOUND_USER);

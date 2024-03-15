@@ -1,6 +1,5 @@
 package org.ssafy.ssafy_common2.chatting.controller;
 
-import io.lettuce.core.dynamic.annotation.Param;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,9 +37,9 @@ public class BettingController {
     @PostMapping("/{room_id}")
     public ApiResponseDto<?> LetsBetting(
             @PathVariable(value = "room_id") long room_id,
-            @Param(value = "user_id") long user_id,
-            @Param(value = "cur_betting_point") Integer cur_betting_point,
-            @Param(value = "is_win") boolean is_win) {
+            @RequestParam(value = "user_id") long user_id,
+            @RequestParam(value = "cur_betting_point") Integer cur_betting_point,
+            @RequestParam(value = "is_win") boolean is_win) {
 
         BettingDto ans = bettingService.LetsBetting( user_id
         , room_id,cur_betting_point, is_win);
@@ -57,14 +56,13 @@ public class BettingController {
     public ApiResponseDto<?> GetBettingResult(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable(value = "room_id")long room_id,
-            @Param(value = "is_win") boolean is_win){
+            @RequestParam(value = "is_win") boolean is_win){
 
         DividendsDto dto;
         try {
             dto = bettingService.GetBettingResult(userDetails.getUser(), room_id, is_win);
         }catch (Exception e){
-            e.printStackTrace();
-            log.info("Error 내용 {}", e.getMessage());
+            log.warn("Betting settlement failed");
             return ResponseUtils.error(ErrorResponse.of(ErrorType.CANT_CALCULATE_BETTING_POINT));
         }
 

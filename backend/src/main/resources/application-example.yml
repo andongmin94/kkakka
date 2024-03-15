@@ -1,0 +1,54 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/kkakka?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:kkakka}
+    password: ${DB_PASSWORD:local-development-only}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+server:
+  port: ${SERVER_PORT:8080}
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_BASE64}
+
+kakao:
+  clientId: ${KAKAO_CLIENT_ID}
+  secret: ${KAKAO_CLIENT_SECRET}
+
+cloud:
+  aws:
+    region:
+      static: ${AWS_REGION:ap-northeast-2}
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  oauth:
+    local-redirect-uri: ${KAKAO_LOCAL_REDIRECT_URI:http://localhost:3000/oauth/callback/kakao/token}
+    web-redirect-uri: ${KAKAO_WEB_REDIRECT_URI:https://example.invalid/oauth/callback/kakao/token}
+  sample-friend-email: ${SAMPLE_FRIEND_EMAIL:demo.user@example.com}
+  default-background-url: ${DEFAULT_BACKGROUND_URL:https://example.invalid/assets/default-background.jpg}
+  websocket:
+    max-message-size: ${WEBSOCKET_MAX_MESSAGE_SIZE:10485760}

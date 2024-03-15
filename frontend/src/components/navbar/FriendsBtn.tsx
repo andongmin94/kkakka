@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 // import useFriendStore from "@/store/friend/friendStore";
 import { FriendType } from "@/types/friendTypes";
 
@@ -16,7 +16,7 @@ export default function FriendsBtn() {
   // const { friendList } = useFriendStore();
   const [friendList, setFriendList] = useState([]);
   const token = localStorage.getItem("token");
-  useEffect(() => {
+  const loadFriends = useCallback(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends`, {
         headers: {
@@ -30,10 +30,14 @@ export default function FriendsBtn() {
       .catch((error) => {
         console.error("친구목록을 불러오는 중 에러 발생:", error);
       });
-  }, []);
+  }, [token]);
+
+  useEffect(() => {
+    loadFriends();
+  }, [loadFriends]);
 
   return (
-    <Sheet>
+    <Sheet onOpenChange={(open) => open && loadFriends()}>
       <SheetTrigger>
         <div className={classes.friends_image} />
       </SheetTrigger>

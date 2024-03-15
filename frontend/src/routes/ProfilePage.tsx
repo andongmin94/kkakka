@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const userId = params.id;
   const token = localStorage.getItem("token");
   const [profileInfo, setProfileInfo] = useState<UserType>();
+  const profileBackground = profileInfo?.userBackImg ?? "/image/profileBg.png";
   const myId = localStorage.getItem("userId");
   useEffect(() => {
     
@@ -50,7 +51,7 @@ export default function ProfilePage() {
       .then((res) => {
         setFriendship(res.data.data.state);
       });
-  }, []);
+  }, [token, userId]);
 
   const enterChatHandler = async () => {
     await axios
@@ -111,7 +112,7 @@ export default function ProfilePage() {
           <div
             className="h-[380px] rounded-xl z-1 rounded-b-none"
             style={{
-              backgroundImage: `url(${profileInfo && profileInfo.userBackImg})`,
+              backgroundImage: `url(${profileBackground})`,
               backgroundSize: "cover",
             }}
           ></div>
@@ -244,9 +245,7 @@ export default function ProfilePage() {
             <div
               className={`border-4 w-full h-[350px] flex-col border-blue-200 rounded-2xl`}
               style={{
-                backgroundImage: `url(${
-                  profileInfo && profileInfo.userBackImg
-                })`,
+                backgroundImage: `url(${profileBackground})`,
                 backgroundSize: "cover",
               }}
             >

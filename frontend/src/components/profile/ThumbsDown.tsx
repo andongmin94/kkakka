@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import axios from "axios";
 
 export default function ThumbsDown({
@@ -10,15 +10,15 @@ export default function ThumbsDown({
   tD: boolean;
   dogamId: number;
   dogamDislikeNum: number;
-  setDogamDislikeNum: Function;
+  setDogamDislikeNum: Dispatch<SetStateAction<number>>;
 }) {
   const token = localStorage.getItem("token");
   const [thumbs, setThumbs] = useState(tD);
 
   const hateClickHandler = async () => {
+    const nextThumbs = !thumbs;
+    setThumbs(nextThumbs);
     try {
-      await setThumbs(!thumbs);
-
       const res = thumbs
         ? await axios.delete(
             `${
@@ -47,6 +47,7 @@ export default function ThumbsDown({
       // API 호출 후 숫자 업데이트
       setDogamDislikeNum(thumbs ? dogamDislikeNum - 1 : dogamDislikeNum + 1);
     } catch (error) {
+      setThumbs(thumbs);
       console.error("Error in hateClickHandler:", error);
     }
   };
@@ -55,8 +56,7 @@ export default function ThumbsDown({
     <div
       className="h-[50px] w-[50px] grid grid-col place-items-center"
       onClick={() => {
-        setThumbs(!thumbs);
-        hateClickHandler();
+        void hateClickHandler();
       }}
     >
       {thumbs ? (

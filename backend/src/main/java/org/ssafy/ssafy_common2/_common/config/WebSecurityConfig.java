@@ -2,9 +2,9 @@ package org.ssafy.ssafy_common2._common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -20,6 +20,7 @@ import org.ssafy.ssafy_common2._common.jwt.JwtUtil;
 import org.ssafy.ssafy_common2._common.security.CustomAuthenticationEntryPoint;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -28,6 +29,10 @@ import java.util.Arrays;
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Value("${app.cors.allowed-origins:http://localhost:3000}")
+    private String allowedOrigins;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,37 +49,42 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .toList();
 
-        http.csrf().disable();
-        http.formLogin().disable();
+        if (origins.isEmpty() || origins.contains("*")) {
+            throw new IllegalStateException("app.cors.allowed-origins must contain explicit origins");
+        }
 
-        // 기본 설정인 Session 방식 사용하지 않고 JWT 방식 사용
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //SockJS는 기본적으로 HTML iframe 요소를 통한 전송을 허용하지 않도록 설정되는데 해당 설정을 해제
-        http.headers((header) -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-
-        http.authorizeRequests()
-                .requestMatchers("/api/oauth/callback/kakao/token").permitAll()
-                .requestMatchers("/oauth/authorize").permitAll()
-                .requestMatchers("/hello").permitAll()
-//                .requestMatchers("/api/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/booking/**").permitAll()
-//                .anyRequest().authenticated()
-                .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-
-        http.cors().configurationSource(request -> {
-            CorsConfiguration cors = new CorsConfiguration();
-            cors.setAllowedOriginPatterns(Arrays.asList("*"));
-            cors.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-            cors.setAllowedHeaders(Arrays.asList("*"));
-            cors.addExposedHeader("Authorization");
-            cors.setAllowCredentials(true);
-
-            return cors;
-        });
-
+        http
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/api/oauth/callback/kakao/token/**",
+                                "/oauth/authorize",
+                                "/ws-stomp/**",
+                                "/error"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
+                .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(origins);
+                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                    configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Last-Event-ID"));
+                    configuration.setExposedHeaders(List.of("Authorization"));
+                    configuration.setAllowCredentials(true);
+                    return configuration;
+                }));
 
         return http.build();
     }

@@ -54,9 +54,8 @@ export default function IndexPage() {
               새로 올라온 도감
             </p>
           </div>
-          <div className="grid grid-cols-1 place-items-center gap-y-5 mb-5 w-full">
-            {/* 도감 리스트 */}
-            <div>친구가 없어요 !</div>
+          <div className="grid grid-cols-1 place-items-center gap-y-5 mb-5 w-full px-2">
+            <NewDogamList />
           </div>
         </div>
       </Mobile>

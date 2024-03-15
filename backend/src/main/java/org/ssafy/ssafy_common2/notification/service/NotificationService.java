@@ -1,7 +1,6 @@
 package org.ssafy.ssafy_common2.notification.service;
 
 
-import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,7 +135,6 @@ public class NotificationService {
     // emitter에게 알림 전송 요청
     private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data, String alarmName) {
         try {
-//            System.out.println("last event id : " + eventId);
             emitter.send(SseEmitter.event()
                     .id(eventId)
                     .name(alarmName)

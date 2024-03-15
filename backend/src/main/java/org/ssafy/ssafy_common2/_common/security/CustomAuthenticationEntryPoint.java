@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -16,26 +17,17 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
-        ErrorType exception = (ErrorType) request.getAttribute("exception");
-
-        if (exception.equals(ErrorType.NOT_TOKEN)) {
-            exceptionHandler(response, ErrorType.NOT_TOKEN);
-            return;
-        }
-
-        if (exception.equals(ErrorType.NOT_VALID_TOKEN)) {
-            exceptionHandler(response, ErrorType.NOT_VALID_TOKEN);
-            return;
-        }
-
-        if (exception.equals(ErrorType.NOT_FOUND_USER)) {
-            exceptionHandler(response, ErrorType.NOT_FOUND_USER);
-        }
+        Object attribute = request.getAttribute("exception");
+        ErrorType error = attribute instanceof ErrorType ? (ErrorType) attribute : ErrorType.NOT_TOKEN;
+        exceptionHandler(response, error);
     }
 
     public void exceptionHandler(HttpServletResponse response, ErrorType error) {
@@ -44,11 +36,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {
-            String json = new ObjectMapper().writeValueAsString(ResponseUtils.error(ErrorResponse.of(error)));
+            String json = objectMapper.writeValueAsString(ResponseUtils.error(ErrorResponse.of(error)));
             response.getWriter().write(json);
-            log.error(error.getMsg());
+            log.warn("Authentication rejected with status {}", error.getCode());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Failed to write authentication error response");
         }
     }
 }

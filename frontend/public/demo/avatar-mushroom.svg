@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">티모장인 가상 사용자</title>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FF8A65"/><stop offset="1" stop-color="#F45171"/></linearGradient></defs>
+  <rect width="256" height="256" rx="64" fill="url(#bg)"/>
+  <path d="M50 128c0-48 35-78 78-78s78 30 78 78z" fill="#FFF5E7" stroke="#fff" stroke-width="8"/>
+  <path d="M102 126h52v70c0 13-11 24-26 24s-26-11-26-24z" fill="#FFE0B2" stroke="#fff" stroke-width="8"/>
+  <circle cx="94" cy="94" r="15" fill="#F45171"/><circle cx="153" cy="82" r="19" fill="#F45171"/><circle cx="176" cy="113" r="10" fill="#F45171"/>
+</svg>

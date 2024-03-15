@@ -1,17 +1,13 @@
 import { Mobile, PC } from "@/components/MediaQuery";
 import MessageAlias from "@/components/message/MessageAlias";
 import MyMsg from "@/components/message/MyMsg";
-// import Picture from "@/components/message/Picture";
 import YouMsg from "@/components/message/YouMsg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Stomp } from "@stomp/stompjs";
-import SockJS from "sockjs-client/dist/sockjs";
+import { createChatClient } from "@/realtime/chatGateway";
 import axios from "axios";
-// import TypeIt from "typeit-react";
-// import Stack from "react-bootstrap/Stack";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -55,11 +51,22 @@ interface playerInfoType {
   playerId: number;
 }
 
+/**
+ * 라이브 방의 REST 초기 데이터, STOMP 메시지, 승패 예측 상태를 한 화면에서 조율한다.
+ * 실제 서버와 Mock 모드는 `createChatClient` 아래에서 갈리므로 화면의 연결 순서는 동일하다.
+ */
 export default function LiveChat() {
-  // const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
   const location = useLocation();
-  const friendsInfo: playerInfoType = { ...location.state };
+  const params = useParams();
+  const roomId = params.id;
+  const [friendsInfo, setFriendsInfo] = useState<playerInfoType>(() => ({
+    playerProfilePic: "/demo/avatar-mushroom.svg",
+    playerAlias: "라이브 플레이어",
+    playerName: "불러오는 중",
+    playerId: 0,
+    ...(location.state as Partial<playerInfoType> | null),
+  }));
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -73,6 +80,18 @@ export default function LiveChat() {
   const [inputChat, setInputChat] = useState("");
 
   const { data } = useProfileDogamQuery(friendsInfo.playerId);
+
+  useEffect(() => {
+    if (friendsInfo.playerId || !roomId) return;
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/broadcasts`)
+      .then((response) => {
+        const room = response.data.data.find(
+          (item: { roomId: number }) => item.roomId === Number(roomId),
+        );
+        if (room) setFriendsInfo(room);
+      });
+  }, [friendsInfo.playerId, roomId]);
 
   // 어떤 도감을 선택했는지 인덱스를 저장
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
@@ -99,7 +118,6 @@ export default function LiveChat() {
   // 배팅 함수==================================================
   const onClickRadio = (value: boolean) => {
     setIsWin(value);
-    console.log(value);
   };
 
   const { toast } = useToast();
@@ -109,16 +127,15 @@ export default function LiveChat() {
     axios
       .post(
         `${import.meta.env.VITE_API_BASE_URL}/api/betting/${roomId}`,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        },
+        {},
         {
           params: {
             user_id: data.userId,
             cur_betting_point: data.cur_betting_point,
             is_win: isWin,
+          },
+          headers: {
+            Authorization: localStorage.getItem("token"),
           },
         }
       )
@@ -147,9 +164,7 @@ export default function LiveChat() {
           JSON.stringify(chatMessage)
         );
       })
-      .catch((error) => {
-        console.log(error);
-
+      .catch(() => {
         toast({
           variant: "destructive",
           title: "현재 10분이 지나서 배팅할 수 있는 시간이 아닙니다!",
@@ -182,9 +197,7 @@ export default function LiveChat() {
     setOpen(false);
   }
 
-  // ================================================================
-
-  //currentTypingId를 최신화 한다.
+  // 새 메시지가 생기면 화면을 아래로 이동하고 다음 타이핑 애니메이션 대상을 선택한다.
   useEffect(() => {
     // chatContainerRef의 current 값이 존재하는 경우 (컴포넌트가 마운트된 경우)
     // 채팅창 스크롤을 가장 하단으로 이동
@@ -192,9 +205,7 @@ export default function LiveChat() {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-    console.log("메세지 배열 혹은 현재 타이핑 ID가 바뀐 것을 확인");
     if (currentTypingId === null) {
-      console.log(currentTypingId + "== currentTypingId");
       // User가 아니면서, isTyping이 True인 msg를 messages에서 찾는다.
       const nextTypingMessage = messages.find(
         (msg) => !msg.isUser && msg.isTyping
@@ -208,31 +219,20 @@ export default function LiveChat() {
     }
   }, [messages, currentTypingId]);
 
-  //--------------------------웹 소켓 파트 입니다. ------------------------------
-
-  // const roomId = userInfo.roomId;
-
-  const params = useParams();
-  const roomId = params.id;
   const roomId2 = roomId;
 
   const clientHeader = {
-    Authorization:
-      " Bearer REDACTED_JWT",
+    Authorization: token ?? "",
   };
 
+  /** 현재 방에 맞는 Mock 또는 STOMP client를 만들고 공통 callback으로 연결한다. */
   const connect = () => {
-    // var sockJS = new SockJS("REDACTED_CONFIG_VALUE/ws-stomp");
-    var sockJS = new SockJS(`${import.meta.env.VITE_API_BASE_URL}/ws-stomp`);
-    stompClient = Stomp.over(sockJS);
-    console.log(stompClient);
-
+    stompClient = createChatClient(`${import.meta.env.VITE_API_BASE_URL}/ws-stomp`);
     stompClient.connect(clientHeader, onConnected, onError);
   };
 
-  // 첫 연결 및 환영 메세지 보내기
+  /** 연결 직후 방을 구독하고 서버와 참여자에게 입장 상태를 알린다. */
   function onConnected() {
-    console.log("채팅 앱 첫 연결 실행!");
     stompClient.subscribe(
       "/sub/chat/room/" + roomId,
       onMessageReceivedFromSocket,
@@ -251,10 +251,10 @@ export default function LiveChat() {
   }
 
   function onError(error: any) {
-    console.log(error);
+    console.error("실시간 채팅 연결에 실패했습니다.", error);
   }
 
-  // 메세지 보내는 로직
+  /** 입력 메시지를 서버가 기대하는 채팅 payload로 변환해 현재 방에 발행한다. */
   function sendMessageToSocket(message: any) {
     var chatMessage = {
       chatRoomId: roomId,
@@ -263,15 +263,12 @@ export default function LiveChat() {
       messageType: "TALK",
       userName: userInfo.userName,
     };
-    console.log(chatMessage);
     stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
   }
 
-  // 메세지 받는 로직 -> subscribe의 두번째 로직으로 넣으면 해당 주소로 들어오는 메세지를 다 받는다.
+  /** 구독 payload를 메시지 컴포넌트가 사용하는 표시 모델로 정규화한다. */
   function onMessageReceivedFromSocket(payload: any) {
     var chat = JSON.parse(payload.body);
-    console.log("들어온 메세지:" + chat.content);
-    // console.log(payload.body);
 
     const messageDTO = {
       isUser: chat.userId === userInfo.userId ? true : false,
@@ -294,8 +291,6 @@ export default function LiveChat() {
 
   useEffect(() => {
     connect();
-    // console.log(userInfo);
-    // console.log(friendsInfo);
 
     setTimeout(() => {
       window.scrollTo(0, document.body.scrollHeight);
@@ -314,7 +309,6 @@ export default function LiveChat() {
         }
       )
       .then((res) => {
-        console.log(res.data.data.content[0]);
         setMessages((prevMessages) => [
           ...prevMessages,
           ...res.data.data.content.reverse(),
@@ -353,28 +347,6 @@ export default function LiveChat() {
         setBalance(res.data.data);
       });
 
-    // const timer = setTimeout(
-    //   () =>
-    //     setProgress(
-    //       predictObject.predictLose + predictObject.predictWin === 0
-    //         ? 0
-    //         : (predictObject.predictWin /
-    //             (predictObject.predictLose + predictObject.predictWin)) *
-    //             100
-    //     ),
-    //   500
-    // );
-
-    // setTimeout(() => {
-    //   setProgress(
-    //     predictObject.predictLose + predictObject.predictWin === 0
-    //       ? 0
-    //       : (predictObject.predictWin /
-    //           (predictObject.predictLose + predictObject.predictWin)) *
-    //           100
-    //   );
-    // }, 500);
-
     return () => {
       // 여기서 STOMP 연결을 끊지 않도록 setTimeout을 활용
       setTimeout(() => {
@@ -390,7 +362,6 @@ export default function LiveChat() {
         );
 
         stompClient.disconnect();
-        // clearTimeout(timer);
       }, 0);
     };
   }, [roomId]);
@@ -527,7 +498,7 @@ export default function LiveChat() {
           </div>
           <AlertTitle className="border-t-2 pt-3">
             {/* 이름 */}
-            <p className="font-bold text-lg flex justify-between px-1">
+            <div className="font-bold text-lg flex justify-between px-1">
               <div className="flex flex-col">
                 <div>{friendsInfo.playerName}님이 이긴다! 👊</div>{" "}
                 <div>
@@ -551,7 +522,7 @@ export default function LiveChat() {
                   %
                 </div>
               </div>
-            </p>
+            </div>
           </AlertTitle>
           <Progress className="w-[100%] h-[30px]" value={progress} />
           <AlertDescription className="">
@@ -820,7 +791,6 @@ export default function LiveChat() {
                                   }`}
                                   key={profiledogam.dogamId}
                                   onClick={() => {
-                                    console.log(profiledogam.dogamImgUrl);
                                     setChatImage(profiledogam.dogamImgUrl);
                                     setSelectedImageIndex(idx);
                                   }}
@@ -1174,7 +1144,6 @@ export default function LiveChat() {
                                     }`}
                                     key={idx}
                                     onClick={() => {
-                                      console.log(profiledogam.dogamImgUrl);
                                       setChatImage(profiledogam.dogamImgUrl);
                                       setSelectedImageIndex(idx);
                                     }}

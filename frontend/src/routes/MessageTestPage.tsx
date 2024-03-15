@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Stomp } from "@stomp/stompjs";
-import SockJS from "sockjs-client/dist/sockjs";
+import { createChatClient } from "@/realtime/chatGateway";
 import axios from "axios";
 // import TypeIt from "typeit-react";
 // import Stack from "react-bootstrap/Stack";
@@ -31,7 +30,15 @@ export default function MessageTestPage() {
   // const { userInfo } = useUserStore();
   const token = localStorage.getItem("token");
   const location = useLocation();
-  const friendsInfo = { ...location.state };
+  const params = useParams();
+  const roomId = params.id;
+  const [friendsInfo, setFriendsInfo] = useState({
+    userAlias: "친구",
+    userId: 0,
+    userName: "불러오는 중",
+    userProfileImg: "/demo/avatar-poro.svg",
+    ...(location.state as Record<string, unknown> | null),
+  });
   // 페이지에 들어올때 채팅창 스크롤이 항상 하단으로 가게 하기 위해 사용
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -113,20 +120,27 @@ export default function MessageTestPage() {
 
   // const roomId = userInfo.roomId;
 
-  const params = useParams();
-  const roomId = params.id;
   roomId2 = roomId;
 
+  useEffect(() => {
+    if (Number(friendsInfo.userId) || !roomId) return;
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/friends/dm`).then((response) => {
+      const room = response.data.data.find(
+        (item: { roomId: number }) => item.roomId === Number(roomId),
+      );
+      if (!room) return;
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/users/data/${room.friendId}`)
+        .then((userResponse) => setFriendsInfo(userResponse.data.data));
+    });
+  }, [friendsInfo.userId, roomId]);
+
   const clientHeader = {
-    Authorization:
-      " Bearer REDACTED_JWT",
+    Authorization: token ?? "",
   };
 
   const connect = () => {
-    // var sockJS = new SockJS("REDACTED_CONFIG_VALUE/ws-stomp");
-    var sockJS = new SockJS(`${import.meta.env.VITE_API_BASE_URL}/ws-stomp`);
-
-    stompClient = Stomp.over(sockJS);
+    stompClient = createChatClient(`${import.meta.env.VITE_API_BASE_URL}/ws-stomp`);
     console.log(stompClient);
 
     stompClient.connect(clientHeader, onConnected, onError);

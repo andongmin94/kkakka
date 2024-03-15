@@ -58,7 +58,9 @@ export function Alarm() {
       .then((res) => {
         console.log(res);
         setAlarmList(res.data.data.alarmList);
-        setLastEventId(res.data.data.alarmList[0].alarmId);
+        if (res.data.data.alarmList.length > 0) {
+          setLastEventId(String(res.data.data.alarmList[0].alarmId));
+        }
         setNumOfUncheckedAlarm(res.data.data.numOfUncheckedAlarm);
         if (res.data.data.lastNotiEventId != null) {
           console.log("갱신해요");

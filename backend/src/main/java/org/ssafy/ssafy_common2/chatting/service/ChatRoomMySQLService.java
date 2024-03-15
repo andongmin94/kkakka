@@ -1,7 +1,6 @@
 package org.ssafy.ssafy_common2.chatting.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +34,6 @@ import java.util.*;
 
 import static org.ssafy.ssafy_common2.chatting.entity.ChatRoom.ChatRoomType.ONE;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatRoomMySQLService {
@@ -195,7 +193,6 @@ public class ChatRoomMySQLService {
         // 시간 정렬 테스트 ==========================================================
 //        for(ChatRoomInfoDto dto : ans){
 //           if(dto.getLastWrittenMessageTime() != null){
-//               System.out.println(dto.getLastWrittenMessageTime().toLocalTime());
 //           }
 //        }
 
@@ -214,7 +211,6 @@ public class ChatRoomMySQLService {
 
         // 이전 채팅방 인원 수
         int cnt = room.getUserCnt();
-        System.out.println("방의 이전 인원수: " + cnt);
         // 채팅방 인원 +1
         if(mode.equals("PLUS")){
             chatRoomRepository.updateUserCnt(cnt+1, roomId);
@@ -264,8 +260,6 @@ public class ChatRoomMySQLService {
 
         //  9-1-a) 친구 리스트 받기용
         ArrayList<LiveBroadcastListDto> ans = new ArrayList<>();
-
-        System.out.println(friendInfoList.size());
 
         // 9-1-b) 친구 한 명씩 순회
         for (int i = 0; i < friendInfoList.size(); i++) {
@@ -389,9 +383,7 @@ public class ChatRoomMySQLService {
                 roomId = getUserConnectedRoomIdWithOwner(owner.getKakaoEmail(), userDetails.getUser().getId(), "ONE");
             }else {
                 // 본인과 타인간의 채팅방이 있는지 확인하는 경우, 둘이 공통으로 참여한 1대1 채팅방이 있는지 확인
-                log.info("{}과 {}간의 채팅방 있는지 확인 중...", userId, userDetails.getUser().getId());
                 roomId = chatJoinRepository.checkUserConnectedOneByOneRoom(userId, userDetails.getUser().getId()).orElse((long)-1);
-                log.info("확인완료!! 둘 사이의 채팅방은... {}", roomId);
             }
 
 

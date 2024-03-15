@@ -30,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // 토큰이 null 이면 다음 필터로 넘어간다
         if (token == null) {
-            request.setAttribute("exception", ErrorType.NOT_TOKEN+" with filter");
+            request.setAttribute("exception", ErrorType.NOT_TOKEN);
             filterChain.doFilter(request, response);
             return;
         }

@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -42,7 +41,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
     private final AliasRepository aliasRepository;
     private final DynamicUserInfoRepository dynamicUserInfoRepository;
     private final FriendListRepository friendListRepository;
@@ -54,6 +52,12 @@ public class UserService {
 
     @Value("${kakao.secret}")
     String clientSecret;
+
+    @Value("${app.sample-friend-email}")
+    String sampleFriendEmail;
+
+    @Value("${app.default-background-url}")
+    String defaultBackgroundUrl;
 
     public OauthToken getAccessToken(String code, String redirectUri) {
         return requestAccessToken(code, redirectUri);
@@ -83,8 +87,7 @@ public class UserService {
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return objectMapper.readValue(responseEntity.getBody(), OauthToken.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            throw new CustomException(ErrorType.OAUTH_PROVIDER_ERROR);
         }
     }
 
@@ -96,15 +99,13 @@ public class UserService {
         //(2)
         User user = userRepository.findByKakaoEmailAndDeletedAtIsNull(profile.getKakao_account().getEmail()).orElse(null);
 
-        System.out.println("카카오 이메일 : " + profile.getKakao_account().getProfile().getProfile_image_url());
-
         boolean isUserNull = false;
 
         //(3)
         if (user == null) {
 
             DynamicUserInfo userInfo = DynamicUserInfo.of(10000, false, 0,
-                    "https://example.invalid/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg", LocalDate.now());
+                    defaultBackgroundUrl, LocalDate.now());
             user = User.of(
                     profile.getId(),
                     profile.getKakao_account().getProfile().getProfile_image_url(),
@@ -122,7 +123,7 @@ public class UserService {
             isUserNull = true;
 
             // *** 유저와 친구 추가 로직
-            User sampleFriendUser = userRepository.findByKakaoEmailAndDeletedAtIsNull("demo.user@example.com").orElseThrow(
+            User sampleFriendUser = userRepository.findByKakaoEmailAndDeletedAtIsNull(sampleFriendEmail).orElseThrow(
                     () -> new CustomException(ErrorType.NOT_FOUND_SAMPLE_USER)
             );
 
@@ -170,8 +171,6 @@ public class UserService {
         //(1-2)
         RestTemplate rt = new RestTemplate();
 
-        System.out.println("token : " + token);
-
         //(1-3)
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token); //(1-4)
@@ -196,40 +195,11 @@ public class UserService {
         try {
             kakaoProfile = objectMapper.readValue(kakaoProfileResponse.getBody(), KakaoProfile.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new CustomException(ErrorType.OAUTH_PROVIDER_ERROR);
         }
 
         return kakaoProfile;
     }
-
-   /* public JsonNode Logout(String autorize_code){
-
-        final String RequestUrl = "https://kapi.kakao.com/v1/user/logout";
-
-        final HttpClient client = HttpClientBuilder.create().build();
-
-        final HttpPost post =new HttpPost(RequestUrl);
-
-        post.addHeader("Authorization","Bearer" + autorize_code);
-
-        JsonNode returnNode =null;
-
-        try{
-            final HttpResponse response = client.execute(post);
-
-             ObjectMapper mapper = new ObjectMapper();
-
-             returnNode = mapper.readTree(response.getEntity().getContent());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch(ClientProtocolException e){
-            e.printStackTrace();
-        } catch(IOException e){
-            e.printStackTrace();
-        } finally{
-
-        }
-        return returnNode;}*/
 
     public User validateUserByEmail(String email){
 

@@ -80,16 +80,14 @@ export default function DogamDetailPage() {
     },
   });
 
-  const [inputText, setInputText] = useState<string>("");
-
-  const addDogamCommentHandler = () => {
+  const addDogamCommentHandler = (values: z.infer<typeof FormSchema>) => {
     axios
       .post(
         `${import.meta.env.VITE_API_BASE_URL}/api/friends/dogam/comment/${
           params.id
         }`,
         {
-          comment: inputText,
+          comment: values.content,
         },
         {
           headers: {
@@ -104,6 +102,7 @@ export default function DogamDetailPage() {
       })
       .then(() => {
         window.alert("댓글이 등록되었습니다.");
+        form.reset();
       });
   };
 
@@ -161,7 +160,7 @@ export default function DogamDetailPage() {
             <div className="h-[50%] overflow-scroll scrollbar-hide">
               {commentList.length > 0 ? (
                 commentList.map((comment) => {
-                  return <Comment commentInfo={comment} />;
+                  return <Comment key={comment.commentId} commentInfo={comment} />;
                 })
               ) : (
                 <div className="mt-5 ml-5 text-gray-500">
@@ -197,20 +196,6 @@ export default function DogamDetailPage() {
                           <Button
                             type="submit"
                             className=" bg-blue-400 font-bold text-sm shadow-md text-white rounded-lg h-[80%] "
-                            onClick={() => {
-                              // 2글자 이상만 작성 가능하게
-                              if (
-                                form.getValues().content != undefined &&
-                                form.getValues().content.length > 1
-                              ) {
-                                setInputText(form.getValues().content);
-                                // getDogamComment();
-                                // addDogamCommentHandler();
-                                // setDogamComments((pre) => [...pre, data]);
-                                // 댓글 입력창 초기화
-                                form.setValue("content", "  ");
-                              }
-                            }}
                           >
                             등록
                           </Button>

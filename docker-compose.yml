@@ -1,22 +1,35 @@
-version: '3'
-
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: dockerfile
-    image: backend
-    restart: 'always'
+  mysql:
+    image: mysql:8.0
+    container_name: kkakka-mysql
+    environment:
+      MYSQL_DATABASE: kkakka
+      MYSQL_USER: ${DB_USERNAME:-kkakka}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-local-development-only}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-local-root-password}
     ports:
-      - "8080:8080"
-    container_name: backend
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - kkakka-mysql-data:/var/lib/mysql
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: dockerfile
-    image: frontend
-    restart: 'always'
+  redis:
+    image: redis:7-alpine
+    container_name: kkakka-redis
     ports:
-      - "3000:3000"
-    container_name: frontend
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  kkakka-mysql-data:

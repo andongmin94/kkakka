@@ -1,10 +1,14 @@
 import axios from "axios";
 
 const createAxiosInstance = () => {
-  const token = localStorage.getItem("token");
   const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
-    headers: { Authorization: token },
+  });
+
+  axiosInstance.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+    if (token) config.headers.set("Authorization", token);
+    return config;
   });
 
   return axiosInstance;

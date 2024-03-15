@@ -15,7 +15,7 @@ import LoginSuccessPage from "@/routes/LoginSuccessPage.js";
 import KakaoCallbackPage from "@/routes/KakaoCallbackPage.tsx";
 import ProfileDishonorPage from "@/routes/ProfileDishonorPage";
 import { ThemeProvider } from "@/components/navbar/ThemeProvider";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 ////////////////일렉트론 컴포넌트/////////////////////
 const electron = window.electron;
@@ -28,11 +28,14 @@ import LiveChat from "./routes/LiveChat";
 import NotFound from "./routes/NotFound";
 import ReactGA from "react-ga4";
 
-ReactGA.initialize(import.meta.env.VITE_GA_KEY);
-ReactGA.send("pageview");
+const analyticsKey = import.meta.env.VITE_GA_KEY;
+if (analyticsKey) {
+  ReactGA.initialize(analyticsKey);
+  ReactGA.send("pageview");
+}
 
 const queryClient = new QueryClient();
-const router = createBrowserRouter([
+const router = createHashRouter([
   { path: "/", element: <LoginPage /> },
   { path: "/first-login", element: <FirstLoginPage /> },
   { path: "/login-success", element: <LoginSuccessPage /> },
@@ -78,7 +81,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
     <QueryClientProvider client={queryClient}>
       {typeof electron !== "undefined" && <TitleBar />}
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   </ThemeProvider>

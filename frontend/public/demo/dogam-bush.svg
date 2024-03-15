@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-labelledby="title">
+  <title id="title">부쉬에서 들킨 가상 경기 장면</title>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#BDEBFF"/><stop offset="1" stop-color="#F4FFF4"/></linearGradient></defs>
+  <rect width="640" height="400" rx="24" fill="url(#sky)"/>
+  <path d="M0 285 120 190l90 70 115-130 110 108 90-83 115 98v147H0z" fill="#81C784"/>
+  <path d="M0 320c95-72 160-48 235-5s153 45 230 5 126-35 175 2v78H0z" fill="#3F8F61"/>
+  <circle cx="286" cy="230" r="38" fill="#FFF5E7" stroke="#F45171" stroke-width="10"/>
+  <path d="M254 220c8-32 56-32 64 0" fill="#F45171"/><circle cx="274" cy="235" r="5"/><circle cx="298" cy="235" r="5"/>
+  <path d="M40 340h560" stroke="#DDF7CA" stroke-width="8" stroke-linecap="round" opacity=".6"/>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">룬수집가 가상 사용자</title>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#232A45"/><stop offset="1" stop-color="#485579"/></linearGradient><linearGradient id="gem" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7AF4FF"/><stop offset="1" stop-color="#4D79FF"/></linearGradient></defs>
+  <rect width="256" height="256" rx="64" fill="url(#bg)"/>
+  <path d="m128 42 66 58-24 88-42 28-42-28-24-88z" fill="url(#gem)" stroke="#D9FCFF" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m128 42 18 70-18 104-18-104zM62 100l48 12 18-70M194 100l-48 12-18-70" fill="none" stroke="#D9FCFF" stroke-width="6" stroke-linejoin="round" opacity=".8"/>
+</svg>

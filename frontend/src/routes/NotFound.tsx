@@ -6,7 +6,7 @@ export default function NotFound() {
     <div
       className="h-screen w-full flex flex-col justify-center items-center "
       style={{
-        backgroundImage: `url(https://example.invalid/static/%EB%A1%A4+%EB%B0%B0%EA%B2%BD.jpg)`,
+        backgroundImage: "url(/image/loginBg.jpg)",
         backgroundSize: "cover",
       }}
     >
